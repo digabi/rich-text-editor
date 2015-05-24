@@ -1,0 +1,7 @@
+{
+  "name": "math-editor-poc",
+  "version": "1.0.0",
+  "dependencies": {
+    "jquery": "~2.1.4"
+  }
+}

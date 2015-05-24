@@ -1,0 +1,17 @@
+{
+  "name": "math-editor-poc",
+  "version": "1.0.0",
+  "description": "Matematiikkaeditori-spike",
+  "author": "",
+  "homepage": "https://github.com/digabi/math-editor-poc",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/digabi/math-editor-poc.git"
+  },
+  "devDependencies": {
+    "browser-sync": "^2.7.4",
+    "gulp": "^3.8.11",
+    "gulp-jshint": "^1.11.0",
+    "gulp-sass": "^2.0.1"
+  }
+}
