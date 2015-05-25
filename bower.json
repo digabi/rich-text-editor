@@ -2,6 +2,7 @@
   "name": "math-editor-poc",
   "version": "1.0.0",
   "dependencies": {
-    "jquery": "~2.1.4"
+    "jquery": "~2.1.4",
+    "MathJax": "~2.5.3"
   }
 }
