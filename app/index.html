@@ -8,7 +8,10 @@
 	<script type="text/x-mathjax-config">
 	  MathJax.Hub.Config({
 	    extensions: ["asciimath2jax.js"],
-	    jax: ["input/AsciiMath", "output/SVG"]
+	    jax: ["input/AsciiMath", "output/SVG"],
+	    asciimath2jax: {
+	    	preview: "none"
+	    }
 	  });
 	</script>
 	<script src="assets/components/MathJax/MathJax.js"></script>
@@ -17,7 +20,7 @@
 <body>
 	<p>`1*32=2029292`</p>
 	<textarea></textarea>
-	<div class="output"></div>
+	<div id="output"></div>
 <script src="assets/js/scripts.js"></script>
 </body>
 </html>
