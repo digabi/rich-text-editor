@@ -4,12 +4,16 @@
 	<meta charset='utf-8'>
 	<title>Math Editor POC</title>
 	<link rel="stylesheet" type="text/css" href="assets/css/main.css">
+	<link rel="stylesheet" type="text/css" href="assets/components/mathquill/mathquill.css">
 	<script src="assets/components/jquery/dist/jquery.min.js"></script>
+	<script src="assets/components/mathquill/mathquill.js"></script>
+
 	<script type="text/x-mathjax-config">
 	  MathJax.Hub.Config({
 	    extensions: ["asciimath2jax.js"],
 	    jax: ["input/AsciiMath", "output/SVG"],
 	    asciimath2jax: {
+	    	displayMath: [ ['´', '´'] ],
 	    	preview: "none"
 	    }
 	  });
@@ -19,7 +23,7 @@
 </head>
 <body>
 	<p>`1*32=2029292`</p>
-	<textarea></textarea>
+	<span id="editable-math" class="mathquill-editable">\frac{d}{dx}\sqrt{x}=</span>
 	<div id="output"></div>
 <script src="assets/js/scripts.js"></script>
 </body>
