@@ -8,7 +8,7 @@ var input = textBox.value;
 
 textBox.addEventListener('input', function (event) {
 	input = textBox.value;
-	outputBox.textContent = '`' + input + '';
+	outputBox.textContent = '`' + input + '`';
 	MathJax.Hub.Queue(['Typeset', MathJax.Hub, "output" ]);
 });
 
