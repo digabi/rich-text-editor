@@ -4,10 +4,22 @@
 	<meta charset='utf-8'>
 	<title>Math Editor POC</title>
 	<link rel="stylesheet" type="text/css" href="assets/css/main.css">
+	<script src="assets/components/jquery/dist/jquery.min.js"></script>
+	<script type="text/x-mathjax-config">
+	  MathJax.Hub.Config({
+	    extensions: ["asciimath2jax.js"],
+	    jax: ["input/asciimath", "output/SVG"]
+	  });
+	</script>
+	<script src="assets/components/MathJax/MathJax.js"></script>
+	</script>
+	<script src="assets/js/scripts.js"></script>
 </head>
 <body>
-	<script src="assets/components/jquery/dist/jquery.min.js"></script>
-	<script src="assets/components/MathJax/MathJax.js"></script>
-	<script src="assets/js/scripts.js"></script>
+
+	<p>``
+	<p>`1*2=2`</p>
+	<textarea></textarea>
+
 </body>
 </html>
