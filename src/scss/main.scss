@@ -1,4 +1,15 @@
-#editable-math {
-	width: 350px;
-	height: 140px;
+#editable-math, textarea, #latex-source {
+	width: 400px;
+	height: 100px;
+	resize: none;
+}
+
+.row {
+	min-height: 70px;
+}
+
+.mathquill-rendered-math * {
+	// Fixes Mathuill conflict with Bootstrap
+    box-sizing: content-box;
+    top: auto;
 }

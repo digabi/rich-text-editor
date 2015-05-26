@@ -37,29 +37,30 @@
 						<ul class="row syntax-tab ">
 							<div class="btn" id="x_{}"><span class="mathquill-embedded-latex">x_x</span></div>
 							<div class="btn" id="^{}"><span class="mathquill-embedded-latex">x^{x}</span></div>
-							<div class="btn" id="\sqrt{x}"><span class="mathquill-embedded-latex">\sqrt{x}</span></div>
+							<div class="btn" id="\sqrt{}"><span class="mathquill-embedded-latex">\sqrt{x}</span></div>
 							<div class="btn" id="\sqrt[]{}"><span class="mathquill-embedded-latex">\sqrt[x]{x}</span></div>
-							<div class="btn" id="-:"></div>
-							<div class="btn" id="xx"></div>
+							<div class="btn" id="\int _{}^{}"><span class="mathquill-embedded-latex">\int _{a}^{b}</span></span></div>
+							<div class="btn" id="\sum"><span class="mathquill-embedded-latex">\sum</span></div>
+							<div class="btn" id="\binom{}{}"><span class="mathquill-embedded-latex">\binom{n}{p}</span></div>
 						</ul>
-						<ul class="row syntax-tab">
-							<div class="btn" id="^^"></div>
-							<div class="btn" id="^^^"></div>
-							<div class="btn" id="vv"></div>
-							<div class="btn" id="vvv"></div>
-							<div class="btn" id="nn"></div>
-							<div class="btn" id="nnn"></div>
-						</ul>
+
 					</div>
 					<div class="tab-pane" id="tab2">
-						<p>Section 2 buttons here</p>
+						<ul class="row syntax-tab">
+							<div class="btn" id="^^"><strong>TODO</strong></div>
+						</ul>
 					</div>
 					<div class="tab-pane" id="tab3">
-						<p>Section 3 buttons here</p>
+						<ul class="row syntax-tab">
+							<div class="btn" id="^^"><strong>TODO</strong></div>
+						</ul>
 					</div>
 				</div>
 			</div>
-			<span id="editable-math" class="mathquill-editable"></span>
+			<p>WYSIWYG editor:</p>
+			<span id="editable-math" class="mathquill-editable"></span><br><br>
+			<p>Latex source:</p><textarea id="latex-source"></textarea><br><br>
+			<p>SVG output</p>
 		</div>
 	<script src="assets/js/scripts.js"></script>
 </body>

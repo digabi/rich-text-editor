@@ -1,29 +1,34 @@
 'use strict';
 
 $(document).ready(function() {
-	var textBox = $('.mathquill-editable');
-	// $(document).on('click', function () {
-	// 	textBox.mathquill('write','\\frac{d}{dx}');
-	// });
+	var latexMath = $('#editable-math'),
+		latexSource = $('#latex-source');
+
 	$('.syntax-tab > div').on('click', function (event) {
 		var syntax = ($(event.currentTarget).attr('id'));
-		textBox.mathquill('write', syntax);
+		latexMath.mathquill('write', syntax);
+		latexMathToLatexSource();
 	});
+
+	function latexMathToLatexSource () {
+    	setTimeout(function() {
+     		var latex = latexMath.mathquill('latex');
+      		latexSource.val(latex);
+		}, 0);
+	}
+
+	function latexSourceToLatexMath () {
+		var oldtext = latexSource.val();
+    	setTimeout(function() {
+      		var newtext = latexSource.val();
+      		if(newtext !== oldtext) {
+        		latexMath.mathquill('latex', newtext);
+      		}
+    	}, 0);
+	}
+
+  	latexMath.bind('keydown keypress', latexMathToLatexSource).keydown().focus();
+
+	latexSource.bind('keydown keypress', latexSourceToLatexMath);
+
 });
-
-
-
-// var textBox = document.querySelector('textarea');
-
-
-// var outputBox = document.querySelector('#output');
-// var input = textBox.value;
-
-// textBox.addEventListener('input', function (event) {
-// 	input = textBox.value;
-// 	outputBox.textContent = '`' + input + '`';
-// 	MathJax.Hub.Queue(['Typeset', MathJax.Hub, 'output' ]);
-// });
-
-
-
