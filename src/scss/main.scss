@@ -8,6 +8,10 @@
 	min-height: 70px;
 }
 
+.box {
+	float: left;
+	text-align: left;
+}
 .mathquill-rendered-math * {
 	// Fixes Mathuill conflict with Bootstrap
     box-sizing: content-box;

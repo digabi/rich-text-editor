@@ -6,6 +6,10 @@
 .row {
   min-height: 70px; }
 
+.box {
+  float: left;
+  text-align: left; }
+
 .mathquill-rendered-math * {
   box-sizing: content-box;
   top: auto; }
