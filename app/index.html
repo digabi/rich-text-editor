@@ -3,12 +3,15 @@
 <head>
 	<meta charset='utf-8'>
 	<title>Math Editor POC</title>
-	<link rel="stylesheet" type="text/css" href="assets/css/main.css">
+	<link rel="stylesheet" type="text/css" href="assets/components/bootstrap/dist/css/bootstrap.css">
 	<link rel="stylesheet" type="text/css" href="assets/mathquill-0.9.4/mathquill.css">
+	<link rel="stylesheet" type="text/css" href="assets/css/main.css">
 	<script src="assets/components/jquery/dist/jquery.min.js"></script>
 	<script src="assets/mathquill-0.9.4/mathquill.js"></script>
+	<script src="assets/components/bootstrap/dist/js/bootstrap.js"></script>
 
-	<script type="text/x-mathjax-config">
+
+<!-- 	<script type="text/x-mathjax-config">
 	  MathJax.Hub.Config({
 	    extensions: ["asciimath2jax.js"],
 	    jax: ["input/AsciiMath", "output/SVG"],
@@ -19,12 +22,45 @@
 	  });
 	</script>
 	<script src="assets/components/MathJax/MathJax.js"></script>
-	</script>
+	</script> -->
 </head>
 <body>
-	<p>`1*32=2029292`</p>
-	<span id="editable-math" class="mathquill-editable">\frac{d}{dx}\sqrt{x}=</span>
-	<div id="output"></div>
-<script src="assets/js/scripts.js"></script>
+	<div class="container">
+		<div class="menubar">
+				<ul class="nav nav-tabs">
+					<li class="active"><a href="#tab1" data-toggle="tab">+ Basic</a></li>
+					<li><a href="#tab2" data-toggle="tab">&Phi; Greek</a></li>
+					<li><a href="#tab3" data-toggle="tab">&#8804; Relationships</a></li>
+				</ul>
+				<div class="tab-content">
+					<div class="tab-pane active" id="tab1">
+						<ul class="row syntax-tab ">
+							<div class="btn" id="x_{}"><span class="mathquill-embedded-latex">x_x</span></div>
+							<div class="btn" id="^{}"><span class="mathquill-embedded-latex">x^{x}</span></div>
+							<div class="btn" id="\sqrt{x}"><span class="mathquill-embedded-latex">\sqrt{x}</span></div>
+							<div class="btn" id="\sqrt[]{}"><span class="mathquill-embedded-latex">\sqrt[x]{x}</span></div>
+							<div class="btn" id="-:"></div>
+							<div class="btn" id="xx"></div>
+						</ul>
+						<ul class="row syntax-tab">
+							<div class="btn" id="^^"></div>
+							<div class="btn" id="^^^"></div>
+							<div class="btn" id="vv"></div>
+							<div class="btn" id="vvv"></div>
+							<div class="btn" id="nn"></div>
+							<div class="btn" id="nnn"></div>
+						</ul>
+					</div>
+					<div class="tab-pane" id="tab2">
+						<p>Section 2 buttons here</p>
+					</div>
+					<div class="tab-pane" id="tab3">
+						<p>Section 3 buttons here</p>
+					</div>
+				</div>
+			</div>
+			<span id="editable-math" class="mathquill-editable"></span>
+		</div>
+	<script src="assets/js/scripts.js"></script>
 </body>
 </html>
