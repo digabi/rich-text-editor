@@ -3,9 +3,6 @@
   height: 100px;
   resize: none; }
 
-.row {
-  min-height: 70px; }
-
 .box {
   float: left;
   text-align: left; }

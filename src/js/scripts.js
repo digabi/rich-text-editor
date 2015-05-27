@@ -55,7 +55,6 @@ $(document).ready(function() {
 		});
 
 		return  function (latex) {
-			console.log('\\displaystyle{'+latex+'}');
 			queue.Push(hideBox, ['Text', math, '\\displaystyle{'+latex+'}'],
 				showBox);
 		};
