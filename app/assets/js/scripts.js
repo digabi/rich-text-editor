@@ -3,11 +3,12 @@
 $(document).ready(function() {
 	var latexMath = $('#editable-math'),
 		latexSource = $('#latex-source'),
-		svgOutput = $('#svg-output');
+		svgOutput = $('#svg-output'),
+		typingTimer = null,
+		doneTypingInterval = 500;
 
 	function latexMathToLatexSource () {
     	setTimeout(function() {
-    		// latexSourceToSVG();
      		var latex = latexMath.mathquill('latex');
       		latexSource.val(latex);
 		}, 0);
@@ -16,7 +17,6 @@ $(document).ready(function() {
 	function latexSourceToLatexMath () {
 		var oldtext = latexSource.val();
     	setTimeout(function() {
-    		// latexSourceToSVG();
       		var newtext = latexSource.val();
       		if(newtext !== oldtext) {
         		latexMath.mathquill('latex', newtext);
@@ -24,16 +24,12 @@ $(document).ready(function() {
     	}, 0);
 	}
 
-	$('.syntax-tab > div').on('click', function (event) {
-		var syntax = ($(event.currentTarget).attr('id'));
-		latexMath.mathquill('write', syntax);
-		latexMathToLatexSource();
-		render();
-
-	});
-
-  	latexMath.bind('keydown keypress', latexMathToLatexSource).keydown().focus();
-	latexSource.bind('keydown keypress', latexSourceToLatexMath);
+	function render () {
+		clearTimeout(typingTimer);
+		typingTimer = setTimeout(function () {
+			updateMath(latexSource.val());
+		}, doneTypingInterval);
+	}
 
 	var updateMath = (function () {
 
@@ -61,15 +57,16 @@ $(document).ready(function() {
 
 	})();
 
-	var typingTimer = null;
-	var doneTypingInterval = 500;
-	function render () {
-		clearTimeout(typingTimer);
-		typingTimer = setTimeout(function () {
-			updateMath(latexSource.val());
-		}, doneTypingInterval);
-	}
+	$('.syntax-tab > div').on('click', function (event) {
+		var syntax = ($(event.currentTarget).attr('id'));
+		latexMath.mathquill('write', syntax);
+		latexMathToLatexSource();
+		render();
+	});
 
 	$('#latex-source, #editable-math').on('keydown', render);
+
+	latexMath.bind('keydown keypress', latexMathToLatexSource).keydown().focus();
+	latexSource.bind('keydown keypress', latexSourceToLatexMath);
 
 });
