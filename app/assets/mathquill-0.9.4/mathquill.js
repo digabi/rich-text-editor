@@ -1984,6 +1984,17 @@ var Vec = LatexCmds.vec = P(MathCommand, function(_, _super) {
   _.textTemplate = ['vec(', ')'];
 });
 
+var Hat = LatexCmds.hat = P(MathCommand, function(_, _super) {
+  _.ctrlSeq = '\\hat';
+  _.htmlTemplate =
+      '<span class="non-leaf">'
+    +   '<span class="hat-prefix">&#94;</span>'
+    +   '<span class="hat-stem">&0</span>'
+    + '</span>'
+  ;
+  _.textTemplate = ['vec(', ')'];
+});
+
 var NthRoot =
 LatexCmds.nthroot = P(SquareRoot, function(_, _super) {
   _.htmlTemplate =

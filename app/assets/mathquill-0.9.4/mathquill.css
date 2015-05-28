@@ -281,12 +281,22 @@
 }
 .mathquill-rendered-math .vector-prefix {
   display: block;
-  text-align: center;
+  text-align: left;
   line-height: .25em;
   margin-bottom: -0.1em;
   font-size: 0.75em;
 }
 .mathquill-rendered-math .vector-stem {
+  display: block;
+}
+.mathquill-rendered-math .hat-prefix {
+  display: block;
+  text-align: center;
+  line-height: .25em;
+  margin-bottom: -0.35em;
+  font-size: 0.75em;
+}
+.mathquill-rendered-math .hat-stem {
   display: block;
 }
 .mathquill-rendered-math,
