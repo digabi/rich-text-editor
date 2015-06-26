@@ -1,5 +1,7 @@
 # math-editor-poc
-Matematiikkaeditori-spike
+Matematiikkaeditori-spike. In this repo you'll find a somewhat incomplete math editor made with mathquill-library. For more info see `docs`.
+
+## Install
 
 1. Install Node, Sass, Bower and Gulp
 2. Run `npm install`.
