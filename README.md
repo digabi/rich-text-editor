@@ -1,5 +1,5 @@
 # math-editor-poc
-Matematiikkaeditori-spike. In this repo you'll find a somewhat incomplete math editor made with mathquill-library. For more info see `docs`.
+Matematiikkaeditori-spike. In this repo you'll find a somewhat incomplete math editor made with mathquill-library. For more info see [docs](docs).
 
 ## Install
 
