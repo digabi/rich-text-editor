@@ -17,6 +17,6 @@
 	"undef": true,
 	"unused": true,
 	"globals" : {
-		"jQuery": true
+
 	}
 }

@@ -4,14 +4,25 @@
   "description": "Matematiikkaeditori-spike",
   "author": "",
   "homepage": "https://github.com/digabi/math-editor-poc",
+  "scripts": {
+    "start": "app/index.js",
+    "dev": "supervisor app/index.js"
+  },
   "repository": {
     "type": "git",
     "url": "https://github.com/digabi/math-editor-poc.git"
   },
   "devDependencies": {
-    "browser-sync": "^2.7.4",
-    "gulp": "^3.8.11",
-    "gulp-jshint": "^1.11.0",
-    "gulp-sass": "^2.0.1"
+    "jshint": "^2.9.4",
+    "supervisor": "^0.12.0"
+  },
+  "dependencies": {
+    "bootstrap": "3.3.4",
+    "browserify-middleware": "^7.1.0",
+    "express": "^4.15.2",
+    "jquery": "2.1.4",
+    "mathjax": "2.6.1",
+    "mathquill": "0.10.1",
+    "node-sass-middleware": "^0.11.0"
   }
 }
