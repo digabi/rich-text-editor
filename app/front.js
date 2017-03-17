@@ -5,7 +5,7 @@ $(document).ready(function() {
 	const tabContent = $('.tab-content')
 	tabs.find('a').click(e => {
 		tabs.find('.active').removeClass('active')
-		$(e.target).addClass('active')
+		e.target.parentNode.classList.add('active')
 		tabContent.find('.active').removeClass('active')
 		tabContent.find(e.target.getAttribute('href')).addClass('active')
 		e.preventDefault()

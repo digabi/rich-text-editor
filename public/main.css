@@ -1,10 +1,16 @@
-body { margin: 5em; font-family: "Helvetica Neue", Helvetica, Arial, sans-serif; }
-.answer { border: 1px solid #aaa; max-width: 800px; padding: 5px; }
+body { color: #333; margin: 5em; font: 14px/1.42 "Helvetica Neue", Helvetica, Arial, sans-serif; }
+*, *:before, *:after { box-sizing: border-box; }
+.answer { border: 1px solid #aaa; max-width: 800px; padding: 5px; box-sizing: border-box; }
 .btn { padding: 0 10px !important; }
 li a { padding: 2px !important; margin: 0; }
 .menubar { display: none; height: 60px; }
 .focus .menubar { display: block; }
 .focus .output { display: none; }
+.container { padding-left: 15px; padding-right: 15px; }
+.container:before,
+.nav:before { content: ' '; display: table; }
+.container:after,
+.nav:after { clear: both; }
 .container.focus { border: 1px solid #eee; }
 #editable-math, textarea,
 #latex-source { display: none; width: 200px; height: 50px; resize: none; background: #fff; }
@@ -13,3 +19,69 @@ li a { padding: 2px !important; margin: 0; }
 .box { float: left; text-align: left; }
 .mathquill-rendered-math * { box-sizing: content-box; top: auto; }
 body .container { margin: 0; display: block; width: auto; }
+.container:before,
+.container:after,
+.nav:before,
+.nav:after {
+	display: table;
+	content: " ";
+}
+ul,
+ol {
+	margin-top: 0;
+	margin-bottom: 10px;
+}
+ul ul,
+ol ul,
+ul ol,
+ol ol {
+	margin-bottom: 0;
+}
+.btn {
+	display: inline-block;
+	padding: 6px 12px;
+	margin-bottom: 0;
+	font-size: 14px;
+	font-weight: normal;
+	line-height: 1.42857143;
+	text-align: center;
+	white-space: nowrap;
+	vertical-align: middle;
+	background-image: none;
+	border: 1px solid transparent;
+	border-radius: 4px;
+}
+.nav {
+	padding-left: 0;
+	margin-bottom: 0;
+	list-style: none;
+}
+.nav > li {
+	position: relative;
+	display: block;
+}
+.nav > li > a {
+	position: relative;
+	display: block;
+	padding: 10px 15px;
+}
+.nav-tabs > li {
+	float: left;
+	margin-bottom: -1px;
+}
+.nav-tabs > li > a {
+	text-decoration: none;
+	margin-right: 2px;
+	line-height: 1.42857143;
+	border: 1px solid transparent;
+	border-radius: 4px 4px 0 0;
+}
+.nav-tabs > li.active > a {
+	color:#333;
+}
+.tab-content > .tab-pane {
+	display: none;
+}
+.tab-content > .active {
+	display: block;
+}
