@@ -1,6 +1,16 @@
 'use strict';
 
 $(document).ready(function() {
+	const tabs = $('.nav-tabs')
+	const tabContent = $('.tab-content')
+	tabs.find('a').click(e => {
+		tabs.find('.active').removeClass('active')
+		$(e.target).addClass('active')
+		tabContent.find('.active').removeClass('active')
+		tabContent.find(e.target.getAttribute('href')).addClass('active')
+		e.preventDefault()
+		return false
+	})
 	var latexMath = $('#editable-math'),
 		latexSource = $('#latex-source'),
 		svgOutput = $('#svg-output'),
