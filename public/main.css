@@ -1,12 +1,13 @@
 body { color: #333; margin: 5em; font: 14px/1.42 "Helvetica Neue", Helvetica, Arial, sans-serif; }
 *, *:before, *:after { box-sizing: border-box; }
-.answer { border: 1px solid #aaa; max-width: 800px; padding: 5px; box-sizing: border-box; }
+.answer {border: 1px solid #aaa;max-width: 740px;padding: 5px;box-sizing: border-box;}
 .btn { padding: 0 10px !important; }
-li a { padding: 2px !important; margin: 0; }
-.menubar { display: none; height: 60px; }
+li a {}
+.menubar {display: none;/* height: 60px; */}
+
 .focus .menubar { display: block; }
 .focus .output { display: none; }
-.container { padding-left: 15px; padding-right: 15px; }
+.container {/* padding-left: 15px; *//* padding-right: 15px; */}
 .container:before,
 .nav:before { content: ' '; display: table; }
 .container:after,
@@ -18,7 +19,7 @@ li a { padding: 2px !important; margin: 0; }
 #latex-source { display: block; }
 .box { float: left; text-align: left; }
 .mathquill-rendered-math * { box-sizing: content-box; top: auto; }
-body .container { margin: 0; display: block; width: auto; }
+body .container {margin: 0;display: block;width: auto;}
 .container:before,
 .container:after,
 .nav:before,
@@ -29,7 +30,7 @@ body .container { margin: 0; display: block; width: auto; }
 ul,
 ol {
 	margin-top: 0;
-	margin-bottom: 10px;
+	margin-bottom: 0px;
 }
 ul ul,
 ol ul,
@@ -52,6 +53,7 @@ ol ol {
 	border-radius: 4px;
 }
 .nav {
+	display: flex;
 	padding-left: 0;
 	margin-bottom: 0;
 	list-style: none;
@@ -61,12 +63,14 @@ ol ol {
 	display: block;
 }
 .nav > li > a {
+	color: #333;
 	position: relative;
 	display: block;
-	padding: 10px 15px;
+	padding: 5px 10px;
 }
 .nav-tabs > li {
-	float: left;
+	background: #eee;
+	display: block;
 	margin-bottom: -1px;
 }
 .nav-tabs > li > a {
@@ -77,6 +81,7 @@ ol ol {
 	border-radius: 4px 4px 0 0;
 }
 .nav-tabs > li.active > a {
+	background: #fff;
 	color:#333;
 }
 .tab-content > .tab-pane {
