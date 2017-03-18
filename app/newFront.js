@@ -12,6 +12,7 @@ const mathField = MQ.MathField(equationEditor, {
 });
 latexEditor.addEventListener('keyup', () => {
 	setTimeout(() => mathField.latex(latexEditor.value), 0)
+	updateResult()
 })
 mathField.latex(latexEditor.value)
 
@@ -25,10 +26,11 @@ buttons.click(e => {
 })
 mathField.focus()
 
-var studentDisplay = null;
-MathJax.Hub.Queue(function() {
-	studentDisplay = MathJax.Hub.getAllJax(document.querySelector('.result'))[0];
-});
-setTimeout(() => {
-	MathJax.Hub.Queue(["Text", studentDisplay, latexEditor.value])
-}, 1000)
+let result = null
+MathJax.Hub.Queue(() => result = MathJax.Hub.getAllJax(document.querySelector('.result'))[0])
+
+function updateResult() {
+	MathJax.Hub.Queue(() => result.Text(latexEditor.value))
+}
+updateResult()
+
