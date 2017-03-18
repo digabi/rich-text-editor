@@ -14,3 +14,10 @@ const mathField = MQ.MathField(equationEditor, {
 latexEditor.addEventListener('keyup', () => {
 	setTimeout(() => mathField.latex(latexEditor.value), 0)
 })
+
+document.querySelector('.button').addEventListener('click', e => {
+	mathField.focus()
+	mathField.typedText(e.target.id)
+	mathField.keystroke('Tab')
+})
+mathField.focus()
