@@ -8,10 +8,7 @@ const output = $('.output')
 let typingTimer = null
 
 const children = visualMath.find('.textarea').children()
-latexSource.focus(onFocus)
-children.focus(onFocus)
-latexSource.blur(onBlur)
-children.blur(onBlur)
+$(latexSource, children).focus(onFocus).blur(onBlur)
 output.click(onFocus)
 
 function onFocus() { container.addClass('focus') }
@@ -24,7 +21,7 @@ $('.syntax-tab > div').on('click', event => {
 	throttledEquationUpdate()
 })
 
-$('#latex-source, #editable-math').on('keydown', throttledEquationUpdate)
+$(visualMath, latexSource).on('keydown', throttledEquationUpdate)
 
 visualMath.bind('keydown keypress', visualToLatex).keydown().focus()
 latexSource.bind('keydown keypress', latexToVisual)
@@ -59,7 +56,6 @@ const equationUpdate = (() => {
 	let box = null
 
 	const hideBox = () => box.style.visibility = 'hidden'
-
 	const showBox = () => box.style.visibility = 'visible'
 
 	queue.Push(() => {
