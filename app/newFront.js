@@ -15,7 +15,9 @@ latexEditor.addEventListener('keyup', () => {
 	setTimeout(() => mathField.latex(latexEditor.value), 0)
 })
 
-document.querySelector('.button').addEventListener('click', e => {
+const button = document.querySelector('.button')
+MQ.StaticMath(button)
+button.addEventListener('click', e => {
 	mathField.focus()
 	mathField.typedText(e.target.id)
 	mathField.keystroke('Tab')
