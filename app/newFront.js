@@ -7,8 +7,7 @@ const mathField = MQ.MathField(equationEditor, {
 	spaceBehavesLikeTab: true, // configurable
 	handlers: {
 		edit: (e) => { // useful event handlers
-			console.log(e)
-			latexEditor.textContent = mathField.latex(); // simple API
+			latexEditor.value = mathField.latex(); // simple API
 		}
 	}
 });
