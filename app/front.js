@@ -1,12 +1,10 @@
-'use strict';
-
 initTabs()
 
 const visualMath = $('#editable-math')
-const latexSource = $('#latex-source');
-const doneTypingInterval = 500;
-const container = $('.container');
-const output = $('.output');
+const latexSource = $('#latex-source')
+const doneTypingInterval = 500
+const container = $('.container')
+const output = $('.output')
 let typingTimer = null
 
 const children = visualMath.find('.textarea').children()
@@ -20,39 +18,38 @@ function onFocus() { container.addClass('focus') }
 function onBlur() { container.removeClass('focus') }
 
 $('.syntax-tab > div').on('click', event => {
-	const syntax = ($(event.currentTarget).attr('id'));
-	visualMath.mathquill('write', syntax);
-	visualToLatex();
-	throttledEquationUpdate();
-});
+	const syntax = ($(event.currentTarget).attr('id'))
+	visualMath.mathquill('write', syntax)
+	visualToLatex()
+	throttledEquationUpdate()
+})
 
-$('#latex-source, #editable-math').on('keydown', throttledEquationUpdate);
+$('#latex-source, #editable-math').on('keydown', throttledEquationUpdate)
 
-visualMath.bind('keydown keypress', visualToLatex).keydown().focus();
-latexSource.bind('keydown keypress', latexToVisual);
-
+visualMath.bind('keydown keypress', visualToLatex).keydown().focus()
+latexSource.bind('keydown keypress', latexToVisual)
 
 function visualToLatex() {
 	setTimeout(() => {
-		const latex = visualMath.mathquill('latex');
-		latexSource.val(latex);
+		const latex = visualMath.mathquill('latex')
+		latexSource.val(latex)
 	}, 0)
 }
 
 function latexToVisual() {
-	const oldtext = latexSource.val();
+	const oldtext = latexSource.val()
 	setTimeout(() => {
-		const newtext = latexSource.val();
+		const newtext = latexSource.val()
 		if(newtext !== oldtext) {
-			visualMath.mathquill('latex', newtext);
+			visualMath.mathquill('latex', newtext)
 		}
 	}, 0)
 }
 
 function throttledEquationUpdate() {
-	clearTimeout(typingTimer);
+	clearTimeout(typingTimer)
 	typingTimer = setTimeout(() => {
-		equationUpdate(latexSource.val());
+		equationUpdate(latexSource.val())
 	}, doneTypingInterval)
 }
 
@@ -61,23 +58,20 @@ const equationUpdate = (() => {
 	let math = null
 	let box = null
 
-	const hideBox = () => {
-		box.style.visibility = 'hidden';
-	}
-	const showBox = () => {
-		box.style.visibility = 'visible';
-	};
+	const hideBox = () => box.style.visibility = 'hidden'
+
+	const showBox = () => box.style.visibility = 'visible'
 
 	queue.Push(() => {
-		math = MathJax.Hub.getAllJax('MathOutput')[0];
-		box = document.getElementById('box');
-		showBox();
-	});
+		math = MathJax.Hub.getAllJax('MathOutput')[0]
+		box = document.getElementById('box')
+		showBox()
+	})
 
 	return latex => {
-		queue.Push(hideBox, ['Text', math, '\\displaystyle{' + latex + '}'], showBox);
-	};
-})();
+		queue.Push(hideBox, ['Text', math, '\\displaystyle{' + latex + '}'], showBox)
+	}
+})()
 
 function initTabs() {
 	const tabs = $('.nav-tabs')
