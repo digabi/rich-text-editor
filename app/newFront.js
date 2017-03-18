@@ -13,6 +13,7 @@ const mathField = MQ.MathField(equationEditor, {
 latexEditor.addEventListener('keyup', () => {
 	setTimeout(() => mathField.latex(latexEditor.value), 0)
 })
+mathField.latex(latexEditor.value)
 
 const buttons = $('.toolbar button')
 buttons.each((i, elem) => MQ.StaticMath(elem))
@@ -23,3 +24,11 @@ buttons.click(e => {
 	if(symbol.startsWith('\\')) mathField.keystroke('Tab')
 })
 mathField.focus()
+
+var studentDisplay = null;
+MathJax.Hub.Queue(function() {
+	studentDisplay = MathJax.Hub.getAllJax(document.querySelector('.result'))[0];
+});
+setTimeout(() => {
+	MathJax.Hub.Queue(["Text", studentDisplay, latexEditor.value])
+}, 1000)
