@@ -1,63 +1,62 @@
 'use strict';
 
-const tabs = $('.nav-tabs')
-const tabContent = $('.tab-content')
-tabs.find('a').click(e => {
-	tabs.find('.active').removeClass('active')
-	e.target.parentNode.classList.add('active')
-	tabContent.find('.active').removeClass('active')
-	tabContent.find(e.target.getAttribute('href')).addClass('active')
-	e.preventDefault()
-	return false
-})
-const latexMath = $('#editable-math')
+initTabs()
+
+const visualMath = $('#editable-math')
 const latexSource = $('#latex-source');
 const doneTypingInterval = 500;
 const container = $('.container');
 const output = $('.output');
 let typingTimer = null
 
+const children = visualMath.find('.textarea').children()
 latexSource.focus(onFocus)
-const children = latexMath.find('.textarea').children()
 children.focus(onFocus)
 latexSource.blur(onBlur)
 children.blur(onBlur)
-
 output.click(onFocus)
-function onFocus() {
-	container.addClass('focus')
-}
 
-function onBlur() {
-	container.removeClass('focus')
-}
+function onFocus() { container.addClass('focus') }
+function onBlur() { container.removeClass('focus') }
 
-function latexMathToLatexSource() {
+$('.syntax-tab > div').on('click', event => {
+	const syntax = ($(event.currentTarget).attr('id'));
+	visualMath.mathquill('write', syntax);
+	visualToLatex();
+	throttledEquationUpdate();
+});
+
+$('#latex-source, #editable-math').on('keydown', throttledEquationUpdate);
+
+visualMath.bind('keydown keypress', visualToLatex).keydown().focus();
+latexSource.bind('keydown keypress', latexToVisual);
+
+
+function visualToLatex() {
 	setTimeout(() => {
-		const latex = latexMath.mathquill('latex');
+		const latex = visualMath.mathquill('latex');
 		latexSource.val(latex);
 	}, 0)
 }
 
-function latexSourceToLatexMath() {
+function latexToVisual() {
 	const oldtext = latexSource.val();
 	setTimeout(() => {
 		const newtext = latexSource.val();
 		if(newtext !== oldtext) {
-			latexMath.mathquill('latex', newtext);
+			visualMath.mathquill('latex', newtext);
 		}
 	}, 0)
 }
 
-function render() {
+function throttledEquationUpdate() {
 	clearTimeout(typingTimer);
 	typingTimer = setTimeout(() => {
-		updateMath(latexSource.val());
+		equationUpdate(latexSource.val());
 	}, doneTypingInterval)
 }
 
-const updateMath = (() =>{
-
+const equationUpdate = (() => {
 	const queue = MathJax.Hub.queue
 	let math = null
 	let box = null
@@ -80,15 +79,15 @@ const updateMath = (() =>{
 	};
 })();
 
-$('.syntax-tab > div').on('click', event => {
-	const syntax = ($(event.currentTarget).attr('id'));
-	latexMath.mathquill('write', syntax);
-	latexMathToLatexSource();
-	render();
-});
-
-$('#latex-source, #editable-math').on('keydown', render);
-
-latexMath.bind('keydown keypress', latexMathToLatexSource).keydown().focus();
-latexSource.bind('keydown keypress', latexSourceToLatexMath);
-
+function initTabs() {
+	const tabs = $('.nav-tabs')
+	const tabContent = $('.tab-content')
+	tabs.find('a').click(e => {
+		tabs.find('.active').removeClass('active')
+		e.target.parentNode.classList.add('active')
+		tabContent.find('.active').removeClass('active')
+		tabContent.find(e.target.getAttribute('href')).addClass('active')
+		e.preventDefault()
+		return false
+	})
+}
