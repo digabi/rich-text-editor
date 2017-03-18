@@ -10,16 +10,15 @@ tabs.find('a').click(e => {
 	e.preventDefault()
 	return false
 })
-var latexMath = $('#editable-math'),
-	latexSource = $('#latex-source'),
-	svgOutput = $('#svg-output'),
-	typingTimer = null,
-	doneTypingInterval = 500,
-	container = $('.container'),
-	output = $('.output')
+const latexMath = $('#editable-math')
+const latexSource = $('#latex-source');
+const doneTypingInterval = 500;
+const container = $('.container');
+const output = $('.output');
+let typingTimer = null
 
 latexSource.focus(onFocus)
-var children = latexMath.find('.textarea').children()
+const children = latexMath.find('.textarea').children()
 children.focus(onFocus)
 latexSource.blur(onBlur)
 children.blur(onBlur)
@@ -34,57 +33,55 @@ function onBlur() {
 }
 
 function latexMathToLatexSource() {
-	setTimeout(function() {
-		var latex = latexMath.mathquill('latex');
+	setTimeout(() => {
+		const latex = latexMath.mathquill('latex');
 		latexSource.val(latex);
-	}, 0);
+	}, 0)
 }
 
 function latexSourceToLatexMath() {
-	var oldtext = latexSource.val();
-	setTimeout(function() {
-		var newtext = latexSource.val();
+	const oldtext = latexSource.val();
+	setTimeout(() => {
+		const newtext = latexSource.val();
 		if(newtext !== oldtext) {
 			latexMath.mathquill('latex', newtext);
 		}
-	}, 0);
+	}, 0)
 }
 
 function render() {
 	clearTimeout(typingTimer);
-	typingTimer = setTimeout(function() {
+	typingTimer = setTimeout(() => {
 		updateMath(latexSource.val());
-	}, doneTypingInterval);
+	}, doneTypingInterval)
 }
 
-var updateMath = (function() {
+const updateMath = (() =>{
 
-	var queue = MathJax.Hub.queue,
-		math = null,
-		box = null,
+	const queue = MathJax.Hub.queue
+	let math = null
+	let box = null
 
-		hideBox = function() {
-			box.style.visibility = 'hidden';
-		},
-		showBox = function() {
-			box.style.visibility = 'visible';
-		};
+	const hideBox = () => {
+		box.style.visibility = 'hidden';
+	}
+	const showBox = () => {
+		box.style.visibility = 'visible';
+	};
 
-	queue.Push(function() {
+	queue.Push(() => {
 		math = MathJax.Hub.getAllJax('MathOutput')[0];
 		box = document.getElementById('box');
 		showBox();
 	});
 
-	return function(latex) {
-		queue.Push(hideBox, ['Text', math, '\\displaystyle{' + latex + '}'],
-			showBox);
+	return latex => {
+		queue.Push(hideBox, ['Text', math, '\\displaystyle{' + latex + '}'], showBox);
 	};
-
 })();
 
-$('.syntax-tab > div').on('click', function(event) {
-	var syntax = ($(event.currentTarget).attr('id'));
+$('.syntax-tab > div').on('click', event => {
+	const syntax = ($(event.currentTarget).attr('id'));
 	latexMath.mathquill('write', syntax);
 	latexMathToLatexSource();
 	render();
