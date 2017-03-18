@@ -23,5 +23,11 @@
     "mathjax": "2.7.0",
     "mathquill": "0.10.1",
     "node-sass-middleware": "^0.11.0"
+  },
+  "browserify-shim": {
+	"mathquill": {
+	  "depends2": ["./node_modules/jquery/dist/jquery.js:jQuery"],
+	  "exports2": "MathQuill"
+	}
   }
 }

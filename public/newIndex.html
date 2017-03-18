@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset='utf-8'>
+	<title>Math Editor POC</title>
+
+	<link rel="stylesheet" type="text/css" href="mathquill/build/mathquill.css">
+	<script src="jquery/dist/jquery.js"></script>
+	<script src="mathquill/build/mathquill.js"></script>
+	<script type="text/javascript" src="mathjax/MathJax.js?config=TeX-AMS-MML_SVG.js"></script>
+
+	<link rel="stylesheet" type="text/css" href="newMain.css">
+
+
+	<!--<link rel="stylesheet" href="mathquill/build/mathquill.css"/>-->
+	<!--<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>-->
+	<!--<script src="mathquill/build/mathquill.js"></script>-->
+
+</head>
+<body>
+<script>
+
+</script>
+<h2>Vastaus</h2>
+<div class="answer" contenteditable="true">
+	tetkstiä tekstiä tekstiä
+	<div contenteditable="false" class="math">
+		<div class="editMode">
+			<div class="equationEditor"></div>
+			<textarea class="latexEditor"></textarea>
+		</div>
+		<div class="result"></div>
+	</div>
+	Vastausta lisää
+	sadf sdfa
+</div>
+
+<p>Type math here: <span id="math-field"></span></p>
+<p>LaTeX of what you typed: <span id="latex"></span></p>
+
+
+<script src="/newFront.min.js"></script>
+</body>
+</html>

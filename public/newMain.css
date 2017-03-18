@@ -1,0 +1,13 @@
+body { color: #333; margin: 5em; font: 14px/1.42 "Helvetica Neue", Helvetica, Arial, sans-serif; }
+.editMode {
+	display: flex;
+}
+.equationEditor {
+	width: 200px;
+}
+.latexEditor {
+	width: 200px;
+}
+.result {
+
+}
