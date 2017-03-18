@@ -19,8 +19,8 @@
   "dependencies": {
     "browserify-middleware": "^7.1.0",
     "express": "^4.15.2",
-    "jquery": "2.1.4",
-    "mathjax": "2.6.1",
+    "jquery": "3.2.0",
+    "mathjax": "2.7.0",
     "mathquill": "0.10.1",
     "node-sass-middleware": "^0.11.0"
   }
