@@ -1,9 +1,14 @@
 const equationEditor = document.querySelector('.equationEditor');
 const latexEditor = document.querySelector('.latexEditor');
 const resultNode = document.querySelector('.result')
+const buttons = $('.toolbar button')
+const MQ = MathQuill.getInterface(2); // for backcompat
+const mathButtons = buttons.map((i, elem) => MQ.StaticMath(elem))
+
 $(resultNode).click(e => {
 	$('.math').addClass('focus')
 	mathField.reflow()
+	mathButtons.each((i, m) => m.reflow())
 	mathField.focus()
 })
 
@@ -22,7 +27,6 @@ $(latexEditor).on('focus blur', e => {
 	updateVisibility()
 })
 
-const MQ = MathQuill.getInterface(2); // for backcompat
 const mathField = MQ.MathField(equationEditor, {
 	spaceBehavesLikeTab: true, // configurable
 	handlers:            {
@@ -37,8 +41,6 @@ latexEditor.addEventListener('keyup', () => {
 })
 mathField.latex(latexEditor.value)
 
-const buttons = $('.toolbar button')
-buttons.each((i, elem) => MQ.StaticMath(elem))
 buttons.click(e => {
 	mathField.focus()
 	const symbol = e.currentTarget.id
