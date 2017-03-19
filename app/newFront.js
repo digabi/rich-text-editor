@@ -1,5 +1,26 @@
 const equationEditor = document.querySelector('.equationEditor');
 const latexEditor = document.querySelector('.latexEditor');
+const resultNode = document.querySelector('.result')
+$(resultNode).click(e => {
+	$('.math').addClass('focus')
+	mathField.reflow()
+	mathField.focus()
+})
+
+let focus1 = false
+let focus2 = false
+function updateVisibility() {
+	setTimeout(() => $('.math').toggleClass('focus', focus1 || focus2), 100)
+}
+$(equationEditor)
+	.on('focusin focusout', e  => {
+		focus1 = e.type === 'focusin'
+		updateVisibility()
+	})
+$(latexEditor).on('focus blur', e => {
+	focus2 = e.type === 'focus'
+	updateVisibility()
+})
 
 const MQ = MathQuill.getInterface(2); // for backcompat
 const mathField = MQ.MathField(equationEditor, {
@@ -27,7 +48,7 @@ buttons.click(e => {
 mathField.focus()
 
 let result = null
-MathJax.Hub.Queue(() => result = MathJax.Hub.getAllJax(document.querySelector('.result'))[0])
+MathJax.Hub.Queue(() => result = MathJax.Hub.getAllJax(resultNode)[0])
 
 function updateResult() {
 	MathJax.Hub.Queue(() => result.Text(latexEditor.value))

@@ -1,5 +1,7 @@
 body { color: #333; margin: 5em; font: 14px/1.42 "Helvetica Neue", Helvetica, Arial, sans-serif; }
+.answer { border: 1px solid #aaa; padding: 5px; box-sizing: content-box;}
 .editMode {
+	display: none;
 }
 .boxes { display: flex; }
 .equationEditor {
@@ -16,5 +18,11 @@ body { color: #333; margin: 5em; font: 14px/1.42 "Helvetica Neue", Helvetica, Ar
 	height: 50px;
 }
 .result {
+	display: block;
+	cursor: pointer;
 }
-/*.button { background: #eee;}*/
+.math {margin: 10px;}
+.math.focus {box-shadow: 1px 1px 10px 1px rgba(0, 0, 0, .2);padding: 10px;}
+.math.focus .result {display: none;}
+.math.focus .editMode {display: block;}
+
