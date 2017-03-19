@@ -15,7 +15,11 @@ $(resultNode).click(e => {
 let focus1 = false
 let focus2 = false
 function updateVisibility() {
-	setTimeout(() => $('.math').toggleClass('focus', focus1 || focus2), 100)
+	setTimeout(() => {
+		$('.math').toggleClass('focus', focus1 || focus2)
+		updateResult()
+	}, 100)
+
 }
 $(equationEditor)
 	.on('focusin focusout', e  => {
@@ -37,7 +41,6 @@ const mathField = MQ.MathField(equationEditor, {
 });
 latexEditor.addEventListener('keyup', () => {
 	setTimeout(() => mathField.latex(latexEditor.value), 0)
-	updateResult()
 })
 mathField.latex(latexEditor.value)
 
