@@ -44,7 +44,7 @@ latexEditor.addEventListener('keyup', () => {
 })
 mathField.latex(latexEditor.value)
 
-mathField.focus()
+$('.answer').get(0).focus()
 
 let result = null
 MathJax.Hub.Queue(() => result = MathJax.Hub.getAllJax(resultNode)[0])
@@ -90,7 +90,11 @@ $('.toolbar .button').mousedown(e => {
 	e.preventDefault()
 	return false
 })
-$characters.find('.toggle').mousedown(() => $characters.find('.list').toggle())
+$characters.find('.toggle').mousedown(e => {
+	$characters.find('.list').toggle()
+	e.preventDefault()
+	return false
+})
 
 function pasteHtmlAtCaret(html) {
 	let sel;
