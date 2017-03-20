@@ -22,7 +22,7 @@ function updateVisibility() {
 
 }
 $(equationEditor)
-	.on('focusin focusout', e  => {
+	.on('focusin focusout', e => {
 		focus1 = e.type === 'focusin'
 		updateVisibility()
 	})
@@ -55,6 +55,18 @@ function updateResult() {
 updateResult()
 
 function initToolbar() {
+	const actions = [
+		{action: '\\sqrt', label: '\\sqrt{\\square}'},
+		{action: '^', label: '\\square^{\\square}'},
+		{action: '\\frac', label: '\\frac{\\square}{\\square}'},
+		{action: '\\int', label: '\\int_{\\square}^{\\square}'},
+		{action: '\\neq', label: '\\neq'},
+		{action: '\\lim_', label: '\\lim_{\\square}'},
+		{action: '\\to', label: '\\to'},
+		{action: '\\overrightarrow', label: '\\overrightarrow{\\square}'}
+	]
+
+	const toolbar = $('.toolbar').append(actions.map(o => $(`<button id="${o.action}">${o.label}</button>`)))
 	const buttons = $('.toolbar button')
 	buttons.click(e => {
 		mathField.focus()
