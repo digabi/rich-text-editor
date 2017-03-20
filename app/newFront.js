@@ -1,9 +1,9 @@
 const equationEditor = document.querySelector('.equationEditor');
 const latexEditor = document.querySelector('.latexEditor');
 const resultNode = document.querySelector('.result')
-const buttons = $('.toolbar button')
 const MQ = MathQuill.getInterface(2); // for backcompat
-const mathButtons = buttons.map((i, elem) => MQ.StaticMath(elem))
+
+const mathButtons = initToolbar()
 
 $(resultNode).click(e => {
 	$('.math').addClass('focus')
@@ -44,12 +44,6 @@ latexEditor.addEventListener('keyup', () => {
 })
 mathField.latex(latexEditor.value)
 
-buttons.click(e => {
-	mathField.focus()
-	const symbol = e.currentTarget.id
-	mathField.typedText(symbol)
-	if(symbol.startsWith('\\')) mathField.keystroke('Tab')
-})
 mathField.focus()
 
 let result = null
@@ -60,3 +54,13 @@ function updateResult() {
 }
 updateResult()
 
+function initToolbar() {
+	const buttons = $('.toolbar button')
+	buttons.click(e => {
+		mathField.focus()
+		const symbol = e.currentTarget.id
+		mathField.typedText(symbol)
+		if(symbol.startsWith('\\')) mathField.keystroke('Tab')
+	})
+	return buttons.map((i, elem) => MQ.StaticMath(elem))
+}
