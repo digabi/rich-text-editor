@@ -1,5 +1,9 @@
 body { color: #333; margin: 5em; font: 14px/1.42 "Helvetica Neue", Helvetica, Arial, sans-serif; }
 .answer { border: 1px solid #aaa; padding: 5px; box-sizing: content-box;}
+.list { border: 1px solid #eee;margin-bottom: 10px;}
+.toggle { border: none; color: #68b4df; background: none; text-transform: uppercase; cursor: pointer;}
+.button { padding: 5px; display: inline-block; cursor: pointer; width: 20px; text-align: center;}
+.button:hover { background: #eee;}
 .editMode {
 	display: none;
 }
@@ -7,12 +11,12 @@ body { color: #333; margin: 5em; font: 14px/1.42 "Helvetica Neue", Helvetica, Ar
 .equationEditor {
 	width: 200px;
 }
-.toolbar {
+.mathToolbar {
 	margin-bottom: 5px;
 	display: flex;
 	font-size: 10px;
 }
-.toolbar button { margin-right: 5px; }
+.mathToolbar button { margin-right: 5px; }
 .latexEditor {
 	width: 200px;
 	height: 50px;

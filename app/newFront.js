@@ -66,8 +66,8 @@ function initToolbar() {
 		{action: '\\overrightarrow', label: '\\overrightarrow{\\square}'}
 	]
 
-	const toolbar = $('.toolbar').append(actions.map(o => $(`<button id="${o.action}">${o.label}</button>`)))
-	const buttons = $('.toolbar button')
+	$('.mathToolbar').append(actions.map(o => $(`<button id="${o.action}">${o.label}</button>`)))
+	const buttons = $('.mathToolbar button')
 	buttons.click(e => {
 		mathField.focus()
 		const symbol = e.currentTarget.id
@@ -75,4 +75,45 @@ function initToolbar() {
 		if(symbol.startsWith('\\')) mathField.keystroke('Tab')
 	})
 	return buttons.map((i, elem) => MQ.StaticMath(elem))
+}
+const chars = [
+	'°', '≡',
+	'⌐', '×', '«', '»', '…', '∫', '¬', '√', 'ƒ', '≈', '‹', '›', '∙', '‰', '¹', '²', '³', '½', '¼', '¾', '←', '↑', '→', '↓', '↔', '↕', '↨', '≠', 'Ø', '∞', '±', '≤', '≥', 'µ', '∂', '∑', '∏', 'Ω', '∆', 'ı', 'Ð',
+	'ð', 'Þ', 'þ', 'Γ', 'Θ', 'Φ', 'α', 'δ', 'ε', 'σ', 'τ', 'φ', '∩', 'Ω', 'ω', 'Д', 'Ф'
+]
+
+const $characters = $('.toolbar .characters')
+
+$characters.find('.list').append(chars.map(char => $(`<span class="button">${char}</span>`)))
+$('.toolbar .button').mousedown(e => {
+	pasteHtmlAtCaret(e.currentTarget.innerText)
+	e.preventDefault()
+	return false
+})
+$characters.find('.toggle').mousedown(() => $characters.find('.list').toggle())
+
+function pasteHtmlAtCaret(html) {
+	let sel;
+	let range;
+	if (window.getSelection) {
+		sel = window.getSelection();
+		if (sel.getRangeAt && sel.rangeCount) {
+			range = sel.getRangeAt(0);
+			range.deleteContents();
+			const el = document.createElement("div");
+			el.innerHTML = html;
+			let frag = document.createDocumentFragment(), node, lastNode;
+			while ( (node = el.firstChild) ) {
+				lastNode = frag.appendChild(node);
+			}
+			range.insertNode(frag);
+			if (lastNode) {
+				range = range.cloneRange();
+				range.setStartAfter(lastNode);
+				range.collapse(true);
+				sel.removeAllRanges();
+				sel.addRange(range);
+			}
+		}
+	}
 }
