@@ -1,7 +1,7 @@
 body { color: #333; margin: 5em; font: 14px/1.42 "Helvetica Neue", Helvetica, Arial, sans-serif; }
 .answer { border: 1px solid #aaa; padding: 5px; box-sizing: content-box; }
 .list { border: 1px solid #eee; margin-bottom: 10px; }
-.toggle { border: none; color: #68b4df; background: none; text-transform: uppercase; cursor: pointer; }
+.toggle {display: block;border: none;color: #68b4df;background: none;text-transform: uppercase;cursor: pointer;}
 .button { padding: 5px; display: inline-block; cursor: pointer; width: 20px; text-align: center; }
 .button:hover,
 button:hover { background: #eee; }
