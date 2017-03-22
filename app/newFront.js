@@ -105,7 +105,7 @@ function pasteHtmlAtCaret(html) {
 	let range;
 	if(window.getSelection) {
 		sel = window.getSelection()
-		if(sel.getRangeAt && sel.rangeCount) {
+		if(sel.getRangeAt && sel.rangeCount && sel.anchorNode.parentElement.classList.contains('answer')) {
 			range = sel.getRangeAt(0)
 			range.deleteContents()
 			const el = document.createElement("div")
