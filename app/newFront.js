@@ -76,7 +76,12 @@ const $characters = $('.toolbar .characters')
 
 $characters.find('.list').append(chars.map(char => $(`<span class="button">${char}</span>`)))
 $('.toolbar .button').mousedown(e => {
-	pasteHtmlAtCaret(e.currentTarget.innerText)
+	const innerText = e.currentTarget.innerText
+	if($('.equationEditor').hasClass('mq-focused')) {
+		mathField.typedText(innerText)
+	} else {
+		pasteHtmlAtCaret(innerText)
+	}
 	e.preventDefault()
 	return false
 })
