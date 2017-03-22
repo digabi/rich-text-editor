@@ -3,13 +3,13 @@ const latexEditor = document.querySelector('.latexEditor')
 const resultNode = document.querySelector('.result')
 const MQ = MathQuill.getInterface(2)
 
-const mathButtons = initToolbar()
+initToolbar()
+$('.mathToolbar').hide()
 
 $(resultNode).click(() => {
 	$('.math').addClass('focus')
 	$('.mathToolbar').show()
 	mathField.reflow()
-	mathButtons.each((i, m) => m.reflow())
 	mathField.focus()
 })
 
@@ -52,6 +52,12 @@ function initToolbar() {
 		{action: '\\overrightarrow', label: '\\overrightarrow{\\square}'}
 	]
 
+	const tags = [
+		{action: '<sub>x</sub>', label: 'X<sub>alaindeksi</sub>'},
+		{action: '<sup>x</sup>', label: 'X<sup>yläindeksi</sup>'},
+		{action: '<i>italic</i>', label: '<i>Kursiivi</i>'}
+	]
+	$('.tags .list').append(tags.map(o => $(`<button id="${o.action}">${o.label}</button>`)))
 	$('.mathToolbar').append(actions.map(o => $(`<button id="${o.action}">${o.label}</button>`)))
 	const buttons = $('.mathToolbar button')
 	buttons.mousedown(e => {
@@ -60,7 +66,6 @@ function initToolbar() {
 		mathField.typedText(symbol)
 		if(symbol.startsWith('\\')) mathField.keystroke('Tab')
 		setTimeout(() => mathField.focus(), 0)
-
 	})
 	return buttons.map((i, elem) => MQ.StaticMath(elem))
 }
@@ -80,6 +85,12 @@ $('.toolbar .button').mousedown(e => {
 	} else {
 		pasteHtmlAtCaret(innerText)
 	}
+	e.preventDefault()
+	return false
+})
+
+$('.tags button').mousedown(e => {
+	pasteHtmlAtCaret(e.currentTarget.id)
 	e.preventDefault()
 	return false
 })
