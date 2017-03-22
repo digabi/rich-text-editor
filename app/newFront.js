@@ -1,13 +1,13 @@
-const equationEditor = document.querySelector('.equationEditor');
-const latexEditor = document.querySelector('.latexEditor');
+const equationEditor = document.querySelector('.equationEditor')
+const latexEditor = document.querySelector('.latexEditor')
 const resultNode = document.querySelector('.result')
-const MQ = MathQuill.getInterface(2); // for backcompat
+const MQ = MathQuill.getInterface(2)
 
 const mathButtons = initToolbar()
 
-$(resultNode).click(e => {
+$(resultNode).click(() => {
 	$('.math').addClass('focus')
-	$('.mathToolbar').show();
+	$('.mathToolbar').show()
 	mathField.reflow()
 	mathButtons.each((i, m) => m.reflow())
 	mathField.focus()
@@ -16,15 +16,13 @@ $(resultNode).click(e => {
 $('.editMode .close').click(e => {
 	e.preventDefault()
 	$('.math').removeClass('focus')
-	$('.mathToolbar').hide();
+	$('.mathToolbar').hide()
 	updateResult()
 })
 const mathField = MQ.MathField(equationEditor, {
-	spaceBehavesLikeTab: true, // configurable
+	spaceBehavesLikeTab: true,
 	handlers:            {
-		edit: (e) => { // useful event handlers
-			latexEditor.value = mathField.latex(); // simple API
-		}
+		edit: () => latexEditor.value = mathField.latex()
 	}
 });
 latexEditor.addEventListener('keyup', () => {
@@ -94,24 +92,24 @@ $('.toggle').mousedown(e => {
 function pasteHtmlAtCaret(html) {
 	let sel;
 	let range;
-	if (window.getSelection) {
-		sel = window.getSelection();
-		if (sel.getRangeAt && sel.rangeCount) {
-			range = sel.getRangeAt(0);
-			range.deleteContents();
-			const el = document.createElement("div");
-			el.innerHTML = html;
-			let frag = document.createDocumentFragment(), node, lastNode;
-			while ( (node = el.firstChild) ) {
-				lastNode = frag.appendChild(node);
+	if(window.getSelection) {
+		sel = window.getSelection()
+		if(sel.getRangeAt && sel.rangeCount) {
+			range = sel.getRangeAt(0)
+			range.deleteContents()
+			const el = document.createElement("div")
+			el.innerHTML = html
+			let frag = document.createDocumentFragment(), node, lastNode
+			while((node = el.firstChild)) {
+				lastNode = frag.appendChild(node)
 			}
-			range.insertNode(frag);
-			if (lastNode) {
-				range = range.cloneRange();
-				range.setStartAfter(lastNode);
-				range.collapse(true);
-				sel.removeAllRanges();
-				sel.addRange(range);
+			range.insertNode(frag)
+			if(lastNode) {
+				range = range.cloneRange()
+				range.setStartAfter(lastNode)
+				range.collapse(true)
+				sel.removeAllRanges()
+				sel.addRange(range)
 			}
 		}
 	}
