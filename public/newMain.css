@@ -1,32 +1,50 @@
 body { color: #333; margin: 5em; font: 14px/1.42 "Helvetica Neue", Helvetica, Arial, sans-serif; }
-.answer { border: 1px solid #aaa; padding: 5px; box-sizing: content-box;}
-.list { border: 1px solid #eee;margin-bottom: 10px;}
-.toggle { border: none; color: #68b4df; background: none; text-transform: uppercase; cursor: pointer;}
-.button { padding: 5px; display: inline-block; cursor: pointer; width: 20px; text-align: center;}
-.button:hover { background: #eee;}
+.answer { border: 1px solid #aaa; padding: 5px; box-sizing: content-box; }
+.list { border: 1px solid #eee; margin-bottom: 10px; }
+.toggle { border: none; color: #68b4df; background: none; text-transform: uppercase; cursor: pointer; }
+.button { padding: 5px; display: inline-block; cursor: pointer; width: 20px; text-align: center; }
+.button:hover,
+button:hover { background: #eee; }
 .editMode {
 	display: none;
+	position: relative;
+}
+.editMode .close {
+	cursor: pointer;
+	border: 1px solid #aaa;
+	line-height: 0.8;
+	vertical-align: top;
+	font-size: 30px;
+	position: absolute;
+	right: -15px;
+	top: -15px;
+	width: 30px;
+	height: 30px;
+	border-radius: 100px;
+	background: #eee;
+	text-align: center;
+	color: #666;
 }
 .boxes { display: flex; }
 .equationEditor {
-	width: 200px;
+	width: 50%;
 }
 .mathToolbar {
 	margin-bottom: 5px;
 	display: flex;
 	font-size: 10px;
 }
-.mathToolbar button { margin-right: 5px; }
+button { background: none; margin-right: 5px; border: none; }
 .latexEditor {
-	width: 200px;
+	width: 50%;
 	height: 50px;
 }
 .result {
 	display: block;
 	cursor: pointer;
 }
-.math {margin: 10px;}
-.math.focus {box-shadow: 1px 1px 10px 1px rgba(0, 0, 0, .2);padding: 10px;}
-.math.focus .result {display: none;}
-.math.focus .editMode {display: block;}
+.math { margin: 10px; }
+.math.focus { box-shadow: 1px 1px 10px 1px rgba(0, 0, 0, .2); /* padding: 10px; */ }
+.math.focus .result { display: none; }
+.math.focus .editMode { display: block; }
 

@@ -7,30 +7,18 @@ const mathButtons = initToolbar()
 
 $(resultNode).click(e => {
 	$('.math').addClass('focus')
+	$('.mathToolbar').show();
 	mathField.reflow()
 	mathButtons.each((i, m) => m.reflow())
 	mathField.focus()
 })
 
-let focus1 = false
-let focus2 = false
-function updateVisibility() {
-	setTimeout(() => {
-		$('.math').toggleClass('focus', focus1 || focus2)
-		updateResult()
-	}, 100)
-
-}
-$(equationEditor)
-	.on('focusin focusout', e => {
-		focus1 = e.type === 'focusin'
-		updateVisibility()
-	})
-$(latexEditor).on('focus blur', e => {
-	focus2 = e.type === 'focus'
-	updateVisibility()
+$('.editMode .close').click(e => {
+	e.preventDefault()
+	$('.math').removeClass('focus')
+	$('.mathToolbar').hide();
+	updateResult()
 })
-
 const mathField = MQ.MathField(equationEditor, {
 	spaceBehavesLikeTab: true, // configurable
 	handlers:            {
@@ -68,11 +56,13 @@ function initToolbar() {
 
 	$('.mathToolbar').append(actions.map(o => $(`<button id="${o.action}">${o.label}</button>`)))
 	const buttons = $('.mathToolbar button')
-	buttons.click(e => {
-		mathField.focus()
+	buttons.mousedown(e => {
+		e.preventDefault()
 		const symbol = e.currentTarget.id
 		mathField.typedText(symbol)
 		if(symbol.startsWith('\\')) mathField.keystroke('Tab')
+		setTimeout(() => mathField.focus(), 0)
+
 	})
 	return buttons.map((i, elem) => MQ.StaticMath(elem))
 }
@@ -90,8 +80,8 @@ $('.toolbar .button').mousedown(e => {
 	e.preventDefault()
 	return false
 })
-$characters.find('.toggle').mousedown(e => {
-	$characters.find('.list').toggle()
+$('.toggle').mousedown(e => {
+	$(e.target.parentNode).find('.list').toggle()
 	e.preventDefault()
 	return false
 })
