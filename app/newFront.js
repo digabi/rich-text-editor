@@ -32,11 +32,9 @@ mathField.latex(latexEditor.value)
 
 $('.answer').get(0).focus()
 
-let result = null
-MathJax.Hub.Queue(() => result = MathJax.Hub.getAllJax(resultNode)[0])
 
 function updateResult() {
-	MathJax.Hub.Queue(() => result.Text(latexEditor.value))
+	$('img.result').prop('src', '/math.svg?latex=' +  latexEditor.value)
 }
 updateResult()
 
