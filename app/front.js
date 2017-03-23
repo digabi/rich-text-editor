@@ -10,7 +10,6 @@ $('.newEquation').mousedown(e => {
 
 function newEquation(placeholder) {
     const img = placeholder.prev()
-    $('.math').addClass('focus')
     img.hide()
     $('.mathToolbar').show()
     placeholder.replaceWith($('.math'))
@@ -20,7 +19,6 @@ function newEquation(placeholder) {
 initToolbar()
 $('.mathToolbar').hide()
 $('.answer').on('mousedown', '.result', e => {
-	$('.math').addClass('focus')
     const img = $(e.target)
     img.hide()
 	$('.mathToolbar').show()
@@ -34,12 +32,12 @@ $('.answer').on('mousedown', '.result', e => {
 $('.math .close').mousedown(e => {
 	e.preventDefault()
     let math = $(e.target).parents('.math')
-	math.removeClass('focus')
-	$('.mathToolbar').hide()
     const img = math.prev()
     img.show()
     img.prop('src', '/math.svg?latex=' +  encodeURIComponent(latexEditor.value))
     img.prop('alt', latexEditor.value)
+    $('.outerPlaceholder').html(math)
+    $('.mathToolbar').hide()
 })
 const mathField = MQ.MathField(equationEditor, {
 	spaceBehavesLikeTab: true,
