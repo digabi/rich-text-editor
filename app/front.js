@@ -50,15 +50,8 @@ const mathField = MQ.MathField(equationEditor, {
 latexEditor.addEventListener('keyup', () => {
 	setTimeout(() => mathField.latex(latexEditor.value), 0)
 })
-mathField.latex(latexEditor.value)
 
 $('.answer').get(0).focus()
-
-
-function updateResult() {
-	$('img.result').prop('src', '/math.svg?latex=' +  latexEditor.value)
-}
-updateResult()
 
 function initToolbar() {
 	const actions = [
