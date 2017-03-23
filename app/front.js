@@ -66,7 +66,7 @@ function initToolbar() {
 		if(symbol.startsWith('\\')) mathField.keystroke('Tab')
 		setTimeout(() => mathField.focus(), 0)
 	})
-	return buttons.map((i, elem) => MQ.StaticMath(elem))
+	buttons.map((i, elem) => MQ.StaticMath(elem))
 }
 const chars = [
 	'°', '≡',
