@@ -1,13 +1,13 @@
 <!DOCTYPE html>
 <html>
 <head>
-	<meta charset='utf-8'>
-	<title>Math Editor POC</title>
+    <meta charset='utf-8'>
+    <title>Math Editor POC</title>
 
-	<link rel="stylesheet" type="text/css" href="mathquill/build/mathquill.css">
-	<script src="jquery/dist/jquery.js"></script>
-	<script src="mathquill/build/mathquill.js"></script>
-	<link rel="stylesheet" type="text/css" href="styles.css">
+    <link rel="stylesheet" type="text/css" href="mathquill/build/mathquill.css">
+    <script src="jquery/dist/jquery.js"></script>
+    <script src="mathquill/build/mathquill.js"></script>
+    <link rel="stylesheet" type="text/css" href="styles.css">
 </head>
 <body>
 <script>
@@ -15,36 +15,33 @@
 </script>
 <h2>Vastaus</h2>
 <div class="toolbar">
-	<button class="newEquation">Lisää kaava</button>
-	<div class="tags">
-		<span class="toggle">Muotoilu</span>
-		<div class="list" style="display: none"></div>
-	</div>
-	<div class="characters">
-		<span class="toggle">Erikoismerkit</span>
-		<div class="list" style="display: none"></div>
-	</div>
-	<div class="formulas">
-		<span class="toggle">Kaavat</span>
-		<div class="mathToolbar list"></div>
-	</div>
+    <button class="newEquation">Lisää kaava</button>
+    <div class="tags">
+        <span class="toggle">Muotoilu</span>
+        <div class="list" style="display: none"></div>
+    </div>
+    <div class="characters">
+        <span class="toggle">Erikoismerkit</span>
+        <div class="list" style="display: none"></div>
+    </div>
+    <div class="formulas">
+        <span class="toggle">Kaavat</span>
+        <div class="mathToolbar list"></div>
+    </div>
 </div>
-
 
 
 <div class="answer" contenteditable="true">
-	tetkstiä tekstiä tekstiä
+    tetkstiä tekstiä tekstiä
 
-	Vastausta lisää
-	sadf sdfa
+    Vastausta lisää
+    sadf sdfa
 </div>
-<div  class="math">
-    <div class="editMode">
-        <div class="close">&times;</div>
-        <div class="boxes">
-            <div class="equationEditor"></div>
-            <textarea class="latexEditor"></textarea>
-        </div>
+<div class="math">
+    <div class="close">&times;</div>
+    <div class="boxes">
+        <div class="equationEditor"></div>
+        <textarea class="latexEditor"></textarea>
     </div>
 </div>
 <script src="/front.min.js"></script>

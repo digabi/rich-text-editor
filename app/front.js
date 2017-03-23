@@ -31,7 +31,7 @@ $('.answer').on('mousedown', '.result', e => {
 	setTimeout(() => mathField.focus(), 0)
 })
 
-$('.editMode .close').mousedown(e => {
+$('.math .close').mousedown(e => {
 	e.preventDefault()
     let math = $(e.target).parents('.math')
 	math.removeClass('focus')

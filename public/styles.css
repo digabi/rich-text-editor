@@ -5,11 +5,7 @@ body { color: #333; margin: 5em; font: 14px/1.42 "Helvetica Neue", Helvetica, Ar
 .button { padding: 5px; display: inline-block; cursor: pointer; width: 20px; text-align: center; }
 .button:hover,
 button:hover { background: #eee; }
-.editMode {
-	display: none;
-	position: relative;
-}
-.editMode .close {
+.math .close {
 	cursor: pointer;
 	border: 1px solid #aaa;
 	line-height: 0.8;
@@ -44,8 +40,7 @@ button { background: none; margin-right: 5px; border: none; }
 	display: block;
 	cursor: pointer;
 }
-.math { margin: 10px; }
+.math { margin: 10px; display: none; position: relative;}
 .math.focus { box-shadow: 1px 1px 10px 1px rgba(0, 0, 0, .2); /* padding: 10px; */ }
-.math.focus .result { display: none; }
-.math.focus .editMode { display: block; }
+.math.focus { display: block; }
 
