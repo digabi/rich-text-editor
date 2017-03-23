@@ -3,103 +3,46 @@
 <head>
 	<meta charset='utf-8'>
 	<title>Math Editor POC</title>
+
+	<link rel="stylesheet" type="text/css" href="mathquill/build/mathquill.css">
 	<script src="jquery/dist/jquery.js"></script>
-	<link rel="stylesheet" type="text/css" href="assets/mathquill-0.9.4/mathquill.css">
-	<script src="assets/mathquill-0.9.4/mathquill.js"></script>
-	<script type="text/javascript" src="mathjax/MathJax.js?config=TeX-AMS-MML_SVG.js"></script>
-	<link rel="stylesheet" type="text/css" href="main.css">
+	<script src="mathquill/build/mathquill.js"></script>
+	<link rel="stylesheet" type="text/css" href="styles.css">
 </head>
 <body>
 <script>
 
 </script>
 <h2>Vastaus</h2>
+<div class="toolbar">
+	<div class="tags">
+		<span class="toggle">Muotoilu</span>
+		<div class="list" style="display: none"></div>
+	</div>
+	<div class="characters">
+		<span class="toggle">Erikoismerkit</span>
+		<div class="list" style="display: none"></div>
+	</div>
+	<div class="formulas">
+		<span class="toggle">Kaavat</span>
+		<div class="mathToolbar list"></div>
+	</div>
+</div>
+
+
+
 <div class="answer" contenteditable="true">
 	tetkstiä tekstiä tekstiä
-	<div class="container" contenteditable="false">
-		<div class="menubar">
-			<ul class="nav nav-tabs">
-				<li class="active"><a href="#tab1" data-toggle="tab">+ Basic</a></li>
-				<li><a href="#tab2" data-toggle="tab">&Phi; Trigonometry</a></li>
-				<li><a href="#tab3" data-toggle="tab">&#8804; Relationships</a></li>
-				<li><a href="#tab4" data-toggle="tab">&sigma; Greek</a></li>
-				<li><a href="#tab5" data-toggle="tab">&sigma; Vectors</a></li>
-			</ul>
-			<div class="tab-content">
-				<div class="tab-pane active" id="tab1">
-					<ul class="row syntax-tab ">
-						<div class="btn" id="_{}"><span class="mathquill-embedded-latex">x_y</span></div>
-						<div class="btn" id="^{}"><span class="mathquill-embedded-latex">x^{y}</span></div>
-						<div class="btn" id="\sqrt{}"><span class="mathquill-embedded-latex">\sqrt{x}</span></div>
-						<div class="btn" id="\sqrt[]{}"><span class="mathquill-embedded-latex">\sqrt[x]{y}</span></div>
-						<div class="btn" id="\int _{}^{}"><span
-								class="mathquill-embedded-latex">\int _{a}^{b}</span></span></div>
-						<div class="btn" id="\sum"><span class="mathquill-embedded-latex">\sum</span></div>
-						<div class="btn" id="\binom{}{}"><span class="mathquill-embedded-latex">\binom{n}{p}</span>
-						</div>
-					</ul>
-
-				</div>
-				<div class="tab-pane" id="tab2">
-					<ul class="row syntax-tab ">
-						<div class="btn" id="\sin()"><span class="mathquill-embedded-latex">\sin(\theta)</span></div>
-						<div class="btn" id="\cos()"><span class="mathquill-embedded-latex">\cos(\theta)</span></div>
-						<div class="btn" id="\tan()"><span class="mathquill-embedded-latex">\tan(\theta)</span></div>
-					</ul>
-					<ul class="row syntax-tab ">
-						<div class="btn" id="\arcsin()"><span class="mathquill-embedded-latex">\arcsin(\theta)</span>
-						</div>
-						<div class="btn" id="\arccos()"><span class="mathquill-embedded-latex">\arccos(\theta)</span>
-						</div>
-						<div class="btn" id="\arctan()"><span class="mathquill-embedded-latex">\arctan(\theta)</span>
-						</div>
-					</ul>
-				</div>
-				<div class="tab-pane" id="tab3">
-					<ul class="row syntax-tab">
-						<div class="btn" id="\le"><span class="mathquill-embedded-latex">\le</span></div>
-						<div class="btn" id="\ge"><span class="mathquill-embedded-latex">\ge</span></div>
-						<div class="btn" id="\approx"><span class="mathquill-embedded-latex">\approx</span></div>
-						<div class="btn" id="\not="><span class="mathquill-embedded-latex">\not=</span></div>
-						<div class="btn" id="\pm"><span class="mathquill-embedded-latex">\pm</span></div>
-						<div class="btn" id="\in"><span class="mathquill-embedded-latex">\in</span></div>
-						<div class="btn" id="\ni"><span class="mathquill-embedded-latex">\ni</span></div>
-						<div class="btn" id="\cdot"><span class="mathquill-embedded-latex">\cdot</span></div>
-						<div class="btn" id="\parallel"><span class="mathquill-embedded-latex">\parallel</span></div>
-					</ul>
-				</div>
-				<div class="tab-pane" id="tab4">
-					<ul class="row syntax-tab ">
-						<div class="btn" id="\alpha"><span class="mathquill-embedded-latex">\alpha</span></div>
-						<div class="btn" id="\beta"><span class="mathquill-embedded-latex">\beta</span></div>
-						<div class="btn" id="\gamma"><span class="mathquill-embedded-latex">\gamma</span></div>
-						<div class="btn" id="\theta"><span class="mathquill-embedded-latex">\theta</span></div>
-						<div class="btn" id="\mu"><span class="mathquill-embedded-latex">\mu</span></div>
-						<div class="btn" id="\sigma"><span class="mathquill-embedded-latex">\sigma</span></div>
-						<div class="btn" id="\delta"><span class="mathquill-embedded-latex">\delta</span></div>
-						<div class="btn" id="\Pi"><span class="mathquill-embedded-latex">\Pi</span></div>
-					</ul>
-				</div>
-				<div class="tab-pane" id="tab5">
-					<ul class="row syntax-tab ">
-						<div class="btn" id="\vec{}"><span class="mathquill-embedded-latex">\vec{a}</span></div>
-						<div class="btn" id="\bar{}"><span class="mathquill-embedded-latex">\bar{a}</span></div>
-						<div class="btn" id="\bar{}"><span class="mathquill-embedded-latex">\overrightarrow{abc}</span>
-						</div>
-						<div class="btn" id="\overrightarrow{}"><span class="mathquill-embedded-latex">\overleftarrow{abc}</span>
-						</div>
-						<div class="btn" id="\overline{}"><span class="mathquill-embedded-latex">\overline{abc}</span>
-						</div>
-					</ul>
-				</div>
+	<img src="/math.svg?latex=E = mc^2 + \frac{1}{x}" />
+	<div contenteditable="false" class="math">
+		<div class="editMode">
+			<div class="close">&times;</div>
+			<div class="boxes">
+				<div class="equationEditor"></div>
+				<textarea class="latexEditor">\sqrt{x^2}</textarea>
 			</div>
 		</div>
-		<div style="display: flex">
-			<span id="editable-math" class="mathquill-editable">\hat{3}</span><textarea id="latex-source"></textarea>
-		</div>
-		<div class="box" id="box" style="visibility:hidden">
-			<div id="MathOutput" class="output">$${}$$</div>
-		</div>
+		<img class="result"/>
 	</div>
 	Vastausta lisää
 	sadf sdfa
