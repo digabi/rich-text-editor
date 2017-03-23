@@ -1,24 +1,45 @@
 const equationEditor = document.querySelector('.equationEditor')
 const latexEditor = document.querySelector('.latexEditor')
-const resultNode = document.querySelector('.result')
 const MQ = MathQuill.getInterface(2)
 
+$('.newEquation').mousedown(e => {
+    e.preventDefault()
+    pasteHtmlAtCaret('<img class="result"/><div class="equationPlaceholder">lol</div> ')
+    newEquation($('.equationPlaceholder'))
+})
+
+function newEquation(placeholder) {
+    const img = placeholder.prev()
+    $('.math').addClass('focus')
+    img.hide()
+    $('.mathToolbar').show()
+    placeholder.replaceWith($('.math'))
+    mathField.latex('')
+    setTimeout(() => mathField.focus(), 0)
+}
 initToolbar()
 $('.mathToolbar').hide()
-$(resultNode).mousedown(e => {
+$('.answer').on('mousedown', '.result', e => {
 	$('.math').addClass('focus')
-	$(e.target).hide()
+    const img = $(e.target)
+    img.hide()
 	$('.mathToolbar').show()
+    img.after($('.math'))
+    const latex = img.prop('alt')
 	mathField.reflow()
+    mathField.latex(latex)
 	setTimeout(() => mathField.focus(), 0)
 })
 
 $('.editMode .close').mousedown(e => {
 	e.preventDefault()
-	$('.math').removeClass('focus')
+    let math = $(e.target).parents('.math')
+	math.removeClass('focus')
 	$('.mathToolbar').hide()
-	$(resultNode).show()
-	updateResult()
+    const img = math.prev()
+    img.show()
+    img.prop('src', '/math.svg?latex=' +  encodeURIComponent(latexEditor.value))
+    img.prop('alt', latexEditor.value)
 })
 const mathField = MQ.MathField(equationEditor, {
 	spaceBehavesLikeTab: true,
