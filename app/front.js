@@ -5,18 +5,19 @@ const MQ = MathQuill.getInterface(2)
 
 initToolbar()
 $('.mathToolbar').hide()
-
-$(resultNode).click(() => {
+$(resultNode).mousedown(e => {
 	$('.math').addClass('focus')
+	$(e.target).hide()
 	$('.mathToolbar').show()
 	mathField.reflow()
-	mathField.focus()
+	setTimeout(() => mathField.focus(), 0)
 })
 
-$('.editMode .close').click(e => {
+$('.editMode .close').mousedown(e => {
 	e.preventDefault()
 	$('.math').removeClass('focus')
 	$('.mathToolbar').hide()
+	$(resultNode).show()
 	updateResult()
 })
 const mathField = MQ.MathField(equationEditor, {
