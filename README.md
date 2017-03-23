@@ -3,7 +3,6 @@ Matematiikkaeditori-spike. In this repo you'll find a somewhat incomplete math e
 
 ## Install
 
-1. Install Node, Sass, Bower and Gulp
+1. Install Node 
 2. Run `npm install`.
-3. Run `bower install`.
-4. Run `gulp`.
+4. Run `npm start`.
