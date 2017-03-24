@@ -6,6 +6,9 @@ const $latexEditor = $('.latexEditor')
 const $answer = $('.answer')
 const $mathToolbar = $('.mathToolbar')
 const $math = $('.math')
+let answerFocus = true
+let latexEditorFocus = false
+let editorVisible = false
 initMathToolbar()
 initSpecialCharacterSelector()
 
@@ -22,25 +25,29 @@ function newEquation($placeholder) {
     $mathToolbar.show()
     $placeholder.replaceWith($math)
     mathField.latex('')
+    editorVisible = true
     setTimeout(() => mathField.focus(), 0)
 }
-let answerFocus = true
 $answer.on('focus blur', e => {
+    if(editorVisible && e.type === 'focus') onClose()
     answerFocus = e.type === 'focus'
 })
-$answer.on('mousedown', '.result', e => {
-    const $img = $(e.target)
+let onShowEditor = function($img) {
     $mathToolbar.show()
     $img.hide()
         .after($math)
     const latex = $img.prop('alt')
     mathField.reflow()
     mathField.latex(latex)
+    editorVisible = true
     setTimeout(() => mathField.focus(), 0)
+}
+$answer.on('mousedown', '.result', e => {
+    if(editorVisible) onClose()
+    onShowEditor($(e.target))
 })
 
-$('.math .close').mousedown(e => {
-    e.preventDefault()
+let onClose = function() {
     const $img = $math.prev()
     if($latexEditor.val().trim() === '') {
         $img.remove()
@@ -51,8 +58,12 @@ $('.math .close').mousedown(e => {
     }
     $('.outerPlaceholder').html($math)
     $mathToolbar.hide()
+    editorVisible = false
+}
+$('.math .close').mousedown(e => {
+    e.preventDefault()
+    onClose()
 })
-let latexEditorFocus = false
 
 const mathField = MQ.MathField($equationEditor.get(0), {
     spaceBehavesLikeTab: true,
