@@ -6,7 +6,8 @@ Math editor for Finnish Matriculation Examination Board.
 
 1. Install Node 
 2. Run `npm install`.
-4. Run `npm start`.
+3. Run `npm start`.
+4. Go to [http://localhost:5000](http://localhost:5000)
 
 # License
 
