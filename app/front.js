@@ -13,13 +13,12 @@ $('.newEquation').mousedown(e => {
     e.preventDefault()
     if(!answerFocus)
         return
-    pasteHtmlAtCaret('<img class="result"/><div class="equationPlaceholder"></div> ')
+    pasteHtmlAtCaret('<img class="result"/><div class="equationPlaceholder"></div>')
     newEquation($('.equationPlaceholder'))
 })
 
 function newEquation($placeholder) {
-    const $img = $placeholder.prev()
-    $img.hide()
+    $placeholder.prev().hide()
     $mathToolbar.show()
     $placeholder.replaceWith($math)
     mathField.latex('')
@@ -31,9 +30,9 @@ $answer.on('focus blur', e => {
 })
 $answer.on('mousedown', '.result', e => {
     const $img = $(e.target)
-    $img.hide()
     $mathToolbar.show()
-    $img.after($math)
+    $img.hide()
+        .after($math)
     const latex = $img.prop('alt')
     mathField.reflow()
     mathField.latex(latex)
@@ -47,8 +46,8 @@ $('.math .close').mousedown(e => {
         $img.remove()
     } else {
         $img.show()
-        $img.prop('src', '/math.svg?latex=' + encodeURIComponent($latexEditor.val()))
-        $img.prop('alt', $latexEditor.val())
+            .prop('src', '/math.svg?latex=' + encodeURIComponent($latexEditor.val()))
+            .prop('alt', $latexEditor.val())
     }
     $('.outerPlaceholder').html($math)
     $mathToolbar.hide()
@@ -58,9 +57,7 @@ let latexEditorFocus = false
 const mathField = MQ.MathField($equationEditor.get(0), {
     spaceBehavesLikeTab: true,
     handlers:            {
-        edit: () => {
-            if(!latexEditorFocus) $latexEditor.val(mathField.latex())
-        }
+        edit: () => !latexEditorFocus && $latexEditor.val(mathField.latex())
     }
 });
 $latexEditor
@@ -86,17 +83,17 @@ function initMathToolbar() {
 }
 
 function initSpecialCharacterSelector() {
-    const $characters = $('.toolbar .characters')
-    $characters.find('.list').append(specialCharacters.map(char => $(`<span class="button">${char}</span>`)))
-    $characters.on('mousedown', '.button', e => {
-        e.preventDefault()
-        const innerText = e.currentTarget.innerText
-        if($equationEditor.hasClass('mq-focused')) {
-            mathField.typedText(innerText)
-        } else {
-            pasteHtmlAtCaret(innerText)
-        }
-    })
+    $('.toolbar .characters').find('.list')
+        .append(specialCharacters.map(char => $(`<span class="button">${char}</span>`)))
+        .on('mousedown', '.button', e => {
+            e.preventDefault()
+            const innerText = e.currentTarget.innerText
+            if($equationEditor.hasClass('mq-focused')) {
+                mathField.typedText(innerText)
+            } else {
+                pasteHtmlAtCaret(innerText)
+            }
+        })
     $('.toggle').mousedown(e => {
         $(e.target.parentNode).toggleClass('expanded')
         e.preventDefault()
@@ -105,8 +102,8 @@ function initSpecialCharacterSelector() {
 }
 
 function pasteHtmlAtCaret(html) {
-    let sel;
-    let range;
+    let sel
+    let range
     if(window.getSelection) {
         sel = window.getSelection()
         if(sel.getRangeAt && answerFocus) {
