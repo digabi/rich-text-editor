@@ -5,7 +5,7 @@ const $equationEditor = $('.equationEditor')
 const $latexEditor = $('.latexEditor')
 const $answer = $('.answer')
 const $mathToolbar = $('.mathToolbar')
-
+const $math = $('.math')
 initMathToolbar()
 initSpecialCharacterSelector()
 
@@ -21,7 +21,7 @@ function newEquation($placeholder) {
     const $img = $placeholder.prev()
     $img.hide()
     $mathToolbar.show()
-    $placeholder.replaceWith($('.math'))
+    $placeholder.replaceWith($math)
     mathField.latex('')
     setTimeout(() => mathField.focus(), 0)
 }
@@ -29,7 +29,7 @@ $answer.on('mousedown', '.result', e => {
     const $img = $(e.target)
     $img.hide()
     $mathToolbar.show()
-    $img.after($('.math'))
+    $img.after($math)
     const latex = $img.prop('alt')
     mathField.reflow()
     mathField.latex(latex)
@@ -38,7 +38,6 @@ $answer.on('mousedown', '.result', e => {
 
 $('.math .close').mousedown(e => {
     e.preventDefault()
-    let $math = $(e.target).parents('.math')
     const $img = $math.prev()
     if($latexEditor.val().trim() === '') {
         $img.remove()
