@@ -9,9 +9,10 @@ const $math = $('.math')
 initMathToolbar()
 initSpecialCharacterSelector()
 
+
 $('.newEquation').mousedown(e => {
     e.preventDefault()
-    if(!hasAnswerFocus())
+    if(!answerFocus)
         return
     pasteHtmlAtCaret('<img class="result"/><div class="equationPlaceholder"></div> ')
     newEquation($('.equationPlaceholder'))
@@ -25,6 +26,10 @@ function newEquation($placeholder) {
     mathField.latex('')
     setTimeout(() => mathField.focus(), 0)
 }
+let answerFocus = true
+$answer.on('focus blur', e => {
+    answerFocus = e.type === 'focus'
+})
 $answer.on('mousedown', '.result', e => {
     const $img = $(e.target)
     $img.hide()
@@ -96,16 +101,12 @@ function initSpecialCharacterSelector() {
     })
 }
 
-function hasAnswerFocus(sel) {
-    return (sel || window.getSelection()).anchorNode.parentElement.classList.contains('answer')
-}
-
 function pasteHtmlAtCaret(html) {
     let sel;
     let range;
     if(window.getSelection) {
         sel = window.getSelection()
-        if(sel.getRangeAt && hasAnswerFocus(sel)) {
+        if(sel.getRangeAt && answerFocus) {
             range = sel.getRangeAt(0)
             range.deleteContents()
             const el = document.createElement("div")
