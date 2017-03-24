@@ -1,4 +1,4 @@
-body { color: #333; margin: 5em; font: 14px/1.42 "Helvetica Neue", Helvetica, Arial, sans-serif; }
+body { color: #333; margin: 5em auto; font: 14px/1.42 "Helvetica Neue", Helvetica, Arial, sans-serif; max-width: 900px;}
 .answer { border: 1px solid #aaa; padding: 5px; box-sizing: content-box; min-height: 100px;}
 .list { border: 1px solid #eee; margin-bottom: 10px; }
 .toggle {display: block;border: none;color: #68b4df;background: none;text-transform: uppercase;cursor: pointer;}
