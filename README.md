@@ -1,5 +1,6 @@
-# math-editor-poc
-Matematiikkaeditori-spike. In this repo you'll find a somewhat incomplete math editor made with mathquill-library. For more info see [docs](docs).
+# Math editor
+Math editor for Finnish Matriculation Examination Board.
+[Live demo](http://matheditor.herokuapp.com)
 
 ## Install
 
