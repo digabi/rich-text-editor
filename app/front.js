@@ -65,19 +65,23 @@ let onClose = function() {
     $('.outerPlaceholder').html($math)
     $mathToolbar.hide()
     editorVisible = false
+    $answer.get(0).focus()
 }
 $('.math .close').mousedown(e => {
     e.preventDefault()
     onClose()
 })
-
 const mathField = MQ.MathField($equationEditor.get(0), {
     spaceBehavesLikeTab: true,
     handlers:            {
         edit: () => !latexEditorFocus && $latexEditor.val(mathField.latex())
     }
 })
-
+$equationEditor.find('textarea').keypress(e => {
+    if(e.ctrlKey && !e.altKey && !e.shiftKey && e.keyCode === 13) {
+        onClose()
+    }
+})
 function onLatexUpdate() { setTimeout(() => mathField.latex($latexEditor.val()), 0) }
 
 $latexEditor
