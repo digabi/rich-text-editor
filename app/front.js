@@ -4,6 +4,8 @@ const MQ = MathQuill.getInterface(2)
 
 $('.newEquation').mousedown(e => {
     e.preventDefault()
+    if(!hasAnswerFocus())
+        return
     pasteHtmlAtCaret('<img class="result"/><div class="equationPlaceholder">lol</div> ')
     newEquation($('.equationPlaceholder'))
 })
@@ -111,12 +113,16 @@ $('.toggle').mousedown(e => {
 	return false
 })
 
+function hasAnswerFocus(sel) {
+    return (sel || window.getSelection()).anchorNode.parentElement.classList.contains('answer')
+}
+
 function pasteHtmlAtCaret(html) {
 	let sel;
 	let range;
 	if(window.getSelection) {
 		sel = window.getSelection()
-		if(sel.getRangeAt && sel.rangeCount && sel.anchorNode.parentElement.classList.contains('answer')) {
+		if(sel.getRangeAt && hasAnswerFocus(sel)) {
 			range = sel.getRangeAt(0)
 			range.deleteContents()
 			const el = document.createElement("div")
