@@ -18,5 +18,5 @@ button { background: none; margin-right: 5px; border: none; }
 .latexEditor { width: 50%; height: 50px; }
 .result { display: block; cursor: pointer; }
 .math { margin: 10px; position: relative; box-shadow: 1px 1px 10px 1px rgba(0, 0, 0, .2); }
-.newEquation:before { content: '∑'; display: inline-block; margin-right: 10px; }
+.newEquation:before { content: 'Σ'; display: inline-block; margin-right: 10px; }
 .newEquation { text-transform: uppercase; box-shadow: 0 1px 2px 1px rgba(0, 0, 0, .2); border-radius: 2px; padding: 5px 10px; font-weight: bold; color: #666; }
