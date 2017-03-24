@@ -1,45 +1,22 @@
-body { color: #333; margin: 5em auto; font: 14px/1.42 "Helvetica Neue", Helvetica, Arial, sans-serif; max-width: 900px;}
-.answer { border: 1px solid #aaa; padding: 5px; box-sizing: content-box; min-height: 100px;}
-.list { border: 1px solid #eee; margin-bottom: 10px; }
-.toggle {display: block;border: none;color: #68b4df;background: none;text-transform: uppercase;cursor: pointer;}
+body { color: #333; margin: 5em auto; font: 14px/1.42 "Helvetica Neue", Helvetica, Arial, sans-serif; max-width: 900px; }
+.answer { border: 1px solid #aaa; padding: 5px; box-sizing: content-box; min-height: 100px; }
+.list { border: 1px solid #eee; margin-bottom: 10px; display: none; }
+.expanded .list { display: block; }
+.toggle { font-size: 12px; padding: 8px 0; display: block; border: none; color: #68b4df; background: none; text-transform: uppercase; cursor: pointer; }
+.toggle:after { content: '▼'; margin-left: 10px; display: inline-block; }
+.expanded .toggle:after { content: '▲'; }
 .button { padding: 5px; display: inline-block; cursor: pointer; width: 20px; text-align: center; }
 .button:hover,
 button:hover { background: #eee; }
-.math .close {
-	cursor: pointer;
-	border: 1px solid #aaa;
-	line-height: 0.8;
-	vertical-align: top;
-	font-size: 20px;
-	position: absolute;
-	left: -10px;
-	top: -10px;
-	width: 20px;
-	height: 20px;
-	border-radius: 100px;
-	background: #eee;
-	text-align: center;
-	color: #666;
+.math .close { cursor: pointer; border: 1px solid #aaa; line-height: 0.8; vertical-align: top; font-size: 20px; position: absolute; left: -10px; top: -10px; width: 20px; height: 20px; border-radius: 100px; background: #eee; text-align: center;
+  color: #666;
 }
 .boxes { display: flex; }
-.equationEditor {
-	width: 50%;
-	padding:10px;
-}
-.mathToolbar {
-	margin-bottom: 5px;
-	display: flex;
-	font-size: 10px;
-}
+.equationEditor { width: 50%; padding: 10px; }
+.mathToolbar { margin-bottom: 5px; display: flex; font-size: 10px; }
 button { background: none; margin-right: 5px; border: none; }
-.latexEditor {
-	width: 50%;
-	height: 50px;
-}
-.result {
-	display: block;
-	cursor: pointer;
-}
-.math { margin: 10px; position: relative;box-shadow: 1px 1px 10px 1px rgba(0, 0, 0, .2); }
-
-.newEquation {text-transform: uppercase;}
+.latexEditor { width: 50%; height: 50px; }
+.result { display: block; cursor: pointer; }
+.math { margin: 10px; position: relative; box-shadow: 1px 1px 10px 1px rgba(0, 0, 0, .2); }
+.newEquation:before { content: '∑'; display: inline-block; margin-right: 10px; }
+.newEquation { text-transform: uppercase; box-shadow: 0 1px 2px 1px rgba(0, 0, 0, .2); border-radius: 2px; padding: 5px 10px; font-weight: bold; color: #666; }

@@ -95,7 +95,7 @@ function initSpecialCharacterSelector() {
         }
     })
     $('.toggle').mousedown(e => {
-        $(e.target.parentNode).find('.list').toggle()
+        $(e.target.parentNode).toggleClass('expanded')
         e.preventDefault()
         return false
     })
