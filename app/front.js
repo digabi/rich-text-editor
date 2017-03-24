@@ -9,7 +9,6 @@ const $math = $('.math')
 initMathToolbar()
 initSpecialCharacterSelector()
 
-
 $('.newEquation').mousedown(e => {
     e.preventDefault()
     if(!answerFocus)
@@ -54,15 +53,19 @@ $('.math .close').mousedown(e => {
     $('.outerPlaceholder').html($math)
     $mathToolbar.hide()
 })
+let latexEditorFocus = false
+
 const mathField = MQ.MathField($equationEditor.get(0), {
     spaceBehavesLikeTab: true,
     handlers:            {
-        edit: () => $latexEditor.val(mathField.latex())
+        edit: () => {
+            if(!latexEditorFocus) $latexEditor.val(mathField.latex())
+        }
     }
 });
-$latexEditor.keyup(() => {
-    setTimeout(() => mathField.latex($latexEditor.val()), 0)
-})
+$latexEditor
+    .keyup(() => setTimeout(() => mathField.latex($latexEditor.val()), 0))
+    .on('focus blur', e => latexEditorFocus = e.type === 'focus')
 
 $answer.get(0).focus()
 
