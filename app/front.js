@@ -37,8 +37,8 @@ let onShowEditor = function($img) {
     $img.hide()
         .after($math)
     const latex = $img.prop('alt')
-    mathField.reflow()
-    mathField.latex(latex)
+    $latexEditor.val(latex)
+    onLatexUpdate()
     editorVisible = true
     setTimeout(() => mathField.focus(), 0)
 }
