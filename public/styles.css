@@ -8,32 +8,18 @@ body { color: #333; margin: 5em auto; font: 14px/1.42 "Helvetica Neue", Helvetic
 .button { padding: 5px; display: inline-block; cursor: pointer; width: 20px; text-align: center; }
 .button:hover,
 button:hover { background: #eee; }
-.math .close {
-  letter-spacing: 1px;
-  cursor: pointer;
-  border: 1px solid gray;
-  line-height: 1;
-  vertical-align: top;
-  font-size: 15px;
-  position: absolute;
-  left: 0;
-  top: 97%;
-  width: 60px;
-  height: 20px;
-  text-align: center;
-  color: #68b4df;
-  z-index: 2;
+.math .close { letter-spacing: 1px; cursor: pointer; border: 1px solid gray; line-height: 1; vertical-align: top; font-size: 13px; position: absolute; left: 0; top: 97%; width: 60px; height: 17px; text-align: center; color: #68b4df; z-index: 2;
   background: #fff;
   border-top: none;
-  box-shadow: 1px 4px 7px 0px rgba(0, 0, 0, .2);
-  display: none;
+  box-shadow: 1px 4px 7px 0 rgba(0, 0, 0, .2);
 }
+.math .close:hover { color: #406F88; }
 .boxes { display: flex; }
 .equationEditor { width: 50%; padding: 10px; }
 .mathToolbar { margin-bottom: 5px; display: flex; font-size: 10px; }
 button { background: none; margin-right: 5px; border: none; }
-.latexEditor {width: 50%;/* height: 50px; */}
-.result { cursor: pointer;}
+.latexEditor { width: 50%; }
+.result { cursor: pointer; }
 .math { margin: 10px; position: relative; box-shadow: 1px 1px 10px 1px rgba(0, 0, 0, .2); }
 .newEquation:before { content: 'Σ'; display: inline-block; margin-right: 10px; }
 .newEquation { text-transform: uppercase; box-shadow: 0 1px 2px 1px rgba(0, 0, 0, .2); border-radius: 2px; padding: 5px 10px; font-weight: bold; color: #666; }
