@@ -1,127 +1,128 @@
 const latexCommands = require('./latexCommands')
 const specialCharacters = require('./specialCharacters')
-const equationEditor = document.querySelector('.equationEditor')
-const latexEditor = document.querySelector('.latexEditor')
 const MQ = MathQuill.getInterface(2)
+const $equationEditor = $('.equationEditor')
+const $latexEditor = $('.latexEditor')
+const $answer = $('.answer')
+const $mathToolbar = $('.mathToolbar')
+
+initMathToolbar()
+initSpecialCharacterSelector()
+
 $('.newEquation').mousedown(e => {
     e.preventDefault()
     if(!hasAnswerFocus())
         return
-    pasteHtmlAtCaret('<img class="result"/><div class="equationPlaceholder">lol</div> ')
+    pasteHtmlAtCaret('<img class="result"/><div class="equationPlaceholder"></div> ')
     newEquation($('.equationPlaceholder'))
 })
 
-function newEquation(placeholder) {
-    const img = placeholder.prev()
-    img.hide()
-    $('.mathToolbar').show()
-    placeholder.replaceWith($('.math'))
+function newEquation($placeholder) {
+    const $img = $placeholder.prev()
+    $img.hide()
+    $mathToolbar.show()
+    $placeholder.replaceWith($('.math'))
     mathField.latex('')
     setTimeout(() => mathField.focus(), 0)
 }
-initToolbar()
-$('.mathToolbar').hide()
-$('.answer').on('mousedown', '.result', e => {
-    const img = $(e.target)
-    img.hide()
-	$('.mathToolbar').show()
-    img.after($('.math'))
-    const latex = img.prop('alt')
-	mathField.reflow()
+$answer.on('mousedown', '.result', e => {
+    const $img = $(e.target)
+    $img.hide()
+    $mathToolbar.show()
+    $img.after($('.math'))
+    const latex = $img.prop('alt')
+    mathField.reflow()
     mathField.latex(latex)
-	setTimeout(() => mathField.focus(), 0)
+    setTimeout(() => mathField.focus(), 0)
 })
 
 $('.math .close').mousedown(e => {
-	e.preventDefault()
-    let math = $(e.target).parents('.math')
-    const img = math.prev()
-    if(latexEditor.value.trim() === '') {
-	    img.remove()
+    e.preventDefault()
+    let $math = $(e.target).parents('.math')
+    const $img = $math.prev()
+    if($latexEditor.val().trim() === '') {
+        $img.remove()
     } else {
-        img.show()
-        img.prop('src', '/math.svg?latex=' +  encodeURIComponent(latexEditor.value))
-        img.prop('alt', latexEditor.value)
+        $img.show()
+        $img.prop('src', '/math.svg?latex=' + encodeURIComponent($latexEditor.val()))
+        $img.prop('alt', $latexEditor.val())
     }
-    $('.outerPlaceholder').html(math)
-    $('.mathToolbar').hide()
+    $('.outerPlaceholder').html($math)
+    $mathToolbar.hide()
 })
-const mathField = MQ.MathField(equationEditor, {
-	spaceBehavesLikeTab: true,
-	handlers:            {
-		edit: () => latexEditor.value = mathField.latex()
-	}
+const mathField = MQ.MathField($equationEditor.get(0), {
+    spaceBehavesLikeTab: true,
+    handlers:            {
+        edit: () => $latexEditor.val(mathField.latex())
+    }
 });
-latexEditor.addEventListener('keyup', () => {
-	setTimeout(() => mathField.latex(latexEditor.value), 0)
+$latexEditor.keyup(() => {
+    setTimeout(() => mathField.latex($latexEditor.val()), 0)
 })
 
-$('.answer').get(0).focus()
+$answer.get(0).focus()
 
-function initToolbar() {
-    // $('.tags .list').append(require('./formattingStyles').map(o => $(`<button id="${o.action}">${o.label}</button>`)))
-	$('.mathToolbar').append(latexCommands.map(o => $(`<button id="${o.action}" title="${o.label}">${o.label}</button>`)))
-	const buttons = $('.mathToolbar button')
-	buttons.mousedown(e => {
-		e.preventDefault()
-		const symbol = e.currentTarget.id
-		mathField.typedText(symbol)
-		if(symbol.startsWith('\\')) mathField.keystroke('Tab')
-		setTimeout(() => mathField.focus(), 0)
-	})
-	buttons.map((i, elem) => MQ.StaticMath(elem))
+function initMathToolbar() {
+    $mathToolbar.append(latexCommands.map(o => {
+        const $button = $(`<button id="${o.action}" title="${o.label}">${o.label}</button>`)
+        MQ.StaticMath($button.get(0))
+        return $button
+    }))
+    $mathToolbar.on('mousedown', 'button', e => {
+        e.preventDefault()
+        const symbol = e.currentTarget.id
+        mathField.typedText(symbol)
+        if(symbol.startsWith('\\')) mathField.keystroke('Tab')
+        setTimeout(() => mathField.focus(), 0)
+    })
+    $mathToolbar.hide()
 }
-const $characters = $('.toolbar .characters')
 
-$characters.find('.list').append(specialCharacters.map(char => $(`<span class="button">${char}</span>`)))
-$('.toolbar .button').mousedown(e => {
-	const innerText = e.currentTarget.innerText
-	if($('.equationEditor').hasClass('mq-focused')) {
-		mathField.typedText(innerText)
-	} else {
-		pasteHtmlAtCaret(innerText)
-	}
-	e.preventDefault()
-	return false
-})
-
-$('.tags button').mousedown(e => {
-	pasteHtmlAtCaret(e.currentTarget.id)
-	e.preventDefault()
-	return false
-})
-$('.toggle').mousedown(e => {
-	$(e.target.parentNode).find('.list').toggle()
-	e.preventDefault()
-	return false
-})
+function initSpecialCharacterSelector() {
+    const $characters = $('.toolbar .characters')
+    $characters.find('.list').append(specialCharacters.map(char => $(`<span class="button">${char}</span>`)))
+    $characters.on('mousedown', '.button', e => {
+        e.preventDefault()
+        const innerText = e.currentTarget.innerText
+        if($equationEditor.hasClass('mq-focused')) {
+            mathField.typedText(innerText)
+        } else {
+            pasteHtmlAtCaret(innerText)
+        }
+    })
+    $('.toggle').mousedown(e => {
+        $(e.target.parentNode).find('.list').toggle()
+        e.preventDefault()
+        return false
+    })
+}
 
 function hasAnswerFocus(sel) {
     return (sel || window.getSelection()).anchorNode.parentElement.classList.contains('answer')
 }
 
 function pasteHtmlAtCaret(html) {
-	let sel;
-	let range;
-	if(window.getSelection) {
-		sel = window.getSelection()
-		if(sel.getRangeAt && hasAnswerFocus(sel)) {
-			range = sel.getRangeAt(0)
-			range.deleteContents()
-			const el = document.createElement("div")
-			el.innerHTML = html
-			let frag = document.createDocumentFragment(), node, lastNode
-			while((node = el.firstChild)) {
-				lastNode = frag.appendChild(node)
-			}
-			range.insertNode(frag)
-			if(lastNode) {
-				range = range.cloneRange()
-				range.setStartAfter(lastNode)
-				range.collapse(true)
-				sel.removeAllRanges()
-				sel.addRange(range)
-			}
-		}
-	}
+    let sel;
+    let range;
+    if(window.getSelection) {
+        sel = window.getSelection()
+        if(sel.getRangeAt && hasAnswerFocus(sel)) {
+            range = sel.getRangeAt(0)
+            range.deleteContents()
+            const el = document.createElement("div")
+            el.innerHTML = html
+            let frag = document.createDocumentFragment(), node, lastNode
+            while((node = el.firstChild)) {
+                lastNode = frag.appendChild(node)
+            }
+            range.insertNode(frag)
+            if(lastNode) {
+                range = range.cloneRange()
+                range.setStartAfter(lastNode)
+                range.collapse(true)
+                sel.removeAllRanges()
+                sel.addRange(range)
+            }
+        }
+    }
 }
