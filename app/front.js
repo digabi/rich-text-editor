@@ -1,7 +1,8 @@
+const latexCommands = require('./latexCommands')
+const specialCharacters = require('./specialCharacters')
 const equationEditor = document.querySelector('.equationEditor')
 const latexEditor = document.querySelector('.latexEditor')
 const MQ = MathQuill.getInterface(2)
-
 $('.newEquation').mousedown(e => {
     e.preventDefault()
     if(!hasAnswerFocus())
@@ -58,24 +59,8 @@ latexEditor.addEventListener('keyup', () => {
 $('.answer').get(0).focus()
 
 function initToolbar() {
-	const actions = [
-		{action: '\\sqrt', label: '\\sqrt{\\square}'},
-		{action: '^', label: '\\square^{\\square}'},
-		{action: '\\frac', label: '\\frac{\\square}{\\square}'},
-		{action: '\\int', label: '\\int_{\\square}^{\\square}'},
-		{action: '\\neq', label: '\\neq'},
-		{action: '\\lim_', label: '\\lim_{\\square}'},
-		{action: '\\to', label: '\\to'},
-		{action: '\\overrightarrow', label: '\\overrightarrow{\\square}'}
-	]
-
-	const tags = [
-		{action: '<sub>x</sub>', label: 'X<sub>alaindeksi</sub>'},
-		{action: '<sup>x</sup>', label: 'X<sup>yläindeksi</sup>'},
-		{action: '<i>italic</i>', label: '<i>Kursiivi</i>'}
-	]
-	$('.tags .list').append(tags.map(o => $(`<button id="${o.action}">${o.label}</button>`)))
-	$('.mathToolbar').append(actions.map(o => $(`<button id="${o.action}" title="${o.label}">${o.label}</button>`)))
+    // $('.tags .list').append(require('./formattingStyles').map(o => $(`<button id="${o.action}">${o.label}</button>`)))
+	$('.mathToolbar').append(latexCommands.map(o => $(`<button id="${o.action}" title="${o.label}">${o.label}</button>`)))
 	const buttons = $('.mathToolbar button')
 	buttons.mousedown(e => {
 		e.preventDefault()
@@ -86,15 +71,9 @@ function initToolbar() {
 	})
 	buttons.map((i, elem) => MQ.StaticMath(elem))
 }
-const chars = [
-	'°', '≡',
-	'⌐', '×', '«', '»', '…', '∫', '¬', '√', 'ƒ', '≈', '‹', '›', '∙', '‰', '¹', '²', '³', '½', '¼', '¾', '←', '↑', '→', '↓', '↔', '↕', '↨', '≠', 'Ø', '∞', '±', '≤', '≥', 'µ', '∂', '∑', '∏', 'Ω', 'Δ', 'ı', 'Ð',
-	'ð', 'Þ', 'þ', 'Γ', 'Θ', 'Φ', 'α', 'δ', 'ε', 'σ', 'τ', 'φ', '∩', 'Ω', 'ω', 'Д', 'Ф'
-]
-
 const $characters = $('.toolbar .characters')
 
-$characters.find('.list').append(chars.map(char => $(`<span class="button">${char}</span>`)))
+$characters.find('.list').append(specialCharacters.map(char => $(`<span class="button">${char}</span>`)))
 $('.toolbar .button').mousedown(e => {
 	const innerText = e.currentTarget.innerText
 	if($('.equationEditor').hasClass('mq-focused')) {
