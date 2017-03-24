@@ -75,7 +75,7 @@ function initToolbar() {
 		{action: '<i>italic</i>', label: '<i>Kursiivi</i>'}
 	]
 	$('.tags .list').append(tags.map(o => $(`<button id="${o.action}">${o.label}</button>`)))
-	$('.mathToolbar').append(actions.map(o => $(`<button id="${o.action}">${o.label}</button>`)))
+	$('.mathToolbar').append(actions.map(o => $(`<button id="${o.action}" title="${o.label}">${o.label}</button>`)))
 	const buttons = $('.mathToolbar button')
 	buttons.mousedown(e => {
 		e.preventDefault()
