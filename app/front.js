@@ -70,9 +70,12 @@ const mathField = MQ.MathField($equationEditor.get(0), {
     handlers:            {
         edit: () => !latexEditorFocus && $latexEditor.val(mathField.latex())
     }
-});
+})
+
+function onLatexUpdate() { setTimeout(() => mathField.latex($latexEditor.val()), 0) }
+
 $latexEditor
-    .keyup(() => setTimeout(() => mathField.latex($latexEditor.val()), 0))
+    .keyup(onLatexUpdate)
     .on('focus blur', e => latexEditorFocus = e.type === 'focus')
 
 $answer.get(0).focus()
@@ -86,9 +89,13 @@ function initMathToolbar() {
     $mathToolbar.on('mousedown', 'button', e => {
         e.preventDefault()
         const symbol = e.currentTarget.id
-        mathField.typedText(symbol)
-        if(symbol.startsWith('\\')) mathField.keystroke('Tab')
-        setTimeout(() => mathField.focus(), 0)
+        if(latexEditorFocus) {
+            insertAtCursor(symbol)
+        } else {
+            mathField.typedText(symbol)
+            if(symbol.startsWith('\\')) mathField.keystroke('Tab')
+            setTimeout(() => mathField.focus(), 0)
+        }
     })
     $mathToolbar.hide()
 }
@@ -136,4 +143,19 @@ function pasteHtmlAtCaret(html) {
             }
         }
     }
+}
+
+function insertAtCursor(value) {
+    const myField = $latexEditor.get(0)
+    if(myField.selectionStart || myField.selectionStart == '0') {
+        const startPos = myField.selectionStart
+        const endPos = myField.selectionEnd
+        myField.value = myField.value.substring(0, startPos)
+            + value
+            + myField.value.substring(endPos, myField.value.length)
+        myField.selectionStart = startPos + value.length; myField.selectionEnd = startPos + value.length
+    } else {
+        myField.value += value
+    }
+    onLatexUpdate()
 }
