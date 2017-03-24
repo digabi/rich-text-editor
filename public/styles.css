@@ -42,3 +42,4 @@ button { background: none; margin-right: 5px; border: none; }
 }
 .math { margin: 10px; position: relative;box-shadow: 1px 1px 10px 1px rgba(0, 0, 0, .2); }
 
+.newEquation {text-transform: uppercase;}
