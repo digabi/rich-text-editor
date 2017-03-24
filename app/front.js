@@ -35,9 +35,13 @@ $('.math .close').mousedown(e => {
 	e.preventDefault()
     let math = $(e.target).parents('.math')
     const img = math.prev()
-    img.show()
-    img.prop('src', '/math.svg?latex=' +  encodeURIComponent(latexEditor.value))
-    img.prop('alt', latexEditor.value)
+    if(latexEditor.value.trim() === '') {
+	    img.remove()
+    } else {
+        img.show()
+        img.prop('src', '/math.svg?latex=' +  encodeURIComponent(latexEditor.value))
+        img.prop('alt', latexEditor.value)
+    }
     $('.outerPlaceholder').html(math)
     $('.mathToolbar').hide()
 })
