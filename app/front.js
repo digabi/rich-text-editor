@@ -16,11 +16,12 @@ $('.newEquation').mousedown(e => {
     e.preventDefault()
     if(!answerFocus)
         return
-    pasteHtmlAtCaret('<img class="result"/><div class="equationPlaceholder"></div>')
-    newEquation($('.equationPlaceholder'))
+    newEquation()
 })
 
-function newEquation($placeholder) {
+function newEquation() {
+    pasteHtmlAtCaret('<img class="result"/><div class="equationPlaceholder"></div>')
+    const $placeholder = $('.equationPlaceholder')
     $placeholder.prev().hide()
     $mathToolbar.show()
     $placeholder.replaceWith($math)
@@ -32,6 +33,11 @@ $answer.on('focus blur', e => {
     if(editorVisible && e.type === 'focus') onClose()
     answerFocus = e.type === 'focus'
 })
+    .keypress(e => {
+        if(e.ctrlKey && !e.altKey && !e.shiftKey && e.charCode === 12) {
+            newEquation()
+        }
+    })
 let onShowEditor = function($img) {
     $mathToolbar.show()
     $img.hide()
@@ -153,7 +159,8 @@ function insertAtCursor(value) {
         myField.value = myField.value.substring(0, startPos)
             + value
             + myField.value.substring(endPos, myField.value.length)
-        myField.selectionStart = startPos + value.length; myField.selectionEnd = startPos + value.length
+        myField.selectionStart = startPos + value.length
+        myField.selectionEnd = startPos + value.length
     } else {
         myField.value += value
     }
