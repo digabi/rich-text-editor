@@ -92,7 +92,7 @@ $answer.get(0).focus()
 
 function initMathToolbar() {
     $mathToolbar.append(latexCommands.map(o => {
-        const $button = $(`<button id="${o.action}" title="${o.action}">${o.label.replace(/X/g, '\\square')}</button>`)
+        const $button = $(`<button id="${o.action}" title="${o.action}">${o.label ? o.label.replace(/X/g, '\\square'): o.action}</button>`)
         MQ.StaticMath($button.get(0))
         return $button
     }))
