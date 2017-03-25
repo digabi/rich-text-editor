@@ -82,7 +82,7 @@ $equationEditor.find('textarea').keypress(e => {
         onClose()
     }
 })
-function onLatexUpdate() { setTimeout(() => mathField.latex($latexEditor.val()), 0) }
+function onLatexUpdate() { setTimeout(() => mathField.latex($latexEditor.val()), 1) }
 
 $latexEditor
     .keyup(onLatexUpdate)
