@@ -29,9 +29,7 @@ $('.load').click(() => {
     $.get('/load', data => $answer.html(data))
 })
 
-$('.sanitize').click(() => {
-    $answer.html(sanitizeHtml($answer.html(), sanitizeOpts))
-})
+$answer.on('paste', e => setTimeout(() => $answer.html(sanitizeHtml($answer.html(), sanitizeOpts)),1))
 function newEquation() {
     pasteHtmlAtCaret('<img class="result"/><div class="equationPlaceholder"></div>')
     const $placeholder = $('.equationPlaceholder')
