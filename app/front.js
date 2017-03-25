@@ -45,7 +45,7 @@ $answer.on('focus blur', e => {
     answerFocus = e.type === 'focus'
 })
     .keypress(e => {
-        if(e.ctrlKey && !e.altKey && !e.shiftKey && e.charCode === 12) {
+        if(e.ctrlKey && !e.altKey && !e.shiftKey && e.key === 'l') {
             newEquation()
         }
     })
