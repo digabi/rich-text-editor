@@ -1,20 +1,31 @@
 #!/usr/bin/env node
 const express = require('express')
+const bodyParser = require('body-parser')
 const port = process.env.PORT || 5000
 const browserify = require('browserify-middleware')
 const mjAPI = require("mathjax-node")
 const app = express()
+let savedData = null
 app.use('/front.min.js', browserify(__dirname + '/front.js'))
 app.use(express.static(__dirname + '/../public'))
 app.use('/bootstrap', express.static(__dirname + '/../node_modules/bootstrap'))
 app.use('/jquery', express.static(__dirname + '/../node_modules/jquery'))
 app.use('/mathquill', express.static(__dirname + '/../node_modules/mathquill'))
 app.use('/mathjax', express.static(__dirname + '/../node_modules/mathjax'))
-
+app.use(bodyParser.urlencoded({ extended: false }))
+app.post('/save', (req, res) => {
+    let answerText = req.body.text
+    console.log(answerText)
+    savedData = answerText
+    res.sendStatus(200)
+})
+app.get('/load', (req, res) => {
+    res.send(savedData)
+})
 mjAPI.config({ MathJax: {} })
 mjAPI.start()
 
-app.use('/math.svg', (req, res) => {
+app.get('/math.svg', (req, res) => {
 	mjAPI.typeset({
 		math:   req.query.latex,
 		format: "TeX", // "inline-TeX", "MathML"

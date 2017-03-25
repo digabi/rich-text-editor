@@ -19,6 +19,13 @@ $('.newEquation').mousedown(e => {
     newEquation()
 })
 
+$('.save').click(() => {
+    $.post('/save', {text: $answer.html()})
+})
+
+$('.load').click(() => {
+    $.get('/load', data => $answer.html(data))
+})
 function newEquation() {
     pasteHtmlAtCaret('<img class="result"/><div class="equationPlaceholder"></div>')
     const $placeholder = $('.equationPlaceholder')
@@ -92,7 +99,7 @@ $answer.get(0).focus()
 
 function initMathToolbar() {
     $mathToolbar.append(latexCommands.map(o => {
-        const $button = $(`<button id="${o.action}" title="${o.action}">${o.label ? o.label.replace(/X/g, '\\square'): o.action}</button>`)
+        const $button = $(`<button id="${o.action}" title="${o.action}">${o.label ? o.label.replace(/X/g, '\\square') : o.action}</button>`)
         MQ.StaticMath($button.get(0))
         return $button
     }))
