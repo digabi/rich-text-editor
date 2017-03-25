@@ -1,5 +1,7 @@
 const latexCommands = require('./latexCommands')
 const specialCharacters = require('./specialCharacters')
+const sanitizeHtml = require('sanitize-html')
+const sanitizeOpts = require('./sanitizeOpts')
 const MQ = MathQuill.getInterface(2)
 const $equationEditor = $('.equationEditor')
 const $latexEditor = $('.latexEditor')
@@ -25,6 +27,10 @@ $('.save').click(() => {
 
 $('.load').click(() => {
     $.get('/load', data => $answer.html(data))
+})
+
+$('.sanitize').click(() => {
+    $answer.html(sanitizeHtml($answer.html(), sanitizeOpts))
 })
 function newEquation() {
     pasteHtmlAtCaret('<img class="result"/><div class="equationPlaceholder"></div>')

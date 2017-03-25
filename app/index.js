@@ -7,17 +7,7 @@ const sanitizeHtml = require('sanitize-html')
 const port = process.env.PORT || 5000
 const app = express()
 let savedData = {}
-const sanitizeOpts = {
-    allowedTags:       [
-        'div',
-        'img',
-        'br'
-    ],
-    allowedAttributes: {
-        img: ['src', 'class', 'alt']
-    },
-    allowedSchemes:    ['http', 'https', 'data']
-}
+const sanitizeOpts = require('./sanitizeOpts')
 app.use('/front.min.js', browserify(__dirname + '/front.js'))
 app.use(express.static(__dirname + '/../public'))
 app.use('/bootstrap', express.static(__dirname + '/../node_modules/bootstrap'))
