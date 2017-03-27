@@ -37,14 +37,11 @@ $answer.on('paste', e => {
     }
 })
 function newEquation() {
-    window.document.execCommand('insertHTML', false, '<img class="result new"/>');
-    const $placeholder = $('<div class="equationPlaceholder"></div>')
-    $('.result.new').after($placeholder)
-    $placeholder.prev().hide()
-    $mathToolbar.show()
-    $placeholder.replaceWith($math)
+    window.document.execCommand('insertHTML', false, '<img class="result new" style="display: none"/>');
+    $('.result.new').removeClass('new').after($math)
     mathField.latex('')
     editorVisible = true
+    $mathToolbar.show()
     setTimeout(() => mathField.focus(), 0)
 }
 $answer.on('focus blur', e => {
