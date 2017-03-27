@@ -95,7 +95,7 @@ const mathField = MQ.MathField($equationEditor.get(0), {
         edit: () => !latexEditorFocus && $latexEditor.val(mathField.latex())
     }
 })
-$equationEditor.find('textarea').keypress(e => {
+$math.find('textarea').keypress(e => {
     if(e.ctrlKey && !e.altKey && !e.shiftKey && e.keyCode === 13) {
         onClose()
     }
