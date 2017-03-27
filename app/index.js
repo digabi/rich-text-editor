@@ -17,6 +17,7 @@ app.use(session({
 }))
 
 app.use('/front.min.js', browserify(__dirname + '/front.js'))
+app.use('/tarkistus.min.js', browserify(__dirname + '/tarkistus.js'))
 app.use(express.static(__dirname + '/../public'))
 app.use('/bootstrap', express.static(__dirname + '/../node_modules/bootstrap'))
 app.use('/jquery', express.static(__dirname + '/../node_modules/jquery'))
