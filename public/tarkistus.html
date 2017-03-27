@@ -4,9 +4,7 @@
     <meta charset='utf-8'>
     <title>Matikkaeditori</title>
 
-    <link rel="stylesheet" type="text/css" href="mathquill/build/mathquill.css">
     <script src="jquery/dist/jquery.js"></script>
-    <script src="mathquill/build/mathquill.js"></script>
     <link rel="stylesheet" type="text/css" href="styles.css">
     <link rel="icon" href="math-editor-favicon.ico" type="image/x-icon" />
     <link rel="shortcut icon" href="math-editor-favicon.ico" type="image/x-icon" />
@@ -17,35 +15,10 @@
 
 </script>
 <h2>Vastaus</h2>
-<div class="toolbar">
-    <button class="newEquation actionButton" title="Ctrl-L">Lisää kaava</button>
-    <!--<div class="tags">-->
-        <!--<span class="toggle">Muotoilu</span>-->
-        <!--<div class="list" style="display: none"></div>-->
-    <!--</div>-->
-    <div class="characters">
-        <span class="toggle">Erikoismerkit</span>
-        <div class="list"></div>
-    </div>
-        <div class="mathToolbar list"></div>
-</div>
-
-<div class="answer" contenteditable="true"></div>
-<div class="outerPlaceholder" style="display: none">
-    <div class="math">
-        <div class="close" title="Ctrl-Enter">sulje</div>
-        <div class="boxes">
-            <div class="equationEditor"></div>
-            <textarea class="latexEditor" placeholder="LaTex"></textarea>
-        </div>
-    </div>
-</div>
-<button class="save actionButton">Tallenna</button>
-<div style="margin:10px 0;">
-    <a href="/tarkistus">Vastaus tarkastajan näkymässä</a>
-</div>
-
-<script src="/front.min.js"></script>
+<div class="answer"></div>
+<script>
+  $.get('/load', data => data && $('.answer').html(data))
+</script>
 <script>
   (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
   (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),

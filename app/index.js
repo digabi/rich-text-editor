@@ -20,6 +20,7 @@ app.use('/bootstrap', express.static(__dirname + '/../node_modules/bootstrap'))
 app.use('/jquery', express.static(__dirname + '/../node_modules/jquery'))
 app.use('/mathquill', express.static(__dirname + '/../node_modules/mathquill'))
 app.use('/mathjax', express.static(__dirname + '/../node_modules/mathjax'))
+app.use('/tarkistus', express.static(__dirname + '/../public/tarkistus.html'))
 app.use(bodyParser.urlencoded({extended: false}))
 app.post('/save', (req, res) => {
     savedData[req.session.id] = sanitizeHtml(req.body.text,  sanitizeOpts)
