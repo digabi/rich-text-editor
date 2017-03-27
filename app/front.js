@@ -33,12 +33,13 @@ $answer.on('paste', e => {
     const clipboardDataAsHtml = e.originalEvent.clipboardData.getData('text/html')
     if(clipboardDataAsHtml) {
         e.preventDefault()
-        window.document.execCommand('insertHtml', false, sanitizeHtml(clipboardDataAsHtml));
+        window.document.execCommand('insertHTML', false, sanitizeHtml(clipboardDataAsHtml));
     }
 })
 function newEquation() {
-    pasteHtmlAtCaret('<img class="result"/><div class="equationPlaceholder"></div>')
-    const $placeholder = $('.equationPlaceholder')
+    window.document.execCommand('insertHTML', false, '<img class="result new"/>');
+    const $placeholder = $('<div class="equationPlaceholder"></div>')
+    $('.result.new').after($placeholder)
     $placeholder.prev().hide()
     $mathToolbar.show()
     $placeholder.replaceWith($math)
@@ -117,7 +118,7 @@ function initMathToolbar() {
         e.preventDefault()
         const symbol = e.currentTarget.id
         if(latexEditorFocus) {
-            insertAtCursor(symbol)
+            insertToTextAreaAtCursor(symbol)
         } else {
             mathField.typedText(symbol)
             if(symbol.startsWith('\\')) mathField.keystroke('Tab')
@@ -136,7 +137,7 @@ function initSpecialCharacterSelector() {
             if($equationEditor.hasClass('mq-focused')) {
                 mathField.typedText(innerText)
             } else {
-                pasteHtmlAtCaret(innerText)
+                window.document.execCommand('insertText', false, innerText);
             }
         })
     $('.toggle').mousedown(e => {
@@ -146,44 +147,12 @@ function initSpecialCharacterSelector() {
     })
 }
 
-function pasteHtmlAtCaret(html) {
-    let sel
-    let range
-    if(window.getSelection) {
-        sel = window.getSelection()
-        if(sel.getRangeAt && answerFocus) {
-            range = sel.getRangeAt(0)
-            range.deleteContents()
-            const el = document.createElement("div")
-            el.innerHTML = html
-            let frag = document.createDocumentFragment(), node, lastNode
-            while((node = el.firstChild)) {
-                lastNode = frag.appendChild(node)
-            }
-            range.insertNode(frag)
-            if(lastNode) {
-                range = range.cloneRange()
-                range.setStartAfter(lastNode)
-                range.collapse(true)
-                sel.removeAllRanges()
-                sel.addRange(range)
-            }
-        }
-    }
-}
-
-function insertAtCursor(value) {
-    const myField = $latexEditor.get(0)
-    if(myField.selectionStart || myField.selectionStart == '0') {
-        const startPos = myField.selectionStart
-        const endPos = myField.selectionEnd
-        myField.value = myField.value.substring(0, startPos)
-            + value
-            + myField.value.substring(endPos, myField.value.length)
-        myField.selectionStart = startPos + value.length
-        myField.selectionEnd = startPos + value.length
-    } else {
-        myField.value += value
-    }
+function insertToTextAreaAtCursor(value) {
+    const field = $latexEditor.get(0)
+    const startPos = field.selectionStart
+    const endPos = field.selectionEnd
+    let oldValue = field.value
+    field.value = oldValue.substring(0, startPos) + value + oldValue.substring(endPos, oldValue.length)
+    field.selectionStart = field.selectionEnd = startPos + value.length
     onLatexUpdate()
 }
