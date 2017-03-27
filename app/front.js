@@ -52,7 +52,7 @@ $answer.on('focus blur', e => {
             newEquation()
         }
     })
-let onShowEditor = function($img) {
+function onShowEditor($img) {
     $mathToolbar.show()
     $img.hide()
         .after($math)
@@ -67,7 +67,7 @@ $answer.on('mousedown', '.result', e => {
     onShowEditor($(e.target))
 })
 
-let onClose = function() {
+function onClose() {
     const $img = $math.prev()
     if($latexEditor.val().trim() === '') {
         $img.remove()
