@@ -2,6 +2,7 @@ const latexCommands = require('./latexCommands')
 const specialCharacters = require('./specialCharacters')
 const sanitizeHtml = require('sanitize-html')
 const sanitizeOpts = require('./sanitizeOpts')
+const util = require('./util')
 const MQ = MathQuill.getInterface(2)
 const $equationEditor = $('.equationEditor')
 const $latexEditor = $('.latexEditor')
@@ -141,19 +142,11 @@ function initSpecialCharacterSelector() {
 
 function insertMath(symbol) {
     if(latexEditorFocus) {
-        insertToTextAreaAtCursor($latexEditor.get(0), symbol)
+        util.insertToTextAreaAtCursor($latexEditor.get(0), symbol)
+        onLatexUpdate()
     } else if($equationEditor.hasClass('mq-focused')) {
         mathField.typedText(symbol)
         if(symbol.startsWith('\\')) mathField.keystroke('Tab')
         setTimeout(() => mathField.focus(), 0)
     }
-}
-
-function insertToTextAreaAtCursor(field, value) {
-    const startPos = field.selectionStart
-    const endPos = field.selectionEnd
-    let oldValue = field.value
-    field.value = oldValue.substring(0, startPos) + value + oldValue.substring(endPos, oldValue.length)
-    field.selectionStart = field.selectionEnd = startPos + value.length
-    onLatexUpdate()
 }
