@@ -4,10 +4,16 @@ const bodyParser = require('body-parser')
 const browserify = require('browserify-middleware')
 const mjAPI = require("mathjax-node")
 const sanitizeHtml = require('sanitize-html')
+const session = require('express-session')
 const port = process.env.PORT || 5000
 const app = express()
 let savedData = {}
 const sanitizeOpts = require('./sanitizeOpts')
+
+app.use(session({
+    secret: 'alsdjfwernfeklbjweiugerpfiorq3jlkhewfbads',
+}))
+
 app.use('/front.min.js', browserify(__dirname + '/front.js'))
 app.use(express.static(__dirname + '/../public'))
 app.use('/bootstrap', express.static(__dirname + '/../node_modules/bootstrap'))
@@ -16,15 +22,11 @@ app.use('/mathquill', express.static(__dirname + '/../node_modules/mathquill'))
 app.use('/mathjax', express.static(__dirname + '/../node_modules/mathjax'))
 app.use(bodyParser.urlencoded({extended: false}))
 app.post('/save', (req, res) => {
-    const cookie = req.headers.cookie
-    const answerText = sanitizeHtml(req.body.text,  sanitizeOpts)
-    console.log(answerText)
-    savedData[cookie] = answerText
+    savedData[req.session.id] = sanitizeHtml(req.body.text,  sanitizeOpts)
     res.sendStatus(200)
 })
 app.get('/load', (req, res) => {
-    const cookie = req.headers.cookie
-    res.send(savedData[cookie])
+    res.send(savedData[req.session.id])
 })
 mjAPI.config({MathJax: {}})
 mjAPI.start()
