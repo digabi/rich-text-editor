@@ -115,14 +115,7 @@ function initMathToolbar() {
     }))
     $mathToolbar.on('mousedown', 'button', e => {
         e.preventDefault()
-        const symbol = e.currentTarget.id
-        if(latexEditorFocus) {
-            insertToTextAreaAtCursor(symbol)
-        } else {
-            mathField.typedText(symbol)
-            if(symbol.startsWith('\\')) mathField.keystroke('Tab')
-            setTimeout(() => mathField.focus(), 0)
-        }
+        insertMath(e.currentTarget.id)
     })
     $mathToolbar.hide()
 }
@@ -133,12 +126,10 @@ function initSpecialCharacterSelector() {
         .on('mousedown', '.button', e => {
             e.preventDefault()
             const innerText = e.currentTarget.innerText
-            if($equationEditor.hasClass('mq-focused')) {
-                mathField.typedText(innerText)
-            } else if(latexEditorFocus) {
-                insertToTextAreaAtCursor(innerText)
+            if(answerFocus) {
+                window.document.execCommand('insertText', false, innerText)
             } else {
-                window.document.execCommand('insertText', false, innerText);
+                insertMath(innerText)
             }
         })
     $('.toggle').mousedown(e => {
@@ -148,8 +139,17 @@ function initSpecialCharacterSelector() {
     })
 }
 
-function insertToTextAreaAtCursor(value) {
-    const field = $latexEditor.get(0)
+function insertMath(symbol) {
+    if(latexEditorFocus) {
+        insertToTextAreaAtCursor($latexEditor.get(0), symbol)
+    } else if($equationEditor.hasClass('mq-focused')) {
+        mathField.typedText(symbol)
+        if(symbol.startsWith('\\')) mathField.keystroke('Tab')
+        setTimeout(() => mathField.focus(), 0)
+    }
+}
+
+function insertToTextAreaAtCursor(field, value) {
     const startPos = field.selectionStart
     const endPos = field.selectionEnd
     let oldValue = field.value
