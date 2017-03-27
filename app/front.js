@@ -80,6 +80,8 @@ let onClose = function() {
     $('.outerPlaceholder').html($math)
     $mathToolbar.hide()
     editorVisible = false
+    mathField.blur()
+    latexEditorFocus = false
     $answer.get(0).focus()
 }
 $('.math .close').mousedown(e => {
@@ -133,6 +135,8 @@ function initSpecialCharacterSelector() {
             const innerText = e.currentTarget.innerText
             if($equationEditor.hasClass('mq-focused')) {
                 mathField.typedText(innerText)
+            } else if(latexEditorFocus) {
+                insertToTextAreaAtCursor(innerText)
             } else {
                 window.document.execCommand('insertText', false, innerText);
             }
