@@ -26,9 +26,7 @@ $('.save').click(() => {
     $.post('/save', {text: $answer.html()})
 })
 
-$('.load').click(() => {
-    $.get('/load', data => $answer.html(data))
-})
+$.get('/load', data => data && $answer.html(data))
 
 $answer.on('paste', e => {
     const clipboardDataAsHtml = e.originalEvent.clipboardData.getData('text/html')
