@@ -29,7 +29,13 @@ $('.load').click(() => {
     $.get('/load', data => $answer.html(data))
 })
 
-$answer.on('paste', e => setTimeout(() => $answer.html(sanitizeHtml($answer.html(), sanitizeOpts)),1))
+$answer.on('paste', e => {
+    const clipboardDataAsHtml = e.originalEvent.clipboardData.getData('text/html')
+    if(clipboardDataAsHtml) {
+        e.preventDefault()
+        window.document.execCommand('insertHtml', false, sanitizeHtml(clipboardDataAsHtml));
+    }
+})
 function newEquation() {
     pasteHtmlAtCaret('<img class="result"/><div class="equationPlaceholder"></div>')
     const $placeholder = $('.equationPlaceholder')
