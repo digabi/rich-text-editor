@@ -11,7 +11,9 @@ let savedData = {}
 const sanitizeOpts = require('./sanitizeOpts')
 
 app.use(session({
-    secret: 'alsdjfwernfeklbjweiugerpfiorq3jlkhewfbads',
+    secret:            'alsdjfwernfeklbjweiugerpfiorq3jlkhewfbads',
+    saveUninitialized: true,
+    resave:            true
 }))
 
 app.use('/front.min.js', browserify(__dirname + '/front.js'))
@@ -23,7 +25,7 @@ app.use('/mathjax', express.static(__dirname + '/../node_modules/mathjax'))
 app.use('/tarkistus', express.static(__dirname + '/../public/tarkistus.html'))
 app.use(bodyParser.urlencoded({extended: false}))
 app.post('/save', (req, res) => {
-    savedData[req.session.id] = sanitizeHtml(req.body.text,  sanitizeOpts)
+    savedData[req.session.id] = sanitizeHtml(req.body.text, sanitizeOpts)
     res.sendStatus(200)
 })
 app.get('/load', (req, res) => {
