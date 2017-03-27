@@ -109,15 +109,13 @@ $latexEditor
 $answer.get(0).focus()
 
 function initMathToolbar() {
-    $mathToolbar.append(latexCommands.map(o => {
-        const $button = $(`<button id="${o.action}" title="${o.action}">${o.label ? o.label.replace(/X/g, '\\square') : o.action}</button>`)
-        MQ.StaticMath($button.get(0))
-        return $button
-    }))
-    $mathToolbar.on('mousedown', 'button', e => {
+    $mathToolbar.append(latexCommands
+        .map(o => `<button id="${o.action}" title="${o.action}">${o.label ? o.label.replace(/X/g, '\\square') : o.action}</button>`)
+        .join('')
+    ).on('mousedown', 'button', e => {
         e.preventDefault()
         insertMath(e.currentTarget.id)
-    })
+    }).find('button').each((i, elem) => MQ.StaticMath(elem))
     $mathToolbar.hide()
 }
 
