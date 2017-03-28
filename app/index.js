@@ -8,6 +8,7 @@ const session = require('express-session')
 const port = process.env.PORT || 5000
 const app = express()
 let savedData = {}
+let savedMarkers = {}
 const sanitizeOpts = require('./sanitizeOpts')
 
 app.use(session({
@@ -25,12 +26,23 @@ app.use('/mathquill', express.static(__dirname + '/../node_modules/mathquill'))
 app.use('/mathjax', express.static(__dirname + '/../node_modules/mathjax'))
 app.use('/tarkistus', express.static(__dirname + '/../public/tarkistus.html'))
 app.use(bodyParser.urlencoded({extended: false}))
+app.use(bodyParser.json({limit: 20 * 1024 * 1024, strict: false}))
 app.post('/save', (req, res) => {
-    savedData[req.session.id] = sanitizeHtml(req.body.text, sanitizeOpts)
+    savedData[req.session.id] = {
+        timestamp: new Date().toISOString(),
+        html:      sanitizeHtml(req.body.text, sanitizeOpts)
+    }
+    res.sendStatus(200)
+})
+app.post('/saveMarkers', (req, res) => {
+    savedMarkers[req.session.id] = req.body
     res.sendStatus(200)
 })
 app.get('/load', (req, res) => {
     res.send(savedData[req.session.id])
+})
+app.get('/loadMarkers', (req, res) => {
+    res.send(savedMarkers[req.session.id])
 })
 mjAPI.config({MathJax: {}})
 mjAPI.start()
