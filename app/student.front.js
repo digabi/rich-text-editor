@@ -108,12 +108,14 @@ $answer.get(0).focus()
 
 function initMathToolbar() {
     $mathToolbar.append(latexCommands
-        .map(o => `<button id="${o.action}" title="${o.action}">${o.label ? o.label.replace(/X/g, '\\square') : o.action}</button>`)
+        .map(o => `<button id="${o.action}" title="${o.action}">
+<img src="/math.svg?latex=${encodeURIComponent(o.label ? o.label.replace(/X/g, '\\square') : o.action)}"/>
+</button>`)
         .join('')
     ).on('mousedown', 'button', e => {
         e.preventDefault()
         insertMath(e.currentTarget.id)
-    }).find('button').each((i, elem) => MQ.StaticMath(elem))
+    })
     $mathToolbar.hide()
 }
 
