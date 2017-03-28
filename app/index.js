@@ -17,14 +17,14 @@ app.use(session({
     resave:            true
 }))
 
-app.use('/front.min.js', browserify(__dirname + '/front.js'))
-app.use('/tarkistus.min.js', browserify(__dirname + '/tarkistus.js'))
+app.use('/student.js', browserify(__dirname + '/student.front.js'))
+app.use('/teacher.js', browserify(__dirname + '/teacher.front.js'))
 app.use(express.static(__dirname + '/../public'))
 app.use('/bootstrap', express.static(__dirname + '/../node_modules/bootstrap'))
 app.use('/jquery', express.static(__dirname + '/../node_modules/jquery'))
 app.use('/mathquill', express.static(__dirname + '/../node_modules/mathquill'))
 app.use('/mathjax', express.static(__dirname + '/../node_modules/mathjax'))
-app.use('/tarkistus', express.static(__dirname + '/../public/tarkistus.html'))
+app.use('/tarkistus', express.static(__dirname + '/../public/teacher.html'))
 app.use(bodyParser.urlencoded({extended: false}))
 app.use(bodyParser.json({limit: 20 * 1024 * 1024, strict: false}))
 app.post('/save', (req, res) => {
