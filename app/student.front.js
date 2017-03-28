@@ -32,7 +32,7 @@ $answer.on('paste', e => {
     const clipboardDataAsHtml = e.originalEvent.clipboardData.getData('text/html')
     if(clipboardDataAsHtml) {
         e.preventDefault()
-        window.document.execCommand('insertHTML', false, sanitizeHtml(clipboardDataAsHtml));
+        window.document.execCommand('insertHTML', false, sanitizeHtml(clipboardDataAsHtml, sanitizeOpts));
     }
 })
 function newEquation() {
