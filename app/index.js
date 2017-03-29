@@ -5,7 +5,8 @@ const browserify = require('browserify-middleware')
 const mjAPI = require("mathjax-node")
 const sanitizeHtml = require('sanitize-html')
 const session = require('express-session')
-const port = process.env.PORT || 5000
+const interfaceIP = process.env.OPENSHIFT_NODEJS_IP || '0.0.0.0'
+const port = process.env.PORT || process.env.OPENSHIFT_NODEJS_PORT || 5000
 const app = express()
 let savedData = {}
 let savedMarkers = {}
@@ -66,4 +67,4 @@ app.get('/math.svg', (req, res) => {
         }
     })
 })
-app.listen(port, () => console.log('Server started at localhost:' + port))
+app.listen(port, interfaceIP, () => console.log('Server started at localhost:' + port))
