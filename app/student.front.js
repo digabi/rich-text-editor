@@ -29,14 +29,17 @@ $('.save').click(() => {
 $.get('/load', data => data && $answer.html(data.html))
 
 $answer.on('paste', e => {
-    const clipboardDataAsHtml = e.originalEvent.clipboardData.getData('text/html')
-    if(clipboardDataAsHtml) {
-        e.preventDefault()
-        window.document.execCommand('insertHTML', false, sanitizeHtml(clipboardDataAsHtml, sanitizeOpts));
+    const reader = new FileReader()
+    const file = e.originalEvent.clipboardData.items[0].getAsFile()
+    if(file) reader.readAsDataURL(file)
+
+    reader.onload = evt => {
+        let img = `<img src="${evt.target.result}"/>`
+        window.document.execCommand('insertHTML', false, sanitizeHtml(img, sanitizeOpts))
     }
 })
 function newEquation(optionalMarkup) {
-    window.document.execCommand('insertHTML', false, (optionalMarkup ? optionalMarkup : '')+'<img class="result new" style="display: none"/>');
+    window.document.execCommand('insertHTML', false, (optionalMarkup ? optionalMarkup : '') + '<img class="result new" style="display: none"/>');
     $('.result.new').removeClass('new').after($math)
     mathField.latex('')
     editorVisible = true
@@ -90,7 +93,7 @@ $('.math .close').mousedown(e => {
 const mathField = MQ.MathField($equationEditor.get(0), {
     spaceBehavesLikeTab: true,
     handlers:            {
-        edit: () => !latexEditorFocus && $latexEditor.val(mathField.latex()),
+        edit:      () => !latexEditorFocus && $latexEditor.val(mathField.latex()),
         downOutOf: field => {
             onClose()
             setTimeout(() => newEquation('<div></div>'), 2)
