@@ -1,22 +1,26 @@
 let markers = {}
 let timestamp = null
 const $answer = $('.answer')
-$.get('/load', data => {
-    if(!data)
+$.when(
+    $.get('/load'),
+    $.get('/loadMarkers')
+).done((load, loadMarkers) => {
+    const answer = load[0]
+    if (!answer)
         return
-    timestamp = data.timestamp
-    $answer.html(data.html)
+    timestamp = answer.timestamp
+    $answer.html(answer.html)
         .find('.result')
         .each((i, elem) => $(elem).prop('id', i))
         .wrap('<div class="resultWrapper">')
-    $.get('/loadMarkers', data => {
-        if(data.timestamp === timestamp) {
-            Object.keys(data.markers).forEach(key => {
-                data.markers[key].forEach(marker => {
-                    addMarker($answer.find('#' + key), marker)
-                })
-            })
-        }
+
+    const markers = loadMarkers[0]
+    if (markers.timestamp !== timestamp)
+        return
+    Object.keys(markers.markers).forEach(key => {
+        markers.markers[key].forEach(marker => {
+            addMarker($answer.find('#' + key), marker)
+        })
     })
 })
 
