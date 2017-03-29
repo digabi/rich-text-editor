@@ -11,6 +11,7 @@ const app = express()
 let savedData = {}
 let savedMarkers = {}
 const sanitizeOpts = require('./sanitizeOpts')
+const startedAt = new Date()
 
 app.use(session({
     secret:            'alsdjfwernfeklbjweiugerpfiorq3jlkhewfbads',
@@ -65,6 +66,12 @@ app.get('/math.svg', (req, res) => {
             res.type('svg')
             res.send(data.svg)
         }
+    })
+})
+app.get('/version', (req, res) => {
+    res.send({
+        serverStarted: startedAt.toString(),
+        currentServerTime: new Date().toString()
     })
 })
 app.listen(port, interfaceIP, () => console.log('Server started at localhost:' + port))
