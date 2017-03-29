@@ -60,5 +60,7 @@ module.exports = [
     { action: '\\uparrow' },
     { action: '\\downarrow' },
     { action: '\\circ' },
+    { action: '|', label: '|X|'},
+    { action: '(', label: '(X)'},
     { action: '\\setminus' }
 ]
