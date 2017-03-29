@@ -19,7 +19,7 @@ button:hover { background: #eee; }
 .mathToolbar { margin-bottom: 5px; display: flex; flex-wrap: wrap; font-size: 10px; }
 button { background: none; margin-right: 5px; border: none; }
 .latexEditor { font-size: 15px; width: 50%; }
-.result { cursor: pointer; }
+.result {vertical-align: middle;cursor: pointer;}
 .math { margin: 10px; position: relative; box-shadow: 1px 1px 10px 1px rgba(0, 0, 0, .2); }
 .newEquation:before { content: 'Σ'; display: inline-block; margin-right: 10px; }
 .newEquation { }
