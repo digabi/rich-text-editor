@@ -6,7 +6,8 @@
   "homepage": "https://github.com/digabi/math-editor-poc",
   "scripts": {
     "start": "app/index.js",
-    "dev": "supervisor app/index.js"
+    "dev": "supervisor app/index.js",
+    "deploy":"git push ssh://58db515cfbc736bf24000001@math-editor.local.digabi.fi/~/git/math.git/ master"
   },
   "repository": {
     "type": "git",
