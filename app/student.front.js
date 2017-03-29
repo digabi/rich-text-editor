@@ -121,14 +121,15 @@ function initMathToolbar() {
 
 function initSpecialCharacterSelector() {
     $('.toolbar .characters').find('.list')
-        .append(specialCharacters.map(char => $(`<span class="button">${char}</span>`)))
+        .append(specialCharacters.map(char => $(`<span class="button" ${char.latexCommand ? `data-command="${char.latexCommand}"` : ''}>${char.character}</span>`)))
         .on('mousedown', '.button', e => {
             e.preventDefault()
-            const innerText = e.currentTarget.innerText
+            const character = e.currentTarget.innerText
+            const command = e.currentTarget.dataset.command
             if(answerFocus) {
-                window.document.execCommand('insertText', false, innerText)
+                window.document.execCommand('insertText', false, character)
             } else {
-                insertMath(innerText)
+                insertMath(command || character)
             }
         })
     $('.toggle').mousedown(e => {
