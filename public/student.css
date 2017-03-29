@@ -26,3 +26,5 @@ button { background: none; margin-right: 5px; border: none; }
 .actionButton { text-transform: uppercase; box-shadow: 0 1px 2px 1px rgba(0, 0, 0, .2); border-radius: 2px; padding: 5px 10px; font-weight: bold; color: #666; }
 .save { margin-top: 10px; }
 .mq-math-mode .mq-root-block { white-space: normal; }
+.mathToolbar.list button { width: 28px; height: 28px; padding: 4px; }
+.mathToolbar.list img { max-width: 20px; max-height: 20px; }
