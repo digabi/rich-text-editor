@@ -35,8 +35,8 @@ $answer.on('paste', e => {
         window.document.execCommand('insertHTML', false, sanitizeHtml(clipboardDataAsHtml, sanitizeOpts));
     }
 })
-function newEquation() {
-    window.document.execCommand('insertHTML', false, '<img class="result new" style="display: none"/>');
+function newEquation(optionalMarkup) {
+    window.document.execCommand('insertHTML', false, (optionalMarkup ? optionalMarkup : '')+'<img class="result new" style="display: none"/>');
     $('.result.new').removeClass('new').after($math)
     mathField.latex('')
     editorVisible = true
@@ -90,7 +90,11 @@ $('.math .close').mousedown(e => {
 const mathField = MQ.MathField($equationEditor.get(0), {
     spaceBehavesLikeTab: true,
     handlers:            {
-        edit: () => !latexEditorFocus && $latexEditor.val(mathField.latex())
+        edit: () => !latexEditorFocus && $latexEditor.val(mathField.latex()),
+        downOutOf: field => {
+            onClose()
+            setTimeout(() => newEquation('<div></div>'), 2)
+        }
     }
 })
 $math.find('textarea').keypress(e => {
