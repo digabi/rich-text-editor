@@ -16,8 +16,9 @@
 <script>
 
 </script>
-<h3>Kaavaeditorin ensimmäinen kehitysversio</h3>
-<p>
+<h3 class="fi">Kaavaeditorin ensimmäinen kehitysversio</h3>
+<h3 class="sv">Formeleditorns första utvecklingsversion</h3>    
+<p class="fi">
     <small><pre>
 Editori toimii parhaiten Firefox-selaimella. “Lisää kaava” -napin alta löydät yleisimpiä matematiikassa, fysiikassa ja
 kemiassa käytettäviä merkintöjä. Lisäksi erikoismerkkejä voi käyttää kaavan kirjoittamiseen. Kaavoja voi rakentaa
@@ -33,6 +34,21 @@ Kertomerkin saa myös * -merkillä
 </pre>
     </small>
 </p>
+<p class="sv">
+    <small><pre>
+Editorn fungerar bäst med browsern Firefox. Under knappen “Lägg till formel” hittar du de vanligaste beteckningarna som används i matematik, fysik och kemi. Dessutom kan du använda specialtecken för att skriva formler. 
+Det går att konstruera formler genom att klicka på beteckningarna i menyerna och/eller genom att skriva LaTeX. 
+Det går förutom att skriva text och formler, att också att lägga till bilder i svarsfältet.
+
+Tips på tangentkombinationer:
+
+Ctrl-V       Lägg till en bild från klippbordet
+Ctrl-L       Skriv en formel
+Bråkstreck får man även med / -märket
+Multiplikationstecken får man även med * -märket
+</pre>
+    </small>
+</p>
 
 <hr/>
 <div class="toolbar">
@@ -41,11 +57,13 @@ Kertomerkin saa myös * -merkillä
         <!--<div class="list" style="display: none"></div>-->
     <!--</div>-->
     <div class="characters">
-        <span class="special-characters">Erikoismerkit</span>
+        <span class="special-characters fi">Erikoismerkit</span>
+        <span class="special-characters sv">Specialtecken</span>
         <div class="list"></div>
     </div>
     <p>
-        <button class="newEquation actionButton" title="Ctrl-L">Lisää kaava</button>
+        <button class="newEquation actionButton fi" title="Ctrl-L">Lisää kaava</button>
+        <button class="newEquation actionButton sv" title="Ctrl-L">Lägg till formerl</button>
     </p>
     <div class="mathToolbar list"></div>
 </div>
@@ -53,16 +71,19 @@ Kertomerkin saa myös * -merkillä
 <div class="answer" contenteditable="true"></div>
 <div class="outerPlaceholder" style="display: none">
     <div class="math">
-        <div class="close" title="Ctrl-Enter">sulje</div>
+        <div class="close fi" title="Ctrl-Enter">sulje</div>
+        <div class="close sv" title="Ctrl-Enter">stäng</div>
         <div class="boxes">
             <div class="equationEditor"></div>
             <textarea class="latexEditor" placeholder="LaTex"></textarea>
         </div>
     </div>
 </div>
-<button class="save actionButton">Tallenna</button>
+<button class="save actionButton fi">Tallenna</button>
+<button class="save actionButton sv">Spara</button>
 <div style="margin:10px 0;">
-    <a href="/tarkistus">Vastaus tarkastajan näkymässä</a>
+    <a class="fi" href="/tarkistus">Vastaus tarkastajan näkymässä</a>
+    <a class="fi" href="/tarkistus">Svaret i bedömmarens vy</a>
 </div>
 
 <script src="/student.js"></script>
