@@ -28,3 +28,4 @@ button { background: none; margin-right: 5px; border: none; }
 .mq-math-mode .mq-root-block { white-space: normal; }
 .mathToolbar.list button { width: 28px; height: 28px; padding: 4px; }
 .mathToolbar.list img { max-width: 20px; max-height: 20px; }
+.characters .list .button { font-family: Symbola, monospace; }
