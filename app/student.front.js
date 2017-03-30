@@ -138,11 +138,6 @@ function initSpecialCharacterSelector() {
                 insertMath(command || character)
             }
         })
-    $('.toggle').mousedown(e => {
-        $(e.target.parentNode).toggleClass('expanded')
-        e.preventDefault()
-        return false
-    })
 }
 
 function insertMath(symbol) {

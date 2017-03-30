@@ -1,10 +1,8 @@
 body {color: #333;margin: 2em auto;font: 14px/1.42 "Helvetica Neue", Helvetica, Arial, sans-serif;max-width: 900px;}
 .answer { border: 1px solid #aaa; padding: 5px; box-sizing: content-box; min-height: 100px; }
-.list { border: 1px solid #eee; margin-bottom: 10px; display: none; }
+.list {border: 1px solid #eee;margin-bottom: 10px;}
 .expanded .list { display: block; }
-.toggle { font-size: 12px; padding: 8px 0; display: block; border: none; color: #68b4df; background: none; text-transform: uppercase; cursor: pointer; }
-.toggle:after { content: '▼'; margin-left: 10px; display: inline-block; }
-.expanded .toggle:after { content: '▲'; }
+.special-characters { font-size: 12px; padding: 8px 0; display: block; border: none; color: #68b4df; background: none; text-transform: uppercase; }
 .button { padding: 5px; display: inline-block; cursor: pointer; width: 20px; text-align: center; }
 .button:hover,
 button:hover { background: #eee; }
