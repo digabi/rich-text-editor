@@ -1,6 +1,7 @@
 module.exports = [
     { character: '°' },
     { character: '≡', latexCommand: '\\equiv' },
+    { character: '≢' }, // \nequiv or \not\equiv
     { character: '⌐' }, // \backneg
     { character: '×', latexCommand: '\\times' },
     { character: '÷', latexCommand: '\\div' },
