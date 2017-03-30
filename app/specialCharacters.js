@@ -80,11 +80,5 @@ module.exports = [
     { character: '△', latexCommand: '\\triangle' },
     { character: '⊥', latexCommand: '\\perp' },
     { character: '‖', latexCommand: '\\parallel' },
-    { character: 'ℕ', latexCommand: '\\N' },
-    { character: 'ℤ', latexCommand: '\\Z' },
-    { character: 'ℚ', latexCommand: '\\Q' },
-    { character: 'ℝ', latexCommand: '\\R' },
-    { character: 'ℂ', latexCommand: '\\C' },
-    { character: 'ℙ', latexCommand: '\\P' },
     { character: '∘', latexCommand: '\\circ' }
 ]
