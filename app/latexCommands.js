@@ -15,7 +15,6 @@ module.exports = [
     { action: '\\arcsin' },
     { action: '\\arccos' },
     { action: '\\arctan' },
-    { action: '\\not' },
     { action: '\\vec', label: '\\vec{X}' },
     { action: '\\bar', label: '\\bar{X}' },
     { action: '\\underline', label: '\\underline{X}' },
