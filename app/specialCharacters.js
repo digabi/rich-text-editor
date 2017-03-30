@@ -31,6 +31,7 @@ module.exports = [
     { character: '↨' }, // \vertical
     { character: '⇐', latexCommand: '\\Leftarrow' },
     { character: '⇒', latexCommand: '\\Rightarrow' },
+    { character: '⇌' }, // \rightleftharpoons
     { character: '≠', latexCommand: '\\neq' },
     { character: '∅', latexCommand: '\\empty' },
     { character: '∞', latexCommand: '\\infty' },
