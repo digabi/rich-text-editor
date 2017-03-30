@@ -91,7 +91,6 @@ $('.math .close').mousedown(e => {
     onClose()
 })
 const mathField = MQ.MathField($equationEditor.get(0), {
-    spaceBehavesLikeTab: true,
     handlers:            {
         edit:      () => !latexEditorFocus && $latexEditor.val(mathField.latex()),
         downOutOf: field => {
