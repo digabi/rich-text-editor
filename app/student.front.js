@@ -150,3 +150,20 @@ function insertMath(symbol) {
         setTimeout(() => mathField.focus(), 0)
     }
 }
+
+const autosave = (answer, async = true) => $.post({
+    url: '/save',
+    data: { text: answer },
+    async
+})
+
+Bacon.fromEvent($('[data-js-handle="answer"]'), 'input focus')
+    .map(e => e.currentTarget.innerHTML)
+    .skipDuplicates()
+    .debounce(5000)
+    .onValue(autosave)
+
+window.onbeforeunload = () => {
+    autosave($answer.html(), false)
+    return null
+}

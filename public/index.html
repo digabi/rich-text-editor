@@ -6,6 +6,8 @@
 
     <link rel="stylesheet" type="text/css" href="mathquill/build/mathquill.css">
     <script src="jquery/dist/jquery.js"></script>
+    <script src="baconjs/dist/Bacon.js"></script>
+    <script src="bacon.jquery/dist/bacon.jquery.js"></script>
     <script src="mathquill/build/mathquill.js"></script>
     <link rel="stylesheet" type="text/css" href="student.css">
     <link rel="icon" href="math-editor-favicon.ico" type="image/x-icon" />
@@ -50,7 +52,7 @@ Kertomerkin saa myös * -merkillä
     <div class="mathToolbar list"></div>
 </div>
 
-<div class="answer" contenteditable="true"></div>
+<div class="answer" contenteditable="true" data-js-handle="answer"></div>
 <div class="outerPlaceholder" style="display: none">
     <div class="math">
         <div class="close" title="Ctrl-Enter">sulje</div>
