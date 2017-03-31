@@ -164,6 +164,7 @@ Bacon.fromEvent($('[data-js-handle="answer"]'), 'input focus')
     .onValue(autosave)
 
 window.onbeforeunload = () => {
+    onClose()
     autosave($answer.html(), false)
     return null
 }
