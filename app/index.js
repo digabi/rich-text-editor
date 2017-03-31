@@ -34,9 +34,9 @@ exposeModules([
     'mathquill',
     'mathjax'])
 app.get('/tarkistus', (req, res) => res.send(teacherHtml))
-app.get('/', (req, res) => res.send(indexHtml))
+app.get('/', (req, res) => res.send(indexHtml(formatDate(startedAt))))
 app.get('/sv/bedomning', (req, res) => res.send(teacherHtmlSv))
-app.get('/sv', (req, res) => res.send(indexHtmlSv))
+app.get('/sv', (req, res) => res.send(indexHtmlSv(formatDate(startedAt))))
 app.use(bodyParser.urlencoded({extended: false}))
 app.use(bodyParser.json({limit: 20 * 1024 * 1024, strict: false}))
 app.post('/save', (req, res) => {
@@ -88,4 +88,12 @@ app.listen(port, interfaceIP, () => console.log('Server started at localhost:' +
 
 function exposeModules(names) {
     names.forEach(name => app.use('/' + name, express.static(__dirname + '/../node_modules/' + name)))
+}
+
+function formatDate(date) {
+    return `${date.getDay()}.${date.getMonth()+1}.${date.getFullYear()} ${pad(date.getHours())}:${pad(date.getMinutes())}`
+}
+
+function pad(num) {
+    return (num > 9 ? '' : '0') + num
 }

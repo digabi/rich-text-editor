@@ -1,4 +1,6 @@
-body { color: #333; margin: 2em auto; font: 14px/1.42 "Helvetica Neue", Helvetica, Arial, sans-serif; max-width: 900px; }
+body {margin: 0;color: #333;font: 14px/1.42 "Helvetica Neue", Helvetica, Arial, sans-serif;background: #565555;}
+section { margin: 2em auto; max-width: 900px; }
+article {padding: 20px;background: #fff;}
 .answer { border: 1px solid #aaa; padding: 5px; box-sizing: content-box; min-height: 100px; }
 .answer img { max-width: 100%; max-height: 1000px; }
 .list { border: 1px solid #eee; margin-bottom: 10px; }
@@ -32,3 +34,7 @@ button { background: none; margin-right: 5px; border: none; }
 textarea:focus { box-shadow: none; outline: 2px solid #68b4df; }
 pre { white-space: pre-wrap; }
 .paragraph { margin: 10px 0; }
+footer {font-weight: bold;font-size: 15px;overflow: hidden;background: #565555;color: #fff;padding: 10px;}
+footer section {display: flex;justify-content: space-between;}
+footer .paragraph {}
+footer a { color:#fff;}
