@@ -26,12 +26,13 @@ app.use(session({
 app.use('/student.js', browserify(__dirname + '/student.front.js'))
 app.use('/teacher.js', browserify(__dirname + '/teacher.front.js'))
 app.use(express.static(__dirname + '/../public'))
-app.use('/bootstrap', express.static(__dirname + '/../node_modules/bootstrap'))
-app.use('/jquery', express.static(__dirname + '/../node_modules/jquery'))
-app.use('/baconjs', express.static(__dirname + '/../node_modules/baconjs/'))
-app.use('/bacon.jquery', express.static(__dirname + '/../node_modules/bacon.jquery/'))
-app.use('/mathquill', express.static(__dirname + '/../node_modules/mathquill'))
-app.use('/mathjax', express.static(__dirname + '/../node_modules/mathjax'))
+exposeModules([
+    'bootstrap',
+    'jquery',
+    'baconjs',
+    'bacon.jquery',
+    'mathquill',
+    'mathjax'])
 app.get('/tarkistus', (req, res) => res.send(teacherHtml))
 app.get('/', (req, res) => res.send(indexHtml))
 app.get('/sv/bedomning', (req, res) => res.send(teacherHtmlSv))
@@ -79,8 +80,12 @@ app.get('/math.svg', (req, res) => {
 })
 app.get('/version', (req, res) => {
     res.send({
-        serverStarted: startedAt.toString(),
+        serverStarted:     startedAt.toString(),
         currentServerTime: new Date().toString()
     })
 })
 app.listen(port, interfaceIP, () => console.log('Server started at localhost:' + port))
+
+function exposeModules(names) {
+    names.forEach(name => app.use('/' + name, express.static(__dirname + '/../node_modules/' + name)))
+}
