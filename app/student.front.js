@@ -86,7 +86,7 @@ function onClose() {
     latexEditorFocus = false
     $answer.get(0).focus()
 }
-$('.math .close').mousedown(e => {
+$math.find('.close').mousedown(e => {
     e.preventDefault()
     onClose()
 })
