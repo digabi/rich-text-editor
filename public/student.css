@@ -9,6 +9,7 @@ article {padding: 20px;background: #fff;}
 .button { padding: 5px; display: inline-block; cursor: pointer; width: 20px; text-align: center; }
 .button:hover,
 button:hover { background: #eee; }
+button:active { box-shadow: none; }
 .math .close { letter-spacing: 1px; cursor: pointer; border: 1px solid gray; line-height: 1; vertical-align: top; font-size: 13px; position: absolute; left: 0; top: 97%; width: 60px; height: 17px; text-align: center; color: #68b4df; z-index: 2;
   background: #fff;
   border-top: none;
