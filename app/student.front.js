@@ -114,13 +114,13 @@ $answer.get(0).focus()
 
 function initMathToolbar() {
     $mathToolbar.append(latexCommands
-        .map(o => `<button id="${o.action}" title="${o.action}">
+        .map(o => `<button title="${o.action}" data-command="${o.action}">
 <img src="/math.svg?latex=${encodeURIComponent(o.label ? o.label.replace(/X/g, '\\square') : o.action)}"/>
 </button>`)
         .join('')
     ).on('mousedown', 'button', e => {
         e.preventDefault()
-        insertMath(e.currentTarget.id)
+        insertMath(e.currentTarget.dataset.command)
     })
     $mathToolbar.hide()
 }
