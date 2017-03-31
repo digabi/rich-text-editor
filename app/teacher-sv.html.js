@@ -17,6 +17,9 @@ module.exports = `<!DOCTYPE html>
 <h2>Bedömning</h2>
 <div class="answer"></div>
 <button class="save actionButton">Spara anmärkningar</button>
+<div class="paragraph">
+    <a href="/tarkistus">Suomeksi</a>
+</div>
 <script src="/teacher.js"></script>
 <script>
   (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){

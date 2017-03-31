@@ -61,8 +61,11 @@ Multiplikationstecken får man även med * -märket
     </div>
 </div>
 <button class="save actionButton">Spara</button>
-<div style="margin:10px 0;">
+<div class="paragraph">
     <a href="mailto:abitti@ylioppilastutkinto.fi?subject=Palaute / Math-editor">Skicka feedback (abitti@ylioppilastutkinto.fi)</a>
+</div>
+<div class="paragraph">
+    <a href="/">Suomeksi</a>
 </div>
 
 <script src="/student.js"></script>

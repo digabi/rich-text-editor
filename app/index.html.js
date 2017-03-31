@@ -63,10 +63,12 @@ Kertomerkin saa myös * -merkillä
     </div>
 </div>
 <button class="save actionButton">Tallenna</button>
-<div style="margin:10px 0;">
+<div class="paragraph">
     <a href="mailto:abitti@ylioppilastutkinto.fi?subject=Palaute / Math-editor">Lähetä palautetta (abitti@ylioppilastutkinto.fi)</a>
 </div>
-
+<div class="paragraph">
+    <a href="/sv">På svenska</a>
+</div>
 <script src="/student.js"></script>
 <script>
   (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){

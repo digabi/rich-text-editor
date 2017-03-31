@@ -21,6 +21,9 @@ module.exports = `<!DOCTYPE html>
 </p>
 <div class="answer"></div>
 <button class="save actionButton">Tallenna merkinnät</button>
+<div class="paragraph">
+    <a href="/sv/bedomning">På svenska</a>
+</div>
 <script src="/teacher.js"></script>
 <script>
   (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
