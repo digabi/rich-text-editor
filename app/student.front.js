@@ -17,14 +17,11 @@ initSpecialCharacterSelector()
 
 $('.newEquation').mousedown(e => {
     e.preventDefault()
-    if(!answerFocus)
-        return
+    if(!answerFocus) return
     newEquation()
 })
 
-$('.save').click(() => {
-    $.post('/save', {text: $answer.html()})
-})
+$('.save').click(() => $.post('/save', {text: $answer.html()}))
 
 $.get('/load', data => data && $answer.html(data.html))
 
@@ -34,7 +31,7 @@ $answer.on('paste', e => {
     if(file) reader.readAsDataURL(file)
 
     reader.onload = evt => {
-        let img = `<img src="${evt.target.result}"/>`
+        const img = `<img src="${evt.target.result}"/>`
         window.document.execCommand('insertHTML', false, sanitizeHtml(img, sanitizeOpts))
     }
 })
@@ -51,14 +48,11 @@ $answer.on('focus blur', e => {
     answerFocus = e.type === 'focus'
 })
     .keypress(e => {
-        if(e.ctrlKey && !e.altKey && !e.shiftKey && e.key === 'l') {
-            newEquation()
-        }
+        if(e.ctrlKey && !e.altKey && !e.shiftKey && e.key === 'l') newEquation()
     })
 function onShowEditor($img) {
     $mathToolbar.show()
-    $img.hide()
-        .after($math)
+    $img.hide().after($math)
     const latex = $img.prop('alt')
     $latexEditor.val(latex)
     onLatexUpdate()
@@ -91,7 +85,7 @@ $math.find('.close').mousedown(e => {
     onClose()
 })
 const mathField = MQ.MathField($equationEditor.get(0), {
-    handlers:            {
+    handlers: {
         edit:      () => !latexEditorFocus && $latexEditor.val(mathField.latex()),
         downOutOf: field => {
             onClose()
@@ -100,9 +94,7 @@ const mathField = MQ.MathField($equationEditor.get(0), {
     }
 })
 $math.find('textarea').keypress(e => {
-    if(e.ctrlKey && !e.altKey && !e.shiftKey && e.keyCode === 13) {
-        onClose()
-    }
+    if(e.ctrlKey && !e.altKey && !e.shiftKey && e.keyCode === 13) onClose()
 })
 function onLatexUpdate() { setTimeout(() => mathField.latex($latexEditor.val()), 1) }
 
@@ -132,11 +124,8 @@ function initSpecialCharacterSelector() {
             e.preventDefault()
             const character = e.currentTarget.innerText
             const command = e.currentTarget.dataset.command
-            if(answerFocus) {
-                window.document.execCommand('insertText', false, character)
-            } else {
-                insertMath(command || character)
-            }
+            if(answerFocus) window.document.execCommand('insertText', false, character)
+            else insertMath(command || character)
         })
 }
 
@@ -151,9 +140,9 @@ function insertMath(symbol) {
     }
 }
 
-const autosave = (answer, async = true) => $.post({
-    url: '/save',
-    data: { text: answer },
+const autosave = (text, async = true) => $.post({
+    url:  '/save',
+    data: {text},
     async
 })
 
