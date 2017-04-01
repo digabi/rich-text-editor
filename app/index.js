@@ -2,10 +2,10 @@
 const express = require('express')
 const bodyParser = require('body-parser')
 const browserify = require('browserify-middleware')
-const mjAPI = require("mathjax-node")
 const sanitizeHtml = require('sanitize-html')
 const session = require('express-session')
 const indexHtml = require('./index.html')
+const mathImg = require('./mathImg')
 const startedAt = new Date()
 const FI = require('./FI')
 const SV = require('./SV')
@@ -60,28 +60,8 @@ app.get('/load', (req, res) => {
 app.get('/loadMarkers', (req, res) => {
     res.send(savedMarkers[req.session.id])
 })
-mjAPI.config({MathJax: {}})
-mjAPI.start()
 
-app.get('/math.svg', (req, res) => {
-    mjAPI.typeset({
-        math:   req.query.latex,
-        format: "TeX", // "inline-TeX", "MathML"
-        mml:    false,
-        svg:    true,
-    }, function(data) {
-        if(data.errors) {
-            res.type('svg')
-            res.send(`<svg xmlns="http://www.w3.org/2000/svg"  
-     xmlns:xlink="http://www.w3.org/1999/xlink">
-    <text x="10" y="15" fill="red">${data.errors.join('<br>')}</text>
-</svg>`)
-        } else {
-            res.type('svg')
-            res.send(data.svg)
-        }
-    })
-})
+app.get('/math.svg', mathImg.handler)
 app.get('/version', (req, res) => {
     res.send({
         serverStarted:     startedAt.toString(),
