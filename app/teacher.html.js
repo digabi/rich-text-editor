@@ -5,7 +5,6 @@ module.exports = (obj) => { with(obj) return `<!DOCTYPE html>
     <title>${mathEditor}</title>
 
     <script src="/jquery/dist/jquery.js"></script>
-    <link rel="stylesheet" type="text/css" href="/student.css">
     <link rel="stylesheet" type="text/css" href="/teacher.css">
     <link rel="icon" href="/math-editor-favicon.ico" type="image/x-icon"/>
     <link rel="shortcut icon" href="/math-editor-favicon.ico" type="image/x-icon"/>

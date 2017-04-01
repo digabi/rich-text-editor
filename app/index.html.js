@@ -44,7 +44,7 @@ ${headHtml(mathEditor)}
                 </div>
             </div>
         </div>
-        <button class="save actionButton">${save}</button>
+        <button class="save actionButton" style="display: none">${save}</button>
     </section>
 </article>
 <footer>

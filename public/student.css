@@ -1,15 +1,7 @@
-body {margin: 0;color: #333;font: 14px/1.42 "Helvetica Neue", Helvetica, Arial, sans-serif;background: #565555;}
-section { margin: 2em auto; max-width: 900px; }
-article {padding: 20px;background: #fff;}
-.answer { border: 1px solid #aaa; padding: 5px; box-sizing: content-box; min-height: 100px; }
-.answer img { max-width: 100%; max-height: 1000px; }
+@import "common.css";
 .list { border: 1px solid #eee; margin-bottom: 10px; }
 .expanded .list { display: block; }
 .special-characters { font-size: 12px; padding: 8px 0; display: block; border: none; color: #68b4df; background: none; text-transform: uppercase; }
-.button { padding: 5px; display: inline-block; cursor: pointer; width: 20px; text-align: center; }
-.button:hover,
-button:hover { background: #eee; }
-button:active { box-shadow: none; }
 .math .close { letter-spacing: 1px; cursor: pointer; border: 1px solid gray; line-height: 1; vertical-align: top; font-size: 13px; position: absolute; left: 0; top: 97%; width: 60px; height: 17px; text-align: center; color: #68b4df; z-index: 2;
   background: #fff;
   border-top: none;
@@ -19,13 +11,10 @@ button:active { box-shadow: none; }
 .boxes { display: flex; }
 .equationEditor { width: 50%; padding: 10px; }
 .mathToolbar { margin-bottom: 5px; display: flex; flex-wrap: wrap; font-size: 10px; }
-button { background: none; margin-right: 5px; border: none; }
 .latexEditor { font-size: 15px; width: 50%; }
 .result { vertical-align: middle; cursor: pointer; }
 .math { margin: 10px; position: relative; box-shadow: 1px 1px 10px 1px rgba(0, 0, 0, .2); }
 .newEquation:before { content: 'Σ'; display: inline-block; margin-right: 10px; }
-.actionButton { text-transform: uppercase; box-shadow: 0 1px 2px 1px rgba(0, 0, 0, .2); border-radius: 2px; padding: 5px 10px; font-weight: bold; color: #666; }
-.save { margin-top: 10px; display: none; }
 .mq-math-mode .mq-root-block { white-space: normal; }
 .mathToolbar.list button { width: 28px; height: 28px; padding: 4px; }
 .mathToolbar.list img { max-width: 20px; max-height: 20px; }
@@ -33,9 +22,3 @@ button { background: none; margin-right: 5px; border: none; }
 .answer:focus,
 .mq-editable-field.mq-focused,
 textarea:focus { box-shadow: none; outline: 2px solid #68b4df; }
-pre { white-space: pre-wrap; }
-.paragraph { margin: 10px 0; }
-footer {font-weight: bold;font-size: 15px;overflow: hidden;background: #565555;color: #fff;padding: 10px;}
-footer section {display: flex;justify-content: space-between;}
-footer .paragraph {}
-footer a { color:#fff;}
