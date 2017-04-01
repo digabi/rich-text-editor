@@ -1,7 +1,7 @@
 const headHtml = require('./head.html')
-module.exports = startedAt => `<!DOCTYPE html>
+module.exports = (obj) => { with(obj) return `<!DOCTYPE html>
 <html>
-${headHtml('Matikkaeditori')}
+${headHtml(mathEditor)}
 <body>
 <article>
     <section>
@@ -12,36 +12,24 @@ ${headHtml('Matikkaeditori')}
         <script>
 
         </script>
-        <h3>Kaavaeditorin ensimmäinen kehitysversio</h3>
+        <h3>${title}</h3>
         <p>
-            <small><pre>
-Editori toimii parhaiten Firefox-selaimella. “Lisää kaava” -napin alta löydät yleisimpiä matematiikassa, fysiikassa ja
-kemiassa käytettäviä merkintöjä. Lisäksi erikoismerkkejä voi käyttää kaavan kirjoittamiseen. Kaavoja voi rakentaa
-klikkaamalla valikon merkintöjä ja/tai kirjoittamalla LaTeXia. Editorin vastauskenttään voi kirjoittaa tekstiä ja kaavoja sekä
-lisätä kuvia.
-
-Pikanäppäinvinkkejä:
-
-Ctrl-V       Liitä kuva leikepöydältä
-Ctrl-L       Kirjoita kaava
-Jakoviivan saa myös / -merkillä
-Kertomerkin saa myös * -merkillä
-</pre>
+            <small><pre>${description}</pre>
             </small>
         </p>
 
         <hr/>
         <div class="toolbar">
             <!--<div class="tags">-->
-            <!--<span class="toggle">Muotoilu</span>-->
+            <!--<span class="toggle">${formatting}</span>-->
             <!--<div class="list" style="display: none"></div>-->
             <!--</div>-->
             <div class="characters">
-                <span class="special-characters">Erikoismerkit</span>
+                <span class="special-characters">${specialCharacters}</span>
                 <div class="list"></div>
             </div>
             <p>
-                <button class="newEquation actionButton" title="Ctrl-L">Lisää kaava</button>
+                <button class="newEquation actionButton" title="Ctrl-L">${insertEquation}</button>
             </p>
             <div class="mathToolbar list"></div>
         </div>
@@ -49,27 +37,27 @@ Kertomerkin saa myös * -merkillä
         <div class="answer" contenteditable="true" data-js-handle="answer"></div>
         <div class="outerPlaceholder" style="display: none">
             <div class="math">
-                <div class="close" title="Ctrl-Enter">sulje</div>
+                <div class="close" title="Ctrl-Enter">${close}</div>
                 <div class="boxes">
                     <div class="equationEditor"></div>
                     <textarea class="latexEditor" placeholder="LaTex"></textarea>
                 </div>
             </div>
         </div>
-        <button class="save actionButton">Tallenna</button>
+        <button class="save actionButton">${save}</button>
     </section>
 </article>
 <footer>
     <section>
         <div class="paragraph">
-            Päivitetty ${startedAt}
+            ${updated} ${startedAt}
         </div>
         <div class="paragraph">
-            <a href="mailto:abitti@ylioppilastutkinto.fi?subject=Palaute / Math-editor">Lähetä palautetta
+            <a href="mailto:abitti@ylioppilastutkinto.fi?subject=Palaute / Math-editor">${sendFeedback}
                 (abitti@ylioppilastutkinto.fi)</a>
         </div>
         <div class="paragraph">
-            <a href="/sv">På svenska</a>
+            <a href="${langLink}">${langLabel}</a>
         </div>
     </section>
 </footer>
@@ -92,4 +80,4 @@ Kertomerkin saa myös * -merkillä
 
 </script>
 </body>
-</html>`
+</html>`}

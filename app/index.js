@@ -6,16 +6,20 @@ const mjAPI = require("mathjax-node")
 const sanitizeHtml = require('sanitize-html')
 const session = require('express-session')
 const indexHtml = require('./index.html')
-const indexHtmlSv = require('./index-sv.html')
+const startedAt = new Date()
+const FI = require('./FI')
+const SV = require('./SV')
+const indexHtmlFI = indexHtml((Object.assign({startedAt: formatDate(startedAt)}, FI.editor)))
+const indexHtmlSV = indexHtml((Object.assign({startedAt: formatDate(startedAt)}, SV.editor)))
 const teacherHtml = require('./teacher.html')
-const teacherHtmlSv = require('./teacher-sv.html')
+const teacherHtmlFI = teacherHtml(Object.assign({startedAt: formatDate(startedAt)}, FI.annotating))
+const teacherHtmlSV = teacherHtml(Object.assign({startedAt: formatDate(startedAt)}, SV.annotating))
 const interfaceIP = process.env.OPENSHIFT_NODEJS_IP || '0.0.0.0'
 const port = process.env.PORT || process.env.OPENSHIFT_NODEJS_PORT || 5000
 const app = express()
 let savedData = {}
 let savedMarkers = {}
 const sanitizeOpts = require('./sanitizeOpts')
-const startedAt = new Date()
 
 app.use(session({
     secret:            'alsdjfwernfeklbjweiugerpfiorq3jlkhewfbads',
@@ -33,10 +37,10 @@ exposeModules([
     'bacon.jquery',
     'mathquill',
     'mathjax'])
-app.get('/tarkistus', (req, res) => res.send(teacherHtml))
-app.get('/', (req, res) => res.send(indexHtml(formatDate(startedAt))))
-app.get('/sv/bedomning', (req, res) => res.send(teacherHtmlSv))
-app.get('/sv', (req, res) => res.send(indexHtmlSv(formatDate(startedAt))))
+app.get('/tarkistus', (req, res) => res.send(teacherHtmlFI))
+app.get('/', (req, res) => res.send(indexHtmlFI))
+app.get('/sv/bedomning', (req, res) => res.send(teacherHtmlSV))
+app.get('/sv', (req, res) => res.send(indexHtmlSV))
 app.use(bodyParser.urlencoded({extended: false}))
 app.use(bodyParser.json({limit: 20 * 1024 * 1024, strict: false}))
 app.post('/save', (req, res) => {
@@ -91,7 +95,7 @@ function exposeModules(names) {
 }
 
 function formatDate(date) {
-    return `${date.getDay()}.${date.getMonth()+1}.${date.getFullYear()} ${pad(date.getHours())}:${pad(date.getMinutes())}`
+    return `${date.getDay()}.${date.getMonth() + 1}.${date.getFullYear()} ${pad(date.getHours())}:${pad(date.getMinutes())}`
 }
 
 function pad(num) {
