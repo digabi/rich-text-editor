@@ -12,6 +12,10 @@ const $math = $('.math')
 let answerFocus = true
 let latexEditorFocus = false
 let editorVisible = false
+const keyCodes = {
+    ENTER: 13,
+    ESC:   27
+}
 initMathToolbar()
 initSpecialCharacterSelector()
 
@@ -93,8 +97,10 @@ const mathField = MQ.MathField($equationEditor.get(0), {
         }
     }
 })
-$math.find('textarea').keypress(e => {
-    if(e.ctrlKey && !e.altKey && !e.shiftKey && e.keyCode === 13) onClose()
+$math.find('textarea').keydown(e => {
+    if(!e.altKey && !e.shiftKey &&
+        ((e.ctrlKey && e.keyCode === keyCodes.ENTER) ||
+        (!e.ctrlKey && e.keyCode === keyCodes.ESC ))) onClose()
 })
 function onLatexUpdate() { setTimeout(() => mathField.latex($latexEditor.val()), 1) }
 
