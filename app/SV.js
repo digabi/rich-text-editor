@@ -14,7 +14,7 @@ Bråkstreck får man även med / -märket
 Multiplikationstecken får man även med * -märket`,
         formatting:        'Muotoilu',
         specialCharacters: 'Specialtecken',
-        insertEquation:    'Lägg till formerl',
+        insertEquation:    'Lägg till formel',
         close:             'stäng',
         save:              'Spara',
         updated:           'Uppdaterad',
