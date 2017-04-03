@@ -1,3 +1,5 @@
+const $ = require('jquery')
+const Bacon = require('baconjs')
 let markers = {}
 let timestamp = null
 const $answer = $('.answer')
