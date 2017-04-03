@@ -71,7 +71,7 @@ function exposeModules(names) {
 }
 
 function formatDate(date) {
-    return `${date.getDay()}.${date.getMonth() + 1}.${date.getFullYear()} ${pad(date.getHours())}:${pad(date.getMinutes())}`
+    return `${date.getDate()}.${date.getMonth() + 1}.${date.getFullYear()} ${pad(date.getHours())}:${pad(date.getMinutes())}`
 }
 
 function pad(num) {
