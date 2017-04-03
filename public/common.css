@@ -2,7 +2,7 @@ body {margin: 0;color: #333;font: 14px/1.42 "Helvetica Neue", Helvetica, Arial, 
 section { margin: 2em auto; max-width: 900px; }
 article {padding: 20px;background: #fff;}
 .paragraph { margin: 10px 0; }
-footer {font-weight: bold;font-size: 15px;overflow: hidden;background: #565555;color: #fff;padding: 10px;}
+footer {font-size: 15px;overflow: hidden;background: #565555;color: #fff;padding: 10px;}
 footer section {display: flex;justify-content: space-between;}
 footer .paragraph {}
 footer a { color:#fff;}
