@@ -91,7 +91,7 @@ $math.find('.close').mousedown(e => {
 const mathField = MQ.MathField($equationEditor.get(0), {
     handlers: {
         edit:      () => !latexEditorFocus && $latexEditor.val(mathField.latex()),
-        downOutOf: field => {
+        enter: field => {
             onClose()
             setTimeout(() => newEquation('<div></div>'), 2)
         }
