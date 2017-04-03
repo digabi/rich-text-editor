@@ -3,6 +3,15 @@ const Bacon = require('baconjs')
 let markers = {}
 let timestamp = null
 const $answer = $('.answer')
+const sampleAnswer = require('./sampleAnswer')
+
+$(document).keypress(e => {
+    e.preventDefault()
+    if(e.ctrlKey && !e.altKey && !e.shiftKey && e.key === 'e') {
+        updateAnswer('<div>Esimerkki:</div>' + latexToImg(sampleAnswer) + '<div>Esimerkki 2:</div>' + latexToImg(sampleAnswer))
+    }
+})
+
 $.when(
     $.get('/load'),
     $.get('/loadMarkers')
@@ -10,11 +19,7 @@ $.when(
     if (!answer)
         return
     timestamp = answer.timestamp
-    $answer.html(answer.html)
-        .find('.result')
-        .each((i, elem) => $(elem).prop('id', i))
-        .wrap('<div class="resultWrapper">')
-
+    updateAnswer(answer.html)
     if (markers.timestamp !== timestamp)
         return
     Object.keys(markers.markers).forEach(key => {
@@ -23,7 +28,12 @@ $.when(
         })
     })
 })
-
+function updateAnswer(html) {
+    $answer.html(html)
+        .find('.result')
+        .each((i, elem) => $(elem).prop('id', i))
+        .wrap('<div class="resultWrapper">')
+}
 let mouseDownPos = null
 let $rectangle = null
 $answer.on('mousedown', '.result', e => {
@@ -85,4 +95,7 @@ function toCss(pos1, pos2) {
 
 function setPos($img, pos1, pos2) {
     $img.css(toCss(pos1, pos2))
+}
+function latexToImg(latex) {
+    return '<img class="result" src="/math.svg?latex=' + encodeURIComponent(latex) + '"/>'
 }
