@@ -6,8 +6,8 @@ const $answer = $('.answer')
 const sampleAnswer = require('./sampleAnswer')
 
 $(document).keypress(e => {
-    e.preventDefault()
     if(e.ctrlKey && !e.altKey && !e.shiftKey && e.key === 'e') {
+        e.preventDefault()
         updateAnswer('<div>Esimerkki:</div>' + latexToImg(sampleAnswer) + '<div>Esimerkki 2:</div>' + latexToImg(sampleAnswer))
     }
 })
@@ -16,11 +16,11 @@ $.when(
     $.get('/load'),
     $.get('/loadMarkers')
 ).done(([answer], [markers]) => {
-    if (!answer)
+    if(!answer)
         return
     timestamp = answer.timestamp
     updateAnswer(answer.html)
-    if (markers.timestamp !== timestamp)
+    if(markers.timestamp !== timestamp)
         return
     Object.keys(markers.markers).forEach(key => {
         markers.markers[key].forEach(marker => {
@@ -43,8 +43,8 @@ $answer.on('mousedown', '.result', e => {
     $(e.target).after($rectangle)
 }).on('mousemove', '.result', e => {
     e.preventDefault()
-    if (e.buttons === 0) {
-        if ($rectangle) onEnd(e)
+    if(e.buttons === 0) {
+        if($rectangle) onEnd(e)
     } else {
         setPos($rectangle, mouseDownPos, point(e))
     }
@@ -62,9 +62,20 @@ $('.save').click(() => {
         contentType: 'application/json; charset=utf-8'
     })
 })
-
+$answer.on('submit', '.description', e => {
+    e.preventDefault()
+    const $form = $(e.target)
+    const value = $form.find('input').val()
+    $form.remove()
+    console.log('Saving ' + value)
+})
 function onEnd(e) {
-    savePos($(e.target), toCss(mouseDownPos, point(e)))
+    const $field = $('<form class="description"><input type="text"/><button type="submit" class="actionButton">Lisää</button>')
+        .css(point(e))
+    let $target = $(e.target).parent()
+    $target.append($field)
+    $field.find('input').focus()
+    savePos($target, toCss(mouseDownPos, point(e)))
     $rectangle = null
 }
 
