@@ -54,7 +54,7 @@ app.post('/saveMarkers', (req, res) => {
     savedMarkers[req.session.id] = req.body
     res.sendStatus(200)
 })
-app.get('/load', (req, res) => res.send(savedData[req.session.id]))
+app.get('/load', (req, res) => res.send(savedData[req.session.id]) || null)
 app.get('/loadMarkers', (req, res) => res.send(savedMarkers[req.session.id]))
 
 app.get('/math.svg', mathImg.handler)
