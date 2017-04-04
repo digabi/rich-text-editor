@@ -30,9 +30,17 @@ $('.save').click(() => $.post('/save', {text: $answer.html()}))
 $.get('/load', data => data && $answer.html(data.html))
 
 $answer.on('paste', e => {
+    e.preventDefault()
     const reader = new FileReader()
     const file = e.originalEvent.clipboardData.items[0].getAsFile()
-    if(file) reader.readAsDataURL(file)
+    if (file) {
+        reader.readAsDataURL(file)
+    } else {
+        const clipboardDataAsHtml = e.originalEvent.clipboardData.getData('text/html')
+        if (clipboardDataAsHtml) {
+            window.document.execCommand('insertHTML', false, sanitizeHtml(clipboardDataAsHtml, sanitizeOpts));
+        }
+    }
 
     reader.onload = evt => {
         const img = `<img src="${evt.target.result}"/>`
