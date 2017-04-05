@@ -30,6 +30,8 @@ $('.save').click(() => $.post('/save', {text: $answer.html()}))
 $.get('/load', data => data && $answer.html(data.html))
 
 $answer.on('paste', e => {
+    if(e.target.tagName === 'TEXTAREA')
+        return
     e.preventDefault()
     const reader = new FileReader()
     const file = e.originalEvent.clipboardData.items[0].getAsFile()
