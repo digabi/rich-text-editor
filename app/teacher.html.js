@@ -2,7 +2,7 @@ module.exports = (obj) => { with(obj) return `<!DOCTYPE html>
 <html>
 <head>
     <meta charset='utf-8'>
-    <title>${mathEditor}</title>
+    <title>${title} - ${mathEditor}</title>
     <link rel="stylesheet" type="text/css" href="/teacher.css">
     <link rel="icon" href="/math-editor-favicon.ico" type="image/x-icon"/>
     <link rel="shortcut icon" href="/math-editor-favicon.ico" type="image/x-icon"/>
@@ -17,7 +17,7 @@ module.exports = (obj) => { with(obj) return `<!DOCTYPE html>
         <script>
 
         </script>
-        <h2>${title}</h2>
+        <h1>${title}</h1>
         <p>
             <a href="${backLink}">${backLinkLabel}</a>
         </p>

@@ -6,9 +6,8 @@ module.exports = {
 kemiassa käytettäviä merkintöjä. Lisäksi erikoismerkkejä voi käyttää kaavan kirjoittamiseen. Kaavoja voi rakentaa
 klikkaamalla valikon merkintöjä ja/tai kirjoittamalla LaTeXia. Editorin vastauskenttään voi kirjoittaa tekstiä ja kaavoja sekä
 lisätä kuvia.`,
-        shortcuts: `Pikanäppäinvinkkejä:
-
-Ctrl-V                Liitä kuva leikepöydältä
+        shortcutTitle: `Pikanäppäinvinkkejä`,
+        shortcuts: `Ctrl-V                Liitä kuva leikepöydältä
 Ctrl-L / Ctrl-I       Kirjoita kaava
 Jakoviivan saa myös / -merkillä
 Kertomerkin saa myös * -merkillä`,

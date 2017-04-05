@@ -22,8 +22,9 @@ module.exports = (obj) => { with(obj) return `<!DOCTYPE html>
         <script>
 
         </script>
-        <h3>${title}</h3>
+        <h1>${title}</h1>
         <p>${description}</p>
+        <h2>${shortcutTitle}</h2>
         <p>
             <small>
                 <pre>${shortcuts}</pre>
