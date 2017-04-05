@@ -8,8 +8,8 @@ Det går förutom att skriva text och formler, att också att lägga till bilder
 
 Tips på tangentkombinationer:
 
-Ctrl-V       Lägg till en bild från klippbordet
-Ctrl-L       Skriv en formel
+Ctrl-V                Lägg till en bild från klippbordet
+Ctrl-L / Ctrl-I       Skriv en formel
 Bråkstreck får man även med / -märket
 Multiplikationstecken får man även med * -märket`,
         formatting: 'Muotoilu',

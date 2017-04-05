@@ -60,7 +60,9 @@ $answer.on('focus blur', e => {
     answerFocus = e.type === 'focus'
 })
     .keypress(e => {
-        if (e.ctrlKey && !e.altKey && !e.shiftKey && e.key === 'l') newEquation()
+        if (e.ctrlKey && !e.altKey && !e.shiftKey) {
+            if(e.key === 'l' || e.key === 'i') newEquation()
+        }
     })
 function onShowEditor($img) {
     $mathToolbar.show()
@@ -156,20 +158,8 @@ function insertMath(symbol) {
     }
 }
 
-const autosave = (text, async = true) => $.post({
+const save = (text, async = true) => $.post({
     url: '/save',
     data: {text},
     async
 })
-
-Bacon.fromEvent($('[data-js-handle="answer"]'), 'input focus')
-    .map(e => e.currentTarget.innerHTML)
-    .skipDuplicates()
-    .debounce(5000)
-    .onValue(autosave)
-
-window.onbeforeunload = () => {
-    onClose()
-    autosave($answer.html(), false)
-    return null
-}

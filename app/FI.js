@@ -9,8 +9,8 @@ lisätä kuvia.
 
 Pikanäppäinvinkkejä:
 
-Ctrl-V       Liitä kuva leikepöydältä
-Ctrl-L       Kirjoita kaava
+Ctrl-V                Liitä kuva leikepöydältä
+Ctrl-L / Ctrl-I       Kirjoita kaava
 Jakoviivan saa myös / -merkillä
 Kertomerkin saa myös * -merkillä`,
         formatting: 'Muotoilu',
