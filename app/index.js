@@ -18,6 +18,7 @@ const interfaceIP = process.env.OPENSHIFT_NODEJS_IP || '0.0.0.0'
 const port = process.env.PORT || process.env.OPENSHIFT_NODEJS_PORT || 5000
 const app = express()
 let savedData = {}
+let savedImage = {}
 let savedMarkers = {}
 const sanitizeOpts = require('./sanitizeOpts')
 
@@ -50,11 +51,41 @@ app.post('/save', (req, res) => {
     }
     res.sendStatus(200)
 })
+app.post('/saveImg', (req, res) => {
+    savedImage[req.session.id] = savedImage[req.session.id] || {}
+    savedImage[req.session.id][req.body.id] = req.body.text
+    res.send(req.body.id)
+})
 app.post('/saveMarkers', (req, res) => {
     savedMarkers[req.session.id] = req.body
     res.sendStatus(200)
 })
 app.get('/load', (req, res) => res.send(savedData[req.session.id]) || null)
+
+function decodeBase64Image(dataString) {
+    if(!dataString)
+        return null
+    const matches = dataString.match(/^data:([A-Za-z-+\/]+);base64,(.+)$/)
+    if (matches.length !== 3) {
+        return null
+    }
+    return {
+        type: matches[1],
+        data: new Buffer(matches[2], 'base64')
+    }
+}
+
+app.get('/loadImg', (req, res) => {
+    const data = decodeBase64Image(savedImage[req.session.id][req.query.id])
+    if (data) {
+        res.writeHead(200, {
+            'Content-Type': data.type,
+        })
+        res.end(data.data)
+    } else {
+        res.send(404)
+    }
+})
 app.get('/loadMarkers', (req, res) => res.send(savedMarkers[req.session.id]))
 
 app.get('/math.svg', mathImg.handler)
