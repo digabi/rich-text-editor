@@ -9,8 +9,8 @@ module.exports = (obj) => { with(obj) return `<!DOCTYPE html>
     <script src="/bacon.jquery/dist/bacon.jquery.js"></script>
     <script src="/mathquill/build/mathquill.js"></script>
     <link rel="stylesheet" type="text/css" href="/student.css">
-    <link rel="icon" href="/math-editor-favicon.ico" type="image/x-icon" />
-    <link rel="shortcut icon" href="/math-editor-favicon.ico" type="image/x-icon" />
+    <link rel="icon" href="/math-editor-favicon.ico" type="image/x-icon"/>
+    <link rel="shortcut icon" href="/math-editor-favicon.ico" type="image/x-icon"/>
 </head>
 <body>
 <article>
@@ -24,7 +24,8 @@ module.exports = (obj) => { with(obj) return `<!DOCTYPE html>
         </script>
         <h3>${title}</h3>
         <p>
-            <small><pre>${description}</pre>
+            <small>
+                <pre>${description}</pre>
             </small>
         </p>
 
@@ -73,9 +74,9 @@ module.exports = (obj) => { with(obj) return `<!DOCTYPE html>
 </footer>
 <script src="/student.js"></script>
 <script>
-    (function(i, s, o, g, r, a, m) {
+    (function (i, s, o, g, r, a, m) {
         i['GoogleAnalyticsObject'] = r;
-        i[r] = i[r] || function() {
+        i[r] = i[r] || function () {
                 (i[r].q = i[r].q || []).push(arguments)
             }, i[r].l = 1 * new Date();
         a = s.createElement(o),

@@ -6,7 +6,7 @@ const $answer = $('.answer')
 const sampleAnswer = require('./sampleAnswer')
 
 $(document).keypress(e => {
-    if(e.ctrlKey && !e.altKey && !e.shiftKey && e.key === 'e') {
+    if (e.ctrlKey && !e.altKey && !e.shiftKey && e.key === 'e') {
         e.preventDefault()
         updateAnswer('<div>Esimerkki:</div>' + latexToImg(sampleAnswer) + '<div>Esimerkki 2:</div>' + latexToImg(sampleAnswer))
     }
@@ -16,11 +16,11 @@ $.when(
     $.get('/load'),
     $.get('/loadMarkers')
 ).done(([answer], [markers]) => {
-    if(!answer)
+    if (!answer)
         return
     timestamp = answer.timestamp
     updateAnswer(answer.html)
-    if(markers.timestamp !== timestamp)
+    if (markers.timestamp !== timestamp)
         return
     Object.keys(markers.markers).forEach(key => {
         markers.markers[key].forEach(marker => {
@@ -43,8 +43,8 @@ $answer.on('mousedown', '.result', e => {
     $(e.target).after($rectangle)
 }).on('mousemove', '.result', e => {
     e.preventDefault()
-    if(e.buttons === 0) {
-        if($rectangle) onEnd(e)
+    if (e.buttons === 0) {
+        if ($rectangle) onEnd(e)
     } else {
         setPos($rectangle, mouseDownPos, point(e))
     }
@@ -55,10 +55,10 @@ $answer.on('mousedown', '.result', e => {
 
 $('.save').click(() => {
     $.ajax({
-        type:        'POST',
-        url:         '/saveMarkers',
-        data:        JSON.stringify({timestamp, markers}),
-        dataType:    'json',
+        type: 'POST',
+        url: '/saveMarkers',
+        data: JSON.stringify({timestamp, markers}),
+        dataType: 'json',
         contentType: 'application/json; charset=utf-8'
     })
 })
@@ -82,7 +82,7 @@ function onEnd(e) {
 function point(e) {
     return {
         left: e.offsetX,
-        top:  e.offsetY
+        top: e.offsetY
     }
 }
 function restoreRectangle($img, pos) {
@@ -97,9 +97,9 @@ function savePos($img, pos) {
 
 function toCss(pos1, pos2) {
     return {
-        left:   Math.min(pos1.left, pos2.left),
-        top:    pos1.top,
-        width:  Math.abs(pos2.left - pos1.left),
+        left: Math.min(pos1.left, pos2.left),
+        top: pos1.top,
+        width: Math.abs(pos2.left - pos1.left),
         height: 3
     }
 }

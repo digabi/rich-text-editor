@@ -22,9 +22,9 @@ let savedMarkers = {}
 const sanitizeOpts = require('./sanitizeOpts')
 
 app.use(session({
-    secret:            'alsdjfwernfeklbjweiugerpfiorq3jlkhewfbads',
+    secret: 'alsdjfwernfeklbjweiugerpfiorq3jlkhewfbads',
     saveUninitialized: true,
-    resave:            true
+    resave: true
 }))
 
 app.use('/student.js', browserify(__dirname + '/student.front.js'))
@@ -46,7 +46,7 @@ app.use(bodyParser.json({limit: 20 * 1024 * 1024, strict: false}))
 app.post('/save', (req, res) => {
     savedData[req.session.id] = {
         timestamp: new Date().toISOString(),
-        html:      sanitizeHtml(req.body.text, sanitizeOpts)
+        html: sanitizeHtml(req.body.text, sanitizeOpts)
     }
     res.sendStatus(200)
 })
@@ -60,7 +60,7 @@ app.get('/loadMarkers', (req, res) => res.send(savedMarkers[req.session.id]))
 app.get('/math.svg', mathImg.handler)
 app.get('/version', (req, res) => {
     res.send({
-        serverStarted:     startedAt.toString(),
+        serverStarted: startedAt.toString(),
         currentServerTime: new Date().toString()
     })
 })

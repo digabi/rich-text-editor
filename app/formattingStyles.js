@@ -5,7 +5,7 @@ module.exports = [
 ]
 
 function initTagButtons() {
-     $('.tags .list').append(require('./formattingStyles').map(o => $(`<button id="${o.action}">${o.label}</button>`)))
+    $('.tags .list').append(require('./formattingStyles').map(o => $(`<button id="${o.action}">${o.label}</button>`)))
 
     $('.tags button').mousedown(e => {
         pasteHtmlAtCaret(e.currentTarget.id)

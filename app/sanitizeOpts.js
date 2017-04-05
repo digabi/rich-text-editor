@@ -1,5 +1,5 @@
 module.exports = {
-    allowedTags:       [
+    allowedTags: [
         'div',
         'img',
         'br'
@@ -7,5 +7,5 @@ module.exports = {
     allowedAttributes: {
         img: ['src', 'class', 'alt']
     },
-    allowedSchemes:    ['http', 'https', 'data']
+    allowedSchemes: ['http', 'https', 'data']
 }

@@ -1,4 +1,4 @@
-module.exports = { insertToTextAreaAtCursor }
+module.exports = {insertToTextAreaAtCursor}
 
 function insertToTextAreaAtCursor(field, value) {
     const startPos = field.selectionStart

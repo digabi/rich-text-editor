@@ -14,14 +14,14 @@ let latexEditorFocus = false
 let editorVisible = false
 const keyCodes = {
     ENTER: 13,
-    ESC:   27
+    ESC: 27
 }
 initMathToolbar()
 initSpecialCharacterSelector()
 
 $('.newEquation').mousedown(e => {
     e.preventDefault()
-    if(!answerFocus) return
+    if (!answerFocus) return
     newEquation()
 })
 
@@ -56,11 +56,11 @@ function newEquation(optionalMarkup) {
     setTimeout(() => mathField.focus(), 0)
 }
 $answer.on('focus blur', e => {
-    if(editorVisible && e.type === 'focus') onClose()
+    if (editorVisible && e.type === 'focus') onClose()
     answerFocus = e.type === 'focus'
 })
     .keypress(e => {
-        if(e.ctrlKey && !e.altKey && !e.shiftKey && e.key === 'l') newEquation()
+        if (e.ctrlKey && !e.altKey && !e.shiftKey && e.key === 'l') newEquation()
     })
 function onShowEditor($img) {
     $mathToolbar.show()
@@ -72,13 +72,13 @@ function onShowEditor($img) {
     setTimeout(() => mathField.focus(), 0)
 }
 $answer.on('mousedown', '.result', e => {
-    if(editorVisible) onClose()
+    if (editorVisible) onClose()
     onShowEditor($(e.target))
 })
 
 function onClose() {
     const $img = $math.prev()
-    if($latexEditor.val().trim() === '') {
+    if ($latexEditor.val().trim() === '') {
         $img.remove()
     } else {
         $img.show()
@@ -98,7 +98,7 @@ $math.find('.close').mousedown(e => {
 })
 const mathField = MQ.MathField($equationEditor.get(0), {
     handlers: {
-        edit:      () => !latexEditorFocus && $latexEditor.val(mathField.latex()),
+        edit: () => !latexEditorFocus && $latexEditor.val(mathField.latex()),
         enter: field => {
             onClose()
             setTimeout(() => newEquation('<div></div>'), 2)
@@ -106,11 +106,13 @@ const mathField = MQ.MathField($equationEditor.get(0), {
     }
 })
 $math.find('textarea').keydown(e => {
-    if(!e.altKey && !e.shiftKey &&
+    if (!e.altKey && !e.shiftKey &&
         ((e.ctrlKey && e.keyCode === keyCodes.ENTER) ||
         (!e.ctrlKey && e.keyCode === keyCodes.ESC ))) onClose()
 })
-function onLatexUpdate() { setTimeout(() => mathField.latex($latexEditor.val()), 1) }
+function onLatexUpdate() {
+    setTimeout(() => mathField.latex($latexEditor.val()), 1)
+}
 
 $latexEditor
     .keyup(onLatexUpdate)
@@ -138,24 +140,24 @@ function initSpecialCharacterSelector() {
             e.preventDefault()
             const character = e.currentTarget.innerText
             const command = e.currentTarget.dataset.command
-            if(answerFocus) window.document.execCommand('insertText', false, character)
+            if (answerFocus) window.document.execCommand('insertText', false, character)
             else insertMath(command || character)
         })
 }
 
 function insertMath(symbol) {
-    if(latexEditorFocus) {
+    if (latexEditorFocus) {
         util.insertToTextAreaAtCursor($latexEditor.get(0), symbol)
         onLatexUpdate()
-    } else if($equationEditor.hasClass('mq-focused')) {
+    } else if ($equationEditor.hasClass('mq-focused')) {
         mathField.typedText(symbol)
-        if(symbol.startsWith('\\')) mathField.keystroke('Tab')
+        if (symbol.startsWith('\\')) mathField.keystroke('Tab')
         setTimeout(() => mathField.focus(), 0)
     }
 }
 
 const autosave = (text, async = true) => $.post({
-    url:  '/save',
+    url: '/save',
     data: {text},
     async
 })

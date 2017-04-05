@@ -7,12 +7,12 @@ mjAPI.start()
 
 function handler(req, res) {
     mjAPI.typeset({
-        math:   req.query.latex,
+        math: req.query.latex,
         format: "TeX", // "inline-TeX", "MathML"
-        mml:    false,
-        svg:    true,
-    }, function(data) {
-        if(data.errors) {
+        mml: false,
+        svg: true,
+    }, function (data) {
+        if (data.errors) {
             res.type('svg')
             res.send(`<svg xmlns="http://www.w3.org/2000/svg"  
      xmlns:xlink="http://www.w3.org/1999/xlink">
