@@ -67,7 +67,7 @@ $answer.on('focus blur', e => {
     .keypress(e => {
         if (e.ctrlKey && !e.altKey && !e.shiftKey) {
             if(e.key === 'l' || e.key === 'i') newEquation()
-            else if(e.key === 's') save($answer.html())
+            else if(e.key === 's') save($answer)
         }
     })
 function onShowEditor($img) {
@@ -164,8 +164,10 @@ function insertMath(symbol) {
     }
 }
 
-const save = (text, async = true) => $.post({
-    url: '/save',
-    data: {text},
-    async
-})
+const save = ($answer, async = true) => {
+    $.post({
+        url: '/save',
+        data: {text: $answer.html()},
+        async
+    })
+}
