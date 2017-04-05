@@ -5,9 +5,8 @@ module.exports = {
         description: `Editori toimii parhaiten Firefox-selaimella. “Lisää kaava” -napin alta löydät yleisimpiä matematiikassa, fysiikassa ja
 kemiassa käytettäviä merkintöjä. Lisäksi erikoismerkkejä voi käyttää kaavan kirjoittamiseen. Kaavoja voi rakentaa
 klikkaamalla valikon merkintöjä ja/tai kirjoittamalla LaTeXia. Editorin vastauskenttään voi kirjoittaa tekstiä ja kaavoja sekä
-lisätä kuvia.
-
-Pikanäppäinvinkkejä:
+lisätä kuvia.`,
+        shortcuts: `Pikanäppäinvinkkejä:
 
 Ctrl-V                Liitä kuva leikepöydältä
 Ctrl-L / Ctrl-I       Kirjoita kaava

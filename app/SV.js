@@ -4,9 +4,8 @@ module.exports = {
         title: 'Formeleditorns första utvecklingsversion',
         description: `Editorn fungerar bäst med browsern Firefox. Under knappen “Lägg till formel” hittar du de vanligaste beteckningarna som används i matematik, fysik och kemi. Dessutom kan du använda specialtecken för att skriva formler.
 Det går att konstruera formler genom att klicka på beteckningarna i menyerna och/eller genom att skriva LaTeX.
-Det går förutom att skriva text och formler, att också att lägga till bilder i svarsfältet.
-
-Tips på tangentkombinationer:
+Det går förutom att skriva text och formler, att också att lägga till bilder i svarsfältet.`,
+        shortcuts: `Tips på tangentkombinationer:
 
 Ctrl-V                Lägg till en bild från klippbordet
 Ctrl-L / Ctrl-I       Skriv en formel
