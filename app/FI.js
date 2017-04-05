@@ -7,10 +7,16 @@ kemiassa käytettäviä merkintöjä. Lisäksi erikoismerkkejä voi käyttää k
 klikkaamalla valikon merkintöjä ja/tai kirjoittamalla LaTeXia. Editorin vastauskenttään voi kirjoittaa tekstiä ja kaavoja sekä
 lisätä kuvia.`,
         shortcutTitle: `Pikanäppäinvinkkejä`,
-        shortcuts: `Ctrl-V                Liitä kuva leikepöydältä
-Ctrl-L / Ctrl-I       Kirjoita kaava
-Jakoviivan saa myös / -merkillä
-Kertomerkin saa myös * -merkillä`,
+        shortcuts: `<table><tbody>
+<tr><th>Liitä kuva leikepöydältä</th><td>Ctrl-V</td></tr>
+<tr><th>Kirjoita kaava</th><td>Ctrl-L tai Ctrl-I</td></tr>
+<tr><th colspan="2">Kaavassa</th></tr>
+<tr><th>Jakoviiva</th><td>/</td></tr>
+<tr><th>Kertomerkki</th><td>*</td></tr>
+<tr><th>Sulje kaava</th><td>Ctrl-Enter</td></tr>
+<tr><th>Lisää kaava seuraavalle riville</th><td>Enter</td></tr>
+</tbody>
+</table>`,
         formatting: 'Muotoilu',
         specialCharacters: 'Erikoismerkit',
         insertEquation: 'Lisää kaava',
