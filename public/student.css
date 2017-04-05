@@ -1,14 +1,14 @@
 @import "common.css";
 .list { border: 1px solid #eee; margin-bottom: 10px; }
 .expanded .list { display: block; }
-.special-characters { font-size: 12px; padding: 8px 0; display: block; border: none; color: #68b4df; background: none; text-transform: uppercase; }
 .math .close { letter-spacing: 1px; cursor: pointer; border: 1px solid gray; line-height: 1; vertical-align: top; font-size: 13px; position: absolute; left: 0; top: 97%; width: 60px; height: 17px; text-align: center; color: #68b4df; z-index: 2; background: #fff; border-top: none; box-shadow: 1px 4px 7px 0 rgba(0, 0, 0, .2); }
 .math .close:hover { color: #406F88; }
 .boxes { display: flex; }
 .equationEditor { width: 50%; padding: 10px; }
 .mathToolbar { margin-bottom: 5px; display: flex; flex-wrap: wrap; font-size: 10px; }
 .latexEditor { font-size: 15px; width: 50%; }
-.result { vertical-align: middle; cursor: pointer; }
+.result { vertical-align: middle; }
+.answer:focus .result { cursor: pointer; }
 .math { margin: 10px; position: relative; box-shadow: 1px 1px 10px 1px rgba(0, 0, 0, .2); }
 .newEquation:before { content: 'Σ'; display: inline-block; margin-right: 10px; }
 .mq-math-mode .mq-root-block { white-space: normal; }

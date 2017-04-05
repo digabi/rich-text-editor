@@ -28,31 +28,10 @@ module.exports = (obj) => { with(obj) return `<!DOCTYPE html>
         <p> ${shortcuts} </p>
 
         <hr/>
-        <div class="toolbar">
-            <!--<div class="tags">-->
-            <!--<span class="toggle">${formatting}</span>-->
-            <!--<div class="list" style="display: none"></div>-->
-            <!--</div>-->
-            <div class="characters">
-                <span class="special-characters">${specialCharacters}</span>
-                <div class="list"></div>
-            </div>
-            <p>
-                <button class="newEquation actionButton" title="Ctrl-L">${insertEquation}</button>
-            </p>
-            <div class="mathToolbar list"></div>
-        </div>
-
+        <h2>Kysymys 1</h2>
         <div class="answer" contenteditable="true" data-js-handle="answer"></div>
-        <div class="outerPlaceholder" style="display: none">
-            <div class="math">
-                <div class="close" title="Ctrl-Enter">${close}</div>
-                <div class="boxes">
-                    <div class="equationEditor"></div>
-                    <textarea class="latexEditor" placeholder="LaTex"></textarea>
-                </div>
-            </div>
-        </div>
+        <h2>Kysymys 2</h2>
+        <div class="answer" contenteditable="true" data-js-handle="answer"></div>
         <button class="save actionButton" style="display: none">${save}</button>
     </section>
 </article>
