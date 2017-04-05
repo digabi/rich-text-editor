@@ -25,12 +25,10 @@ $('.newEquation').mousedown(e => {
     newEquation()
 })
 
-$('.save').click(() => $.post('/save', {text: $answer.html()}))
-
 $.get('/load', data => data && $answer.html(data.html))
 
 $answer.on('paste', e => {
-    if(e.target.tagName === 'TEXTAREA')
+    if (e.target.tagName === 'TEXTAREA')
         return
     const reader = new FileReader()
     const clipboardData = e.originalEvent.clipboardData
@@ -48,7 +46,6 @@ $answer.on('paste', e => {
 
     reader.onload = evt => {
         const img = `<img src="${evt.target.result}"/>`
-        console.log('img', img)
         window.document.execCommand('insertHTML', false, sanitizeHtml(img, sanitizeOpts))
     }
 })
@@ -66,8 +63,8 @@ $answer.on('focus blur', e => {
 })
     .keypress(e => {
         if (e.ctrlKey && !e.altKey && !e.shiftKey) {
-            if(e.key === 'l' || e.key === 'i') newEquation()
-            else if(e.key === 's') save($answer)
+            if (e.key === 'l' || e.key === 'i') newEquation()
+            else if (e.key === 's') save($answer)
         }
     })
 function onShowEditor($img) {
@@ -170,9 +167,28 @@ function insertMath(symbol, alternativeSymbol, useWrite) {
 }
 
 const save = ($answer, async = true) => {
-    $.post({
-        url: '/save',
-        data: {text: $answer.html()},
+    const ts = new Date().getTime()
+    const inlineImages = $('.answer img[src^="data"]').each((i, el) => {
+        el.setAttribute('id', ts + '-' + i)
+    }).map((i, el) => ({
+        data: el.getAttribute('src'),
+        id: el.getAttribute('id')
+    })).toArray()
+
+    Bacon.combineAsArray(inlineImages.map(data => Bacon.fromPromise($.post({
+        url: '/saveImg',
+        data: {
+            text: data.data,
+            id: data.id
+        },
         async
-    })
+    })))).flatMap(results => {
+        results.forEach(id => $answer.find('#' + id).attr('src', '/loadImg?id=' + id))
+        return $answer.html()
+    }).flatMap(html => Bacon.fromPromise($.post({
+            url: '/save',
+            data: {text: html},
+            async
+        })
+    )).onValue(() => console.log('Saved'))
 }
