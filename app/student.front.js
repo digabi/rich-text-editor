@@ -62,6 +62,7 @@ $answer.on('focus blur', e => {
     .keypress(e => {
         if (e.ctrlKey && !e.altKey && !e.shiftKey) {
             if(e.key === 'l' || e.key === 'i') newEquation()
+            else if(e.key === 's') save($answer.html())
         }
     })
 function onShowEditor($img) {
