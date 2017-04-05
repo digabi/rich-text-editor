@@ -42,8 +42,8 @@ app.get('/tarkistus', (req, res) => res.send(teacherHtmlFI))
 app.get('/', (req, res) => res.send(studentHtmlFI))
 app.get('/sv/bedomning', (req, res) => res.send(teacherHtmlSV))
 app.get('/sv', (req, res) => res.send(studentHtmlSV))
-app.use(bodyParser.urlencoded({extended: false}))
-app.use(bodyParser.json({limit: 20 * 1024 * 1024, strict: false}))
+app.use(bodyParser.urlencoded({extended: false, limit: '5mb'}))
+app.use(bodyParser.json({limit: '5mb', strict: false}))
 app.post('/save', (req, res) => {
     savedData[req.session.id] = {
         timestamp: new Date().toISOString(),
