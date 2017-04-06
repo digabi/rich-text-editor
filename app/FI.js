@@ -13,7 +13,8 @@ lisätä kuvia.`,
 <tr><th colspan="2">Kaavassa</th></tr>
 <tr><th>Jakoviiva</th><td>/</td></tr>
 <tr><th>Kertomerkki</th><td>*</td></tr>
-<tr><th>Sulje kaava</th><td>Ctrl-Enter</td></tr>
+<tr><th>Eksponentti</th><td>^</td></tr>
+<tr><th>Sulje kaava</th><td>Ctrl-Enter tai Esc</td></tr>
 <tr><th>Lisää kaava seuraavalle riville</th><td>Enter</td></tr>
 </tbody>
 </table>`,
