@@ -2,10 +2,14 @@ module.exports = {
     editor: {
         mathEditor: 'Matikkaeditori',
         title: 'Kaavaeditorin ensimmäinen kehitysversio',
-        description: `Editori toimii parhaiten Firefox-selaimella. “Lisää kaava” -napin alta löydät yleisimpiä matematiikassa, fysiikassa ja
-kemiassa käytettäviä merkintöjä. Lisäksi erikoismerkkejä voi käyttää kaavan kirjoittamiseen. Kaavoja voi rakentaa
-klikkaamalla valikon merkintöjä ja/tai kirjoittamalla LaTeXia. Editorin vastauskenttään voi kirjoittaa tekstiä ja kaavoja sekä
-lisätä kuvia.`,
+        description: `<ul>
+<li>Editori toimii parhaiten Firefox-selaimella.</li>
+<li>“Lisää kaava” -napin alta löydät yleisimpiä matematiikassa, fysiikassa ja
+kemiassa käytettäviä merkintöjä. Lisäksi erikoismerkkejä voi käyttää kaavan kirjoittamiseen.</li>
+ <li>Kaavoja voi rakentaa
+klikkaamalla valikon merkintöjä ja/tai kirjoittamalla LaTeXia.</li>
+ <li>Editorin vastauskenttään voi kirjoittaa tekstiä ja kaavoja sekä
+lisätä kuvia.</li></ul>`,
         shortcutTitle: `Pikanäppäinvinkkejä`,
         shortcuts: `<table><tbody>
 <tr><th>Liitä kuva leikepöydältä</th><td>Ctrl-V</td></tr>
