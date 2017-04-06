@@ -127,13 +127,14 @@ $answer.get(0).focus()
 
 function initMathToolbar() {
     $mathToolbar.append(latexCommands
-        .map(o => `<button title="${o.action}" data-command="${o.action}" data-latexcommand="${o.label}">
+        .map(o => `<button title="${o.action}" data-command="${o.action}" data-latexcommand="${o.label}" data-usewrite="${o.useWrite || false}">
 <img src="/math.svg?latex=${encodeURIComponent(o.label ? o.label.replace(/X/g, '\\square') : o.action)}"/>
 </button>`)
         .join('')
     ).on('mousedown', 'button', e => {
         e.preventDefault()
-        insertMath(e.currentTarget.dataset.command, e.currentTarget.dataset.latexcommand)
+        const dataset = e.currentTarget.dataset;
+        insertMath(dataset.command, dataset.latexcommand, dataset.usewrite === 'true')
     })
     $mathToolbar.hide()
 }
@@ -150,12 +151,16 @@ function initSpecialCharacterSelector() {
         })
 }
 
-function insertMath(symbol, alternativeSymbol) {
+function insertMath(symbol, alternativeSymbol, useWrite) {
     if (latexEditorFocus) {
         util.insertToTextAreaAtCursor($latexEditor.get(0), alternativeSymbol || symbol)
         onLatexUpdate()
     } else if ($equationEditor.hasClass('mq-focused')) {
-        mathField.typedText(symbol)
+        if (useWrite) {
+            mathField.write(symbol)
+        } else {
+            mathField.typedText(symbol)
+        }
         if (symbol.startsWith('\\')) mathField.keystroke('Tab')
         setTimeout(() => mathField.focus(), 0)
     }
