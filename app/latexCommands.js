@@ -20,5 +20,6 @@ module.exports = [
     {action: '\\underline', label: '\\underline{X}'},
     {action: '\\overleftarrow', label: '\\overleftarrow{X}'},
     {action: '|', label: '|X|'},
-    {action: '(', label: '(X)'}
+    {action: '(', label: '(X)'},
+    {action: '_{ }^{ } ', label: '_{X}^{X}X', useWrite: true}
 ]
