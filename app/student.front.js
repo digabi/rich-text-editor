@@ -166,21 +166,16 @@ function insertMath(symbol, alternativeSymbol, useWrite) {
     }
 }
 
+const markAndGetInlineImages = ts => $('.answer img[src^="data"]')
+    .each((i, el) => el.setAttribute('id', ts + '-' + i))
+    .map((i, el) => ({data: el.getAttribute('src'), id: el.getAttribute('id')}))
+    .toArray()
+
 const save = ($answer, async = true) => {
     const ts = new Date().getTime()
-    const inlineImages = $('.answer img[src^="data"]').each((i, el) => {
-        el.setAttribute('id', ts + '-' + i)
-    }).map((i, el) => ({
-        data: el.getAttribute('src'),
-        id: el.getAttribute('id')
-    })).toArray()
-
-    Bacon.combineAsArray(inlineImages.map(data => Bacon.fromPromise($.post({
+    Bacon.combineAsArray(markAndGetInlineImages(ts).map(data => Bacon.fromPromise($.post({
         url: '/saveImg',
-        data: {
-            text: data.data,
-            id: data.id
-        },
+        data: {text: data.data, id: data.id},
         async
     })))).flatMap(results => {
         results.forEach(id => $answer.find('#' + id).attr('src', '/loadImg?id=' + id))
@@ -192,3 +187,4 @@ const save = ($answer, async = true) => {
         })
     )).onValue(() => console.log('Saved'))
 }
+
