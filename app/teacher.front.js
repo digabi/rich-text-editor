@@ -66,16 +66,16 @@ $answer.on('submit', '.description', e => {
     e.preventDefault()
     const $form = $(e.target)
     const value = $form.find('input').val()
+    $form.prev().prop('title', value)
     $form.remove()
-    console.log('Saving ' + value)
 })
 function onEnd(e) {
-    const $field = $('<form class="description"><input type="text"/><button type="submit" class="actionButton">Lisää</button>')
+    const $form = $('<form class="description"><input type="text"/><button type="submit" class="actionButton">Merkitse</button>')
         .css(point(e))
-    let $target = $(e.target).parent()
-    $target.append($field)
-    $field.find('input').focus()
-    savePos($target, toCss(mouseDownPos, point(e)))
+    let $imgWrapper = $(e.target).parent()
+    $rectangle.after($form)
+    $form.find('input').focus()
+    savePos($imgWrapper, toCss(mouseDownPos, point(e)))
     $rectangle = null
 }
 
@@ -90,8 +90,8 @@ function restoreRectangle($img, pos) {
     $img.after($rectangle)
     savePos($img, pos)
 }
-function savePos($img, pos) {
-    const index = $img.prop('id')
+function savePos($imgWrapper, pos) {
+    const index = $imgWrapper.prop('id')
     markers[index] = (markers[index] || []).concat(pos)
 }
 
@@ -100,7 +100,7 @@ function toCss(pos1, pos2) {
         left: Math.min(pos1.left, pos2.left),
         top: pos1.top,
         width: Math.abs(pos2.left - pos1.left),
-        height: 3
+        height: 5
     }
 }
 
