@@ -8,11 +8,11 @@ Det går förutom att skriva text och formler, att också att lägga till bilder
         shortcutTitle: `Tips på tangentkombinationer`,
         shortcuts: `<table><tbody>
 <tr><th>Lägg till en bild från klippbordet</th><td>Ctrl-V</td></tr>
-<tr><th>Skriv en formel</th><td>Ctrl-L tai Ctrl-I</td></tr>
+<tr><th>Skriv en formel</th><td>Ctrl-L / Ctrl-I</td></tr>
 <tr><th colspan="2"></th></tr>
 <tr><th>Bråkstreck</th><td>/</td></tr>
 <tr><th>Multiplikationstecken</th><td>*</td></tr>
-<tr><th>Stäng</th><td>Ctrl-Enter</td></tr>
+<tr><th>Stäng</th><td>Ctrl-Enter / Esc</td></tr>
 </tbody>
 </table>`,
         formatting: 'Muotoilu',
