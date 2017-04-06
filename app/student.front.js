@@ -127,13 +127,13 @@ $answer.get(0).focus()
 
 function initMathToolbar() {
     $mathToolbar.append(latexCommands
-        .map(o => `<button title="${o.action}" data-command="${o.action}">
+        .map(o => `<button title="${o.action}" data-command="${o.action}" data-latexcommand="${o.label}">
 <img src="/math.svg?latex=${encodeURIComponent(o.label ? o.label.replace(/X/g, '\\square') : o.action)}"/>
 </button>`)
         .join('')
     ).on('mousedown', 'button', e => {
         e.preventDefault()
-        insertMath(e.currentTarget.dataset.command)
+        insertMath(e.currentTarget.dataset.command, e.currentTarget.dataset.latexcommand)
     })
     $mathToolbar.hide()
 }
@@ -150,9 +150,9 @@ function initSpecialCharacterSelector() {
         })
 }
 
-function insertMath(symbol) {
+function insertMath(symbol, alternativeSymbol) {
     if (latexEditorFocus) {
-        util.insertToTextAreaAtCursor($latexEditor.get(0), symbol)
+        util.insertToTextAreaAtCursor($latexEditor.get(0), alternativeSymbol || symbol)
         onLatexUpdate()
     } else if ($equationEditor.hasClass('mq-focused')) {
         mathField.typedText(symbol)
