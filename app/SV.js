@@ -28,13 +28,13 @@ module.exports = {
         langLabel: 'Suomeksi'
     },
     annotating: {
-        sendFeedback: 'Skicka feedback',
+        sendFeedback: 'Skicka respons',
         updated: 'Uppdaterad',
         mathEditor: 'Matematikeditor',
-        title: 'Bedömning',
+        title: 'Kontroll',
         backLink: '/sv',
         backLinkLabel: 'Matematikeditor',
-        save: 'Spara anmärkningar',
+        save: 'Spara anteckningar',
         langLink: '/tarkistus',
         langLabel: 'Suomeksi'
     }
