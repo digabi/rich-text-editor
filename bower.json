@@ -1,0 +1,17 @@
+{
+  "name": "math-editor-poc",
+  "description": "Matematiikkaeditori-spike",
+  "main": "dist/math-editor.js",
+  "authors": [],
+  "license": "MIT",
+  "homepage": "https://github.com/digabi/math-editor",
+  "ignore": ["*", "!dist/*"],
+  "dependencies": {
+    "jquery": "3.2.0",
+    "mathjax": "2.7.0",
+    "bacon.jquery": "^0.4.12",
+    "baconjs": "^0.7.92",
+    "mathquill": "0.10.1",
+    "sanitize-html": "^1.14.1"
+  }
+}
