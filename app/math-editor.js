@@ -33,7 +33,7 @@ window.onload = () => {
     let $editor
 
     $('body')
-        .append($('<link rel="stylesheet" type="text/css" href="/math.css"/>'))
+        .append($('<link rel="stylesheet" type="text/css" href="/math-editor.css"/>'))
         .append($outerPlaceholder)
 
     initToolbar()

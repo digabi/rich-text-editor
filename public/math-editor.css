@@ -18,3 +18,4 @@
 .answer:focus,
 .mq-editable-field.mq-focused,
 textarea:focus { box-shadow: none; outline: 2px solid #68b4df; }
+.hidden { display: none; }

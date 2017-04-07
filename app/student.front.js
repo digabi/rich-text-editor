@@ -1,5 +1,5 @@
 const $answer = $('.answer')
-const { makeRichText } = require('./editor')
+const { makeRichText } = require('./math-editor')
 
 $('.save').click(() => $.post('/save', { text: $answer.html() }))
 
