@@ -8,10 +8,10 @@
   "ignore": ["*", "!dist/*"],
   "dependencies": {
     "jquery": "3.2.0",
-    "mathjax": "2.7.0",
+    "MathJax": "2.7.0",
     "bacon.jquery": "^0.4.12",
-    "baconjs": "^0.7.92",
+    "bacon": "^0.7.92",
     "mathquill": "0.10.1",
-    "sanitize-html": "^1.14.1"
+    "sanitize-html": "^1.11.4"
   }
 }
