@@ -1,4 +1,5 @@
 describe('math editor', () => {
+
     before(waitUntil(() => $('.toolbar').length > 0 &&  $('.toolbar').is(':hidden')))
 
     describe('initial state', () => {
@@ -24,10 +25,11 @@ describe('math editor', () => {
 
     describe('start math', () => {
         before(() => {
+            $('.newEquation').mousedown()
         })
 
         it('shows tools', () => {
-
+            expect($('.math')).to.be.visible
         })
     })
 })
