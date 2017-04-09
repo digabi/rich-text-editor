@@ -11,14 +11,23 @@ describe('math editor', () => {
 
     describe('focus state', () => {
         before(() => {
-            $('.answer:first').focus()
-            $('.answer:first').focus() // TODO why two calls is necessary?
+            $('.answer1').focus()
+            $('.answer1').focus() // TODO why two calls is necessary?
         })
         before(waitUntil(() => $('.toolbar').is(':visible')))
 
         it('shows tools', () => {
             expect($('.toolbar')).to.be.visible
-            expect($('.answer:first').prev()).to.have.class('toolbar')
+            expect($('.answer1').prev()).to.have.class('toolbar')
+        })
+    })
+
+    describe('start math', () => {
+        before(() => {
+        })
+
+        it('shows tools', () => {
+
         })
     })
 })

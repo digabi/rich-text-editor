@@ -308,6 +308,8 @@ const persistInlineImages = $editor => {
 const makeRichText = (selector, onValueChanged = () => {}) => {
     $(selector).each((i, element) => {
         const $editor = $(element)
+        $editor.attr('contenteditable', 'true')
+        $editor.attr('data-js-handle', 'answer')
 
         $editor.on('keydown', e => {
             if(!e.altKey && !e.shiftKey &&
