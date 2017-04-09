@@ -42,10 +42,11 @@ exposeModules([
     'chai',
     'chai-jquery',
     'mocha',])
-app.get('/tarkistus', (req, res) => res.send(teacherHtmlFI))
-app.get('/', (req, res) => res.send(studentHtmlFI))
-app.get('/sv/bedomning', (req, res) => res.send(teacherHtmlSV))
-app.get('/sv', (req, res) => res.send(studentHtmlSV))
+const doctype = '<!DOCTYPE html>'
+app.get('/tarkistus', (req, res) => res.send(doctype + teacherHtmlFI))
+app.get('/', (req, res) => res.send(doctype + studentHtmlFI))
+app.get('/sv/bedomning', (req, res) => res.send(doctype + teacherHtmlSV))
+app.get('/sv', (req, res) => res.send(doctype + studentHtmlSV))
 app.use(bodyParser.urlencoded({extended: false, limit: '5mb'}))
 app.use(bodyParser.json({limit: '5mb', strict: false}))
 app.post('/save', (req, res) => {

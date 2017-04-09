@@ -1,4 +1,4 @@
-module.exports = (obj) => { with(obj) return `<!DOCTYPE html>
+module.exports = (obj) => { with(obj) return `
 <html>
 <head>
     <meta charset='utf-8'>
