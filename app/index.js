@@ -31,13 +31,17 @@ app.use(session({
 app.use('/student.js', browserify(__dirname + '/student.front.js'))
 app.use('/teacher.js', browserify(__dirname + '/teacher.front.js'))
 app.use(express.static(__dirname + '/../public'))
+app.use(express.static(__dirname + '/../test'))
 exposeModules([
     'bootstrap',
     'jquery',
     'baconjs',
     'bacon.jquery',
     'mathquill',
-    'mathjax'])
+    'mathjax',
+    'chai',
+    'chai-jquery',
+    'mocha',])
 app.get('/tarkistus', (req, res) => res.send(teacherHtmlFI))
 app.get('/', (req, res) => res.send(studentHtmlFI))
 app.get('/sv/bedomning', (req, res) => res.send(teacherHtmlSV))

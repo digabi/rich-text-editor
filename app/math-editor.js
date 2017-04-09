@@ -323,7 +323,7 @@ const makeRichText = (selector, onValueChanged = () => {}) => {
             }
         }).on('focus blur', e => {
             if(editor.isMathEditorVisible() && e.type === 'focus') editor.closeMathEditor()
-            answerFocus = e.type === 'focus'
+            //answerFocus = e.type === 'focus'
         }).on('paste', e => {
             if(e.target.tagName === 'TEXTAREA')
                 return
