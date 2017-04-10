@@ -6,6 +6,8 @@ const sanitizeHtml = require('sanitize-html')
 const session = require('express-session')
 const studentHtml = require('./student.html')
 const mathImg = require('./mathImg')
+const fs = require('fs')
+const path = require('path')
 const startedAt = new Date()
 const FI = require('./FI')
 const SV = require('./SV')
@@ -18,8 +20,8 @@ const interfaceIP = process.env.OPENSHIFT_NODEJS_IP || '0.0.0.0'
 const port = process.env.PORT || process.env.OPENSHIFT_NODEJS_PORT || 5000
 const app = express()
 let savedData = {}
-let savedImage = {}
 let savedMarkers = {}
+
 const sanitizeOpts = require('./sanitizeOpts')
 
 app.use(session({
@@ -62,9 +64,10 @@ app.post('/save', (req, res) => {
 app.post('/saveImg', (req, res) => {
     const sessionId = req.session.id
     const {answerId, id, text} = req.body
-    savedImage[sessionId] = savedImage[sessionId] || {}
-    savedImage[sessionId][answerId] = savedImage[sessionId][answerId] || {}
-    savedImage[sessionId][answerId][id] = text
+    const fullPath = path.normalize(`${__dirname}/../target/${sessionId}/${answerId}`)
+    mkdir(fullPath)
+    const data = decodeBase64Image(text)
+    fs.writeFileSync(path.join(fullPath, id + '.png'), data.data)
     res.send(id)
 })
 app.post('/saveMarkers', (req, res) => {
@@ -89,16 +92,42 @@ function decodeBase64Image(dataString) {
         data: new Buffer(matches[2], 'base64')
     }
 }
+function isUnsafe(param) {
+    return param.indexOf('/') >=0 || param.indexOf('..') >= 0
+}
+
+function mkdir(dir) {
+    const sep = '/'
+    const segments = dir.split(sep)
+    let current = ''
+    let i = 0
+
+    while (i < segments.length) {
+        current = current + sep + segments[i]
+        try {
+            fs.statSync(current)
+        } catch (e) {
+            fs.mkdirSync(current)
+        }
+        i++
+    }
+}
 
 app.get('/loadImg', (req, res) => {
     const {answerId, id} = req.query
-    const data = decodeBase64Image(savedImage[req.session.id][answerId][id])
-    if (data) {
+    if(isUnsafe(answerId) || isUnsafe(id)) {
+        res.send(404)
+        return
+    }
+
+    const sessionId = req.session.id;
+    try {
         res.writeHead(200, {
-            'Content-Type': data.type,
+            'Content-Type': 'image/jpeg',
         })
-        res.end(data.data)
-    } else {
+        const fullPath = path.normalize(`${__dirname}/../target/${sessionId}/${answerId}`)
+        fs.createReadStream(path.join(fullPath, id + '.png')).pipe(res)
+    } catch(e) {
         res.send(404)
     }
 })
