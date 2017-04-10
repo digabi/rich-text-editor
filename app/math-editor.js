@@ -182,16 +182,14 @@ window.onload = () => {
     function initToolbar() {
         $toolbar = $(`        
         <div class="toolbar">
-            <div class="toolbarContent">
-                <div class="characters">
-                    <span class="special-characters">
-                      <div class="list"></div>
-                    </span>
-                </div>
-                <div class="mathToolbar list hidden"></div>
-                <div>
-                    <button class="newEquation actionButton" title="Ctrl-L">Lisää kaava</button>
-                </div>
+            <div class="characters">
+                <span class="special-characters">
+                  <div class="list"></div>
+                </span>
+            </div>
+            <div class="mathToolbar list hidden"></div>
+            <div>
+                <button class="newEquation actionButton" title="Ctrl-L">Lisää kaava</button>
             </div>
         </div>
         `)
