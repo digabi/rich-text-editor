@@ -4,12 +4,12 @@
 .math .close { letter-spacing: 1px; cursor: pointer; border: 1px solid gray; line-height: 1; vertical-align: top; font-size: 13px; position: absolute; left: 0; top: 97%; width: 60px; height: 17px; text-align: center; color: #68b4df; z-index: 2; background: #fff; border-top: none; box-shadow: 1px 4px 7px 0 rgba(0, 0, 0, .2); }
 .math .close:hover { color: #406F88; }
 .boxes { display: flex; }
-.equationEditor { width: 50%; padding: 10px; }
+.equationEditor { width: 50%; padding: 10px; background: #fff;}
 .mathToolbar {width: 45%;margin-bottom: 5px;display: flex;flex-wrap: wrap;font-size: 10px;}
-.latexEditor { font-size: 15px; width: 50%; }
+.latexEditor { font-size: 15px; width: 50%; background: #fff;}
 .result { vertical-align: middle; }
 .answer:focus .result { cursor: pointer; }
-.math { margin: 10px; position: relative; box-shadow: 1px 1px 10px 1px rgba(0, 0, 0, .2); }
+.math { margin: 10px; position: relative; box-shadow: 1px 1px 10px 1px rgba(0, 0, 0, .2); z-index: 2;}
 .newEquation:before { content: 'Σ'; display: inline-block; margin-right: 10px; }
 .mq-math-mode .mq-root-block { white-space: normal; }
 .mathToolbar.list button { width: 28px; height: 28px; padding: 4px; }
@@ -19,8 +19,9 @@
 .mq-editable-field.mq-focused,
 textarea:focus { box-shadow: none; outline: 2px solid #68b4df; }
 .hidden { display: none; }
-.toolbar {height: 30px;display: flex;top:0;background: #fff;box-shadow: 1px 1px 10px 1px rgba(0, 0, 0, .2);overflow: hidden;}
+.toolbar {height: 30px; max-width: 900px; top:0;overflow: hidden; margin-bottom: 5px; position: relative;z-index: 1;}
+.toolbarContent {display: flex; position: absolute; top:0; left:0; width:100%; background: #fff;box-shadow: 1px 1px 10px 1px rgba(0, 0, 0, .2);}
 .sticky .toolbar {position: fixed;}
 .characters {width: 45%; margin-right: 10px;}
-.toolbar:hover { height: auto;}
-.newEquation { margin-left: 10px; margin-top: 0;}
+.toolbar:hover { overflow: visible;}
+.newEquation { margin-left: 10px; margin-top: 5px;}
