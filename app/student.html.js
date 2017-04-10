@@ -4,6 +4,7 @@ module.exports = (obj) => { with(obj) return `
     <meta charset='utf-8'>
     <title>${mathEditor}</title>
     <link rel="stylesheet" type="text/css" href="/mathquill/build/mathquill.css">
+    <link rel="stylesheet" type="text/css" href="/math-editor.css"/>
     <script src="/jquery/dist/jquery.js"></script>
     <script src="/baconjs/dist/Bacon.js"></script>
     <script src="/bacon.jquery/dist/bacon.jquery.js"></script>

@@ -32,9 +32,7 @@ window.onload = () => {
     let mathEditorVisible = false
     let $editor
 
-    $('body')
-        .append($('<link rel="stylesheet" type="text/css" href="/math-editor.css"/>'))
-        .append($outerPlaceholder)
+    $('body').append($outerPlaceholder)
 
     initToolbar()
     mathEditor = initMathEditor()
