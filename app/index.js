@@ -50,30 +50,35 @@ app.get('/sv', (req, res) => res.send(doctype + studentHtmlSV))
 app.use(bodyParser.urlencoded({extended: false, limit: '5mb'}))
 app.use(bodyParser.json({limit: '5mb', strict: false}))
 app.post('/save', (req, res) => {
-    savedData[req.session.id] = savedData[req.session.id] || {}
-    savedData[req.session.id][req.body.answerId] = {
+    const sessionId = req.session.id;
+    savedData[sessionId] = savedData[sessionId] || {}
+    const {answerId, text} = req.body
+    savedData[sessionId][answerId] = {
         timestamp: new Date().toISOString(),
-        html: sanitizeHtml(req.body.text, sanitizeOpts)
+        html: sanitizeHtml(text, sanitizeOpts)
     }
     res.sendStatus(200)
 })
 app.post('/saveImg', (req, res) => {
-    savedImage[req.session.id] = savedImage[req.session.id] || {}
-    savedImage[req.session.id][req.body.answerId] = savedImage[req.session.id][req.body.answerId] || {}
-    savedImage[req.session.id][req.body.answerId][req.body.id] = req.body.text
-    res.send(req.body.id)
+    const sessionId = req.session.id
+    const {answerId, id, text} = req.body
+    savedImage[sessionId] = savedImage[sessionId] || {}
+    savedImage[sessionId][answerId] = savedImage[sessionId][answerId] || {}
+    savedImage[sessionId][answerId][id] = text
+    res.send(id)
 })
 app.post('/saveMarkers', (req, res) => {
     savedMarkers[req.session.id] = req.body
     res.sendStatus(200)
 })
 app.get('/load', (req, res) => {
-    res.send(savedData[req.session.id] ?
-        savedData[req.session.id][req.query.answerId] || null : null)
+    const sessionId = req.session.id
+    const answerId = req.query.answerId
+    res.send(savedData[sessionId] ? savedData[sessionId][answerId] || null : null)
 })
 
 function decodeBase64Image(dataString) {
-    if(!dataString)
+    if (!dataString)
         return null
     const matches = dataString.match(/^data:([A-Za-z-+\/]+);base64,(.+)$/)
     if (matches.length !== 3) {
@@ -86,7 +91,8 @@ function decodeBase64Image(dataString) {
 }
 
 app.get('/loadImg', (req, res) => {
-    const data = decodeBase64Image(savedImage[req.session.id][req.query.answerId][req.query.id])
+    const {answerId, id} = req.query
+    const data = decodeBase64Image(savedImage[req.session.id][answerId][id])
     if (data) {
         res.writeHead(200, {
             'Content-Type': data.type,
