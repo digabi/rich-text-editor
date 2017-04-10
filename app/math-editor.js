@@ -271,15 +271,14 @@ window.onload = () => {
     }
 }
 
-const markAndGetInlineImages = ($editor, ts) => $editor.find('img[src^="data"]')
-    .each((i, el) => el.setAttribute('id', ts + '-' + i))
+const markAndGetInlineImages = $editor => $editor.find('img[src^="data"]')
+    .each((i, el) => el.setAttribute('id', new Date().getTime() + '-' + i))
     .map((i, el) => ({data: el.getAttribute('src'), id: el.getAttribute('id')}))
     .toArray()
 
 const persistInlineImages = $editor => {
-    const ts = new Date().getTime()
     return Bacon.combineAsArray(
-        markAndGetInlineImages($editor, ts)
+        markAndGetInlineImages($editor)
             .map(data =>
                 Bacon.fromPromise(
                     $.post({
