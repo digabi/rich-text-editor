@@ -1,7 +1,9 @@
 const $answer = $('.answer')
 const { makeRichText } = require('./math-editor')
 
-$.get('/load', data => data && $answer.html(data.html))
+$answer.each((i, answer) => {
+    $.get(`/load?answerId=${answer.id}`, data => data && $(answer).html(data.html))
+})
 
 const save = ($elem, async = true) => $.post({
     url: '/save',

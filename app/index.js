@@ -50,7 +50,8 @@ app.get('/sv', (req, res) => res.send(doctype + studentHtmlSV))
 app.use(bodyParser.urlencoded({extended: false, limit: '5mb'}))
 app.use(bodyParser.json({limit: '5mb', strict: false}))
 app.post('/save', (req, res) => {
-    savedData[req.session.id] = {
+    savedData[req.session.id] = savedData[req.session.id] || {}
+    savedData[req.session.id][req.body.answerId] = {
         timestamp: new Date().toISOString(),
         html: sanitizeHtml(req.body.text, sanitizeOpts)
     }
@@ -65,7 +66,10 @@ app.post('/saveMarkers', (req, res) => {
     savedMarkers[req.session.id] = req.body
     res.sendStatus(200)
 })
-app.get('/load', (req, res) => res.send(savedData[req.session.id]) || null)
+app.get('/load', (req, res) => {
+    res.send(savedData[req.session.id] ?
+        savedData[req.session.id][req.query.answerId] || null : null)
+})
 
 function decodeBase64Image(dataString) {
     if(!dataString)
