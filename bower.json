@@ -1,11 +1,12 @@
 {
-  "name": "math-editor-poc",
-  "description": "Matematiikkaeditori-spike",
+  "name": "math-editor",
+  "description": "YTL matematiikkaeditori-demo",
   "main": "dist/math-editor.js",
-  "authors": [],
+  "authors": ["abitti@ylioppilastutkinto.fi"],
   "license": "MIT",
   "homepage": "https://github.com/digabi/math-editor",
   "ignore": ["*", "!dist/*"],
+  "version": "1.0.0",
   "dependencies": {
     "jquery": "3.2.0",
     "MathJax": "2.7.0",
