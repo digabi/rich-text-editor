@@ -59,7 +59,8 @@ app.post('/save', (req, res) => {
 })
 app.post('/saveImg', (req, res) => {
     savedImage[req.session.id] = savedImage[req.session.id] || {}
-    savedImage[req.session.id][req.body.id] = req.body.text
+    savedImage[req.session.id][req.body.answerId] = savedImage[req.session.id][req.body.answerId] || {}
+    savedImage[req.session.id][req.body.answerId][req.body.id] = req.body.text
     res.send(req.body.id)
 })
 app.post('/saveMarkers', (req, res) => {
@@ -85,7 +86,7 @@ function decodeBase64Image(dataString) {
 }
 
 app.get('/loadImg', (req, res) => {
-    const data = decodeBase64Image(savedImage[req.session.id][req.query.id])
+    const data = decodeBase64Image(savedImage[req.session.id][req.query.answerId][req.query.id])
     if (data) {
         res.writeHead(200, {
             'Content-Type': data.type,

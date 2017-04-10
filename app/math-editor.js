@@ -292,7 +292,7 @@ const persistInlineImages = $editor => {
         .flatMap(results => {
             console.log(results)
             results.forEach(id => {
-                $editor.find('#' + id).attr('src', '/loadImg?id=' + id)
+                $editor.find('#' + id).attr('src', `/loadImg?answerId=${$editor.attr('id')}&id=${id}`)
             })
         })
         .onValue(() => $editor.trigger('input'))
