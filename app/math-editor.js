@@ -179,9 +179,9 @@ window.onload = () => {
                 </span>
             </div>
             <div class="mathToolbar list hidden"></div>
-            <p>
+            <div>
                 <button class="newEquation actionButton" title="Ctrl-L">Lisää kaava</button>
-            </p>
+            </div>
         </div>
         `)
 
