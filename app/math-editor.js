@@ -25,7 +25,16 @@ function hideElementInDOM($element) {
 let editor
 
 window.onload = () => {
-    // TODO: replace with data attributes?
+    $(window).asEventStream('scroll resize').throttle(500).onValue(e => {
+        const scrollPos = document.body.scrollTop
+        const $answer = $('.toolbar').next()
+        if($answer.hasClass('answer')) {
+            const top = $answer.position().top;
+            $('body').toggleClass('sticky', scrollPos + 35 > top)
+        }
+    })
+
+        // TODO: replace with data attributes?
     let answerFocus = true
     let latexEditorFocus = false
     let equationEditorFocus = false

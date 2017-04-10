@@ -19,7 +19,8 @@
 .mq-editable-field.mq-focused,
 textarea:focus { box-shadow: none; outline: 2px solid #68b4df; }
 .hidden { display: none; }
-.toolbar {height: 30px;display: flex;position: fixed;top:0;left:0;width: 100%;background: #fff;box-shadow: 1px 1px 10px 1px rgba(0, 0, 0, .2);overflow: hidden;}
+.toolbar {height: 30px;display: flex;top:0;background: #fff;box-shadow: 1px 1px 10px 1px rgba(0, 0, 0, .2);overflow: hidden;}
+.sticky .toolbar {position: fixed;}
 .characters {width: 45%; margin-right: 10px;}
 .toolbar:hover { height: auto;}
 .newEquation { margin-left: 10px; margin-top: 0;}
