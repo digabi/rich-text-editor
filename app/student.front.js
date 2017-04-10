@@ -5,9 +5,9 @@ $('.save').click(() => $.post('/save', { text: $answer.html() }))
 
 $.get('/load', data => data && $answer.html(data.html))
 
-const save = (text, async = true) => $.post({
+const save = ($elem, async = true) => $.post({
     url: '/save',
-    data: { text },
+    data: { text: $elem.html(), answerId: $elem.attr('id') },
     async
 })
 

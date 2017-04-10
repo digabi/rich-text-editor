@@ -28,9 +28,9 @@ module.exports = (obj) => { with(obj) return `
 
         <hr/>
         <h2>Kysymys 1</h2>
-        <div class="answer"></div>
+        <div class="answer" id="answer1"></div>
         <h2>Kysymys 2</h2>
-        <div class="answer"></div>
+        <div class="answer" id="answer2"></div>
         <button class="save actionButton" style="display: none">${save}</button>
     </section>
 </article>

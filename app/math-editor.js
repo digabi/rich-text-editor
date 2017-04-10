@@ -285,7 +285,8 @@ const persistInlineImages = $editor => {
                         url: '/saveImg',
                         data: {
                             text: data.data,
-                            id: data.id
+                            id: data.id,
+                            answerId: $editor.attr('id')
                         }
                     }))))
         .flatMap(results => {
@@ -313,7 +314,7 @@ const makeRichText = (selector, onValueChanged = () => {}) => {
         }).on('keypress', e => {
             if (e.ctrlKey && !e.altKey && !e.shiftKey) {
                 if(e.key === 'l' || e.key === 'i') editor.insertNewEquation()
-                else if(e.key === 's') onValueChanged($editor.html())
+                else if(e.key === 's') onValueChanged($editor)
             }
         }).on('focus blur', e => {
             if(editor.isMathEditorVisible() && e.type === 'focus') editor.closeMathEditor()
@@ -347,7 +348,7 @@ const makeRichText = (selector, onValueChanged = () => {}) => {
         })
 
         $editor.on('blur focus', e => editor.onFocusChanged(e))
-        $editor.on('input focus', e => onValueChanged(e.currentTarget.innerHTML))
+        $editor.on('input focus', e => onValueChanged($(e.currentTarget)))
     })
 }
 
