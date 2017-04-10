@@ -4,7 +4,9 @@ const util = require('./util')
 const sanitizeHtml = require('sanitize-html')
 const sanitizeOpts = require('./sanitizeOpts')
 const MQ = MathQuill.getInterface(2)
-
+const FI = require('./FI')
+const SV = require('./SV')
+const l = (document.location.href.indexOf('/sv') >= 0 ? SV : FI).editor
 const keyCodes = {
     ENTER: 13,
     ESC:   27
@@ -40,7 +42,7 @@ window.onload = () => {
     function initMathEditor() {
         const $mathEditor = $(`
             <div class="math">
-                <div class="close" title="Ctrl-Enter">Sulje</div>
+                <div class="close" title="Ctrl-Enter">${l.close}</div>
                 <div class="boxes">
                     <div class="equationEditor"></div>
                     <textarea class="latexEditor" placeholder="LaTex"></textarea>
@@ -180,7 +182,7 @@ window.onload = () => {
             </div>
             <div class="mathToolbar list hidden"></div>
             <p>
-                <button class="newEquation actionButton" title="Ctrl-L">Lisää kaava</button>
+                <button class="newEquation actionButton" title="Ctrl-L">${l.insertEquation}</button>
             </p>
         </div>
         `)
