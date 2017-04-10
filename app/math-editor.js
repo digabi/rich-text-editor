@@ -312,10 +312,8 @@ const makeRichText = (selector, onValueChanged = () => {}) => {
             // TODO: open editor if clicked on equation in another editor
             editor.openMathEditor($(e.target))
         }).on('keypress', e => {
-            if (e.ctrlKey && !e.altKey && !e.shiftKey) {
-                if(e.key === 'l' || e.key === 'i') editor.insertNewEquation()
-                else if(e.key === 's') onValueChanged($editor)
-            }
+            if (e.ctrlKey && !e.altKey && !e.shiftKey &&
+                (e.key === 'l' || e.key === 'i')) editor.insertNewEquation()
         }).on('focus blur', e => {
             if(editor.isMathEditorVisible() && e.type === 'focus') editor.closeMathEditor()
             //answerFocus = e.type === 'focus'
