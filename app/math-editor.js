@@ -11,7 +11,7 @@ const locales = {
 const l = locales[window.locale].editor
 const keyCodes = {
     ENTER: 13,
-    ESC:   27
+    ESC: 27
 }
 
 let $toolbar
@@ -66,16 +66,16 @@ window.onload = () => {
             }
         })
 
-        $equationEditor.on('focus mousedown', e => {
-            equationEditorFocus = true
-        })
+        $equationEditor
+            .on('focus mousedown', e => equationEditorFocus = true)
+            .on('focus blur', '.mq-textarea textarea', e => {
+                equationEditorFocus = e.type !== 'blur'
+                onFocusChanged()
+            })
 
-        $equationEditor.find('.mq-textarea textarea ').on('focus blur', e => {
-            equationEditorFocus = e.type !== 'blur'
-            onFocusChanged()
-        })
-
-        function onLatexUpdate() { setTimeout(() => mathField.latex($latexEditor.val()), 1) }
+        function onLatexUpdate() {
+            setTimeout(() => mathField.latex($latexEditor.val()), 1)
+        }
 
         $latexEditor
             .keyup(onLatexUpdate)
@@ -90,6 +90,7 @@ window.onload = () => {
         })
 
         let focusChanged = null
+
         function onFocusChanged() {
             clearTimeout(focusChanged)
             focusChanged = setTimeout(() => {
@@ -115,17 +116,17 @@ window.onload = () => {
         }
 
         function insertMath(symbol, alternativeSymbol, useWrite) {
-            if(latexEditorFocus) {
+            if (latexEditorFocus) {
                 util.insertToTextAreaAtCursor($latexEditor.get(0), alternativeSymbol || symbol)
                 onLatexUpdate()
-            } else if(equationEditorFocus) {
+            } else if (equationEditorFocus) {
                 if (useWrite) {
                     mathField.write(symbol)
                 } else {
                     mathField.typedText(symbol)
                 }
 
-                if(symbol.startsWith('\\')) mathField.keystroke('Tab')
+                if (symbol.startsWith('\\')) mathField.keystroke('Tab')
                 setTimeout(() => mathField.focus(), 0)
             }
         }
@@ -134,7 +135,7 @@ window.onload = () => {
             // TODO: remove event bindings
             const $currentEditor = $mathEditor.closest('.answer')
             const $img = $mathEditor.prev()
-            if($latexEditor.val().trim() === '') {
+            if ($latexEditor.val().trim() === '') {
                 $img.remove()
             } else {
                 $img.show()
@@ -213,7 +214,7 @@ window.onload = () => {
                     e.preventDefault()
                     const character = e.currentTarget.innerText
                     const command = e.currentTarget.dataset.command
-                    if(answerFocus) window.document.execCommand('insertText', false, character)
+                    if (answerFocus) window.document.execCommand('insertText', false, character)
                     else mathEditor.insertMath(command || character)
                 })
         }
@@ -246,6 +247,7 @@ window.onload = () => {
     }
 
     let blurred
+
     function onFocusChanged(e) {
         answerFocus = e.type === 'focus'
 
@@ -299,55 +301,52 @@ const persistInlineImages = $editor => {
         .onValue(() => $editor.trigger('input'))
 }
 
-const makeRichText = (selector, onValueChanged = () => {}) => {
+const makeRichText = (selector, onValueChanged = () => { }) => {
     $(selector).each((i, element) => {
         const $editor = $(element)
-        $editor.attr('contenteditable', 'true')
-        $editor.attr('data-js-handle', 'answer')
-
-        $editor.on('keydown', e => {
-            if(!e.altKey && !e.shiftKey &&
-                ((e.ctrlKey && e.keyCode === keyCodes.ENTER) ||
-                (!e.ctrlKey && e.keyCode === keyCodes.ESC ))) mathEditor.closeMathEditor(true)
-        }).on('mousedown', '.result', e => {
-            // TODO: open editor if clicked on equation in another editor
-            editor.openMathEditor($(e.target))
-        }).on('keypress', e => {
-            if (e.ctrlKey && !e.altKey && !e.shiftKey &&
-                (e.key === 'l' || e.key === 'i')) editor.insertNewEquation()
-        }).on('focus blur', e => {
-            if(editor.isMathEditorVisible() && e.type === 'focus') editor.closeMathEditor()
-            //answerFocus = e.type === 'focus'
-        }).on('paste', e => {
-            if(e.target.tagName === 'TEXTAREA')
-                return
-
-            const reader = new FileReader()
-            const clipboardData = e.originalEvent.clipboardData
-            const file = clipboardData.items && clipboardData.items[0].getAsFile()
-            if (file) {
-                e.preventDefault()
-                reader.readAsDataURL(file)
-            } else {
-                const clipboardDataAsHtml = clipboardData.getData('text/html')
-                if (clipboardDataAsHtml) {
+        $editor
+            .attr('contenteditable', 'true')
+            .attr('data-js-handle', 'answer')
+            .on('keydown', e => {
+                if (!e.altKey && !e.shiftKey &&
+                    ((e.ctrlKey && e.keyCode === keyCodes.ENTER) ||
+                    (!e.ctrlKey && e.keyCode === keyCodes.ESC ))) mathEditor.closeMathEditor(true)
+            })
+            .on('mousedown', '.result', e => editor.openMathEditor($(e.target))) // TODO: open editor if clicked on equation in another editor
+            .on('keypress', e => {
+                if (e.ctrlKey && !e.altKey && !e.shiftKey && (e.key === 'l' || e.key === 'i')) editor.insertNewEquation()
+            })
+            .on('focus blur', e => {
+                if (editor.isMathEditorVisible() && e.type === 'focus') editor.closeMathEditor()
+                editor.onFocusChanged(e)
+            })
+            .on('input focus', e => onValueChanged($(e.currentTarget)))
+            .on('paste', e => {
+                if (e.target.tagName === 'TEXTAREA')
+                    return
+                const reader = new FileReader()
+                const clipboardData = e.originalEvent.clipboardData
+                const file = clipboardData.items && clipboardData.items[0].getAsFile()
+                if (file) {
                     e.preventDefault()
-                    window.document.execCommand('insertHTML', false, sanitizeHtml(clipboardDataAsHtml, sanitizeOpts));
+                    reader.readAsDataURL(file)
+                } else {
+                    const clipboardDataAsHtml = clipboardData.getData('text/html')
+                    if (clipboardDataAsHtml) {
+                        e.preventDefault()
+                        window.document.execCommand('insertHTML', false, sanitizeHtml(clipboardDataAsHtml, sanitizeOpts));
+                        persistInlineImages($editor)
+                        // TODO: call autosave?
+                    }
+                }
+
+                reader.onload = evt => {
+                    const img = `<img src="${evt.target.result}"/>`
+                    window.document.execCommand('insertHTML', false, sanitizeHtml(img, sanitizeOpts))
                     persistInlineImages($editor)
                     // TODO: call autosave?
                 }
-            }
-
-            reader.onload = evt => {
-                const img = `<img src="${evt.target.result}"/>`
-                window.document.execCommand('insertHTML', false, sanitizeHtml(img, sanitizeOpts))
-                persistInlineImages($editor)
-                // TODO: call autosave?
-            }
-        })
-
-        $editor.on('blur focus', e => editor.onFocusChanged(e))
-        $editor.on('input focus', e => onValueChanged($(e.currentTarget)))
+            })
     })
 }
 
