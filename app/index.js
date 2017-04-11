@@ -77,7 +77,7 @@ app.post('/saveMarkers', (req, res) => {
 app.get('/load', (req, res) => {
     const sessionId = req.session.id
     const answerId = req.query.answerId
-    res.send(savedData[sessionId] ? savedData[sessionId][answerId] || null : null)
+    res.json(savedData[sessionId] ? savedData[sessionId][answerId] || null : null)
 })
 
 function decodeBase64Image(dataString) {
