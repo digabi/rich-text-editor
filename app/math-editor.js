@@ -308,13 +308,11 @@ const makeRichText = (selector, onValueChanged = () => { }) => {
             .attr('contenteditable', 'true')
             .attr('data-js-handle', 'answer')
             .on('keydown', e => {
-                if (!e.altKey && !e.shiftKey &&
-                    ((e.ctrlKey && e.keyCode === keyCodes.ENTER) ||
-                    (!e.ctrlKey && e.keyCode === keyCodes.ESC ))) mathEditor.closeMathEditor(true)
+                if (isCtrlKey(e, keyCodes.ENTER) || isKey(e, keyCodes.ESC)) mathEditor.closeMathEditor(true)
             })
             .on('mousedown', '.result', e => editor.openMathEditor($(e.target))) // TODO: open editor if clicked on equation in another editor
             .on('keypress', e => {
-                if (e.ctrlKey && !e.altKey && !e.shiftKey && (e.key === 'l' || e.key === 'i')) editor.insertNewEquation()
+                if (isCtrlKey(e, 'l') || isCtrlKey(e, 'i')) editor.insertNewEquation()
             })
             .on('focus blur', e => {
                 if (editor.isMathEditorVisible() && e.type === 'focus') editor.closeMathEditor()
@@ -349,6 +347,12 @@ const makeRichText = (selector, onValueChanged = () => { }) => {
             })
     })
 }
+
+function isKey(e, key) { return !e.altKey && !e.shiftKey && !e.ctrlKey  && keyOrKeyCode(e, key)}
+
+function isCtrlKey(e, key) { return !e.altKey && !e.shiftKey && e.ctrlKey && keyOrKeyCode(e, key)}
+
+function keyOrKeyCode(e, val) { return typeof val === 'string' ? e.key === val : e.keyCode === val }
 
 module.exports = {
     makeRichText
