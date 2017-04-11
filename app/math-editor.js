@@ -144,7 +144,6 @@ window.onload = () => {
 
             $toolbar.find('.newEquation').show()
             $toolbar.find('.mathToolbar').hide()
-            $toolbar.find('.mathToolbar').hide()
             hideElementInDOM($mathEditor)
             mathEditorVisible = false
             latexEditorFocus = false
