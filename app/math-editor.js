@@ -1,8 +1,7 @@
-const latexCommands = require('./latexCommands')
-const specialCharacters = require('./specialCharacters')
 const util = require('./util')
 const sanitizeHtml = require('sanitize-html')
 const sanitizeOpts = require('./sanitizeOpts')
+const toolbars = require('./toolbars')
 const MQ = MathQuill.getInterface(2)
 const locales = {
     FI: require('./FI'),
@@ -38,8 +37,8 @@ window.onload = () => {
 
     $('body').append($outerPlaceholder)
 
-    initToolbar()
     mathEditor = initMathEditor()
+    initToolbar()
 
     function initMathEditor() {
         const $mathEditor = $(`
@@ -191,41 +190,10 @@ window.onload = () => {
 
         hideElementInDOM($toolbar)
 
-        initSpecialCharacterToolbar()
-        initMathToolbar()
-        initNewEquation()
-
-        function initMathToolbar() {
-            $toolbar.find('.mathToolbar.list').append(latexCommands
-                .map(o => `<button title="${o.action}" data-command="${o.action}" data-latexcommand="${o.label}" data-usewrite="${o.useWrite || false}">
-<img src="/math.svg?latex=${encodeURIComponent(o.label ? o.label.replace(/X/g, '\\square') : o.action)}"/>
-</button>`).join('')
-            ).on('mousedown', 'button', e => {
-                e.preventDefault()
-                const dataset = e.currentTarget.dataset;
-                mathEditor.insertMath(dataset.command, dataset.latexcommand, dataset.usewrite === 'true')
-            })
-        }
-
-        function initSpecialCharacterToolbar() {
-            $toolbar.find('.characters .list')
-                .append(specialCharacters.map(char => `<span class="button" ${char.latexCommand ? `data-command="${char.latexCommand}"` : ''}>${char.character}</span>`))
-                .on('mousedown', '.button', e => {
-                    e.preventDefault()
-                    const character = e.currentTarget.innerText
-                    const command = e.currentTarget.dataset.command
-                    if (answerFocus) window.document.execCommand('insertText', false, character)
-                    else mathEditor.insertMath(command || character)
-                })
-        }
-
-        function initNewEquation() {
-            $toolbar.find('.newEquation').mousedown((e => {
-                e.preventDefault()
-                if (!answerFocus) return // TODO: remove when button is only visible when textarea has focus
-                mathEditor.insertNewEquation()
-            }).bind(this))
-        }
+        const hasAnswerFocus = () => answerFocus
+        toolbars.initSpecialCharacterToolbar($toolbar, mathEditor, hasAnswerFocus)
+        toolbars.initMathToolbar($toolbar, mathEditor)
+        toolbars.initNewEquation($toolbar, mathEditor, hasAnswerFocus)
     }
 
     function openEditor($element) {
