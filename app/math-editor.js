@@ -246,51 +246,49 @@ const persistInlineImages = $editor => {
         .onValue(() => $editor.trigger('input'))
 }
 
-const makeRichText = (selector, onValueChanged = () => { }) => {
-    $(selector).each((i, element) => {
-        const $answer = $(element)
-        $answer
-            .attr('contenteditable', 'true')
-            .attr('data-js-handle', 'answer')
-            .on('keydown', e => {
-                if (isCtrlKey(e, keyCodes.ENTER) || isKey(e, keyCodes.ESC)) mathEditor.closeMathEditor(true)
-            })
-            .on('mousedown', '.result', e => editor.openMathEditor($(e.target))) // TODO: open editor if clicked on equation in another editor
-            .on('keypress', e => {
-                if (isCtrlKey(e, 'l') || isCtrlKey(e, 'i')) editor.insertNewEquation()
-            })
-            .on('focus blur', e => {
-                if (editor.isMathEditorVisible() && e.type === 'focus') editor.closeMathEditor()
-                editor.onEditorFocusChanged(e)
-            })
-            .on('input focus', e => onValueChanged($(e.currentTarget)))
-            .on('paste', e => {
-                if (e.target.tagName === 'TEXTAREA')
-                    return
-                const reader = new FileReader()
-                const clipboardData = e.originalEvent.clipboardData
-                const file = clipboardData.items && clipboardData.items[0].getAsFile()
-                if (file) {
+const makeRichText = (element, onValueChanged = () => { }) => {
+    const $answer = $(element)
+    $answer
+        .attr('contenteditable', 'true')
+        .attr('data-js-handle', 'answer')
+        .on('keydown', e => {
+            if (isCtrlKey(e, keyCodes.ENTER) || isKey(e, keyCodes.ESC)) mathEditor.closeMathEditor(true)
+        })
+        .on('mousedown', '.result', e => editor.openMathEditor($(e.target))) // TODO: open editor if clicked on equation in another editor
+        .on('keypress', e => {
+            if (isCtrlKey(e, 'l') || isCtrlKey(e, 'i')) editor.insertNewEquation()
+        })
+        .on('focus blur', e => {
+            if (editor.isMathEditorVisible() && e.type === 'focus') editor.closeMathEditor()
+            editor.onEditorFocusChanged(e)
+        })
+        .on('input focus', e => onValueChanged($(e.currentTarget)))
+        .on('paste', e => {
+            if (e.target.tagName === 'TEXTAREA')
+                return
+            const reader = new FileReader()
+            const clipboardData = e.originalEvent.clipboardData
+            const file = clipboardData.items && clipboardData.items[0].getAsFile()
+            if (file) {
+                e.preventDefault()
+                reader.readAsDataURL(file)
+            } else {
+                const clipboardDataAsHtml = clipboardData.getData('text/html')
+                if (clipboardDataAsHtml) {
                     e.preventDefault()
-                    reader.readAsDataURL(file)
-                } else {
-                    const clipboardDataAsHtml = clipboardData.getData('text/html')
-                    if (clipboardDataAsHtml) {
-                        e.preventDefault()
-                        window.document.execCommand('insertHTML', false, sanitizeHtml(clipboardDataAsHtml, sanitizeOpts));
-                        persistInlineImages($answer)
-                        // TODO: call autosave?
-                    }
-                }
-
-                reader.onload = evt => {
-                    const img = `<img src="${evt.target.result}"/>`
-                    window.document.execCommand('insertHTML', false, sanitizeHtml(img, sanitizeOpts))
+                    window.document.execCommand('insertHTML', false, sanitizeHtml(clipboardDataAsHtml, sanitizeOpts));
                     persistInlineImages($answer)
                     // TODO: call autosave?
                 }
-            })
-    })
+            }
+
+            reader.onload = evt => {
+                const img = `<img src="${evt.target.result}"/>`
+                window.document.execCommand('insertHTML', false, sanitizeHtml(img, sanitizeOpts))
+                persistInlineImages($answer)
+                // TODO: call autosave?
+            }
+        })
 }
 
 function isKey(e, key) { return !e.altKey && !e.shiftKey && !e.ctrlKey  && keyOrKeyCode(e, key)}
