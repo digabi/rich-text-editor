@@ -38,7 +38,8 @@ window.onload = () => {
     $('body').append($outerPlaceholder)
 
     mathEditor = initMathEditor()
-    initToolbar()
+    $toolbar = toolbars.init(mathEditor, () => answerFocus, l)
+    hideElementInDOM($toolbar)
 
     function initMathEditor() {
         const $mathEditor = $(`
@@ -171,29 +172,6 @@ window.onload = () => {
             openMathEditor,
             onFocusChanged
         }
-    }
-
-    function initToolbar() {
-        $toolbar = $(`        
-        <div class="toolbar">
-            <div class="characters">
-                <span class="special-characters">
-                  <div class="list"></div>
-                </span>
-            </div>
-            <div class="mathToolbar list hidden"></div>
-            <p>
-                <button class="newEquation actionButton" title="Ctrl-L">${l.insertEquation}</button>
-            </p>
-        </div>
-        `)
-
-        hideElementInDOM($toolbar)
-
-        const hasAnswerFocus = () => answerFocus
-        toolbars.initSpecialCharacterToolbar($toolbar, mathEditor, hasAnswerFocus)
-        toolbars.initMathToolbar($toolbar, mathEditor)
-        toolbars.initNewEquation($toolbar, mathEditor, hasAnswerFocus)
     }
 
     function openEditor($element) {

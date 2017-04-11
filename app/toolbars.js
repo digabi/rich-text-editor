@@ -2,10 +2,30 @@ const specialCharacters = require('./specialCharacters')
 const latexCommands = require('./latexCommands')
 
 module.exports = {
-    initSpecialCharacterToolbar,
-    initMathToolbar,
-    initNewEquation
+    init,
 }
+
+function init(mathEditor, hasAnswerFocus, l) {
+    const $toolbar = $(`        
+        <div class="toolbar">
+            <div class="characters">
+                <span class="special-characters">
+                  <div class="list"></div>
+                </span>
+            </div>
+            <div class="mathToolbar list hidden"></div>
+            <p>
+                <button class="newEquation actionButton" title="Ctrl-L">${l.insertEquation}</button>
+            </p>
+        </div>
+        `)
+    initSpecialCharacterToolbar($toolbar, mathEditor, hasAnswerFocus)
+    initMathToolbar($toolbar, mathEditor)
+    initNewEquation($toolbar, mathEditor, hasAnswerFocus)
+    return $toolbar
+}
+
+
 function initSpecialCharacterToolbar($toolbar, mathEditor, hasAnswerFocus) {
     $toolbar.find('.characters .list')
         .append(specialCharacters.map(char => `<span class="button" ${char.latexCommand ? `data-command="${char.latexCommand}"` : ''}>${char.character}</span>`))
