@@ -6,7 +6,7 @@
   "license": "MIT",
   "homepage": "https://github.com/digabi/math-editor",
   "ignore": ["*", "!dist/*"],
-  "version": "1.0.0",
+  "version": "2.0.0",
   "dependencies": {
     "jquery": "2.2.4",
     "MathJax": "2.7.0",
