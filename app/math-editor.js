@@ -7,7 +7,7 @@ const locales = {
     FI: require('./FI'),
     SV: require('./SV')
 }
-const l = locales[window.locale].editor
+const l = locales[window.locale || 'FI'].editor
 const keyCodes = {
     ENTER: 13,
     ESC: 27
