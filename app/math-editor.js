@@ -4,9 +4,11 @@ const util = require('./util')
 const sanitizeHtml = require('sanitize-html')
 const sanitizeOpts = require('./sanitizeOpts')
 const MQ = MathQuill.getInterface(2)
-const FI = require('./FI')
-const SV = require('./SV')
-const l = (document.location.href.indexOf('/sv') >= 0 ? SV : FI).editor
+const locales = {
+    FI: require('./FI'),
+    SV: require('./SV')
+}
+const l = locales[window.locale].editor
 const keyCodes = {
     ENTER: 13,
     ESC:   27

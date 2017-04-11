@@ -6,6 +6,9 @@ module.exports = (obj) => { with(obj) return `
     <link rel="stylesheet" type="text/css" href="/teacher.css">
     <link rel="icon" href="/math-editor-favicon.ico" type="image/x-icon"/>
     <link rel="shortcut icon" href="/math-editor-favicon.ico" type="image/x-icon"/>
+    <script>
+        window.locale = '${locale}'
+    </script>
 </head>
 <body>
 <article>

@@ -4,6 +4,11 @@ let markers = {}
 let timestamp = null
 const $answer = $('.answer')
 const sampleAnswer = require('./sampleAnswer')
+const locales = {
+    FI: require('./FI'),
+    SV: require('./SV')
+}
+const l = locales[window.locale].editor
 
 $(document).keypress(e => {
     if (e.ctrlKey && !e.altKey && !e.shiftKey && e.key === 'e') {

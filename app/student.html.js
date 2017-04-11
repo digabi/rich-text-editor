@@ -11,6 +11,9 @@ module.exports = (obj) => { with(obj) return `
     <script src="/mathquill/build/mathquill.js"></script>
     <link rel="icon" href="/math-editor-favicon.ico" type="image/x-icon"/>
     <link rel="shortcut icon" href="/math-editor-favicon.ico" type="image/x-icon"/>
+    <script>
+        window.locale = '${locale}'
+    </script>
 </head>
 <body>
 <article>
