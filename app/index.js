@@ -63,11 +63,13 @@ app.post('/save', (req, res) => {
 })
 app.post('/saveImg', (req, res) => {
     const sessionId = req.session.id
-    const {answerId, id, text} = req.body
+    const {answerId} = req.query
+    const id = String(new Date().getTime())
     const fullPath = path.normalize(`${__dirname}/../target/${sessionId}/${answerId}`)
     mkdir(fullPath)
-    const data = decodeBase64Image(text)
-    fs.writeFileSync(path.join(fullPath, id + '.png'), data.data)
+    const fileWriteStream = fs.createWriteStream(path.join(fullPath, id + '.png'))
+    fileWriteStream.write(req.read())
+    fileWriteStream.end()
     res.send(id)
 })
 app.post('/saveMarkers', (req, res) => {
@@ -80,20 +82,8 @@ app.get('/load', (req, res) => {
     res.json(savedData[sessionId] ? savedData[sessionId][answerId] || null : null)
 })
 
-function decodeBase64Image(dataString) {
-    if (!dataString)
-        return null
-    const matches = dataString.match(/^data:([A-Za-z-+\/]+);base64,(.+)$/)
-    if (matches.length !== 3) {
-        return null
-    }
-    return {
-        type: matches[1],
-        data: new Buffer(matches[2], 'base64')
-    }
-}
 function isUnsafe(param) {
-    return param.indexOf('/') >=0 || param.indexOf('..') >= 0
+    return param.indexOf('/') >= 0 || param.indexOf('..') >= 0
 }
 
 function mkdir(dir) {

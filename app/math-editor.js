@@ -218,32 +218,6 @@ editor = {
     insertNewEquation: mathEditor.insertNewEquation
 }
 
-const markAndGetInlineImages = $editor => $editor.find('img[src^="data"]')
-    .each((i, el) => el.setAttribute('id', new Date().getTime() + '-' + i))
-    .map((i, el) => ({data: el.getAttribute('src'), id: el.getAttribute('id')}))
-    .toArray()
-
-const persistInlineImages = $editor => {
-    return Bacon.combineAsArray(
-        markAndGetInlineImages($editor)
-            .map(data =>
-                Bacon.fromPromise(
-                    $.post({
-                        url: '/saveImg',
-                        data: {
-                            text: data.data,
-                            id: data.id,
-                            answerId: $editor.attr('id')
-                        }
-                    }))))
-        .flatMap(results => {
-            results.forEach(id => {
-                $editor.find('#' + id).attr('src', `/loadImg?answerId=${$editor.attr('id')}&id=${id}`)
-            })
-        })
-        .onValue(() => $editor.trigger('input'))
-}
-
 const makeRichText = (element, onValueChanged = () => { }) => {
     const $answer = $(element)
     $answer
@@ -264,27 +238,27 @@ const makeRichText = (element, onValueChanged = () => { }) => {
         .on('paste', e => {
             if (e.target.tagName === 'TEXTAREA')
                 return
-            const reader = new FileReader()
             const clipboardData = e.originalEvent.clipboardData
             const file = clipboardData.items && clipboardData.items[0].getAsFile()
             if (file) {
                 e.preventDefault()
-                reader.readAsDataURL(file)
+                Bacon.fromPromise($.post({
+                    type:'POST',
+                    url: `/saveImg?answerId=${$editor.attr('id')}`,
+                    data: file,
+                    processData: false,
+                    contentType:false
+                })).onValue(id => {
+                    const src = `/loadImg?answerId=${$editor.attr('id')}&id=${id}`
+                    const img = `<img src="${src}"/>`
+                    window.document.execCommand('insertHTML', false, img)
+                })
             } else {
                 const clipboardDataAsHtml = clipboardData.getData('text/html')
                 if (clipboardDataAsHtml) {
                     e.preventDefault()
                     window.document.execCommand('insertHTML', false, sanitizeHtml(clipboardDataAsHtml, sanitizeOpts));
-                    persistInlineImages($answer)
-                    // TODO: call autosave?
                 }
-            }
-
-            reader.onload = evt => {
-                const img = `<img src="${evt.target.result}"/>`
-                window.document.execCommand('insertHTML', false, sanitizeHtml(img, sanitizeOpts))
-                persistInlineImages($answer)
-                // TODO: call autosave?
             }
         })
 }
