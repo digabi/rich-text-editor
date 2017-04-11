@@ -27,197 +27,195 @@ function hideElementInDOM($element) {
 
 let editor
 
-window.onload = () => {
-    // TODO: replace with data attributes?
-    let answerFocus = true
-    let latexEditorFocus = false
-    let equationEditorFocus = false
-    let mathEditorVisible = false
-    let $editor
+// TODO: replace with data attributes?
+let answerFocus = true
+let latexEditorFocus = false
+let equationEditorFocus = false
+let mathEditorVisible = false
+let $editor
 
-    $('body').append($outerPlaceholder)
+$('body').append($outerPlaceholder)
 
-    mathEditor = initMathEditor()
-    $toolbar = toolbars.init(mathEditor, () => answerFocus, l)
-    hideElementInDOM($toolbar)
+mathEditor = initMathEditor()
+$toolbar = toolbars.init(mathEditor, () => answerFocus, l)
+hideElementInDOM($toolbar)
 
-    function initMathEditor() {
-        const $mathEditor = $(`
-            <div class="math">
-                <div class="close" title="Ctrl-Enter">${l.close}</div>
-                <div class="boxes">
-                    <div class="equationEditor"></div>
-                    <textarea class="latexEditor" placeholder="LaTex"></textarea>
-                </div>
-            </div>`)
+function initMathEditor() {
+    const $mathEditor = $(`
+        <div class="math">
+            <div class="close" title="Ctrl-Enter">${l.close}</div>
+            <div class="boxes">
+                <div class="equationEditor"></div>
+                <textarea class="latexEditor" placeholder="LaTex"></textarea>
+            </div>
+        </div>`)
 
-        hideElementInDOM($mathEditor)
+    hideElementInDOM($mathEditor)
 
-        const $latexEditor = $mathEditor.find('.latexEditor')
-        const $equationEditor = $mathEditor.find('.equationEditor')
-        const mathField = MQ.MathField($equationEditor.get(0), {
-            handlers: {
-                edit: () => !latexEditorFocus && $latexEditor.val(mathField.latex()),
-                enter: field => {
-                    // TODO: do not close editor / o not create a new equation if there is no text?
-                    mathEditor.closeMathEditor(true)
-                    setTimeout(() => insertNewEquation('<div></div>'), 2)
-                }
+    const $latexEditor = $mathEditor.find('.latexEditor')
+    const $equationEditor = $mathEditor.find('.equationEditor')
+    const mathField = MQ.MathField($equationEditor.get(0), {
+        handlers: {
+            edit: () => !latexEditorFocus && $latexEditor.val(mathField.latex()),
+            enter: field => {
+                // TODO: do not close editor / o not create a new equation if there is no text?
+                mathEditor.closeMathEditor(true)
+                setTimeout(() => insertNewEquation('<div></div>'), 2)
             }
+        }
+    })
+
+    $equationEditor
+        .on('focus mousedown', e => equationEditorFocus = true)
+        .on('focus blur', '.mq-textarea textarea', e => {
+            equationEditorFocus = e.type !== 'blur'
+            onFocusChanged()
         })
 
-        $equationEditor
-            .on('focus mousedown', e => equationEditorFocus = true)
-            .on('focus blur', '.mq-textarea textarea', e => {
-                equationEditorFocus = e.type !== 'blur'
-                onFocusChanged()
-            })
+    function onLatexUpdate() {
+        setTimeout(() => mathField.latex($latexEditor.val()), 1)
+    }
 
-        function onLatexUpdate() {
-            setTimeout(() => mathField.latex($latexEditor.val()), 1)
-        }
-
-        $latexEditor
-            .keyup(onLatexUpdate)
-            .on('focus blur', e => {
-                latexEditorFocus = e.type !== 'blur'
-                onFocusChanged()
-            })
-
-        $mathEditor.find('.close').mousedown(e => {
-            e.preventDefault()
-            closeMathEditor(true)
+    $latexEditor
+        .keyup(onLatexUpdate)
+        .on('focus blur', e => {
+            latexEditorFocus = e.type !== 'blur'
+            onFocusChanged()
         })
 
-        let focusChanged = null
+    $mathEditor.find('.close').mousedown(e => {
+        e.preventDefault()
+        closeMathEditor(true)
+    })
 
-        function onFocusChanged() {
-            clearTimeout(focusChanged)
-            focusChanged = setTimeout(() => {
-                if (!latexEditorFocus && !equationEditorFocus) closeMathEditor()
-                if (!answerFocus && !mathEditorVisible && !latexEditorFocus && !equationEditorFocus) closeEditor()
-            }, 0)
+    let focusChanged = null
 
-        }
+    function onFocusChanged() {
+        clearTimeout(focusChanged)
+        focusChanged = setTimeout(() => {
+            if (!latexEditorFocus && !equationEditorFocus) closeMathEditor()
+            if (!answerFocus && !mathEditorVisible && !latexEditorFocus && !equationEditorFocus) closeEditor()
+        }, 0)
 
-        function insertNewEquation(optionalMarkup) {
-            window.document.execCommand('insertHTML', false, (optionalMarkup ? optionalMarkup : '') + '<img class="result new" style="display: none"/>');
-            const $addedEquationImage = $('.result.new')
-            $addedEquationImage
-                .removeClass('new')
+    }
 
-            moveElementAfter($mathEditor, $addedEquationImage)
+    function insertNewEquation(optionalMarkup) {
+        window.document.execCommand('insertHTML', false, (optionalMarkup ? optionalMarkup : '') + '<img class="result new" style="display: none"/>');
+        const $addedEquationImage = $('.result.new')
+        $addedEquationImage
+            .removeClass('new')
 
-            mathField.latex('')
-            mathEditorVisible = true
-            $toolbar.find('.newEquation').hide()
-            $toolbar.find('.mathToolbar').show()
-            setTimeout(() => mathField.focus(), 0)
-        }
+        moveElementAfter($mathEditor, $addedEquationImage)
 
-        function insertMath(symbol, alternativeSymbol, useWrite) {
-            if (latexEditorFocus) {
-                util.insertToTextAreaAtCursor($latexEditor.get(0), alternativeSymbol || symbol)
-                onLatexUpdate()
-            } else if (equationEditorFocus) {
-                if (useWrite) {
-                    mathField.write(symbol)
-                } else {
-                    mathField.typedText(symbol)
-                }
+        mathField.latex('')
+        mathEditorVisible = true
+        $toolbar.find('.newEquation').hide()
+        $toolbar.find('.mathToolbar').show()
+        setTimeout(() => mathField.focus(), 0)
+    }
 
-                if (symbol.startsWith('\\')) mathField.keystroke('Tab')
-                setTimeout(() => mathField.focus(), 0)
-            }
-        }
-
-        function closeMathEditor(setFocusAfterClose = false) {
-            // TODO: remove event bindings
-            const $currentEditor = $mathEditor.closest('.answer')
-            const $img = $mathEditor.prev()
-            if ($latexEditor.val().trim() === '') {
-                $img.remove()
-            } else {
-                $img.show()
-                    .prop('src', '/math.svg?latex=' + encodeURIComponent($latexEditor.val()))
-                    .prop('alt', $latexEditor.val())
-            }
-
-            $toolbar.find('.newEquation').show()
-            $toolbar.find('.mathToolbar').hide()
-            hideElementInDOM($mathEditor)
-            mathEditorVisible = false
-            latexEditorFocus = false
-            equationEditorFocus = false
-            if (setFocusAfterClose) $currentEditor.focus()
-        }
-
-        function openMathEditor($img) {
-            if (mathEditorVisible) closeMathEditor()
-            $img.hide()
-            moveElementAfter($mathEditor, $img)
-            const latex = $img.prop('alt')
-            $latexEditor.val(latex)
+    function insertMath(symbol, alternativeSymbol, useWrite) {
+        if (latexEditorFocus) {
+            util.insertToTextAreaAtCursor($latexEditor.get(0), alternativeSymbol || symbol)
             onLatexUpdate()
-            mathEditorVisible = true
-            $toolbar.find('.newEquation').hide()
-            $toolbar.find('.mathToolbar').show()
+        } else if (equationEditorFocus) {
+            if (useWrite) {
+                mathField.write(symbol)
+            } else {
+                mathField.typedText(symbol)
+            }
+
+            if (symbol.startsWith('\\')) mathField.keystroke('Tab')
             setTimeout(() => mathField.focus(), 0)
         }
-
-        return {
-            insertNewEquation,
-            insertMath,
-            closeMathEditor,
-            openMathEditor,
-            onFocusChanged
-        }
     }
 
-    function openEditor($element) {
-        $editor = $element
-        $element.before($toolbar)
-        $toolbar.show()
-    }
-
-    function closeEditor() {
+    function closeMathEditor(setFocusAfterClose = false) {
         // TODO: remove event bindings
-        $toolbar.find('.mathToolbar').hide()
-        hideElementInDOM($toolbar)
-        mathEditor.closeMathEditor()
-        // $editor.off()
+        const $currentEditor = $mathEditor.closest('.answer')
+        const $img = $mathEditor.prev()
+        if ($latexEditor.val().trim() === '') {
+            $img.remove()
+        } else {
+            $img.show()
+                .prop('src', '/math.svg?latex=' + encodeURIComponent($latexEditor.val()))
+                .prop('alt', $latexEditor.val())
+        }
 
-        answerFocus = false
+        $toolbar.find('.newEquation').show()
+        $toolbar.find('.mathToolbar').hide()
+        hideElementInDOM($mathEditor)
         mathEditorVisible = false
         latexEditorFocus = false
+        equationEditorFocus = false
+        if (setFocusAfterClose) $currentEditor.focus()
     }
 
-    let blurred
-
-    function onEditorFocusChanged(e) {
-        answerFocus = e.type === 'focus'
-
-        clearTimeout(blurred)
-        blurred = setTimeout(() => {
-            if (!answerFocus && !mathEditorVisible && !latexEditorFocus && !equationEditorFocus) closeEditor()
-            else if (answerFocus && mathEditorVisible) mathEditor.closeMathEditor()
-            else openEditor($(e.target))
-        }, 0)
+    function openMathEditor($img) {
+        if (mathEditorVisible) closeMathEditor()
+        $img.hide()
+        moveElementAfter($mathEditor, $img)
+        const latex = $img.prop('alt')
+        $latexEditor.val(latex)
+        onLatexUpdate()
+        mathEditorVisible = true
+        $toolbar.find('.newEquation').hide()
+        $toolbar.find('.mathToolbar').show()
+        setTimeout(() => mathField.focus(), 0)
     }
 
-    function isMathEditorVisible() {
-        return mathEditorVisible
+    return {
+        insertNewEquation,
+        insertMath,
+        closeMathEditor,
+        openMathEditor,
+        onFocusChanged
     }
+}
 
-    editor = {
-        openEditor,
-        closeEditor,
-        onEditorFocusChanged,
-        isMathEditorVisible,
-        openMathEditor: mathEditor.openMathEditor,
-        closeMathEditor: mathEditor.closeMathEditor,
-        insertNewEquation: mathEditor.insertNewEquation
-    }
+function openEditor($element) {
+    $editor = $element
+    $element.before($toolbar)
+    $toolbar.show()
+}
+
+function closeEditor() {
+    // TODO: remove event bindings
+    $toolbar.find('.mathToolbar').hide()
+    hideElementInDOM($toolbar)
+    mathEditor.closeMathEditor()
+    // $editor.off()
+
+    answerFocus = false
+    mathEditorVisible = false
+    latexEditorFocus = false
+}
+
+let blurred
+
+function onEditorFocusChanged(e) {
+    answerFocus = e.type === 'focus'
+
+    clearTimeout(blurred)
+    blurred = setTimeout(() => {
+        if (!answerFocus && !mathEditorVisible && !latexEditorFocus && !equationEditorFocus) closeEditor()
+        else if (answerFocus && mathEditorVisible) mathEditor.closeMathEditor()
+        else openEditor($(e.target))
+    }, 0)
+}
+
+function isMathEditorVisible() {
+    return mathEditorVisible
+}
+
+editor = {
+    openEditor,
+    closeEditor,
+    onEditorFocusChanged,
+    isMathEditorVisible,
+    openMathEditor: mathEditor.openMathEditor,
+    closeMathEditor: mathEditor.closeMathEditor,
+    insertNewEquation: mathEditor.insertNewEquation
 }
 
 const markAndGetInlineImages = $editor => $editor.find('img[src^="data"]')
