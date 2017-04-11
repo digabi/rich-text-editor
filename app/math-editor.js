@@ -248,7 +248,7 @@ window.onload = () => {
 
     let blurred
 
-    function onFocusChanged(e) {
+    function onEditorFocusChanged(e) {
         answerFocus = e.type === 'focus'
 
         clearTimeout(blurred)
@@ -266,7 +266,7 @@ window.onload = () => {
     editor = {
         openEditor,
         closeEditor,
-        onFocusChanged,
+        onEditorFocusChanged,
         isMathEditorVisible,
         openMathEditor: mathEditor.openMathEditor,
         closeMathEditor: mathEditor.closeMathEditor,
@@ -293,7 +293,6 @@ const persistInlineImages = $editor => {
                         }
                     }))))
         .flatMap(results => {
-            console.log(results)
             results.forEach(id => {
                 $editor.find('#' + id).attr('src', `/loadImg?answerId=${$editor.attr('id')}&id=${id}`)
             })
@@ -303,8 +302,8 @@ const persistInlineImages = $editor => {
 
 const makeRichText = (selector, onValueChanged = () => { }) => {
     $(selector).each((i, element) => {
-        const $editor = $(element)
-        $editor
+        const $answer = $(element)
+        $answer
             .attr('contenteditable', 'true')
             .attr('data-js-handle', 'answer')
             .on('keydown', e => {
@@ -316,7 +315,7 @@ const makeRichText = (selector, onValueChanged = () => { }) => {
             })
             .on('focus blur', e => {
                 if (editor.isMathEditorVisible() && e.type === 'focus') editor.closeMathEditor()
-                editor.onFocusChanged(e)
+                editor.onEditorFocusChanged(e)
             })
             .on('input focus', e => onValueChanged($(e.currentTarget)))
             .on('paste', e => {
@@ -333,7 +332,7 @@ const makeRichText = (selector, onValueChanged = () => { }) => {
                     if (clipboardDataAsHtml) {
                         e.preventDefault()
                         window.document.execCommand('insertHTML', false, sanitizeHtml(clipboardDataAsHtml, sanitizeOpts));
-                        persistInlineImages($editor)
+                        persistInlineImages($answer)
                         // TODO: call autosave?
                     }
                 }
@@ -341,7 +340,7 @@ const makeRichText = (selector, onValueChanged = () => { }) => {
                 reader.onload = evt => {
                     const img = `<img src="${evt.target.result}"/>`
                     window.document.execCommand('insertHTML', false, sanitizeHtml(img, sanitizeOpts))
-                    persistInlineImages($editor)
+                    persistInlineImages($answer)
                     // TODO: call autosave?
                 }
             })
