@@ -115,21 +115,19 @@ function mkdir(dir) {
 
 app.get('/loadImg', (req, res) => {
     const {answerId, id} = req.query
-    if(isUnsafe(answerId) || isUnsafe(id)) {
+    if (isUnsafe(answerId) || isUnsafe(id)) {
         res.send(404)
         return
     }
 
     const sessionId = req.session.id;
-    try {
-        res.writeHead(200, {
-            'Content-Type': 'image/jpeg',
-        })
-        const fullPath = path.normalize(`${__dirname}/../target/${sessionId}/${answerId}`)
-        fs.createReadStream(path.join(fullPath, id + '.png')).pipe(res)
-    } catch(e) {
-        res.send(404)
+    const fullPath = path.normalize(`${__dirname}/../target/${sessionId}/${answerId}`)
+    const filePath = path.join(fullPath, id + '.png');
+    if (fs.existsSync(filePath)) {
+        res.writeHead(200, {'Content-Type': 'image/jpeg'})
+        fs.createReadStream(filePath).pipe(res)
     }
+    else res.sendStatus(404)
 })
 app.get('/loadMarkers', (req, res) => res.send(savedMarkers[req.session.id]))
 
