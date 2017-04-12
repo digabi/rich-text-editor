@@ -12,7 +12,7 @@
     "MathJax": "2.7.0",
     "bacon.jquery": "^0.4.12",
     "bacon": "^0.7.92",
-    "mathquill": "git@github.com:digabi/mathquill.git#0.10.1-dist",
+    "mathquill": "digabi/mathquill#0.10.1-dist",
     "sanitize-html": "^1.11.4"
   }
 }
