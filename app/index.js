@@ -68,9 +68,7 @@ app.post('/saveImg', (req, res) => {
     const fullPath = path.normalize(`${__dirname}/../target/${sessionId}/${answerId}`)
     mkdir(fullPath)
     const fileWriteStream = fs.createWriteStream(path.join(fullPath, id + '.png'))
-    fileWriteStream.write(req.read())
-    fileWriteStream.end()
-    res.send(id)
+    req.pipe(fileWriteStream).on('finish', () => res.json({id}))
 })
 app.post('/saveMarkers', (req, res) => {
     savedMarkers[req.session.id] = req.body

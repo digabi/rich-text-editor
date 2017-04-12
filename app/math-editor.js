@@ -248,7 +248,7 @@ const makeRichText = (element, onValueChanged = () => { }) => {
                     data: file,
                     processData: false,
                     contentType:false
-                })).onValue(id => {
+                })).onValue(({id}) => {
                     const src = `/loadImg?answerId=${$editor.attr('id')}&id=${id}`
                     const img = `<img src="${src}"/>`
                     window.document.execCommand('insertHTML', false, img)
