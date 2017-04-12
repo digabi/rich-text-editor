@@ -23,7 +23,6 @@ function handler(req, res) {
     res.type('svg')
 
     if(req.query.latex in cache) {
-        console.log('cache')
         res.send(cache[req.query.latex])
     } else {
         mjAPI.typeset({
