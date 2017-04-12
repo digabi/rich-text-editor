@@ -1,12 +1,11 @@
 describe('math editor', () => {
 
-    before(waitUntil(() => $('.toolbar').length > 0 &&  $('.toolbar').is(':hidden')))
+    before(waitUntil(() => $('[data-js="tools"]').length > 0 &&  $('[data-js="tools"]').is(':hidden')))
 
     describe('initial state', () => {
         it('answer field is contenteditable', () => {
-            const $answer = $('.answer')
+            const $answer = $('[data-js="answer"]')
             expect($answer).to.have.attr('contenteditable', 'true')
-            expect($answer).to.have.attr('data-js-handle', 'answer')
         })
     })
 
@@ -15,21 +14,21 @@ describe('math editor', () => {
             $('.answer1').focus()
             $('.answer1').focus() // TODO why two calls is necessary?
         })
-        before(waitUntil(() => $('.toolbar').is(':visible')))
+        before(waitUntil(() => $('[data-js="tools"]').is(':visible')))
 
         it('shows tools', () => {
-            expect($('.toolbar')).to.be.visible
-            expect($('.answer1').prev()).to.have.class('toolbar')
+            expect($('[data-js="characters"]')).to.be.visible
+            expect($('.answer1').prev()).to.have.class('math-editor-tools')
         })
     })
 
     describe('start math', () => {
         before(() => {
-            $('.newEquation').mousedown()
+            $('[data-js="newEquation"]').mousedown()
         })
 
         it('shows tools', () => {
-            expect($('.math')).to.be.visible
+            expect($('[data-js="mathToolbar"]')).to.be.visible
         })
     })
 })

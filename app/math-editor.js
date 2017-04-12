@@ -14,7 +14,7 @@ const keyCodes = {
 }
 
 let $toolbar
-const $outerPlaceholder = $(`<div class="outerPlaceholder hidden">`)
+const $outerPlaceholder = $(`<div class="math-editor-hidden" data-js="outerPlaceholder">`)
 let mathEditor
 
 function moveElementAfter($element, $after) {
@@ -42,18 +42,18 @@ hideElementInDOM($toolbar)
 
 function initMathEditor() {
     const $mathEditor = $(`
-        <section class="math">
-            <div class="close" title="Ctrl-Enter">${l.close}</div>
-            <div class="boxes">
-                <div class="equationEditor"></div>
-                <textarea class="latexEditor" placeholder="LaTex"></textarea>
+        <section class="math-editor" data-js="mathEditor">
+            <div class="math-editor-close" title="Ctrl-Enter">${l.close}</div>
+            <div class="math-editor-boxes">
+                <div class="math-editor-equation-editor" data-js="equationEditor"></div>
+                <textarea class="math-editor-latex-editor" data-js="latexEditor" placeholder="LaTex"></textarea>
             </div>
         </section>`)
 
     hideElementInDOM($mathEditor)
 
-    const $latexEditor = $mathEditor.find('.latexEditor')
-    const $equationEditor = $mathEditor.find('.equationEditor')
+    const $latexEditor = $mathEditor.find('[data-js="latexEditor"]')
+    const $equationEditor = $mathEditor.find('[data-js="equationEditor"]')
     const mathField = MQ.MathField($equationEditor.get(0), {
         handlers: {
             edit: () => !latexEditorFocus && $latexEditor.val(mathField.latex()),
@@ -100,17 +100,17 @@ function initMathEditor() {
     }
 
     function insertNewEquation(optionalMarkup) {
-        window.document.execCommand('insertHTML', false, (optionalMarkup ? optionalMarkup : '') + '<img class="new" style="display: none"/>');
-        const $addedEquationImage = $('.new')
+        window.document.execCommand('insertHTML', false, (optionalMarkup ? optionalMarkup : '') + '<img data-js="new" style="display: none"/>');
+        const $addedEquationImage = $('[data-js="new"]')
         $addedEquationImage
-            .removeClass('new')
+            .removeAttr('data-js')
 
         moveElementAfter($mathEditor, $addedEquationImage)
 
         mathField.latex('')
         mathEditorVisible = true
-        $toolbar.find('.newEquation').hide()
-        $toolbar.find('.mathToolbar').show()
+        $toolbar.find('[data-js="newEquation"]').hide()
+        $toolbar.find('[data-js="mathToolbar"]').show()
         setTimeout(() => mathField.focus(), 0)
     }
 
@@ -132,7 +132,7 @@ function initMathEditor() {
 
     function closeMathEditor(setFocusAfterClose = false) {
         // TODO: remove event bindings
-        const $currentEditor = $mathEditor.closest('.answer')
+        const $currentEditor = $mathEditor.closest('[data-js="answer"]')
         const $img = $mathEditor.prev()
         if ($latexEditor.val().trim() === '') {
             $img.remove()
@@ -142,8 +142,8 @@ function initMathEditor() {
                 .prop('alt', $latexEditor.val())
         }
 
-        $toolbar.find('.newEquation').show()
-        $toolbar.find('.mathToolbar').hide()
+        $toolbar.find('[data-js="newEquation"]').show()
+        $toolbar.find('[data-js="mathToolbar"]').hide()
         hideElementInDOM($mathEditor)
         mathEditorVisible = false
         latexEditorFocus = false
@@ -159,8 +159,8 @@ function initMathEditor() {
         $latexEditor.val(latex)
         onLatexUpdate()
         mathEditorVisible = true
-        $toolbar.find('.newEquation').hide()
-        $toolbar.find('.mathToolbar').show()
+        $toolbar.find('[data-js="newEquation"]').hide()
+        $toolbar.find('[data-js="mathToolbar"]').show()
         setTimeout(() => mathField.focus(), 0)
     }
 
@@ -181,7 +181,7 @@ function openEditor($element) {
 
 function closeEditor() {
     // TODO: remove event bindings
-    $toolbar.find('.mathToolbar').hide()
+    $toolbar.find('[data-js="mathToolbar"]').hide()
     hideElementInDOM($toolbar)
     mathEditor.closeMathEditor()
     // $editor.off()
@@ -222,7 +222,8 @@ const makeRichText = (element, onValueChanged = () => { }) => {
     const $answer = $(element)
     $answer
         .attr('contenteditable', 'true')
-        .attr('data-js-handle', 'answer')
+        .attr('data-js', 'answer')
+        .addClass('math-editor-answer')
         .on('keydown', e => {
             if (isCtrlKey(e, keyCodes.ENTER) || isKey(e, keyCodes.ESC)) mathEditor.closeMathEditor(true)
         })
@@ -264,9 +265,9 @@ const makeRichText = (element, onValueChanged = () => { }) => {
 }
 
 function sanitizeContent(answerElement) {
-    $(answerElement).find('.math').hide()
+    $(answerElement).find('[data-js="mathEditor"]').hide()
     const text = $(answerElement)[0].innerText
-    $(answerElement).find('.math').show()
+    $(answerElement).find('[data-js="mathEditor"]').show()
     const html = $(answerElement).html().replace(/<section[\s\S]*<\/section>/gi, '')
 
     return { answerHTML: sanitizeHtml(html, sanitizeOpts), answerText: text }

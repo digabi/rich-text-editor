@@ -7,15 +7,15 @@ module.exports = {
 
 function init(mathEditor, hasAnswerFocus, l) {
     const $toolbar = $(`        
-        <div class="toolbar">
-            <div class="characters">
-                <span class="special-characters">
-                  <div class="list"></div>
+        <div class="math-editor-tools" data-js="tools">
+            <div class="math-editor-characters" data-js="characters">
+                <span class="math-editor-special-characters">
+                  <div class="math-editor-list" data-js="charactersList"></div>
                 </span>
             </div>
-            <div class="mathToolbar list hidden"></div>
+            <div class="math-editor-toolbar math-editor-list math-editor-hidden" data-js="mathToolbar"></div>
             <p>
-                <button class="newEquation actionButton" title="Ctrl-L">${l.insertEquation}</button>
+                <button class="math-editor-new-equation math-editor-action-button" data-js="newEquation" title="Ctrl-L">${l.insertEquation}</button>
             </p>
         </div>
         `)
@@ -27,9 +27,9 @@ function init(mathEditor, hasAnswerFocus, l) {
 
 
 function initSpecialCharacterToolbar($toolbar, mathEditor, hasAnswerFocus) {
-    $toolbar.find('.characters .list')
-        .append(specialCharacters.map(char => `<span class="button" ${char.latexCommand ? `data-command="${char.latexCommand}"` : ''}>${char.character}</span>`))
-        .on('mousedown', '.button', e => {
+    $toolbar.find('[data-js="charactersList"]')
+        .append(specialCharacters.map(char => `<button class="math-editor-button" ${char.latexCommand ? `data-command="${char.latexCommand}"` : ''}>${char.character}</button>`))
+        .on('mousedown', 'button', e => {
             e.preventDefault()
             const character = e.currentTarget.innerText
             const command = e.currentTarget.dataset.command
@@ -39,8 +39,8 @@ function initSpecialCharacterToolbar($toolbar, mathEditor, hasAnswerFocus) {
 }
 
 function initMathToolbar($toolbar, mathEditor) {
-    $toolbar.find('.mathToolbar.list').append(latexCommands
-        .map(o => `<button title="${o.action}" data-command="${o.action}" data-latexcommand="${o.label}" data-usewrite="${o.useWrite || false}">
+    $toolbar.find('[data-js="mathToolbar"]').append(latexCommands
+        .map(o => `<button title="${o.action}" class="math-editor-button" data-command="${o.action}" data-latexcommand="${o.label}" data-usewrite="${o.useWrite || false}">
 <img src="/math.svg?latex=${encodeURIComponent(o.label ? o.label.replace(/X/g, '\\square') : o.action)}"/>
 </button>`).join('')
     ).on('mousedown', 'button', e => {
@@ -51,7 +51,7 @@ function initMathToolbar($toolbar, mathEditor) {
 }
 
 function initNewEquation($toolbar, mathEditor, hasAnswerFocus) {
-    $toolbar.find('.newEquation').mousedown((e => {
+    $toolbar.find('[data-js="newEquation"]').mousedown((e => {
         e.preventDefault()
         if (!hasAnswerFocus()) return // TODO: remove when button is only visible when textarea has focus
         mathEditor.insertNewEquation()

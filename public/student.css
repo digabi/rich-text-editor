@@ -1,0 +1,3 @@
+@import url("common.css");
+
+.answer { border: 1px solid #aaa; padding: 5px; box-sizing: content-box; min-height: 100px; }
