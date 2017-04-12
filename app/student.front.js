@@ -11,6 +11,8 @@ $answer.each((i, answer) => {
     makeRichText(answer)
     $.get(`/load?answerId=${answer.id}`, data => data && $(answer).html(data.html))
 }).on('keypress', e => {
-    if (e.ctrlKey && !e.altKey && !e.shiftKey && e.key === 's')
+    if (e.ctrlKey && !e.altKey && !e.shiftKey && e.key === 's') {
+        e.preventDefault()
         save($(e.target))
+    }
 })
