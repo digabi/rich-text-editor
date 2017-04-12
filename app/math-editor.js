@@ -100,8 +100,8 @@ function initMathEditor() {
     }
 
     function insertNewEquation(optionalMarkup) {
-        window.document.execCommand('insertHTML', false, (optionalMarkup ? optionalMarkup : '') + '<img class="result new" style="display: none"/>');
-        const $addedEquationImage = $('.result.new')
+        window.document.execCommand('insertHTML', false, (optionalMarkup ? optionalMarkup : '') + '<img class="new" style="display: none"/>');
+        const $addedEquationImage = $('.new')
         $addedEquationImage
             .removeClass('new')
 
@@ -226,7 +226,7 @@ const makeRichText = (element, onValueChanged = () => { }) => {
         .on('keydown', e => {
             if (isCtrlKey(e, keyCodes.ENTER) || isKey(e, keyCodes.ESC)) mathEditor.closeMathEditor(true)
         })
-        .on('mousedown', '.result', e => editor.openMathEditor($(e.target))) // TODO: open editor if clicked on equation in another editor
+        .on('mousedown', 'img[src^="/math.svg"]', e => editor.openMathEditor($(e.target))) // TODO: open editor if clicked on equation in another editor
         .on('keypress', e => {
             if (isCtrlKey(e, 'l') || isCtrlKey(e, 'i')) editor.insertNewEquation()
         })

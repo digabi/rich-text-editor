@@ -7,8 +7,8 @@
 .equationEditor { width: 50%; padding: 10px; }
 .mathToolbar { margin-bottom: 5px; display: flex; flex-wrap: wrap; font-size: 10px; }
 .latexEditor { font-size: 15px; width: 50%; }
-.result { vertical-align: middle; }
-.answer:focus .result { cursor: pointer; }
+.answer img[src^="/math.svg"] { vertical-align: middle; }
+.answer:focus img[src^="/math.svg"] { cursor: pointer; }
 .math { margin: 10px; position: relative; box-shadow: 1px 1px 10px 1px rgba(0, 0, 0, .2); }
 .newEquation:before { content: 'Σ'; display: inline-block; margin-right: 10px; }
 .mq-math-mode .mq-root-block { white-space: normal; }

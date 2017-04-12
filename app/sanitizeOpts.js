@@ -5,7 +5,7 @@ module.exports = {
         'br'
     ],
     allowedAttributes: {
-        img: ['src', 'class', 'alt']
+        img: ['src', 'alt']
     },
     allowedSchemes: []
 }
