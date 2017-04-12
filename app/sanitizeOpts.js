@@ -7,5 +7,5 @@ module.exports = {
     allowedAttributes: {
         img: ['src', 'alt']
     },
-    allowedSchemes: []
+    allowedSchemes: ['data']
 }

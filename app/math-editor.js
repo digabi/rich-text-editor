@@ -218,6 +218,44 @@ editor = {
     insertNewEquation: mathEditor.insertNewEquation
 }
 
+const markAndGetInlineImages = $editor => $editor.find('img[src^="data"]')
+    .each((i, el) => el.setAttribute('id', new Date().getTime() + '-' + i))
+    .map((i, el) => Object.assign(decodeBase64Image(el.getAttribute('src')), {id: el.getAttribute('id')}))
+    .toArray()
+    .filter(({type}) => type === 'image/png')
+
+const persistInlineImages = $editor => {
+    return Bacon.combineAsArray(
+        markAndGetInlineImages($editor)
+            .map(data =>
+                Bacon.fromPromise($.post({
+                    type:'POST',
+                    url: `/saveImg?answerId=${$editor.attr('id')}&id=${data.id}`,
+                    data: data.data,
+                    processData: false,
+                    contentType:false
+                }))))
+        .flatMap(results => {
+            results.forEach(({id}) => {
+                $editor.find('#' + id).attr('src', `/loadImg?answerId=${$editor.attr('id')}&id=${id}`)
+            })
+        })
+        .onValue(() => $editor.trigger('input'))
+}
+
+function decodeBase64Image(dataString) {
+    if (!dataString)
+        return null
+    const matches = dataString.match(/^data:([A-Za-z-+\/]+);base64,(.+)$/)
+    if (matches.length !== 3) {
+        return null
+    }
+    return {
+        type: matches[1],
+        data: new Buffer(matches[2], 'base64')
+    }
+}
+
 const makeRichText = (element, onValueChanged = () => { }) => {
     const $answer = $(element)
     $answer
@@ -243,6 +281,8 @@ const makeRichText = (element, onValueChanged = () => { }) => {
             const file = clipboardData.items && clipboardData.items[0].getAsFile()
             if (file) {
                 e.preventDefault()
+                if(file.type !== 'image/png')
+                    return
                 Bacon.fromPromise($.post({
                     type:'POST',
                     url: `/saveImg?answerId=${$editor.attr('id')}`,
@@ -259,6 +299,10 @@ const makeRichText = (element, onValueChanged = () => { }) => {
                 if (clipboardDataAsHtml) {
                     e.preventDefault()
                     window.document.execCommand('insertHTML', false, sanitizeHtml(clipboardDataAsHtml, sanitizeOpts));
+                    setTimeout(()=> persistInlineImages($editor), 0)
+
+                } else {
+                    setTimeout(()=> persistInlineImages($editor), 0)
                 }
             }
         })

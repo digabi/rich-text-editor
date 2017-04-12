@@ -64,7 +64,7 @@ app.post('/save', (req, res) => {
 app.post('/saveImg', (req, res) => {
     const sessionId = req.session.id
     const {answerId} = req.query
-    const id = String(new Date().getTime())
+    const id = req.query.id
     const fullPath = path.normalize(`${__dirname}/../target/${sessionId}/${answerId}`)
     mkdir(fullPath)
     const fileWriteStream = fs.createWriteStream(path.join(fullPath, id + '.png'))
