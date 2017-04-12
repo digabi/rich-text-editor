@@ -263,12 +263,15 @@ const makeRichText = (element, onValueChanged = () => { }) => {
         })
 }
 
-function isKey(e, key) { return !e.altKey && !e.shiftKey && !e.ctrlKey  && keyOrKeyCode(e, key)}
+function isKey(e, key) { return preventIfTrue(e, !e.altKey && !e.shiftKey && !e.ctrlKey  && keyOrKeyCode(e, key))}
 
-function isCtrlKey(e, key) { return !e.altKey && !e.shiftKey && e.ctrlKey && keyOrKeyCode(e, key)}
+function isCtrlKey(e, key) { return preventIfTrue(e, !e.altKey && !e.shiftKey && e.ctrlKey && keyOrKeyCode(e, key))}
 
 function keyOrKeyCode(e, val) { return typeof val === 'string' ? e.key === val : e.keyCode === val }
-
+function preventIfTrue(e, val) {
+    if(val) e.preventDefault()
+    return val
+}
 module.exports = {
     makeRichText
 }
