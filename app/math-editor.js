@@ -42,13 +42,13 @@ hideElementInDOM($toolbar)
 
 function initMathEditor() {
     const $mathEditor = $(`
-        <div class="math">
+        <section class="math">
             <div class="close" title="Ctrl-Enter">${l.close}</div>
             <div class="boxes">
                 <div class="equationEditor"></div>
                 <textarea class="latexEditor" placeholder="LaTex"></textarea>
             </div>
-        </div>`)
+        </section>`)
 
     hideElementInDOM($mathEditor)
 
@@ -234,7 +234,7 @@ const makeRichText = (element, onValueChanged = () => { }) => {
             if (editor.isMathEditorVisible() && e.type === 'focus') editor.closeMathEditor()
             editor.onEditorFocusChanged(e)
         })
-        .on('input focus', e => onValueChanged($(e.currentTarget)))
+        .on('input focus', e => onValueChanged(sanitizeContent(e.currentTarget)))
         .on('paste', e => {
             if (e.target.tagName === 'TEXTAREA')
                 return
@@ -261,6 +261,15 @@ const makeRichText = (element, onValueChanged = () => { }) => {
                 }
             }
         })
+}
+
+function sanitizeContent(answerElement) {
+    $(answerElement).find('.math').hide()
+    const text = $(answerElement)[0].innerText
+    $(answerElement).find('.math').show()
+    const html = $(answerElement).html().replace(/<section[\s\S]*<\/section>/gi, '')
+
+    return { answerHTML: sanitizeHtml(html, sanitizeOpts), answerText: text }
 }
 
 function isKey(e, key) { return preventIfTrue(e, !e.altKey && !e.shiftKey && !e.ctrlKey  && keyOrKeyCode(e, key))}
