@@ -13,10 +13,10 @@ function init(mathEditor, hasAnswerFocus, l) {
                   <div class="math-editor-toolbar math-editor-list" data-js="charactersList"></div>
                 </span>
             </div>
-            <div class="math-editor-toolbar math-editor-list math-editor-hidden" data-js="mathToolbar"></div>
-            <p>
+            <div class="math-editor-equation math-editor-toolbar math-editor-list math-editor-hidden" data-js="mathToolbar"></div>
+            <div>
                 <button class="math-editor-new-equation math-editor-button math-editor-button-action" data-js="newEquation" title="Ctrl-L">${l.insertEquation}</button>
-            </p>
+            </div>
         </div>
         `)
     initSpecialCharacterToolbar($toolbar, mathEditor, hasAnswerFocus)
