@@ -4,6 +4,7 @@ module.exports = [
     {action: '\\frac', label: '\\frac{X}{X}'},
     {action: '\\int', label: '\\int_{X}^{X}'},
     {action: '\\lim_', label: '\\lim_{X}'},
+    {action: '\\lim_{x\\rightarrow\\infty}', label: '\\lim_{x\\rightarrow\\infty}', useWrite:true},
     {action: '\\overrightarrow', label: '\\overrightarrow{X}'},
     {action: '_', label: 'x_X'},
     {action: '\\nthroot', label: '\\sqrt[X]{X}'},
@@ -14,10 +15,12 @@ module.exports = [
     {action: '\\tan'},
     {action: '\\vec', label: '\\vec{X}'},
     {action: '\\bar', label: '\\bar{X}'},
-    {action: '\\underline', label: '\\underline{X}'},
+    {action: '\\overline{\\text{i}}', useWrite: true},
+    {action: '\\overline{\\text{j}}', useWrite: true},
+    {action: '\\overline{\\text{k}}', useWrite: true},
     {action: '\\overleftarrow', label: '\\overleftarrow{X}'},
     {action: '|', label: '|X|'},
     {action: '(', label: '(X)'},
     {action: '_{ }^{ } ', label: '_{X}^{X}X', useWrite: true},
-    {action: '\\text', label: '\\text{text}'}
+    {action: '\\text', label: '\\text{text}'},
 ]
