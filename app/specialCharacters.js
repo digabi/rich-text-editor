@@ -2,13 +2,15 @@ module.exports = [
     {character: '°'},
     {character: '≡', latexCommand: '\\equiv'},
     {character: '≢'}, // \nequiv or \not\equiv
-    {character: '⌐'}, // \backneg
+    {character: '≈', latexCommand: '\\approx'},
+    {character: '∼', latexCommand: '\\sim'},
+    {character: '≠', latexCommand: '\\neq'},
+    {character: '≤', latexCommand: '\\leq'},
+    {character: '≥', latexCommand: '\\geq'},
     {character: '×', latexCommand: '\\times'},
     {character: '÷', latexCommand: '\\div'},
     {character: '·', latexCommand: '\\cdot'},
     {character: '…', latexCommand: '\\dots'},
-    {character: '≈', latexCommand: '\\approx'},
-    {character: '∼', latexCommand: '\\sim'},
     {character: '¹', latexCommand: '^1'},
     {character: '²', latexCommand: '^2'},
     {character: '³', latexCommand: '^3'},
@@ -21,11 +23,14 @@ module.exports = [
     {character: '⇒', latexCommand: '\\Rightarrow'},
     {character: '⇔', latexCommand: '\\Leftrightarrow'},
     {character: '⇌'}, // \rightleftharpoons
-    {character: '≠', latexCommand: '\\neq'},
     {character: '∞', latexCommand: '\\infty'},
     {character: '±', latexCommand: '\\pm'},
-    {character: '≤', latexCommand: '\\leq'},
-    {character: '≥', latexCommand: '\\geq'},
+    {character: '∠', latexCommand: '\\angle'},
+    {character: '△', latexCommand: '\\triangle'},
+    {character: '⊥', latexCommand: '\\perp'},
+    {character: '‖', latexCommand: '\\parallel'},
+    {character: '∘', latexCommand: '\\circ'},
+
     {character: 'µ', latexCommand: '\\mu'},
     {character: '∂', latexCommand: '\\partial'},
     {character: '∑', latexCommand: '\\Sigma'},
@@ -51,6 +56,7 @@ module.exports = [
     {character: 'Д'}, // \cyrd
     {character: 'π', latexCommand: '\\pi'},
     {character: 'Ф', latexCommand: '\\phi'},
+
     {character: '∈', latexCommand: '\\in'},
     {character: '∉', latexCommand: '\\notin'},
     {character: '∋', latexCommand: '\\ni'},
@@ -65,13 +71,10 @@ module.exports = [
     {character: '∪', latexCommand: '\\cup'},
     {character: '∅', latexCommand: '\\empty'},
     {character: '∖', latexCommand: '\\setminus'},
-    {character: '∠', latexCommand: '\\angle'},
+
+    {character: '⌐'}, // \backneg
     {character: '∧', latexCommand: '\\and'},
     {character: '∨', latexCommand: '\\or'},
     {character: '∀', latexCommand: '\\forall'},
-    {character: '∃', latexCommand: '\\exists'},
-    {character: '△', latexCommand: '\\triangle'},
-    {character: '⊥', latexCommand: '\\perp'},
-    {character: '‖', latexCommand: '\\parallel'},
-    {character: '∘', latexCommand: '\\circ'}
+    {character: '∃', latexCommand: '\\exists'}
 ]
