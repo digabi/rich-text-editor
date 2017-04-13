@@ -224,22 +224,14 @@ const markAndGetInlineImages = $editor => $editor.find('img[src^="data"]')
     .toArray()
     .filter(({type}) => type === 'image/png')
 
-const persistInlineImages = $editor => {
+const persistInlineImages = ($editor, screenshotSaver) => {
     return Bacon.combineAsArray(
         markAndGetInlineImages($editor)
-            .map(data =>
-                Bacon.fromPromise($.post({
-                    type:'POST',
-                    url: `/saveImg?answerId=${$editor.attr('id')}&id=${data.id}`,
-                    data: data.data,
-                    processData: false,
-                    contentType:false
-                }))))
-        .flatMap(results => {
-            results.forEach(({id}) => {
-                $editor.find('#' + id).attr('src', `/loadImg?answerId=${$editor.attr('id')}&id=${id}`)
-            })
-        })
+            .map(data => Bacon.fromPromise(
+                screenshotSaver(data.data)
+                    .then(screenshotUrl => $editor.find('#' + data.id).attr('src', screenshotUrl).removeAttr('id')))
+            )
+        )
         .onValue(() => $editor.trigger('input'))
 }
 
@@ -259,8 +251,7 @@ function decodeBase64Image(dataString) {
 const makeRichText = (element, options, onValueChanged = () => { }) => {
     const {
         screenshot: {
-            saveUrl,
-            loadUrl
+            saver
         }
     } = options
     const $answer = $(element)
@@ -290,15 +281,8 @@ const makeRichText = (element, options, onValueChanged = () => { }) => {
                 e.preventDefault()
                 if(file.type !== 'image/png')
                     return
-                Bacon.fromPromise($.post({
-                    type:'POST',
-                    url: `${saveUrl}?answerId=${$editor.attr('id')}`,
-                    data: file,
-                    processData: false,
-                    contentType:false
-                })).onValue(({id}) => {
-                    const src = `${loadUrl}?answerId=${$editor.attr('id')}&id=${id}`
-                    const img = `<img src="${src}"/>`
+                saver(file).then(screenshotUrl => {
+                    const img = `<img src="${screenshotUrl}"/>`
                     window.document.execCommand('insertHTML', false, img)
                 })
             } else {
@@ -306,10 +290,9 @@ const makeRichText = (element, options, onValueChanged = () => { }) => {
                 if (clipboardDataAsHtml) {
                     e.preventDefault()
                     window.document.execCommand('insertHTML', false, sanitizeHtml(clipboardDataAsHtml, sanitizeOpts));
-                    setTimeout(()=> persistInlineImages($editor), 0)
-
+                    setTimeout(()=> persistInlineImages($editor, saver), 0)
                 } else {
-                    setTimeout(()=> persistInlineImages($editor), 0)
+                    setTimeout(()=> persistInlineImages($editor, saver), 0)
                 }
             }
         })
