@@ -25,11 +25,12 @@ module.exports = [
     {character: '⇌'}, // \rightleftharpoons
     {character: '∞', latexCommand: '\\infty'},
     {character: '±', latexCommand: '\\pm'},
+    {character: '∘', latexCommand: '\\circ'},
+
     {character: '∠', latexCommand: '\\angle'},
     {character: '△', latexCommand: '\\triangle'},
     {character: '⊥', latexCommand: '\\perp'},
     {character: '‖', latexCommand: '\\parallel'},
-    {character: '∘', latexCommand: '\\circ'},
 
     {character: 'µ', latexCommand: '\\mu'},
     {character: '∂', latexCommand: '\\partial'},
