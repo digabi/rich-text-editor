@@ -42,13 +42,13 @@ hideElementInDOM($toolbar)
 
 function initMathEditor() {
     const $mathEditor = $(`
-        <section class="math-editor" data-js="mathEditor">
+        <div class="math-editor" data-js="mathEditor">
             <div class="math-editor-close" title="Ctrl-Enter">${l.close}</div>
             <div class="math-editor-boxes">
                 <div class="math-editor-equation-editor" data-js="equationEditor"></div>
                 <textarea class="math-editor-latex-editor" data-js="latexEditor" placeholder="LaTex"></textarea>
             </div>
-        </section>`)
+        </div>`)
 
     hideElementInDOM($mathEditor)
 
@@ -312,9 +312,10 @@ function sanitizeContent(answerElement) {
     $(answerElement).find('[data-js="mathEditor"]').hide()
     const text = $(answerElement)[0].innerText
     $(answerElement).find('[data-js="mathEditor"]').show()
-    const html = $(answerElement).html().replace(/<section[\s\S]*<\/section>/gi, '')
 
-    return { answerHTML: sanitizeHtml(html, sanitizeOpts), answerText: text }
+    const html = sanitizeHtml($(answerElement).html(), sanitizeOpts)
+
+    return { answerHTML: html, answerText: text }
 }
 
 function isKey(e, key) { return preventIfTrue(e, !e.altKey && !e.shiftKey && !e.ctrlKey  && keyOrKeyCode(e, key))}
