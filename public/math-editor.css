@@ -5,7 +5,8 @@
 .math-editor-equation-editor { width: 50%; padding: 10px; }
 .math-editor-toolbar { margin-bottom: 5px; display: flex; flex-wrap: wrap; font-size: 10px; }
 .math-editor-latex-editor { font-size: 15px; width: 50%; }
-.math-editor-answer img[src^="/math.svg"] { vertical-align: middle; margin: 2px 0; padding: 3px 10px; background: #eee;}
+.math-editor-answer img[src^="/math.svg"] { vertical-align: middle; margin: 2px 0; padding: 3px 10px; background: #eee; }
+.math-editor-answer img[src^="/loadImg"] { margin-top: 2px; }
 .math-editor-answer:focus img[src^="/math.svg"] { cursor: pointer; }
 .math-editor { margin: 10px; position: relative; box-shadow: 1px 1px 10px 1px rgba(0, 0, 0, .2); }
 .math-editor-new-equation:before { content: 'Σ'; display: inline-block; margin-right: 10px; }
