@@ -260,6 +260,7 @@ const makeRichText = (element, onValueChanged = () => { }) => {
     const $answer = $(element)
     $answer
         .attr('contenteditable', 'true')
+        .attr('spellcheck', 'false')
         .attr('data-js', 'answer')
         .addClass('math-editor-answer')
         .on('keydown', e => {
