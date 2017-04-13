@@ -32,7 +32,7 @@ module.exports = {
         sendFeedback: 'Skicka respons',
         updated: 'Uppdaterad',
         mathEditor: 'Matematikeditor',
-        title: 'Kontroll',
+        title: 'Bedömning',
         backLink: '/sv',
         backLinkLabel: 'Matematikeditor',
         save: 'Spara anteckningar',
