@@ -30,7 +30,8 @@ lisätä kuvia.</li></ul>`,
         updated: 'Päivitetty',
         sendFeedback: 'Lähetä palautetta',
         langLink: '/sv',
-        langLabel: 'På svenska'
+        langLabel: 'På svenska',
+        answerTitle: 'Vastaus'
     },
     annotating: {
         sendFeedback: 'Lähetä palautetta',

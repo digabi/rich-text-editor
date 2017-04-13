@@ -11,7 +11,7 @@ module.exports = {
         shortcuts: `<table><tbody>
 <tr><th>Lägg till en bild från klippbordet</th><td>Ctrl-V</td></tr>
 <tr><th>Skriv en formel</th><td>Ctrl-L / Ctrl-I</td></tr>
-<tr><th colspan="2"></th></tr>
+<tr><th colspan="2">TODO</th></tr>
 <tr><th>Bråkstreck</th><td>/</td></tr>
 <tr><th>Multiplikationstecken</th><td>*</td></tr>
 <tr><th>Stäng</th><td>Ctrl-Enter / Esc</td></tr>
@@ -25,7 +25,8 @@ module.exports = {
         updated: 'Uppdaterad',
         sendFeedback: 'Skicka feedback',
         langLink: '/',
-        langLabel: 'Suomeksi'
+        langLabel: 'Suomeksi',
+        answerTitle: 'TODO'
     },
     annotating: {
         sendFeedback: 'Skicka respons',

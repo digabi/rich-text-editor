@@ -32,9 +32,9 @@ module.exports = (obj) => { with(obj) return `
         <p> ${shortcuts} </p>
 
         <hr/>
-        <h2>A</h2>
+        <h2>${answerTitle} 1</h2>
         <div class="answer" id="answer1"></div>
-        <h2>B</h2>
+        <h2>${answerTitle} 2</h2>
         <div class="answer" id="answer2"></div>
         <button class="save actionButton" style="display: none">${save}</button>
     </section>
