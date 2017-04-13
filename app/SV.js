@@ -9,15 +9,15 @@ module.exports = {
 <li>Det går förutom att skriva text och formler, att också att lägga till bilder i svarsfältet.</li></ul>`,
         shortcutTitle: `Tips på tangentkombinationer`,
         shortcuts: `<table><tbody>
-<tr><th>Lägg till en bild från klippbordet</th><td>Ctrl-V</td></tr>
+<tr><th>Lägg till en bild från urklippet</th><td>Ctrl-V</td></tr>
 <tr><th>Skriv en formel</th><td>Ctrl-L / Ctrl-I</td></tr>
-<tr><th colspan="2">TODO </th></tr>
+<tr><th colspan="2">I formeln </th></tr>
 <tr><th>Bråkstreck</th><td>/</td></tr>
 <tr><th>Multiplikationstecken</th><td>*</td></tr>
-<tr><th>Stäng</th><td>Ctrl-Enter / Esc</td></tr>
+<tr><th>Stäng formeln</th><td>Ctrl-Enter eller Esc</td></tr>
 </tbody>
 </table>`,
-        formatting: 'Muotoilu',
+        formatting: 'Formatering',
         specialCharacters: 'Specialtecken',
         insertEquation: 'Lägg till formel',
         close: 'stäng',
@@ -26,13 +26,13 @@ module.exports = {
         sendFeedback: 'Skicka feedback',
         langLink: '/',
         langLabel: 'Suomeksi',
-        answerTitle: 'TODO'
+        answerTitle: 'Svar'
     },
     annotating: {
         sendFeedback: 'Skicka respons',
         updated: 'Uppdaterad',
         mathEditor: 'Matematikeditor',
-        title: 'Kontroll',
+        title: 'Bedömning',
         backLink: '/sv',
         backLinkLabel: 'Matematikeditor',
         save: 'Spara anteckningar',
