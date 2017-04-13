@@ -10,7 +10,7 @@ function init(mathEditor, hasAnswerFocus, l) {
         <div class="math-editor-tools" data-js="tools">
             <div class="math-editor-characters" data-js="characters">
                 <span class="math-editor-special-characters">
-                  <div class="math-editor-list" data-js="charactersList"></div>
+                  <div class="math-editor-toolbar math-editor-list" data-js="charactersList"></div>
                 </span>
             </div>
             <div class="math-editor-toolbar math-editor-list math-editor-hidden" data-js="mathToolbar"></div>
