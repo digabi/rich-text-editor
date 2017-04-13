@@ -15,7 +15,7 @@ function init(mathEditor, hasAnswerFocus, l) {
             </div>
             <div class="math-editor-toolbar math-editor-list math-editor-hidden" data-js="mathToolbar"></div>
             <p>
-                <button class="math-editor-new-equation math-editor-action-button" data-js="newEquation" title="Ctrl-L">${l.insertEquation}</button>
+                <button class="math-editor-new-equation math-editor-button math-editor-button-action" data-js="newEquation" title="Ctrl-L">${l.insertEquation}</button>
             </p>
         </div>
         `)
@@ -28,7 +28,7 @@ function init(mathEditor, hasAnswerFocus, l) {
 
 function initSpecialCharacterToolbar($toolbar, mathEditor, hasAnswerFocus) {
     $toolbar.find('[data-js="charactersList"]')
-        .append(specialCharacters.map(char => `<button class="math-editor-button" ${char.latexCommand ? `data-command="${char.latexCommand}"` : ''}>${char.character}</button>`))
+        .append(specialCharacters.map(char => `<button class="math-editor-button math-editor-button-grid" ${char.latexCommand ? `data-command="${char.latexCommand}"` : ''}>${char.character}</button>`))
         .on('mousedown', 'button', e => {
             e.preventDefault()
             const character = e.currentTarget.innerText
@@ -40,7 +40,7 @@ function initSpecialCharacterToolbar($toolbar, mathEditor, hasAnswerFocus) {
 
 function initMathToolbar($toolbar, mathEditor) {
     $toolbar.find('[data-js="mathToolbar"]').append(latexCommands
-        .map(o => `<button title="${o.action}" class="math-editor-button" data-command="${o.action}" data-latexcommand="${o.label}" data-usewrite="${o.useWrite || false}">
+        .map(o => `<button title="${o.action}" class="math-editor-button math-editor-button-grid" data-command="${o.action}" data-latexcommand="${o.label}" data-usewrite="${o.useWrite || false}">
 <img src="/math.svg?latex=${encodeURIComponent(o.label ? o.label.replace(/X/g, '\\square') : o.action)}"/>
 </button>`).join('')
     ).on('mousedown', 'button', e => {

@@ -10,12 +10,6 @@ footer { font-size: 15px; overflow: hidden; background: #565555; color: #fff; pa
 footer section { display: flex; justify-content: space-between; }
 footer .paragraph { }
 footer a { color: #fff; }
-.button { padding: 5px; display: inline-block; cursor: pointer; width: 20px; text-align: center; }
-.button:hover,
-button:hover { background: #eee; }
-button:active { box-shadow: none; }
-button { background: none; margin-right: 5px; border: none; }
-.actionButton { text-transform: uppercase; box-shadow: 0 1px 2px 1px rgba(0, 0, 0, .2); border-radius: 2px; padding: 5px 10px; font-weight: bold; color: #666; }
 pre { white-space: pre-wrap; }
 .save { margin-top: 10px; }
 table {}
