@@ -21,5 +21,6 @@ module.exports = [
     {action: '\\overleftarrow', label: '\\overleftarrow{X}'},
     {action: '|', label: '|X|'},
     {action: '(', label: '(X)'},
+    {action: '{ } { }', label: '\\begin{matrix} X&X\\ \\X&X \\end{matrix}'},
     {action: '_{ }^{ } ', label: '_{X}^{X}X', useWrite: true}
 ]
