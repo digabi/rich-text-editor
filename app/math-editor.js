@@ -256,7 +256,13 @@ function decodeBase64Image(dataString) {
     }
 }
 
-const makeRichText = (element, onValueChanged = () => { }) => {
+const makeRichText = (element, options, onValueChanged = () => { }) => {
+    const {
+        screenshot: {
+            saveUrl,
+            loadUrl
+        }
+    } = options
     const $answer = $(element)
     $answer
         .attr('contenteditable', 'true')
@@ -286,12 +292,12 @@ const makeRichText = (element, onValueChanged = () => { }) => {
                     return
                 Bacon.fromPromise($.post({
                     type:'POST',
-                    url: `/saveImg?answerId=${$editor.attr('id')}`,
+                    url: `${saveUrl}?answerId=${$editor.attr('id')}`,
                     data: file,
                     processData: false,
                     contentType:false
                 })).onValue(({id}) => {
-                    const src = `/loadImg?answerId=${$editor.attr('id')}&id=${id}`
+                    const src = `${loadUrl}?answerId=${$editor.attr('id')}&id=${id}`
                     const img = `<img src="${src}"/>`
                     window.document.execCommand('insertHTML', false, img)
                 })

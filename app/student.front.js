@@ -7,8 +7,15 @@ const save = ($elem, async = true) => $.post({
     async
 })
 
+const richTextOptions = {
+    screenshot: {
+        loadUrl: '/loadImg',
+        saveUrl: '/saveImg'
+    }
+}
+
 $answer.each((i, answer) => {
-    makeRichText(answer)
+    makeRichText(answer, richTextOptions)
     $.get(`/load?answerId=${answer.id}`, data => data && $(answer).html(data.html))
 }).on('keypress', e => {
     if (e.ctrlKey && !e.altKey && !e.shiftKey && e.key === 's') {
