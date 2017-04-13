@@ -12,14 +12,12 @@ module.exports = [
     {action: '\\sin'},
     {action: '\\cos'},
     {action: '\\tan'},
-    {action: '\\arcsin'},
-    {action: '\\arccos'},
-    {action: '\\arctan'},
     {action: '\\vec', label: '\\vec{X}'},
     {action: '\\bar', label: '\\bar{X}'},
     {action: '\\underline', label: '\\underline{X}'},
     {action: '\\overleftarrow', label: '\\overleftarrow{X}'},
     {action: '|', label: '|X|'},
     {action: '(', label: '(X)'},
-    {action: '_{ }^{ } ', label: '_{X}^{X}X', useWrite: true}
+    {action: '_{ }^{ } ', label: '_{X}^{X}X', useWrite: true},
+    {action: '\\text', label: '\\text{text}'}
 ]
