@@ -26,6 +26,7 @@ function init(mathEditor, hasRichTextFocus, l) {
             <div class="rich-text-editor-tools-button-wrapper">
                 <div class="rich-text-editor-toolbar-wrapper">
                     <button class="rich-text-editor-new-equation rich-text-editor-button rich-text-editor-button-action" data-js="newEquation" data-command="Ctrl-E">Σ ${l.insertEquation}</button>
+                <button class="math-editor-new-equation math-editor-button math-editor-button-action" data-js="newGroup" >Yhtälöryhmä</button>
                 </div>
             </div>
         </div>
@@ -84,5 +85,13 @@ function initNewEquation($newEquation, mathEditor, hasAnswerFocus) {
         e.preventDefault()
         if (!hasAnswerFocus()) return // TODO: remove when button is only visible when textarea has focus
         mathEditor.insertNewEquation()
+    }).bind(this))
+}
+
+function initNewGroup($toolbar, hasAnswerFocus) {
+    $toolbar.find('[data-js="newGroup"]').mousedown((e => {
+        e.preventDefault()
+        if (!hasAnswerFocus()) return // TODO: remove when button is only visible when textarea has focus
+        window.document.execCommand('insertHTML', false, '<div class="group"> </div> ')
     }).bind(this))
 }

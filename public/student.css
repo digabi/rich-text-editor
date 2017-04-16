@@ -8,4 +8,6 @@
     background-size: 15px 100%;
     background-image: url("aalto.png");
 }
-
+.answer:after {
+    content: '\200B';
+}
