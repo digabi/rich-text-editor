@@ -50,17 +50,14 @@ module.exports = [
     {character: '⇌'}, // \rightleftharpoons
     {character: '∞', latexCommand: '\\infty'},
 
-    {character: '×', latexCommand: '\\times'},
     {character: '∈', latexCommand: '\\in'},
     {character: '∉', latexCommand: '\\notin'},
-    {character: '∋', latexCommand: '\\ni'},
     {character: 'ℝ'},
     {character: 'ℕ'},
     {character: 'ℤ'},
     {character: 'ℚ'},
-    {character: 'ℂ'},
     {character: '⊂', latexCommand: '\\subset'},
-    {character: '⊃', latexCommand: '\\supset'},
+    {character: '⊄', latexCommand: '\\notsubset'},
     {character: '∩', latexCommand: '\\cap'},
     {character: '∪', latexCommand: '\\cup'},
     {character: '∅', latexCommand: '\\empty'},
