@@ -228,7 +228,7 @@ const persistInlineImages = ($editor, screenshotSaver) => {
     return Bacon.combineAsArray(
         markAndGetInlineImages($editor)
             .map(data => Bacon.fromPromise(
-                screenshotSaver(data.data)
+                screenshotSaver(data)
                     .then(screenshotUrl => $editor.find('#' + data.id).attr('src', screenshotUrl).removeAttr('id')))
             )
         )
