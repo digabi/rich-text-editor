@@ -56,7 +56,13 @@ function initMathEditor() {
     const $equationEditor = $mathEditor.find('[data-js="equationEditor"]')
     const mathField = MQ.MathField($equationEditor.get(0), {
         handlers: {
-            edit: () => !latexEditorFocus && $latexEditor.val(mathField.latex()),
+            edit: () => {
+                if (latexEditorFocus)
+                    return
+                const latex = mathField.latex()
+                $latexEditor.val(latex)
+                updateMathImg($mathEditor.prev(), latex)
+            },
             enter: field => {
                 // TODO: do not close editor / o not create a new equation if there is no text?
                 mathEditor.closeMathEditor(true)
@@ -73,6 +79,7 @@ function initMathEditor() {
         })
 
     function onLatexUpdate() {
+        updateMathImg($mathEditor.prev(), $latexEditor.val())
         setTimeout(() => mathField.latex($latexEditor.val()), 1)
     }
 
@@ -96,7 +103,6 @@ function initMathEditor() {
             if (!latexEditorFocus && !equationEditorFocus) closeMathEditor()
             if (!answerFocus && !mathEditorVisible && !latexEditorFocus && !equationEditorFocus) closeEditor()
         }, 0)
-
     }
 
     function insertNewEquation(optionalMarkup) {
@@ -130,6 +136,12 @@ function initMathEditor() {
         }
     }
 
+    function updateMathImg($img, latex) {
+        $img
+            .prop('src', '/math.svg?latex=' + encodeURIComponent(latex))
+            .prop('alt', latex)
+    }
+
     function closeMathEditor(setFocusAfterClose = false) {
         // TODO: remove event bindings
         const $currentEditor = $mathEditor.closest('[data-js="answer"]')
@@ -138,8 +150,7 @@ function initMathEditor() {
             $img.remove()
         } else {
             $img.show()
-                .prop('src', '/math.svg?latex=' + encodeURIComponent($latexEditor.val()))
-                .prop('alt', $latexEditor.val())
+            updateMathImg($img, $latexEditor.val())
         }
 
         $toolbar.find('[data-js="newEquation"]').show()
