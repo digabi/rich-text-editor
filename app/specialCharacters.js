@@ -1,5 +1,4 @@
 module.exports = [
-    {character: '°'},
     {character: '≡', latexCommand: '\\equiv'},
     {character: '≢'}, // \nequiv or \not\equiv
     {character: '≈', latexCommand: '\\approx'},
@@ -7,23 +6,15 @@ module.exports = [
     {character: '≠', latexCommand: '\\neq'},
     {character: '≤', latexCommand: '\\leq'},
     {character: '≥', latexCommand: '\\geq'},
-    {character: '×', latexCommand: '\\times'},
-    {character: '·', latexCommand: '\\cdot'},
     {character: '…', latexCommand: '\\dots'},
     {character: '²', latexCommand: '^2'},
     {character: '³', latexCommand: '^3'},
     {character: '½', latexCommand: '1/2'},
-    {character: '↑', latexCommand: '\\uparrow'},
-    {character: '→', latexCommand: '\\rightarrow'},
-    {character: '↓', latexCommand: '\\downarrow'},
-    {character: '↔', latexCommand: '\\leftrightarrow'},
-    {character: '⇒', latexCommand: '\\Rightarrow'},
-    {character: '⇔', latexCommand: '\\Leftrightarrow'},
-    {character: '⇌'}, // \rightleftharpoons
-    {character: '∞', latexCommand: '\\infty'},
+    {character: '·', latexCommand: '\\cdot'},
     {character: '±', latexCommand: '\\pm'},
-    {character: '∘', latexCommand: '\\circ'},
 
+    {character: '°'},
+    {character: '∘', latexCommand: '\\circ'},
     {character: '∠', latexCommand: '\\angle'},
     {character: '△', latexCommand: '\\triangle'},
     {character: '⊥', latexCommand: '\\perp'},
@@ -50,6 +41,16 @@ module.exports = [
     {character: 'π', latexCommand: '\\pi'},
     {character: 'Ф', latexCommand: '\\phi'},
 
+    {character: '↑', latexCommand: '\\uparrow'},
+    {character: '→', latexCommand: '\\rightarrow'},
+    {character: '↓', latexCommand: '\\downarrow'},
+    {character: '↔', latexCommand: '\\leftrightarrow'},
+    {character: '⇒', latexCommand: '\\Rightarrow'},
+    {character: '⇔', latexCommand: '\\Leftrightarrow'},
+    {character: '⇌'}, // \rightleftharpoons
+    {character: '∞', latexCommand: '\\infty'},
+
+    {character: '×', latexCommand: '\\times'},
     {character: '∈', latexCommand: '\\in'},
     {character: '∉', latexCommand: '\\notin'},
     {character: '∋', latexCommand: '\\ni'},
