@@ -282,7 +282,7 @@ const makeRichText = (element, options, onValueChanged = () => { }) => {
             if (editor.isMathEditorVisible() && e.type === 'focus') editor.closeMathEditor()
             editor.onEditorFocusChanged(e)
         })
-        .on('input focus', e => onValueChanged(sanitizeContent(e.currentTarget)))
+        .on('keyup input', e => onValueChanged(sanitizeContent(e.currentTarget)))
         .on('paste', e => {
             if (e.target.tagName === 'TEXTAREA')
                 return
@@ -314,6 +314,7 @@ function sanitizeContent(answerElement) {
     const text = $(answerElement)[0].innerText
     $(answerElement).find('[data-js="mathEditor"]').show()
 
+    // Shouldn't interfere in user input
     const html = sanitizeHtml($(answerElement).html(), sanitizeOpts)
 
     return { answerHTML: html, answerText: text }
