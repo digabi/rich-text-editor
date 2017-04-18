@@ -8,14 +8,11 @@ module.exports = [
     {character: '≤', latexCommand: '\\leq'},
     {character: '≥', latexCommand: '\\geq'},
     {character: '×', latexCommand: '\\times'},
-    {character: '÷', latexCommand: '\\div'},
     {character: '·', latexCommand: '\\cdot'},
     {character: '…', latexCommand: '\\dots'},
-    {character: '¹', latexCommand: '^1'},
     {character: '²', latexCommand: '^2'},
     {character: '³', latexCommand: '^3'},
     {character: '½', latexCommand: '1/2'},
-    {character: '←', latexCommand: '\\leftarrow'},
     {character: '↑', latexCommand: '\\uparrow'},
     {character: '→', latexCommand: '\\rightarrow'},
     {character: '↓', latexCommand: '\\downarrow'},
@@ -39,10 +36,6 @@ module.exports = [
     {character: 'Ω', latexCommand: '\\Omega'},
     {character: 'Δ', latexCommand: '\\Delta'},
     {character: '𝜄', latexCommand: '\\iota'},
-    {character: 'Ð'}, // \Eth
-    {character: 'ð'}, // \eth
-    {character: 'Þ'}, // \thorn
-    {character: 'þ'}, // \Thorn
     {character: 'Γ', latexCommand: '\\Gamma'},
     {character: 'Θ', latexCommand: '\\Theta'},
     {character: 'Φ', latexCommand: '\\Phi'},
@@ -54,7 +47,6 @@ module.exports = [
     {character: 'τ', latexCommand: '\\tau'},
     {character: 'Ω', latexCommand: '\\Omega'},
     {character: 'ω', latexCommand: '\\omega'},
-    {character: 'Д'}, // \cyrd
     {character: 'π', latexCommand: '\\pi'},
     {character: 'Ф', latexCommand: '\\phi'},
 
