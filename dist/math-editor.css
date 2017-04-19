@@ -12,6 +12,7 @@
 .math-editor {z-index: 1;margin: 10px;position: relative;box-shadow: 1px 1px 10px 1px rgba(0, 0, 0, .2);}
 .math-editor-answer .mq-math-mode .mq-root-block { white-space: normal; }
 .math-editor-toolbar.math-editor-list img { max-width: 20px; max-height: 20px; }
+.math-editor-special-characters .math-editor-list .math-editor-button.math-popular { }
 .math-editor-special-characters .math-editor-list .math-editor-button { font-family: Symbola, monospace; color: #555; }
 .math-editor-button { display: inline-block; cursor: pointer; text-align: center; border: none; }
 .math-editor-button:hover,

@@ -35,7 +35,7 @@ function init(mathEditor, hasAnswerFocus, l) {
 
 function initSpecialCharacterToolbar($toolbar, mathEditor, hasAnswerFocus) {
     $toolbar.find('[data-js="charactersList"]')
-        .append(specialCharacters.map(char => `<button class="math-editor-button math-editor-button-grid" ${char.latexCommand ? `data-command="${char.latexCommand}"` : ''}>${char.character}</button>`))
+        .append(specialCharacters.map(char => `<button class="math-editor-button math-editor-button-grid${char.popular ? ' math-popular' :''}" ${char.latexCommand ? `data-command="${char.latexCommand}"` : ''}>${char.character}</button>`))
         .on('mousedown', 'button', e => {
             e.preventDefault()
             const character = e.currentTarget.innerText
