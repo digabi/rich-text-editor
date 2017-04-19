@@ -19,12 +19,19 @@ function init(mathEditor, hasAnswerFocus, l) {
             </div>
         </div>
         `)
+    const $newEquation = $toolbar.find('[data-js="newEquation"]')
+    const $mathToolbar = $toolbar.find('[data-js="mathToolbar"]')
     initSpecialCharacterToolbar($toolbar, mathEditor, hasAnswerFocus)
-    initMathToolbar($toolbar, mathEditor)
-    initNewEquation($toolbar, mathEditor, hasAnswerFocus)
-    return $toolbar
-}
+    initMathToolbar($mathToolbar, mathEditor)
+    initNewEquation($newEquation, mathEditor, hasAnswerFocus)
 
+    function toggleMathToolbar(isVisible) {
+        $newEquation.toggle(!isVisible)
+        $mathToolbar.toggle(isVisible)
+    }
+
+    return { $toolbar, toggleMathToolbar }
+}
 
 function initSpecialCharacterToolbar($toolbar, mathEditor, hasAnswerFocus) {
     $toolbar.find('[data-js="charactersList"]')
@@ -38,8 +45,8 @@ function initSpecialCharacterToolbar($toolbar, mathEditor, hasAnswerFocus) {
         })
 }
 
-function initMathToolbar($toolbar, mathEditor) {
-    $toolbar.find('[data-js="mathToolbar"]').append(latexCommands
+function initMathToolbar($mathToolbar, mathEditor) {
+    $mathToolbar.append(latexCommands
         .map(o => `<button title="${o.action}" class="math-editor-button math-editor-button-grid" data-command="${o.action}" data-latexcommand="${o.label}" data-usewrite="${o.useWrite || false}">
 <img src="/math.svg?latex=${encodeURIComponent(o.label ? o.label.replace(/X/g, '\\square') : o.action)}"/>
 </button>`).join('')
@@ -50,8 +57,8 @@ function initMathToolbar($toolbar, mathEditor) {
     })
 }
 
-function initNewEquation($toolbar, mathEditor, hasAnswerFocus) {
-    $toolbar.find('[data-js="newEquation"]').mousedown((e => {
+function initNewEquation($newEquation, mathEditor, hasAnswerFocus) {
+    $newEquation.mousedown((e => {
         e.preventDefault()
         if (!hasAnswerFocus()) return // TODO: remove when button is only visible when textarea has focus
         mathEditor.insertNewEquation()

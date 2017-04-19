@@ -14,7 +14,6 @@ const keyCodes = {
 }
 
 const $outerPlaceholder = $(`<div class="math-editor-hidden" data-js="outerPlaceholder">`)
-let mathEditor
 
 function moveElementAfter($element, $after) {
     $after.after($element)
@@ -23,8 +22,6 @@ function moveElementAfter($element, $after) {
 function hideElementInDOM($element) {
     $outerPlaceholder.append($element)
 }
-
-let editor
 
 // TODO: replace with data attributes?
 let answerFocus = true
@@ -35,8 +32,9 @@ let $currentEditor
 
 $('body').append($outerPlaceholder)
 
-mathEditor = initMathEditor()
-const $toolbar = toolbars.init(mathEditor, () => answerFocus, l)
+const mathEditor = initMathEditor()
+const {$toolbar, toggleMathToolbar} = toolbars.init(mathEditor, () => answerFocus, l)
+
 hideElementInDOM($toolbar)
 
 function initMathEditor() {
@@ -114,9 +112,7 @@ function initMathEditor() {
 
         mqInstance.latex('')
         mathEditorVisible = true
-        const newEquation = $toolbar.find('[data-js="newEquation"]')
-        newEquation.hide()
-        $toolbar.find('[data-js="mathToolbar"]').show()
+        toggleMathToolbar(true)
         setTimeout(() => mqInstance.focus(), 0)
     }
 
@@ -153,8 +149,7 @@ function initMathEditor() {
             updateMathImg($img, $latexEditor.val())
         }
 
-        $toolbar.find('[data-js="newEquation"]').show()
-        $toolbar.find('[data-js="mathToolbar"]').hide()
+        toggleMathToolbar(false)
         hideElementInDOM($mathEditorContainer)
         mathEditorVisible = false
         latexEditorFocus = false
@@ -170,8 +165,7 @@ function initMathEditor() {
         $latexEditor.val(latex)
         onLatexUpdate()
         mathEditorVisible = true
-        $toolbar.find('[data-js="newEquation"]').hide()
-        $toolbar.find('[data-js="mathToolbar"]').show()
+        toggleMathToolbar(true)
         setTimeout(() => mqInstance.focus(), 0)
     }
 
@@ -192,7 +186,6 @@ function openEditor($element) {
 
 function closeEditor() {
     // TODO: remove event bindings
-    $toolbar.find('[data-js="mathToolbar"]').hide()
     hideElementInDOM($toolbar)
     mathEditor.closeMathEditor()
     // $editor.off()
@@ -219,7 +212,7 @@ function isMathEditorVisible() {
     return mathEditorVisible
 }
 
-editor = {
+const editor = {
     openEditor,
     closeEditor,
     onEditorFocusChanged,
