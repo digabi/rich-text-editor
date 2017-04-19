@@ -16,9 +16,9 @@ module.exports = [
     {character: '°'},
     {character: '∘', latexCommand: '\\circ'},
     {character: '∠', latexCommand: '\\angle'},
-    {character: '△', latexCommand: '\\triangle'},
     {character: '⊥', latexCommand: '\\perp'},
     {character: '‖', latexCommand: '\\parallel'},
+    {character: '⇅'},
 
     {character: 'µ', latexCommand: '\\mu'},
     {character: '∂', latexCommand: '\\partial'},
@@ -63,7 +63,7 @@ module.exports = [
     {character: '∅', latexCommand: '\\empty'},
     {character: '∖', latexCommand: '\\setminus'},
 
-    {character: '⌐'}, // \backneg
+    {character: '¬'},
     {character: '∧', latexCommand: '\\and'},
     {character: '∨', latexCommand: '\\or'},
     {character: '∀', latexCommand: '\\forall'},
