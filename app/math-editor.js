@@ -241,7 +241,10 @@ const makeRichText = (element, options, onValueChanged = () => { }) => {
         .on('keydown', e => {
             if (isCtrlKey(e, keyCodes.ENTER) || isKey(e, keyCodes.ESC)) mathEditor.closeMathEditor(true)
         })
-        .on('mousedown', 'img[src^="/math.svg"]', e => mathEditor.openMathEditor($(e.target))) // TODO: open editor if clicked on equation in another editor
+        .on('mousedown', 'img[src^="/math.svg"]', e => {
+            onEditorFocus($(e.target).closest('[data-js="answer"]'))
+            mathEditor.openMathEditor($(e.target))
+        })
         .on('keypress', e => {
             if (isCtrlKey(e, 'l') || isCtrlKey(e, 'i')) mathEditor.insertNewEquation()
         })
