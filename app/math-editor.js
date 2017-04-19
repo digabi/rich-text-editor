@@ -98,7 +98,7 @@ function initMathEditor() {
         clearTimeout(focusChanged)
         focusChanged = setTimeout(() => {
             if (!latexEditorFocus && !equationEditorFocus) closeMathEditor()
-            if (!answerFocus && !mathEditorVisible && !latexEditorFocus && !equationEditorFocus) closeEditor()
+            if (!answerFocus && !mathEditorVisible && !latexEditorFocus && !equationEditorFocus) onEditorBlur()
         }, 0)
     }
 
@@ -178,13 +178,13 @@ function initMathEditor() {
     }
 }
 
-function openEditor($element) {
+function onEditorFocus($element) {
     $currentEditor = $element
     $element.before($toolbar)
     $toolbar.show()
 }
 
-function closeEditor() {
+function onEditorBlur() {
     // TODO: remove event bindings
     hideElementInDOM($toolbar)
     mathEditor.closeMathEditor()
@@ -202,9 +202,9 @@ function onEditorFocusChanged(e) {
 
     clearTimeout(blurred)
     blurred = setTimeout(() => {
-        if (!answerFocus && !mathEditorVisible && !latexEditorFocus && !equationEditorFocus) closeEditor()
+        if (!answerFocus && !mathEditorVisible && !latexEditorFocus && !equationEditorFocus) onEditorBlur()
         else if (answerFocus && mathEditorVisible) mathEditor.closeMathEditor()
-        else openEditor($(e.target))
+        else onEditorFocus($(e.target))
     }, 0)
 }
 
