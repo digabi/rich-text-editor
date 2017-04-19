@@ -3,16 +3,25 @@
 .math-editor-close:hover { color: #406F88; }
 .math-editor-boxes { display: flex; }
 .math-editor-equation-editor { width: 50%; padding: 10px; }
-.math-editor-toolbar { margin-bottom: 5px; display: flex; flex-wrap: wrap; font-size: 10px; }
+.math-editor-tools {z-index: 2;position: fixed;top:0;left: 0;right: 0;}
+.math-editor-toolbar {margin-bottom: 0;display: flex;flex-wrap: wrap;font-size: 10px;background: #fff;z-index: 30;}
 .math-editor-latex-editor { font-size: 15px; width: 50%; }
-.math-editor-answer img[src^="/math.svg"] { vertical-align: middle; }
+.math-editor-answer img[src^="/math.svg"] { vertical-align: middle; margin: 2px 0; padding: 3px 10px; background: #eee; }
+.math-editor-answer img[src^="/loadImg"] { margin-top: 2px; }
 .math-editor-answer:focus img[src^="/math.svg"] { cursor: pointer; }
-.math-editor { margin: 10px; position: relative; box-shadow: 1px 1px 10px 1px rgba(0, 0, 0, .2); }
+.math-editor {z-index: 1;margin: 10px;position: relative;box-shadow: 1px 1px 10px 1px rgba(0, 0, 0, .2);}
 .math-editor-new-equation:before { content: 'Σ'; display: inline-block; margin-right: 10px; }
 .math-editor-answer .mq-math-mode .mq-root-block { white-space: normal; }
-.math-editor-toolbar.math-editor-list button { width: 28px; height: 28px; padding: 4px; }
 .math-editor-toolbar.math-editor-list img { max-width: 20px; max-height: 20px; }
 .math-editor-special-characters .math-editor-list button { font-family: Symbola, monospace; }
+.math-editor-button { padding: 5px; display: inline-block; cursor: pointer; text-align: center; background: none; margin-right: 5px; border: none; }
+.math-editor-button:hover,
+.math-editor-button:hover { background: #eee; }
+.math-editor-button:active { box-shadow: none; }
+.math-editor-button-action { text-transform: uppercase; box-shadow: 0 1px 2px 1px rgba(0, 0, 0, .2); border-radius: 2px; padding: 5px 10px; font-weight: bold; color: #666; }
+.math-editor-button-grid { width: 28px; height: 28px; padding: 4px; }
+.math-editor-characters { box-shadow: 0 1px 10px 1px rgba(0, 0, 0, .2); }
+.math-editor-equation {background: #eee;box-shadow: 0 3px 7px 1px rgba(0, 0, 0, .2);}
 .math-editor-answer:focus,
 .math-editor-answer .mq-editable-field.mq-focused,
 .math-editor-answer textarea:focus { box-shadow: none; outline: 2px solid #68b4df; }
