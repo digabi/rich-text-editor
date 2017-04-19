@@ -212,16 +212,6 @@ function isMathEditorVisible() {
     return mathEditorVisible
 }
 
-const editor = {
-    openEditor,
-    closeEditor,
-    onEditorFocusChanged,
-    isMathEditorVisible,
-    openMathEditor: mathEditor.openMathEditor,
-    closeMathEditor: mathEditor.closeMathEditor,
-    insertNewEquation: mathEditor.insertNewEquation
-}
-
 const markAndGetInlineImages = $editor => $editor.find('img[src^="data"]')
     .each((i, el) => el.setAttribute('id', new Date().getTime() + '-' + i))
     .map((i, el) => Object.assign(decodeBase64Image(el.getAttribute('src')), {id: el.getAttribute('id')}))
@@ -267,13 +257,13 @@ const makeRichText = (element, options, onValueChanged = () => { }) => {
         .on('keydown', e => {
             if (isCtrlKey(e, keyCodes.ENTER) || isKey(e, keyCodes.ESC)) mathEditor.closeMathEditor(true)
         })
-        .on('mousedown', 'img[src^="/math.svg"]', e => editor.openMathEditor($(e.target))) // TODO: open editor if clicked on equation in another editor
+        .on('mousedown', 'img[src^="/math.svg"]', e => mathEditor.openMathEditor($(e.target))) // TODO: open editor if clicked on equation in another editor
         .on('keypress', e => {
-            if (isCtrlKey(e, 'l') || isCtrlKey(e, 'i')) editor.insertNewEquation()
+            if (isCtrlKey(e, 'l') || isCtrlKey(e, 'i')) mathEditor.insertNewEquation()
         })
         .on('focus blur', e => {
-            if (editor.isMathEditorVisible() && e.type === 'focus') editor.closeMathEditor()
-            editor.onEditorFocusChanged(e)
+            if (isMathEditorVisible() && e.type === 'focus') mathEditor.closeMathEditor()
+            onEditorFocusChanged(e)
         })
         .on('keyup input', e => onValueChanged(sanitizeContent(e.currentTarget)))
         .on('paste', e => {
