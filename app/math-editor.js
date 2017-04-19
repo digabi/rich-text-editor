@@ -1,6 +1,4 @@
-const util = require('./util')
-const sanitizeHtml = require('sanitize-html')
-const sanitizeOpts = require('./sanitizeOpts')
+const {isCtrlKey, isKey, decodeBase64Image, insertToTextAreaAtCursor, sanitizeContent, sanitize} = require('./util')
 const toolbars = require('./toolbars')
 const MQ = MathQuill.getInterface(2)
 const locales = {
@@ -118,7 +116,7 @@ function initMathEditor() {
 
     function insertMath(symbol, alternativeSymbol, useWrite) {
         if (latexEditorFocus) {
-            util.insertToTextAreaAtCursor($latexEditor.get(0), alternativeSymbol || symbol)
+            insertToTextAreaAtCursor($latexEditor.get(0), alternativeSymbol || symbol)
             onLatexUpdate()
         } else if (equationEditorFocus) {
             if (useWrite) {
@@ -229,19 +227,6 @@ const persistInlineImages = ($editor, screenshotSaver) => {
         .onValue(() => $editor.trigger('input'))
 }
 
-function decodeBase64Image(dataString) {
-    if (!dataString)
-        return null
-    const matches = dataString.match(/^data:([A-Za-z-+\/]+);base64,(.+)$/)
-    if (matches.length !== 3) {
-        return null
-    }
-    return {
-        type: matches[1],
-        data: new Buffer(matches[2], 'base64')
-    }
-}
-
 const makeRichText = (element, options, onValueChanged = () => { }) => {
     const {
         screenshot: {
@@ -283,7 +268,7 @@ const makeRichText = (element, options, onValueChanged = () => { }) => {
                 const clipboardDataAsHtml = clipboardData.getData('text/html')
                 if (clipboardDataAsHtml) {
                     e.preventDefault()
-                    window.document.execCommand('insertHTML', false, sanitizeHtml(clipboardDataAsHtml, sanitizeOpts))
+                    window.document.execCommand('insertHTML', false, sanitize(clipboardDataAsHtml))
                     setTimeout(()=> persistInlineImages($currentEditor, saver), 0)
                 } else {
                     setTimeout(()=> persistInlineImages($currentEditor, saver), 0)
@@ -292,27 +277,6 @@ const makeRichText = (element, options, onValueChanged = () => { }) => {
         })
 }
 
-function sanitizeContent(answerElement) {
-    const $answerElement = $(answerElement)
-    const $mathEditor = $answerElement.find('[data-js="mathEditor"]')
-    $mathEditor.hide()
-    const text = $answerElement.text()
-    $mathEditor.show()
-
-    const html = sanitizeHtml($answerElement.html(), sanitizeOpts)
-
-    return { answerHTML: html, answerText: text }
-}
-
-function isKey(e, key) { return preventIfTrue(e, !e.altKey && !e.shiftKey && !e.ctrlKey  && keyOrKeyCode(e, key))}
-
-function isCtrlKey(e, key) { return preventIfTrue(e, !e.altKey && !e.shiftKey && e.ctrlKey && keyOrKeyCode(e, key))}
-
-function keyOrKeyCode(e, val) { return typeof val === 'string' ? e.key === val : e.keyCode === val }
-function preventIfTrue(e, val) {
-    if(val) e.preventDefault()
-    return val
-}
 module.exports = {
     makeRichText
 }
