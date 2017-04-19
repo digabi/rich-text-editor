@@ -38,7 +38,6 @@ hideElementInDOM($toolbar)
 function initMathEditor() {
     const $mathEditorContainer = $(`
         <div class="math-editor" data-js="mathEditor">
-            <div class="math-editor-close" title="Ctrl-Enter">${l.close}</div>
             <div class="math-editor-boxes">
                 <div class="math-editor-equation-editor" data-js="equationEditor"></div>
                 <textarea class="math-editor-latex-editor" data-js="latexEditor" placeholder="LaTex"></textarea>
@@ -83,11 +82,6 @@ function initMathEditor() {
             latexEditorFocus = e.type !== 'blur'
             onFocusChanged()
         })
-
-    $mathEditorContainer.find('.close').mousedown(e => {
-        e.preventDefault()
-        closeMathEditor(true)
-    })
 
     let focusChanged = null
 

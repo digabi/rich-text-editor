@@ -1,6 +1,4 @@
 .math-editor-list { border: 1px solid #eee; margin-bottom: 10px; }
-.math-editor-close { letter-spacing: 1px; cursor: pointer; border: 1px solid gray; line-height: 1; vertical-align: top; font-size: 13px; position: absolute; left: 0; top: 97%; width: 60px; height: 17px; text-align: center; color: #68b4df; z-index: 2; background: #fff; border-top: none; box-shadow: 1px 4px 7px 0 rgba(0, 0, 0, .2); }
-.math-editor-close:hover { color: #406F88; }
 .math-editor-boxes { display: flex; }
 .math-editor-equation-editor { width: 50%; padding: 10px; }
 .math-editor-tools {z-index: 2;position: fixed;top:0;left: 0;right: 0;}
