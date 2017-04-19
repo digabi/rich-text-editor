@@ -12,8 +12,8 @@
 .math-editor {z-index: 1;margin: 10px;position: relative;box-shadow: 1px 1px 10px 1px rgba(0, 0, 0, .2);}
 .math-editor-answer .mq-math-mode .mq-root-block { white-space: normal; }
 .math-editor-toolbar.math-editor-list img { max-width: 20px; max-height: 20px; }
-.math-editor-special-characters .math-editor-list .math-editor-button.math-popular { }
-.math-editor-special-characters .math-editor-list .math-editor-button { font-family: Symbola, monospace; color: #555; }
+.math-editor-characters .math-editor-list .math-editor-button.math-popular { }
+.math-editor-characters .math-editor-list .math-editor-button { font-family: Symbola, monospace; color: #555; }
 .math-editor-button { display: inline-block; cursor: pointer; text-align: center; border: none; }
 .math-editor-button:hover,
 .math-editor-button:hover { background: #eee; }
@@ -31,3 +31,10 @@
 .math-editor-hidden { display: none; }
 .math-editor-answer img { max-width: 100%; max-height: 1000px; }
 .math-editor textarea { height: auto; box-shadow: none; border-radius: 0; resize: none; border: none;}
+.math-editor-characters-group { padding-right: 30px; }
+.math-editor-characters .math-editor-button { display: none; }
+.math-editor-characters.math-editor-characters-expanded .math-editor-button,
+.math-editor-characters .math-editor-button.math-editor-characters-popular { display: inline-block; }
+.math-editor-toolbar .math-editor-button.math-editor-characters-expand-collapse { display: inline-block; font-family: 'SansSerif'}
+.math-editor-characters-expand-collapse:before { content: '⌄'; }
+.math-editor-characters-expanded .math-editor-characters-expand-collapse:before { content: '⌃'; }

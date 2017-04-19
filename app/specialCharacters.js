@@ -1,72 +1,94 @@
 module.exports = [
-    {character: '≡', latexCommand: '\\equiv'},
-    {character: '≢'}, // \nequiv or \not\equiv
-    {character: '≈', latexCommand: '\\approx', popular: true},
-    {character: '∼', latexCommand: '\\sim'},
-    {character: '≠', latexCommand: '\\neq', popular: true},
-    {character: '≤', latexCommand: '\\leq', popular: true},
-    {character: '≥', latexCommand: '\\geq', popular: true},
-    {character: '…', latexCommand: '\\dots'},
-    {character: '²', latexCommand: '^2', popular: true},
-    {character: '³', latexCommand: '^3', popular: true},
-    {character: '½', latexCommand: '1/2', popular: true},
-    {character: '⅓', latexCommand: '1/3', popular: true},
-    {character: '·', latexCommand: '\\cdot', popular: true},
-    {character: '±', latexCommand: '\\pm'},
-
-    {character: '°', popular: true},
-    {character: '∘', latexCommand: '\\circ'},
-    {character: '∠', latexCommand: '\\angle'},
-    {character: '⊥', latexCommand: '\\perp'},
-    {character: '‖', latexCommand: '\\parallel'},
-    {character: '⇅'},
-
-    {character: 'µ', latexCommand: '\\mu'},
-    {character: '∂', latexCommand: '\\partial'},
-    {character: '∑', latexCommand: '\\Sigma'},
-    {character: '∏', latexCommand: '\\Pi'},
-    {character: 'Ω', latexCommand: '\\Omega'},
-    {character: 'Δ', latexCommand: '\\Delta'},
-    {character: '𝜄', latexCommand: '\\iota'},
-    {character: 'Γ', latexCommand: '\\Gamma'},
-    {character: 'Θ', latexCommand: '\\Theta'},
-    {character: 'Φ', latexCommand: '\\Phi'},
-    {character: 'η', latexCommand: '\\eta'},
-    {character: 'α', latexCommand: '\\alpha'},
-    {character: 'δ', latexCommand: '\\delta'},
-    {character: 'ε', latexCommand: '\\varepsilon'},
-    {character: 'σ', latexCommand: '\\sigma'},
-    {character: 'τ', latexCommand: '\\tau'},
-    {character: 'Ω', latexCommand: '\\Omega'},
-    {character: 'ω', latexCommand: '\\omega'},
-    {character: 'π', latexCommand: '\\pi', popular: true},
-    {character: 'Ф', latexCommand: '\\phi'},
-
-    {character: '↑', latexCommand: '\\uparrow'},
-    {character: '→', latexCommand: '\\rightarrow'},
-    {character: '↓', latexCommand: '\\downarrow'},
-    {character: '↔', latexCommand: '\\leftrightarrow'},
-    {character: '⇒', latexCommand: '\\Rightarrow', popular: true},
-    {character: '⇔', latexCommand: '\\Leftrightarrow', popular: true},
-    {character: '⇌'}, // \rightleftharpoons
-    {character: '∞', latexCommand: '\\infty', popular: true},
-
-    {character: '∈', latexCommand: '\\in'},
-    {character: '∉', latexCommand: '\\notin'},
-    {character: 'ℝ'},
-    {character: 'ℕ'},
-    {character: 'ℤ'},
-    {character: 'ℚ'},
-    {character: '⊂', latexCommand: '\\subset'},
-    {character: '⊄', latexCommand: '\\notsubset'},
-    {character: '∩', latexCommand: '\\cap'},
-    {character: '∪', latexCommand: '\\cup'},
-    {character: '∅', latexCommand: '\\empty'},
-    {character: '∖', latexCommand: '\\setminus'},
-
-    {character: '¬'},
-    {character: '∧', latexCommand: '\\and'},
-    {character: '∨', latexCommand: '\\or'},
-    {character: '∀', latexCommand: '\\forall'},
-    {character: '∃', latexCommand: '\\exists'}
+    {
+        label: 'Perus',
+        characters: [
+            { character: '≠', latexCommand: '\\neq', popular: true },
+            { character: '≈', latexCommand: '\\approx', popular: true },
+            { character: '≤', latexCommand: '\\leq', popular: true },
+            { character: '≥', latexCommand: '\\geq', popular: true },
+            { character: '²', latexCommand: '^2', popular: true },
+            { character: '³', latexCommand: '^3' },
+            { character: '½', latexCommand: '1/2', popular: true },
+            { character: '⅓', latexCommand: '1/3' },
+            { character: '±', latexCommand: '\\pm' }
+        ]
+    },
+    {
+        label: 'Algebra',
+        characters: [
+            { character: '∼', latexCommand: '\\sim' },
+            { character: '≡', latexCommand: '\\equiv', popular: true },
+            { character: '≢' }, // \nequiv or \not\equiv
+            { character: '·', latexCommand: '\\cdot', popular: true },
+            { character: '…', latexCommand: '\\dots' }, // matriisialgebra?
+            { character: '∞', latexCommand: '\\infty', popular: true },
+        ]
+    },
+    {
+        label: 'Kreikkalaiset aakkoset',
+        characters: [
+            { character: 'α', latexCommand: '\\alpha', popular: true },
+            { character: 'β', latexCommand: '\\beta', popular: true },
+            { character: 'δ', latexCommand: '\\delta' },
+            { character: 'ε', latexCommand: '\\varepsilon' },
+            { character: 'η', latexCommand: '\\eta' },
+            { character: '∂', latexCommand: '\\partial' },
+            { character: '𝜄', latexCommand: '\\iota' },
+            { character: 'λ', latexCommand: '\\lambda', popular: true },
+            { character: 'µ', latexCommand: '\\mu', popular: true },
+            { character: 'π', latexCommand: '\\pi', popular: true },
+            { character: 'σ', latexCommand: '\\sigma' },
+            { character: 'τ', latexCommand: '\\tau' },
+            { character: 'Ф', latexCommand: '\\phi' },
+            { character: 'ω', latexCommand: '\\omega' },
+            { character: 'Γ', latexCommand: '\\Gamma' },
+            { character: 'Δ', latexCommand: '\\Delta', popular: true },
+            { character: 'Θ', latexCommand: '\\Theta' },
+            { character: '∏', latexCommand: '\\Pi' },
+            { character: '∑', latexCommand: '\\Sigma', popular: true },
+            { character: 'Φ', latexCommand: '\\Phi' },
+            { character: 'Ω', latexCommand: '\\Omega' }
+        ]
+    },
+    {
+        label: 'Geometria ja vektorioppi',
+        characters: [
+            { character: '°', popular: true },
+            { character: '↑', latexCommand: '\\uparrow' },
+            { character: '⇅' },
+            { character: '∠', latexCommand: '\\angle', popular: true },
+            { character: '⊥', latexCommand: '\\perp', popular: true },
+            { character: '‖', latexCommand: '\\parallel', popular: true },
+            { character: '↓', latexCommand: '\\downarrow' },
+            { character: '↔', latexCommand: '\\leftrightarrow' },
+            { character: '⇌' } // \rightleftharpoons
+        ]
+    },
+    {
+        label: 'Logiikka ja joukko-oppi',
+        characters: [
+            { character: '⇒', latexCommand: '\\Rightarrow', popular: true },
+            { character: '⇔', latexCommand: '\\Leftrightarrow', popular: true },
+            { character: '∧', latexCommand: '\\and' },
+            { character: '∨', latexCommand: '\\or' },
+            { character: '¬' },
+            { character: '∃', latexCommand: '\\exists', popular: true },
+            { character: '∀', latexCommand: '\\forall', popular: true },
+            { character: '∩', latexCommand: '\\cap' },
+            { character: '∪', latexCommand: '\\cup' },
+            { character: '∖', latexCommand: '\\setminus' },
+            { character: '⊂', latexCommand: '\\subset' },
+            { character: '⊄', latexCommand: '\\notsubset' },
+            { character: '∈', latexCommand: '\\in', popular: true },
+            { character: '∉', latexCommand: '\\notin', popular: true },
+            { character: '∅', latexCommand: '\\empty' },
+            { character: '→', latexCommand: '\\rightarrow' },
+            { character: '∘', latexCommand: '\\circ' },
+            { character: '∼', latexCommand: '\\sim' },
+            { character: 'ℝ' },
+            { character: 'ℕ', popular: true },
+            { character: 'ℤ', popular: true },
+            { character: 'ℚ' }
+        ]
+    }
 ]
