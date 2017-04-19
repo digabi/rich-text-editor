@@ -103,7 +103,7 @@ function initMathEditor() {
     }
 
     function insertNewEquation(optionalMarkup) {
-        window.document.execCommand('insertHTML', false, (optionalMarkup ? optionalMarkup : '') + '<img data-js="new" style="display: none"/>');
+        window.document.execCommand('insertHTML', false, (optionalMarkup ? optionalMarkup : '') + '<img data-js="new" style="display: none"/>')
         const $addedEquationImage = $('[data-js="new"]')
         $addedEquationImage
             .removeAttr('data-js')
@@ -293,7 +293,7 @@ const makeRichText = (element, options, onValueChanged = () => { }) => {
                 const clipboardDataAsHtml = clipboardData.getData('text/html')
                 if (clipboardDataAsHtml) {
                     e.preventDefault()
-                    window.document.execCommand('insertHTML', false, sanitizeHtml(clipboardDataAsHtml, sanitizeOpts));
+                    window.document.execCommand('insertHTML', false, sanitizeHtml(clipboardDataAsHtml, sanitizeOpts))
                     setTimeout(()=> persistInlineImages($currentEditor, saver), 0)
                 } else {
                     setTimeout(()=> persistInlineImages($currentEditor, saver), 0)
