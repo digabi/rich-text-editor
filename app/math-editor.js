@@ -303,12 +303,13 @@ const makeRichText = (element, options, onValueChanged = () => { }) => {
 }
 
 function sanitizeContent(answerElement) {
-    $(answerElement).find('[data-js="mathEditor"]').hide()
-    const text = $(answerElement)[0].innerText
-    $(answerElement).find('[data-js="mathEditor"]').show()
+    const $answerElement = $(answerElement)
+    const $mathEditor = $answerElement.find('[data-js="mathEditor"]')
+    $mathEditor.hide()
+    const text = $answerElement.text()
+    $mathEditor.show()
 
-    // Shouldn't interfere in user input
-    const html = sanitizeHtml($(answerElement).html(), sanitizeOpts)
+    const html = sanitizeHtml($answerElement.html(), sanitizeOpts)
 
     return { answerHTML: html, answerText: text }
 }
