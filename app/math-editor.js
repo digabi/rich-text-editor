@@ -13,7 +13,6 @@ const keyCodes = {
     ESC: 27
 }
 
-let $toolbar
 const $outerPlaceholder = $(`<div class="math-editor-hidden" data-js="outerPlaceholder">`)
 let mathEditor
 
@@ -32,16 +31,16 @@ let answerFocus = true
 let latexEditorFocus = false
 let equationEditorFocus = false
 let mathEditorVisible = false
-let $editor
+let $currentEditor
 
 $('body').append($outerPlaceholder)
 
 mathEditor = initMathEditor()
-$toolbar = toolbars.init(mathEditor, () => answerFocus, l)
+const $toolbar = toolbars.init(mathEditor, () => answerFocus, l)
 hideElementInDOM($toolbar)
 
 function initMathEditor() {
-    const $mathEditor = $(`
+    const $mathEditorContainer = $(`
         <div class="math-editor" data-js="mathEditor">
             <div class="math-editor-close" title="Ctrl-Enter">${l.close}</div>
             <div class="math-editor-boxes">
@@ -50,18 +49,18 @@ function initMathEditor() {
             </div>
         </div>`)
 
-    hideElementInDOM($mathEditor)
+    hideElementInDOM($mathEditorContainer)
 
-    const $latexEditor = $mathEditor.find('[data-js="latexEditor"]')
-    const $equationEditor = $mathEditor.find('[data-js="equationEditor"]')
-    const mathField = MQ.MathField($equationEditor.get(0), {
+    const $latexEditor = $mathEditorContainer.find('[data-js="latexEditor"]')
+    const $equationEditor = $mathEditorContainer.find('[data-js="equationEditor"]')
+    const mqInstance = MQ.MathField($equationEditor.get(0), {
         handlers: {
             edit: () => {
                 if (latexEditorFocus)
                     return
-                const latex = mathField.latex()
+                const latex = mqInstance.latex()
                 $latexEditor.val(latex)
-                updateMathImg($mathEditor.prev(), latex)
+                updateMathImg($mathEditorContainer.prev(), latex)
             },
             enter: field => {
                 // TODO: do not close editor / o not create a new equation if there is no text?
@@ -79,8 +78,8 @@ function initMathEditor() {
         })
 
     function onLatexUpdate() {
-        updateMathImg($mathEditor.prev(), $latexEditor.val())
-        setTimeout(() => mathField.latex($latexEditor.val()), 1)
+        updateMathImg($mathEditorContainer.prev(), $latexEditor.val())
+        setTimeout(() => mqInstance.latex($latexEditor.val()), 1)
     }
 
     $latexEditor
@@ -90,7 +89,7 @@ function initMathEditor() {
             onFocusChanged()
         })
 
-    $mathEditor.find('.close').mousedown(e => {
+    $mathEditorContainer.find('.close').mousedown(e => {
         e.preventDefault()
         closeMathEditor(true)
     })
@@ -111,13 +110,14 @@ function initMathEditor() {
         $addedEquationImage
             .removeAttr('data-js')
 
-        moveElementAfter($mathEditor, $addedEquationImage)
+        moveElementAfter($mathEditorContainer, $addedEquationImage)
 
-        mathField.latex('')
+        mqInstance.latex('')
         mathEditorVisible = true
-        $toolbar.find('[data-js="newEquation"]').hide()
+        const newEquation = $toolbar.find('[data-js="newEquation"]')
+        newEquation.hide()
         $toolbar.find('[data-js="mathToolbar"]').show()
-        setTimeout(() => mathField.focus(), 0)
+        setTimeout(() => mqInstance.focus(), 0)
     }
 
     function insertMath(symbol, alternativeSymbol, useWrite) {
@@ -126,13 +126,13 @@ function initMathEditor() {
             onLatexUpdate()
         } else if (equationEditorFocus) {
             if (useWrite) {
-                mathField.write(symbol)
+                mqInstance.write(symbol)
             } else {
-                mathField.typedText(symbol)
+                mqInstance.typedText(symbol)
             }
 
-            if (symbol.startsWith('\\')) mathField.keystroke('Tab')
-            setTimeout(() => mathField.focus(), 0)
+            if (symbol.startsWith('\\')) mqInstance.keystroke('Tab')
+            setTimeout(() => mqInstance.focus(), 0)
         }
     }
 
@@ -144,8 +144,8 @@ function initMathEditor() {
 
     function closeMathEditor(setFocusAfterClose = false) {
         // TODO: remove event bindings
-        const $currentEditor = $mathEditor.closest('[data-js="answer"]')
-        const $img = $mathEditor.prev()
+        const $currentEditor = $mathEditorContainer.closest('[data-js="answer"]')
+        const $img = $mathEditorContainer.prev()
         if ($latexEditor.val().trim() === '') {
             $img.remove()
         } else {
@@ -155,7 +155,7 @@ function initMathEditor() {
 
         $toolbar.find('[data-js="newEquation"]').show()
         $toolbar.find('[data-js="mathToolbar"]').hide()
-        hideElementInDOM($mathEditor)
+        hideElementInDOM($mathEditorContainer)
         mathEditorVisible = false
         latexEditorFocus = false
         equationEditorFocus = false
@@ -165,14 +165,14 @@ function initMathEditor() {
     function openMathEditor($img) {
         if (mathEditorVisible) closeMathEditor()
         $img.hide()
-        moveElementAfter($mathEditor, $img)
+        moveElementAfter($mathEditorContainer, $img)
         const latex = $img.prop('alt')
         $latexEditor.val(latex)
         onLatexUpdate()
         mathEditorVisible = true
         $toolbar.find('[data-js="newEquation"]').hide()
         $toolbar.find('[data-js="mathToolbar"]').show()
-        setTimeout(() => mathField.focus(), 0)
+        setTimeout(() => mqInstance.focus(), 0)
     }
 
     return {
@@ -185,7 +185,7 @@ function initMathEditor() {
 }
 
 function openEditor($element) {
-    $editor = $element
+    $currentEditor = $element
     $element.before($toolbar)
     $toolbar.show()
 }
@@ -301,9 +301,9 @@ const makeRichText = (element, options, onValueChanged = () => { }) => {
                 if (clipboardDataAsHtml) {
                     e.preventDefault()
                     window.document.execCommand('insertHTML', false, sanitizeHtml(clipboardDataAsHtml, sanitizeOpts));
-                    setTimeout(()=> persistInlineImages($editor, saver), 0)
+                    setTimeout(()=> persistInlineImages($currentEditor, saver), 0)
                 } else {
-                    setTimeout(()=> persistInlineImages($editor, saver), 0)
+                    setTimeout(()=> persistInlineImages($currentEditor, saver), 0)
                 }
             }
         })
