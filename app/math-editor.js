@@ -275,7 +275,7 @@ const makeRichText = (element, options, onValueChanged = () => { }) => {
                 e.preventDefault()
                 if(file.type !== 'image/png')
                     return
-                saver(file).then(screenshotUrl => {
+                saver({data: file, type: file.type}).then(screenshotUrl => {
                     const img = `<img src="${screenshotUrl}"/>`
                     window.document.execCommand('insertHTML', false, img)
                 })
