@@ -67,9 +67,8 @@ function initMathEditor() {
     })
 
     $equationEditor
-        .on('focus mousedown', e => equationEditorFocus = true)
         .on('focus blur', '.mq-textarea textarea', e => {
-            equationEditorFocus = e.type !== 'blur'
+            equationEditorFocus = e.type !== 'blur' && e.type !== 'focusout'
             onFocusChanged()
         })
 
