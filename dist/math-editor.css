@@ -1,12 +1,11 @@
 .math-editor-list { border: 1px solid #eee; margin-bottom: 10px; }
-.math-editor-close { letter-spacing: 1px; cursor: pointer; border: 1px solid gray; line-height: 1; vertical-align: top; font-size: 13px; position: absolute; left: 0; top: 97%; width: 60px; height: 17px; text-align: center; color: #68b4df; z-index: 2; background: #fff; border-top: none; box-shadow: 1px 4px 7px 0 rgba(0, 0, 0, .2); }
-.math-editor-close:hover { color: #406F88; }
 .math-editor-boxes { display: flex; }
-.math-editor-equation-editor { width: 50%; padding: 10px; }
+.math-editor .math-editor-equation-editor { width: 50%; padding: 10px; border: none;}
 .math-editor-tools {z-index: 2;position: fixed;top:0;left: 0;right: 0;}
 .math-editor-toolbar {margin-bottom: 0;display: flex;flex-wrap: wrap;font-size: 10px;background: #fff;z-index: 30;}
 .math-editor-latex-editor { font-size: 15px; width: 50%; }
-.math-editor-answer img[src^="/math.svg"] { vertical-align: middle; margin: 2px 0; padding: 3px 10px; background: #eee; cursor: pointer; }
+.math-editor-answer img[src^="/math.svg"] { vertical-align: middle; margin: 2px 0; padding: 3px 10px; cursor: pointer; }
+.math-editor-answer:focus img[src^="/math.svg"] {  background: #EDF9FF; }
 .math-editor-answer img[src^="/loadImg"] { margin-top: 2px; }
 .math-editor {z-index: 1;margin: 10px;position: relative;box-shadow: 1px 1px 10px 1px rgba(0, 0, 0, .2);}
 .math-editor-new-equation:before { content: 'Σ'; display: inline-block; margin-right: 10px; }
@@ -23,7 +22,7 @@
 .math-editor-equation {background: #eee;box-shadow: 0 3px 7px 1px rgba(0, 0, 0, .2);}
 .math-editor-answer:focus,
 .math-editor-answer .mq-editable-field.mq-focused,
-.math-editor-answer textarea:focus { box-shadow: none; outline: 2px solid #68b4df; }
+.math-editor-answer textarea:focus { box-shadow: none; outline: 1px solid #359BB7; z-index:2;}
 .math-editor-hidden { display: none; }
 .math-editor-answer img { max-width: 100%; max-height: 1000px; }
-
+.math-editor textarea { height: auto; box-shadow: none; border-radius: 0; resize: none; border: none;}
