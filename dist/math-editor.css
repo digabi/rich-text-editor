@@ -3,25 +3,27 @@
 .math-editor .math-editor-equation-editor { width: 50%; padding: 10px; border: none;}
 .math-editor-tools {z-index: 2;position: fixed;top:0;left: 0;right: 0;}
 .math-editor-toolbar {margin-bottom: 0;display: flex;flex-wrap: wrap;font-size: 10px;background: #fff;z-index: 30;}
-.math-editor-toolbar .math-editor-button  {font-size: 16px; }
+.math-editor-toolbar .math-editor-button  {font-size: 16px; background: none;}
 .math-editor-button { }
 .math-editor-latex-editor { font-size: 15px; width: 50%; }
 .math-editor-answer img[src^="/math.svg"] { vertical-align: middle; margin: 2px 0; padding: 3px 10px; cursor: pointer; }
 .math-editor-answer:focus img[src^="/math.svg"] {  background: #EDF9FF; }
 .math-editor-answer img[src^="/loadImg"] { margin-top: 2px; }
 .math-editor {z-index: 1;margin: 10px;position: relative;box-shadow: 1px 1px 10px 1px rgba(0, 0, 0, .2);}
-.math-editor-new-equation:before { content: 'Σ'; display: inline-block; margin-right: 10px; }
 .math-editor-answer .mq-math-mode .mq-root-block { white-space: normal; }
 .math-editor-toolbar.math-editor-list img { max-width: 20px; max-height: 20px; }
-.math-editor-special-characters .math-editor-list button { font-family: Symbola, monospace; }
-.math-editor-button { padding: 5px; display: inline-block; cursor: pointer; text-align: center; background: none; border: none; }
+.math-editor-special-characters .math-editor-list .math-editor-button { font-family: Symbola, monospace; color: #555; }
+.math-editor-button { display: inline-block; cursor: pointer; text-align: center; border: none; }
 .math-editor-button:hover,
 .math-editor-button:hover { background: #eee; }
 .math-editor-button:active { box-shadow: none; }
-.math-editor-button-action { text-transform: uppercase; box-shadow: 0 1px 2px 1px rgba(0, 0, 0, .2); border-radius: 2px; padding: 5px 10px; font-weight: bold; color: #666; }
+.math-editor-button-action { box-shadow: 0 1px 2px 1px rgba(0, 0, 0, .2); border-radius: 2px; padding: 5px 10px; color: #666; }
+.math-editor-new-equation:before { content: 'Σ'; display: inline-block; margin-right: 10px; }
+.math-editor-new-equation { background: #fafafa; font-weight: normal; box-shadow: 0 1px 2px 1px rgba(0, 0, 0, .2); border-radius: 2px; margin-left: 10px; margin-top: 5px; padding: 10px 15px; color: #555;font-size: 14px;}
 .math-editor-button-grid { width: 35px; height: 35px; }
 .math-editor-characters { box-shadow: 0 1px 10px 1px rgba(0, 0, 0, .2); }
-.math-editor-equation {background: #eee;box-shadow: 0 3px 7px 1px rgba(0, 0, 0, .2);}
+.math-editor-equation {background: #fafafa;box-shadow: 0 3px 7px 1px rgba(0, 0, 0, .2);}
+.math-editor-equation .math-editor-button:hover {background: #ECECEC;}
 .math-editor-answer:focus,
 .math-editor-answer .mq-editable-field.mq-focused,
 .math-editor-answer textarea:focus { box-shadow: none; outline: 1px solid #359BB7; z-index:2;}
