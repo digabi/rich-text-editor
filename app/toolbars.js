@@ -13,7 +13,7 @@ function init(mathEditor, hasAnswerFocus, l) {
             </div>
             <div class="math-editor-equation math-editor-toolbar math-editor-list math-editor-hidden" data-js="mathToolbar"></div>
             <div>
-                <button class="math-editor-new-equation math-editor-button math-editor-button-action" data-js="newEquation" title="Ctrl-L">${l.insertEquation}</button>
+                <button class="math-editor-new-equation math-editor-button math-editor-button-action" data-js="newEquation" data-title="Ctrl-L">Σ ${l.insertEquation}</button>
             </div>
         </div>
         `)
@@ -31,13 +31,13 @@ function init(mathEditor, hasAnswerFocus, l) {
     return { $toolbar, toggleMathToolbar }
 }
 
-const specialCharacterToButton = char => `<button class="math-editor-button math-editor-button-grid${char.popular ? ' math-editor-characters-popular' :''}" ${char.latexCommand ? `data-command="${char.latexCommand}"` : ''}>${char.character}</button>`
+const specialCharacterToButton = char => `<button class="math-editor-button math-editor-button-grid${char.popular ? ' math-editor-characters-popular' :''}" ${char.latexCommand ? `data-command="${char.latexCommand}"` : ''} data-title="${char.latexCommand || char.character}">${char.character}</button>`
 
 const popularInGroup = group => group.characters.filter(character => character.popular).length
 
 function initSpecialCharacterToolbar($toolbar, mathEditor, hasAnswerFocus) {
     const gridButtonWidthPx = 35
-    
+
     $toolbar.find('[data-js="charactersList"]')
         .append(specialCharacterGroups.map(group =>
             `<div class="math-editor-characters-group" 
@@ -61,7 +61,7 @@ function initSpecialCharacterToolbar($toolbar, mathEditor, hasAnswerFocus) {
 
 function initMathToolbar($mathToolbar, mathEditor) {
     $mathToolbar.append(latexCommands
-        .map(o => `<button title="${o.action}" class="math-editor-button math-editor-button-grid" data-command="${o.action}" data-latexcommand="${o.label}" data-usewrite="${o.useWrite || false}">
+        .map(o => `<button data-title="${o.action}" class="math-editor-button math-editor-button-grid" data-command="${o.action}" data-latexcommand="${o.label}" data-usewrite="${o.useWrite || false}">
 <img src="/math.svg?latex=${encodeURIComponent(o.label ? o.label.replace(/X/g, '\\square') : o.action)}"/>
 </button>`).join('')
     ).on('mousedown', 'button', e => {
