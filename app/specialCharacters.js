@@ -17,7 +17,7 @@ module.exports = [
         label: 'Algebra',
         characters: [
             { character: '∼', latexCommand: '\\sim' },
-            { character: '≡', latexCommand: '\\equiv', popular: true },
+            { character: '≡', latexCommand: '\\equiv' },
             { character: '≢' }, // \nequiv or \not\equiv
             { character: '·', latexCommand: '\\cdot', popular: true },
             { character: '…', latexCommand: '\\dots' }, // matriisialgebra?

@@ -8,9 +8,13 @@ module.exports = {
 function init(mathEditor, hasAnswerFocus, l) {
     const $toolbar = $(`
         <div class="math-editor-tools" data-js="tools">
+            <div class="math-editor-tools-button-wrapper">
+                <div class="math-editor-toolbar-wrapper">
+                    <button class="math-editor-characters-expand-collapse" data-js="expandCollapseCharacters" style="z-index: 100"></button>
+                </div>
+            </div>
             <div class="math-editor-tools-row">
                 <div class="math-editor-toolbar-wrapper">
-                    <button class="math-editor-new-equation math-editor-button math-editor-button-action" data-js="newEquation" data-title="Ctrl-L">Σ ${l.insertEquation}</button>
                     <div class="math-editor-toolbar-characters math-editor-toolbar math-editor-toolbar-button-list" data-js="charactersList"></div>
                 </div>
             </div>
@@ -19,8 +23,18 @@ function init(mathEditor, hasAnswerFocus, l) {
                     <div class="math-editor-toolbar-equation math-editor-toolbar math-editor-toolbar-button-list" style="display: none" data-js="mathToolbar"></div>
                 </div>
             </div>
+            <div class="math-editor-tools-button-wrapper">
+                <div class="math-editor-toolbar-wrapper">
+                    <button class="math-editor-new-equation math-editor-button math-editor-button-action" data-js="newEquation" data-title="Ctrl-L">Σ ${l.insertEquation}</button>
+                </div>
+            </div>
         </div>
         `)
+        .on('mousedown', '[data-js="expandCollapseCharacters"]', e => {
+            e.preventDefault()
+            $toolbar.toggleClass('math-editor-characters-expanded')
+        })
+
     const $newEquation = $toolbar.find('[data-js="newEquation"]')
     const $mathToolbar = $toolbar.find('[data-js="mathToolbar"]')
     initSpecialCharacterToolbar($toolbar, mathEditor, hasAnswerFocus)
@@ -48,18 +62,13 @@ function initSpecialCharacterToolbar($toolbar, mathEditor, hasAnswerFocus) {
                   style="width: ${popularInGroup(group) * gridButtonWidthPx}px">
                   ${group.characters.map(specialCharacterToButton).join('')}
              </div>`))
-        .append(`<button class="math-editor-characters-expand-collapse"></button>`)
         .on('mousedown', 'button', e => {
             e.preventDefault()
 
-            if ($(e.currentTarget).hasClass('math-editor-characters-expand-collapse')) {
-                $toolbar.find('[data-js="charactersList"]').toggleClass('math-editor-characters-expanded')
-            } else {
-                const character = e.currentTarget.innerText
-                const command = e.currentTarget.dataset.command
-                if (hasAnswerFocus()) window.document.execCommand('insertText', false, character)
-                else mathEditor.insertMath(command || character)
-            }
+            const character = e.currentTarget.innerText
+            const command = e.currentTarget.dataset.command
+            if (hasAnswerFocus()) window.document.execCommand('insertText', false, character)
+            else mathEditor.insertMath(command || character)
         })
 }
 
