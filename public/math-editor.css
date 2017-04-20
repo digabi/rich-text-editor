@@ -3,7 +3,7 @@
 .math-editor .math-editor-equation-editor { width: 50%; padding: 10px; border: none;}
 .math-editor-tools {z-index: 2;position: fixed;top:0;left: 0;right: 0;}
 .math-editor-toolbar {margin-bottom: 0;display: flex;flex-wrap: wrap;font-size: 10px;background: #fff;z-index: 30;}
-.math-editor-toolbar .math-editor-button  {font-size: 16px; background: none;}
+.math-editor-toolbar .math-editor-button  {font-size: 16px; background: none; position: relative;}
 .math-editor-button { }
 .math-editor-latex-editor { font-size: 15px; width: 50%; }
 .math-editor-answer img[src^="/math.svg"] { vertical-align: middle; margin: 2px 0; padding: 3px 10px; cursor: pointer; }
@@ -15,7 +15,6 @@
 .math-editor-characters .math-editor-list .math-editor-button.math-popular { }
 .math-editor-characters .math-editor-list .math-editor-button { font-family: Symbola, monospace; color: #555; }
 .math-editor-button { display: inline-block; cursor: pointer; text-align: center; border: none; }
-.math-editor-button:hover,
 .math-editor-button:hover { background: #eee; }
 .math-editor-button:active { box-shadow: none; }
 .math-editor-button-action { box-shadow: 0 1px 2px 1px rgba(0, 0, 0, .2); border-radius: 2px; padding: 5px 10px; color: #666; }
