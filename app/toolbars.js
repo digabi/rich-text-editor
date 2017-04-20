@@ -44,7 +44,7 @@ function initSpecialCharacterToolbar($toolbar, mathEditor, hasAnswerFocus) {
                   style="width: ${popularInGroup(group) * gridButtonWidthPx}px">
                   ${group.characters.map(specialCharacterToButton).join('')}
              </div>`))
-        .append(`<button class="math-editor-characters-expand-collapse math-editor-button math-editor-button-grid"></button>`)
+        .append(`<button class="math-editor-characters-expand-collapse"></button>`)
         .on('mousedown', 'button', e => {
             e.preventDefault()
 

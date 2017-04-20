@@ -38,5 +38,6 @@
 .math-editor-characters.math-editor-characters-expanded .math-editor-button,
 .math-editor-characters .math-editor-button.math-editor-characters-popular { display: inline-block; }
 .math-editor-toolbar .math-editor-button.math-editor-characters-expand-collapse { display: inline-block; font-family: 'SansSerif', serif}
-.math-editor-characters-expand-collapse:before { content: '⌄'; }
-.math-editor-characters-expanded .math-editor-characters-expand-collapse:before { content: '⌃'; }
+.math-editor-characters-expand-collapse:before { content: url('expand.svg'); }
+.math-editor-characters-expanded .math-editor-characters-expand-collapse:before { content: url('collapse.svg'); }
+.math-editor-characters-expand-collapse { height: 35px; background: none; border: none; cursor: pointer; padding-top: 4px; }
