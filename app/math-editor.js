@@ -48,22 +48,28 @@ function initMathEditor() {
 
     const $latexEditor = $mathEditorContainer.find('[data-js="latexEditor"]')
     const $equationEditor = $mathEditorContainer.find('[data-js="equationEditor"]')
+    let mqEditTimeout
+    function onMqEdit() {
+        clearTimeout(mqEditTimeout)
+        mqEditTimeout = setTimeout(() => {
+            if (latexEditorFocus)
+                return
+            const latex = mqInstance.latex()
+            $latexEditor.val(latex)
+            updateMathImg($mathEditorContainer.prev(), latex)
+        }, 100)
+    }
     const mqInstance = MQ.MathField($equationEditor.get(0), {
         handlers: {
-            edit: () => {
-                if (latexEditorFocus)
-                    return
-                const latex = mqInstance.latex()
-                $latexEditor.val(latex)
-                updateMathImg($mathEditorContainer.prev(), latex)
-            },
+            edit: onMqEdit,
             enter: field => {
-                // TODO: do not close editor / o not create a new equation if there is no text?
+                // TODO: do not close editor / o not create  a new equation if there is no text?
                 mathEditor.closeMathEditor(true)
                 setTimeout(() => insertNewEquation('<div></div>'), 2)
             }
         }
     })
+    $equationEditor.on('keydown', '.mq-textarea textarea', onMqEdit)
 
     $equationEditor
         .on('focus blur', '.mq-textarea textarea', e => {
