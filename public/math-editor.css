@@ -1,45 +1,49 @@
 /*.math-editor-list { margin-bottom: 10px; }*/
+.math-editor {z-index: 1;margin: 10px;position: relative;box-shadow: 1px 1px 10px 1px rgba(0, 0, 0, .2);}
+.math-editor-hidden { display: none; }
 .math-editor-boxes { display: flex; }
-.math-editor .math-editor-equation-editor { width: 50%; padding: 10px; border: none;}
-.math-editor-tools { z-index: 2;position: fixed;top:0;left: 0;right: 0; box-shadow: 0 1px 10px 1px rgba(0, 0, 0, .2); line-height: 0; }
-.math-editor-toolbar { margin-bottom: 0; display: flex; flex-wrap: wrap; font-size: 10px; z-index: 30; }
-.math-editor-toolbar-wrapper { margin: auto; max-width: 990px; }
-.math-editor-tools-row:nth-child(odd) { background: #fff; }
-.math-editor-tools-row:nth-child(even) { background: #fafafa; }
-.math-editor-toolbar .math-editor-button  {font-size: 16px; background: none; position: relative;}
-.math-editor-latex-editor { font-size: 15px; width: 50%; }
 .math-editor-answer img[src^="/math.svg"] { vertical-align: middle; margin: 2px 0; padding: 3px 10px; cursor: pointer; }
 .math-editor-answer:focus img[src^="/math.svg"] {  background: #EDF9FF; }
 .math-editor-answer img[src^="/loadImg"] { margin-top: 2px; }
-.math-editor {z-index: 1;margin: 10px;position: relative;box-shadow: 1px 1px 10px 1px rgba(0, 0, 0, .2);}
 .math-editor-answer .mq-math-mode .mq-root-block { white-space: normal; }
-.math-editor-toolbar.math-editor-list img { max-width: 20px; max-height: 20px; }
-.math-editor-characters.math-editor-list .math-editor-button.math-popular { }
-.math-editor-characters.math-editor-list .math-editor-button { font-family: Symbola, monospace; color: #555; }
+.math-editor-answer:focus,
+.math-editor-answer .mq-editable-field.mq-focused,
+.math-editor-answer textarea:focus { box-shadow: none; outline: 1px solid #359BB7; z-index:2;}
+.math-editor-answer img { max-width: 100%; max-height: 1000px; }
+.math-editor textarea { height: auto; box-shadow: none; border-radius: 0; resize: none; border: none;}
+
+.math-editor-equation-editor { width: 50%; padding: 10px; border: none;}
+.math-editor-latex-editor { font-size: 15px; width: 50%; }
+
 .math-editor-button {text-align: center;display: inline-block;position: relative;cursor: pointer;border: none;}
-.math-editor-toolbar .math-editor-button:hover { background: #eee; }
 .math-editor-button[data-title]:hover:after { background: #359BB7; border-radius: 5px; color: #fff; content: attr(data-title); left: 50%; top:100%; padding: 5px 15px; position: absolute; z-index: 32; transform: translate(-50%, 0); white-space: nowrap; }
 .math-editor-button[data-title]:hover:before { display: inline-block; border: solid; border-color: #359BB7 transparent; border-width: 0 6px 6px 6px; bottom: 0; content: ""; left: 50%; position: absolute; z-index: 99; margin-left: -6px; }
 .math-editor-button[data-title]:after:hover,
 .math-editor-button[data-title]:before:hover { display: none; }
 .math-editor-button:active { box-shadow: none; }
-.math-editor-button-action { padding: 5px 10px; color: #666; }
-.math-editor-new-equation { vertical-align: top; font-weight: normal; height: 35px; background: none; border: none; font-family: SourceSansPro-Semibold, sans-serif; font-size: 16px; color: #359BB7; letter-spacing: 0; line-height: 22px; }
+.math-editor-button-action { padding: 5px 10px; font-weight: normal; background: none; border: none; font-family: SourceSansPro-Semibold, sans-serif; font-size: 16px; color: #359BB7; letter-spacing: 0; line-height: 22px; }
+.math-editor-new-equation { vertical-align: top; height: 35px; }
+
+.math-editor-tools { z-index: 2; position: fixed; top: 0; left: 0; right: 0; box-shadow: 0 1px 10px 1px rgba(0, 0, 0, .2); line-height: 0; }
+.math-editor-toolbar-wrapper { margin: auto; max-width: 990px; }
+.math-editor-tools-row:nth-child(odd) { background: #fff; }
+.math-editor-tools-row:nth-child(even) { background: #fafafa; }
+
+.math-editor-toolbar { z-index: 30; display: inline-block; }
+.math-editor-toolbar .math-editor-button  {font-size: 16px; background: none; position: relative;}
+.math-editor-toolbar .math-editor-button:hover { background: #eee; }
 .math-editor-button-grid { width: 35px; height: 35px; }
-.math-editor-characters { display: inline-block; }
-.math-editor-equation { display: inline-block; }
-.math-editor-equation .math-editor-button:hover {background: #ECECEC;}
-.math-editor-answer:focus,
-.math-editor-answer .mq-editable-field.mq-focused,
-.math-editor-answer textarea:focus { box-shadow: none; outline: 1px solid #359BB7; z-index:2;}
-.math-editor-hidden { display: none; }
-.math-editor-answer img { max-width: 100%; max-height: 1000px; }
-.math-editor textarea { height: auto; box-shadow: none; border-radius: 0; resize: none; border: none;}
-.math-editor-characters-group { margin-right: 30px; display: inline-block; vertical-align: top; }
-.math-editor-characters .math-editor-button { display: none; }
-.math-editor-characters.math-editor-characters-expanded .math-editor-button,
-.math-editor-characters .math-editor-button.math-editor-characters-popular { display: inline-block; }
-.math-editor-toolbar .math-editor-button.math-editor-characters-expand-collapse { display: inline-block; font-family: 'SansSerif', serif}
+
+.math-editor-toolbar.math-editor-toolbar-button-list img { max-width: 20px; max-height: 20px; }
+.math-editor-toolbar-button-list.math-editor-button:hover {background: #ECECEC;}
+.math-editor-toolbar-characters.math-editor-toolbar-button-list .math-editor-button { font-family: Symbola, monospace; color: #555; }
+.math-editor-toolbar-equation { display: inline-block; }
+.math-editor-toolbar-characters-group { margin-right: 30px; display: inline-block; vertical-align: top; }
+.math-editor-toolbar-characters .math-editor-button { display: none; }
+
+.math-editor-toolbar-characters.math-editor-characters-expanded .math-editor-button,
+.math-editor-toolbar-characters .math-editor-button.math-editor-characters-popular { display: inline-block; }
+
+.math-editor-characters-expand-collapse { display: inline-block; font-family: 'SansSerif', serif; height: 35px; background: none; border: none; cursor: pointer; padding-top: 4px; }
 .math-editor-characters-expand-collapse:before { content: url('expand.svg'); }
 .math-editor-characters-expanded .math-editor-characters-expand-collapse:before { content: url('collapse.svg'); }
-.math-editor-characters-expand-collapse { height: 35px; background: none; border: none; cursor: pointer; padding-top: 4px; }

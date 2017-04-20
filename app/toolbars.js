@@ -11,12 +11,12 @@ function init(mathEditor, hasAnswerFocus, l) {
             <div class="math-editor-tools-row">
                 <div class="math-editor-toolbar-wrapper">
                     <button class="math-editor-new-equation math-editor-button math-editor-button-action" data-js="newEquation" data-title="Ctrl-L">Σ ${l.insertEquation}</button>
-                    <div class="math-editor-characters math-editor-toolbar math-editor-list" data-js="charactersList"></div>
+                    <div class="math-editor-toolbar-characters math-editor-toolbar math-editor-toolbar-button-list" data-js="charactersList"></div>
                 </div>
             </div>
             <div class="math-editor-tools-row">
                 <div class="math-editor-toolbar-wrapper math-editor-equation-wrapper">
-                    <div class="math-editor-equation math-editor-toolbar math-editor-list math-editor-hidden" data-js="mathToolbar"></div>
+                    <div class="math-editor-toolbar-equation math-editor-toolbar math-editor-toolbar-button-list" style="display: none" data-js="mathToolbar"></div>
                 </div>
             </div>
         </div>
@@ -44,7 +44,7 @@ function initSpecialCharacterToolbar($toolbar, mathEditor, hasAnswerFocus) {
 
     $toolbar.find('[data-js="charactersList"]')
         .append(specialCharacterGroups.map(group =>
-            `<div class="math-editor-characters-group" 
+            `<div class="math-editor-toolbar-characters-group" 
                   style="width: ${popularInGroup(group) * gridButtonWidthPx}px">
                   ${group.characters.map(specialCharacterToButton).join('')}
              </div>`))
