@@ -19,7 +19,6 @@ const teacherHtmlSV = teacherHtml(Object.assign({startedAt: formatDate(startedAt
 const interfaceIP = process.env.OPENSHIFT_NODEJS_IP || '0.0.0.0'
 const port = process.env.PORT || process.env.OPENSHIFT_NODEJS_PORT || 5000
 const app = express()
-let savedData = {}
 let savedMarkers = {}
 
 const sanitizeOpts = require('./sanitizeOpts')
@@ -53,22 +52,24 @@ app.use(bodyParser.urlencoded({extended: false, limit: '5mb'}))
 app.use(bodyParser.json({limit: '5mb', strict: false}))
 app.post('/save', (req, res) => {
     const sessionId = req.session.id;
-    savedData[sessionId] = savedData[sessionId] || {}
     const {answerId, text} = req.body
-    savedData[sessionId][answerId] = {
-        timestamp: new Date().toISOString(),
-        html: sanitizeHtml(text, sanitizeOpts)
-    }
+
+    const fileWriteStream = createFileWriteStream(sessionId, answerId);
+    fileWriteStream.write(JSON.stringify({
+            timestamp: new Date().toISOString(),
+            html: sanitizeHtml(text, sanitizeOpts)
+        })
+    )
+    fileWriteStream.end()
     res.sendStatus(200)
 })
 app.post('/saveImg', (req, res) => {
     const sessionId = req.session.id
     const {answerId} = req.query
     const id = req.query.id
-    const fullPath = path.normalize(`${__dirname}/../target/${sessionId}/${answerId}`)
-    mkdir(fullPath)
-    const fileWriteStream = fs.createWriteStream(path.join(fullPath, id + '.png'))
-    req.pipe(fileWriteStream).on('finish', () => res.json({id}))
+    const url = `/loadImg?answerId=${req.query.answerId}&id=${id}`
+    const fileWriteStream = createFileWriteStream(sessionId, answerId, id + '.png')
+    req.pipe(fileWriteStream).on('finish', () => res.json({url}))
 })
 app.post('/saveMarkers', (req, res) => {
     savedMarkers[req.session.id] = req.body
@@ -77,8 +78,38 @@ app.post('/saveMarkers', (req, res) => {
 app.get('/load', (req, res) => {
     const sessionId = req.session.id
     const answerId = req.query.answerId
-    res.json(savedData[sessionId] ? savedData[sessionId][answerId] || null : null)
+    const pathToFile = getPathToFile(sessionId, answerId, 'answer.json');
+
+    if(fs.existsSync(pathToFile)) {
+        res.json(JSON.parse(fs.readFileSync(pathToFile, 'utf-8')))
+    } else {
+        res.json(null)
+    }
 })
+app.get('/loadImg', (req, res) => {
+    const {answerId, id} = req.query
+    if (isUnsafe(answerId) || isUnsafe(id)) {
+        res.send(404)
+        return
+    }
+
+    const sessionId = req.session.id;
+    const filePath = getPathToFile(sessionId, answerId, id + '.png')
+    if (fs.existsSync(filePath)) {
+        res.writeHead(200, {'Content-Type': 'image/jpeg'})
+        fs.createReadStream(filePath).pipe(res)
+    }
+    else res.sendStatus(404)
+})
+app.get('/loadMarkers', (req, res) => res.send(savedMarkers[req.session.id]))
+app.get('/math.svg', mathImg.handler)
+app.get('/version', (req, res) => {
+    res.send({
+        serverStarted: startedAt.toString(),
+        currentServerTime: new Date().toString()
+    })
+})
+app.listen(port, interfaceIP, () => console.log('Server started at localhost:' + port))
 
 function isUnsafe(param) {
     return param.indexOf('/') >= 0 || param.indexOf('..') >= 0
@@ -101,32 +132,18 @@ function mkdir(dir) {
     }
 }
 
-app.get('/loadImg', (req, res) => {
-    const {answerId, id} = req.query
-    if (isUnsafe(answerId) || isUnsafe(id)) {
-        res.send(404)
-        return
-    }
+function getFullPath(sessionId, answerId) {
+    return path.normalize(`${__dirname}/../target/${sessionId}/${answerId}`);
+}
 
-    const sessionId = req.session.id;
-    const fullPath = path.normalize(`${__dirname}/../target/${sessionId}/${answerId}`)
-    const filePath = path.join(fullPath, id + '.png');
-    if (fs.existsSync(filePath)) {
-        res.writeHead(200, {'Content-Type': 'image/jpeg'})
-        fs.createReadStream(filePath).pipe(res)
-    }
-    else res.sendStatus(404)
-})
-app.get('/loadMarkers', (req, res) => res.send(savedMarkers[req.session.id]))
+function getPathToFile(sessionId, answerId, filename) {
+    return path.join(getFullPath(sessionId, answerId), filename);
+}
 
-app.get('/math.svg', mathImg.handler)
-app.get('/version', (req, res) => {
-    res.send({
-        serverStarted: startedAt.toString(),
-        currentServerTime: new Date().toString()
-    })
-})
-app.listen(port, interfaceIP, () => console.log('Server started at localhost:' + port))
+function createFileWriteStream(sessionId, answerId, filename = 'answer.json') {
+    mkdir(getFullPath(sessionId, answerId))
+    return fs.createWriteStream(getPathToFile(sessionId, answerId, filename))
+}
 
 function exposeModules(names) {
     names.forEach(name => app.use('/' + name, express.static(__dirname + '/../node_modules/' + name)))
