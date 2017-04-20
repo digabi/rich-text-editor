@@ -36,3 +36,4 @@ $answer.each((i, answer) => {
         save($(e.target))
     }
 })
+$('#answer1').focus()
