@@ -30,6 +30,8 @@ function handler(req, res) {
             format: "TeX", // "inline-TeX", "MathML"
             mml: false,
             svg: true,
+            linebreaks: true,
+            width: 100
         }, function (data) {
             if (data.errors) {
                 res.send(`<?xml version="1.0" encoding="UTF-8" standalone="no"?>
