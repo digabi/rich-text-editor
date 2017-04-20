@@ -12,13 +12,14 @@ footer .paragraph { }
 footer a { color: #fff; }
 pre { white-space: pre-wrap; }
 .save { margin-top: 10px; }
-table {}
+table {
+}
 table [colspan] { font-weight: bold; padding-top:5px;}
-th, td {padding: 1px 15px;}
+th, td {color: #666;padding: 1px 15px;}
 th { padding-left: 0;}
 table th {font-size: 13px;font-weight: normal;text-align: left;}
 table td {font-family: monospace;text-align: right;font-size: 12px;}
-ul {padding: 0 1.5em;}
+ul {padding: 0 1.5em;margin: 0;}
 li {}
 
 .math-editor-new-equation { padding: 5px 10px; font-weight: bold; color: #666; }

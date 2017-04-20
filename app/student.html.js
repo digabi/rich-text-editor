@@ -20,11 +20,16 @@ module.exports = (obj) => { with(obj) return `
 <article>
     <section>
         <h1>${title}</h1>
-        <p>${description}</p>
-        <h2>${shortcutTitle}</h2>
-        <p> ${shortcuts} </p>
 
-        <hr/>
+        <div style="display: flex">
+            <div style="width: 55%">
+                ${description}
+            </div>
+            <div style="width:45%">
+                ${shortcuts}
+            </div>
+        </div>
+
         <h2>${answerTitle} 1</h2>
         <div class="answer" id="answer1"></div>
         <h2>${answerTitle} 2</h2>
