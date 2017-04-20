@@ -33,7 +33,7 @@
 .math-editor-hidden { display: none; }
 .math-editor-answer img { max-width: 100%; max-height: 1000px; }
 .math-editor textarea { height: auto; box-shadow: none; border-radius: 0; resize: none; border: none;}
-.math-editor-characters-group { padding-right: 30px; }
+.math-editor-characters-group { margin-right: 30px; }
 .math-editor-characters .math-editor-button { display: none; }
 .math-editor-characters.math-editor-characters-expanded .math-editor-button,
 .math-editor-characters .math-editor-button.math-editor-characters-popular { display: inline-block; }
