@@ -6,14 +6,18 @@ module.exports = {
 }
 
 function init(mathEditor, hasAnswerFocus, l) {
-    const $toolbar = $(`        
+    const $toolbar = $(`
         <div class="math-editor-tools" data-js="tools">
-            <div class="math-editor-characters" data-js="characters">
-              <div class="math-editor-toolbar math-editor-list" data-js="charactersList"></div>
+            <div class="math-editor-tools-row">
+                <div class="math-editor-toolbar-wrapper">
+                    <button class="math-editor-new-equation math-editor-button math-editor-button-action" data-js="newEquation" data-title="Ctrl-L">Σ ${l.insertEquation}</button>
+                    <div class="math-editor-characters math-editor-toolbar math-editor-list" data-js="charactersList"></div>
+                </div>
             </div>
-            <div class="math-editor-equation math-editor-toolbar math-editor-list math-editor-hidden" data-js="mathToolbar"></div>
-            <div>
-                <button class="math-editor-new-equation math-editor-button math-editor-button-action" data-js="newEquation" data-title="Ctrl-L">Σ ${l.insertEquation}</button>
+            <div class="math-editor-tools-row">
+                <div class="math-editor-toolbar-wrapper math-editor-equation-wrapper">
+                    <div class="math-editor-equation math-editor-toolbar math-editor-list math-editor-hidden" data-js="mathToolbar"></div>
+                </div>
             </div>
         </div>
         `)
@@ -49,7 +53,7 @@ function initSpecialCharacterToolbar($toolbar, mathEditor, hasAnswerFocus) {
             e.preventDefault()
 
             if ($(e.currentTarget).hasClass('math-editor-characters-expand-collapse')) {
-                $toolbar.find('[data-js="characters"]').toggleClass('math-editor-characters-expanded')
+                $toolbar.find('[data-js="charactersList"]').toggleClass('math-editor-characters-expanded')
             } else {
                 const character = e.currentTarget.innerText
                 const command = e.currentTarget.dataset.command

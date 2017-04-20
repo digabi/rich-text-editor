@@ -17,7 +17,7 @@ describe('math editor', () => {
         before(waitUntil(() => $('[data-js="tools"]').is(':visible')))
 
         it('shows tools', () => {
-            expect($('[data-js="characters"]')).to.be.visible
+            expect($('[data-js="charactersList"]')).to.be.visible
             expect($('.answer1').prev()).to.have.class('math-editor-tools')
         })
     })
