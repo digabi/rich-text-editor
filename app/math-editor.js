@@ -223,7 +223,7 @@ const markAndGetInlineImages = $editor => {
 }
 
 const persistInlineImages = ($editor, screenshotSaver) => {
-    const saveStream = Bacon.combineAsArray(
+    Bacon.combineAsArray(
         markAndGetInlineImages($editor)
             .map(data => Bacon.fromPromise(
                 screenshotSaver(data)
@@ -231,9 +231,7 @@ const persistInlineImages = ($editor, screenshotSaver) => {
                     .fail(e => $editor.find('#' + data.id).remove())
                 )
             )
-        )
-    saveStream.onValue(() => $editor.trigger('input'))
-    saveStream.onError(e => {})  // TODO: Call error callback here
+    ).onValue(() => $editor.trigger('input'))
 }
 
 const makeRichText = (element, options, onValueChanged = () => { }) => {
