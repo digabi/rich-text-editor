@@ -1,4 +1,4 @@
-const {isCtrlKey, isKey, decodeBase64Image, insertToTextAreaAtCursor, sanitizeContent, sanitize} = require('./util')
+const {isCtrlKey, isKey, decodeBase64Image, insertToTextAreaAtCursor, sanitizeContent, sanitize, setCursorAfter} = require('./util')
 const toolbars = require('./toolbars')
 const loadingImg = require('./loadingImg')
 const MQ = MathQuill.getInterface(2)
@@ -71,7 +71,7 @@ function initMathEditor() {
             enter: field => {
                 // TODO: do not close editor / o not create  a new equation if there is no text?
                 mathEditor.closeMathEditor(true)
-                setTimeout(() => insertNewEquation('<div></div>'), 2)
+                setTimeout(() => insertNewEquation('<br>'), 2)
             }
         }
     })
@@ -105,8 +105,8 @@ function initMathEditor() {
         }, 0)
     }
 
-    function insertNewEquation(optionalMarkup) {
-        window.document.execCommand('insertHTML', false, (optionalMarkup ? optionalMarkup : '') + '<img data-js="new" style="display: none"/>')
+    function insertNewEquation(optionalMarkup = '') {
+        window.document.execCommand('insertHTML', false, optionalMarkup + '<img data-js="new" style="display: none"/>')
         const $addedEquationImage = $('[data-js="new"]')
         $addedEquationImage
             .removeAttr('data-js')
@@ -162,6 +162,7 @@ function initMathEditor() {
 
     function openMathEditor($img) {
         if (mathEditorVisible) closeMathEditor()
+        setCursorAfter($img)
         $img.hide()
         moveElementAfter($mathEditorContainer, $img)
         const latex = $img.prop('alt')

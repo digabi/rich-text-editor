@@ -1,7 +1,7 @@
 const sanitizeHtml = require('sanitize-html')
 const sanitizeOpts = require('./sanitizeOpts')
 
-module.exports = {isKey, isCtrlKey, insertToTextAreaAtCursor, decodeBase64Image, sanitize, sanitizeContent}
+module.exports = {isKey, isCtrlKey, insertToTextAreaAtCursor, decodeBase64Image, sanitize, sanitizeContent, setCursorAfter}
 
 function sanitize(html) {
     return sanitizeHtml(html, sanitizeOpts)
@@ -47,4 +47,15 @@ function sanitizeContent(answerElement) {
     const html = sanitize($answerElement.html())
 
     return { answerHTML: html, answerText: text }
+}
+
+function setCursorAfter($img) {
+    const range = document.createRange()
+    const img = $img.get(0)
+    const nextSibling = img.nextSibling.tagName === 'DIV' ? img : img.nextSibling
+    range.setStart(nextSibling, 0)
+    range.setEnd(nextSibling, 0)
+    const sel = window.getSelection()
+    sel.removeAllRanges()
+    sel.addRange(range)
 }
