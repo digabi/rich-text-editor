@@ -4,8 +4,8 @@ module.exports = (obj) => { with(obj) return `
     <meta charset='utf-8'>
     <title>${title} - ${mathEditor}</title>
     <link rel="stylesheet" type="text/css" href="/teacher.css">
-    <link rel="icon" href="/math-editor-favicon.ico" type="image/x-icon"/>
-    <link rel="shortcut icon" href="/math-editor-favicon.ico" type="image/x-icon"/>
+    <link rel="icon" href="/rich-text-editor-favicon.ico" type="image/x-icon"/>
+    <link rel="shortcut icon" href="/rich-text-editor-favicon.ico" type="image/x-icon"/>
     <script>
         window.locale = '${locale}'
     </script>

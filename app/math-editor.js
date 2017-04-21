@@ -13,7 +13,7 @@ const keyCodes = {
 }
 const equationImageSelector = 'img[src^="/math.svg"]'
 
-const $outerPlaceholder = $(`<div class="math-editor-hidden" data-js="outerPlaceholder">`)
+const $outerPlaceholder = $(`<div class="rich-text-editor-hidden" data-js="outerPlaceholder">`)
 
 function moveElementAfter($element, $after) {
     $after.after($element)
@@ -45,8 +45,8 @@ function initMathEditor() {
     const $mathEditorContainer = $(`
         <div class="math-editor" data-js="mathEditor">
             <div class="math-editor-boxes">
-                <div class="math-editor-equation-editor" data-js="equationField"></div>
-                <textarea class="math-editor-latex-editor" data-js="latexField" placeholder="LaTex"></textarea>
+                <div class="math-editor-equation-field" data-js="equationField"></div>
+                <textarea class="math-editor-latex-field" data-js="latexField" placeholder="LaTex"></textarea>
             </div>
         </div>`)
 
@@ -260,7 +260,7 @@ const makeRichText = (element, options, onValueChanged = () => { }) => {
         .attr('contenteditable', 'true')
         .attr('spellcheck', 'false')
         .attr('data-js', 'answer')
-        .addClass('math-editor-answer')
+        .addClass('rich-text-editor')
         .on('keydown', e => {
             if (isCtrlKey(e, keyCodes.ENTER) || isKey(e, keyCodes.ESC)) mathEditor.closeMathEditor(true)
         })

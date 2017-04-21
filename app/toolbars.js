@@ -7,32 +7,32 @@ module.exports = {
 
 function init(mathEditor, hasAnswerFocus, l) {
     const $toolbar = $(`
-        <div class="math-editor-tools" data-js="tools">
-            <div class="math-editor-tools-button-wrapper">
-                <div class="math-editor-toolbar-wrapper">
-                    <button class="math-editor-characters-expand-collapse" data-js="expandCollapseCharacters" style="z-index: 100"></button>
+        <div class="rich-text-editor-tools" data-js="tools">
+            <div class="rich-text-editor-tools-button-wrapper">
+                <div class="rich-text-editor-toolbar-wrapper">
+                    <button class="rich-text-editor-characters-expand-collapse" data-js="expandCollapseCharacters" style="z-index: 100"></button>
                 </div>
             </div>
-            <div class="math-editor-tools-row">
-                <div class="math-editor-toolbar-wrapper">
-                    <div class="math-editor-toolbar-characters math-editor-toolbar math-editor-toolbar-button-list" data-js="charactersList"></div>
+            <div class="rich-text-editor-tools-row">
+                <div class="rich-text-editor-toolbar-wrapper">
+                    <div class="rich-text-editor-toolbar-characters rich-text-editor-toolbar rich-text-editor-toolbar-button-list" data-js="charactersList"></div>
                 </div>
             </div>
-            <div class="math-editor-tools-row">
-                <div class="math-editor-toolbar-wrapper math-editor-equation-wrapper">
-                    <div class="math-editor-toolbar-equation math-editor-toolbar math-editor-toolbar-button-list" data-js="mathToolbar"></div>
+            <div class="rich-text-editor-tools-row">
+                <div class="rich-text-editor-toolbar-wrapper rich-text-editor-equation-wrapper">
+                    <div class="rich-text-editor-toolbar-equation rich-text-editor-toolbar rich-text-editor-toolbar-button-list" data-js="mathToolbar"></div>
                 </div>
             </div>
-            <div class="math-editor-tools-button-wrapper">
-                <div class="math-editor-toolbar-wrapper">
-                    <button class="math-editor-new-equation math-editor-button math-editor-button-action" data-js="newEquation" data-title="Ctrl-L">Σ ${l.insertEquation}</button>
+            <div class="rich-text-editor-tools-button-wrapper">
+                <div class="rich-text-editor-toolbar-wrapper">
+                    <button class="rich-text-editor-new-equation rich-text-editor-button rich-text-editor-button-action" data-js="newEquation" data-title="Ctrl-L">Σ ${l.insertEquation}</button>
                 </div>
             </div>
         </div>
         `)
         .on('mousedown', '[data-js="expandCollapseCharacters"]', e => {
             e.preventDefault()
-            $toolbar.toggleClass('math-editor-characters-expanded')
+            $toolbar.toggleClass('rich-text-editor-characters-expanded')
         })
 
     const $newEquation = $toolbar.find('[data-js="newEquation"]')
@@ -44,7 +44,7 @@ function init(mathEditor, hasAnswerFocus, l) {
     return { $toolbar }
 }
 
-const specialCharacterToButton = char => `<button class="math-editor-button math-editor-button-grid${char.popular ? ' math-editor-characters-popular' :''}" ${char.latexCommand ? `data-command="${char.latexCommand}"` : ''} data-title="${char.latexCommand || char.character}">${char.character}</button>`
+const specialCharacterToButton = char => `<button class="rich-text-editor-button rich-text-editor-button-grid${char.popular ? ' rich-text-editor-characters-popular' :''}" ${char.latexCommand ? `data-command="${char.latexCommand}"` : ''} data-title="${char.latexCommand || char.character}">${char.character}</button>`
 
 const popularInGroup = group => group.characters.filter(character => character.popular).length
 
@@ -53,7 +53,7 @@ function initSpecialCharacterToolbar($toolbar, mathEditor, hasAnswerFocus) {
 
     $toolbar.find('[data-js="charactersList"]')
         .append(specialCharacterGroups.map(group =>
-            `<div class="math-editor-toolbar-characters-group" 
+            `<div class="rich-text-editor-toolbar-characters-group" 
                   style="width: ${popularInGroup(group) * gridButtonWidthPx}px">
                   ${group.characters.map(specialCharacterToButton).join('')}
              </div>`))
@@ -69,7 +69,7 @@ function initSpecialCharacterToolbar($toolbar, mathEditor, hasAnswerFocus) {
 
 function initMathToolbar($mathToolbar, mathEditor) {
     $mathToolbar.append(latexCommands
-        .map(o => `<button data-title="${o.action}" class="math-editor-button math-editor-button-grid" data-command="${o.action}" data-latexcommand="${o.label}" data-usewrite="${o.useWrite || false}">
+        .map(o => `<button data-title="${o.action}" class="rich-text-editor-button rich-text-editor-button-grid" data-command="${o.action}" data-latexcommand="${o.label}" data-usewrite="${o.useWrite || false}">
 <img src="/math.svg?latex=${encodeURIComponent(o.label ? o.label.replace(/X/g, '\\square') : o.action)}"/>
 </button>`).join('')
     ).on('mousedown', 'button', e => {
