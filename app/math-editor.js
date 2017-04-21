@@ -299,10 +299,8 @@ const makeRichText = (element, options, onValueChanged = () => { }) => {
                 if (clipboardDataAsHtml) {
                     e.preventDefault()
                     window.document.execCommand('insertHTML', false, sanitize(clipboardDataAsHtml))
-                    setTimeout(()=> persistInlineImages($currentEditor, saver, limit), 0)
-                } else {
-                    setTimeout(()=> persistInlineImages($currentEditor, saver, limit), 0)
                 }
+                setTimeout(()=> persistInlineImages($currentEditor, saver, limit), 0)
             }
         })
 
