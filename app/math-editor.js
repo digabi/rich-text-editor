@@ -46,13 +46,13 @@ function initMathEditor() {
         <div class="math-editor" data-js="mathEditor">
             <div class="math-editor-boxes">
                 <div class="math-editor-equation-editor" data-js="equationEditor"></div>
-                <textarea class="math-editor-latex-editor" data-js="latexEditor" placeholder="LaTex"></textarea>
+                <textarea class="math-editor-latex-editor" data-js="latexField" placeholder="LaTex"></textarea>
             </div>
         </div>`)
 
     hideElementInDOM($mathEditorContainer)
 
-    const $latexEditor = $mathEditorContainer.find('[data-js="latexEditor"]')
+    const $latexField = $mathEditorContainer.find('[data-js="latexField"]')
     const $equationEditor = $mathEditorContainer.find('[data-js="equationEditor"]')
     let mqEditTimeout
     function onMqEdit() {
@@ -61,7 +61,7 @@ function initMathEditor() {
             if (latexFieldFocus)
                 return
             const latex = mqInstance.latex()
-            $latexEditor.val(latex)
+            $latexField.val(latex)
             updateMathImg($mathEditorContainer.prev(), latex)
         }, 100)
     }
@@ -84,11 +84,11 @@ function initMathEditor() {
         })
 
     function onLatexUpdate() {
-        updateMathImg($mathEditorContainer.prev(), $latexEditor.val())
-        setTimeout(() => mqInstance.latex($latexEditor.val()), 1)
+        updateMathImg($mathEditorContainer.prev(), $latexField.val())
+        setTimeout(() => mqInstance.latex($latexField.val()), 1)
     }
 
-    $latexEditor
+    $latexField
         .keyup(onLatexUpdate)
         .on('focus blur', e => {
             latexFieldFocus = e.type !== 'blur'
@@ -121,7 +121,7 @@ function initMathEditor() {
 
     function insertMath(symbol, alternativeSymbol, useWrite) {
         if (latexFieldFocus) {
-            insertToTextAreaAtCursor($latexEditor.get(0), alternativeSymbol || symbol)
+            insertToTextAreaAtCursor($latexField.get(0), alternativeSymbol || symbol)
             onLatexUpdate()
         } else if (equationFieldFocus) {
             if (useWrite) {
@@ -145,11 +145,11 @@ function initMathEditor() {
         // TODO: remove event bindings
         const $currentEditor = $mathEditorContainer.closest('[data-js="answer"]')
         const $img = $mathEditorContainer.prev()
-        if ($latexEditor.val().trim() === '') {
+        if ($latexField.val().trim() === '') {
             $img.remove()
         } else {
             $img.show()
-            updateMathImg($img, $latexEditor.val())
+            updateMathImg($img, $latexField.val())
         }
 
         toggleMathToolbar(false)
@@ -165,7 +165,7 @@ function initMathEditor() {
         $img.hide()
         moveElementAfter($mathEditorContainer, $img)
         const latex = $img.prop('alt')
-        $latexEditor.val(latex)
+        $latexField.val(latex)
         onLatexUpdate()
         mathEditorVisible = true
         toggleMathToolbar(true)
