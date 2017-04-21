@@ -25,7 +25,7 @@ function init(mathEditor, hasAnswerFocus, l) {
             </div>
             <div class="rich-text-editor-tools-button-wrapper">
                 <div class="rich-text-editor-toolbar-wrapper">
-                    <button class="rich-text-editor-new-equation rich-text-editor-button rich-text-editor-button-action" data-js="newEquation" data-title="Ctrl-L">Σ ${l.insertEquation}</button>
+                    <button class="rich-text-editor-new-equation rich-text-editor-button rich-text-editor-button-action" data-js="newEquation" data-command="Ctrl-L">Σ ${l.insertEquation}</button>
                 </div>
             </div>
         </div>
@@ -44,7 +44,7 @@ function init(mathEditor, hasAnswerFocus, l) {
     return { $toolbar }
 }
 
-const specialCharacterToButton = char => `<button class="rich-text-editor-button rich-text-editor-button-grid${char.popular ? ' rich-text-editor-characters-popular' :''}" ${char.latexCommand ? `data-command="${char.latexCommand}"` : ''} ${char.latexCommand ? `data-title="${char.latexCommand}"`:''}>${char.character}</button>`
+const specialCharacterToButton = char => `<button class="rich-text-editor-button rich-text-editor-button-grid${char.popular ? ' rich-text-editor-characters-popular' :''}" ${char.latexCommand ? `data-command="${char.latexCommand}"` : ''}>${char.character}</button>`
 
 const popularInGroup = group => group.characters.filter(character => character.popular).length
 
@@ -69,7 +69,7 @@ function initSpecialCharacterToolbar($toolbar, mathEditor, hasAnswerFocus) {
 
 function initMathToolbar($mathToolbar, mathEditor) {
     $mathToolbar.append(latexCommands
-        .map(o => `<button data-title="${o.action}" class="rich-text-editor-button rich-text-editor-button-grid" data-command="${o.action}" data-latexcommand="${o.label}" data-usewrite="${o.useWrite || false}">
+        .map(o => `<button class="rich-text-editor-button rich-text-editor-button-grid" data-command="${o.action}" data-latexcommand="${o.label}" data-usewrite="${o.useWrite || false}">
 <img src="/math.svg?latex=${encodeURIComponent(o.label ? o.label.replace(/X/g, '\\square') : o.action)}"/>
 </button>`).join('')
     ).on('mousedown', 'button', e => {
