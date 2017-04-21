@@ -20,7 +20,7 @@ function init(mathEditor, hasAnswerFocus, l) {
             </div>
             <div class="math-editor-tools-row">
                 <div class="math-editor-toolbar-wrapper math-editor-equation-wrapper">
-                    <div class="math-editor-toolbar-equation math-editor-toolbar math-editor-toolbar-button-list" style="display: none" data-js="mathToolbar"></div>
+                    <div class="math-editor-toolbar-equation math-editor-toolbar math-editor-toolbar-button-list" data-js="mathToolbar"></div>
                 </div>
             </div>
             <div class="math-editor-tools-button-wrapper">
@@ -41,12 +41,7 @@ function init(mathEditor, hasAnswerFocus, l) {
     initMathToolbar($mathToolbar, mathEditor)
     initNewEquation($newEquation, mathEditor, hasAnswerFocus)
 
-    function toggleMathToolbar(isVisible) {
-        $newEquation.toggle(!isVisible)
-        $mathToolbar.toggle(isVisible)
-    }
-
-    return { $toolbar, toggleMathToolbar }
+    return { $toolbar }
 }
 
 const specialCharacterToButton = char => `<button class="math-editor-button math-editor-button-grid${char.popular ? ' math-editor-characters-popular' :''}" ${char.latexCommand ? `data-command="${char.latexCommand}"` : ''} data-title="${char.latexCommand || char.character}">${char.character}</button>`

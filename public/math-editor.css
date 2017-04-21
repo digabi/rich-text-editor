@@ -22,9 +22,10 @@
 .math-editor-button[data-title]:before:hover { display: none; }
 .math-editor-button:active { box-shadow: none; }
 .math-editor-button-action { padding: 5px 10px; font-weight: normal; background: none; border: none; font-family: SourceSansPro-Semibold, sans-serif; font-size: 16px; color: #359BB7; letter-spacing: 0; line-height: 22px; }
-.math-editor-new-equation { vertical-align: top; height: 35px; width: 150px; }
-
-.math-editor-tools { z-index: 2; position: fixed; top: 0; left: 0; right: 0; box-shadow: 0 1px 10px 1px rgba(0, 0, 0, .2); line-height: 0; background: white; }
+.math-editor-new-equation { display: block; vertical-align: top; height: 35px; width: 150px; }
+.math-editor-focus .math-editor-new-equation { display: none; }
+.math-editor-tools { display: none; }
+.rich-text-editor-focus .math-editor-tools { display: block; z-index: 2; position: fixed; top: 0; left: 0; right: 0; box-shadow: 0 1px 10px 1px rgba(0, 0, 0, .2); line-height: 0; background: white; }
 .math-editor-toolbar-wrapper { margin: auto; max-width: 990px; position: relative; }
 .math-editor-tools-row:nth-child(even) { background: #fff; }
 .math-editor-tools-row:nth-child(odd) { background: #fafafa; }
@@ -37,7 +38,8 @@
 .math-editor-toolbar.math-editor-toolbar-button-list img { max-width: 20px; max-height: 20px; }
 .math-editor-toolbar-button-list.math-editor-button:hover {background: #ECECEC;}
 .math-editor-toolbar-characters.math-editor-toolbar-button-list .math-editor-button { font-family: Symbola, monospace; color: #555; }
-.math-editor-toolbar-equation { display: inline-block; }
+.math-editor-toolbar-equation { display: none; }
+.math-editor-focus .math-editor-toolbar-equation { display: inline-block; }
 .math-editor-toolbar-characters-group { margin-right: 24px; display: inline-block; vertical-align: top; }
 .math-editor-toolbar-characters .math-editor-button { display: none; }
 

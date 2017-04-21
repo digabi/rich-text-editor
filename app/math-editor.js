@@ -30,12 +30,16 @@ let equationEditorFocus = false
 let mathEditorVisible = false
 let $currentEditor
 
-$('body').append($outerPlaceholder)
 
 const mathEditor = initMathEditor()
-const {$toolbar, toggleMathToolbar} = toolbars.init(mathEditor, () => answerFocus, l)
+const {$toolbar} = toolbars.init(mathEditor, () => answerFocus, l)
 
-hideElementInDOM($toolbar)
+function toggleMathToolbar(isVisible) {
+    $('body').toggleClass('math-editor-focus', isVisible)
+}
+$('body')
+    .append($outerPlaceholder)
+    .append($toolbar)
 
 function initMathEditor() {
     const $mathEditorContainer = $(`
@@ -179,13 +183,12 @@ function initMathEditor() {
 
 function onEditorFocus($element) {
     $currentEditor = $element
-    $element.before($toolbar)
-    $toolbar.show()
+    $('body').addClass('rich-text-editor-focus')
 }
 
 function onEditorBlur() {
     // TODO: remove event bindings
-    hideElementInDOM($toolbar)
+    $('body').removeClass('rich-text-editor-focus')
     mathEditor.closeMathEditor()
     // $editor.off()
 
