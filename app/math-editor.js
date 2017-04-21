@@ -211,26 +211,22 @@ function isMathEditorVisible() {
 }
 
 const markAndGetInlineImages = $editor => {
-    return $editor.find('img[src^="data"]')
-        .each((i, el) => el.setAttribute('id', new Date().getTime() + '-' + i))
-        .map((i, el) => {
-            const ret = Object.assign(decodeBase64Image(el.getAttribute('src')), {id: el.getAttribute('id')})
-            el.setAttribute('src', loadingImg)
-            return ret
-        })
-        .toArray()
-        .filter(({type}) => type === 'image/png')
+    const images = $editor.find('img[src^="data"]').toArray()
+        .map((el, index) => Object.assign(decodeBase64Image(el.getAttribute('src')), {
+            $el: $(el)
+        }))
+    images.filter(({type}) => type !== 'image/png').forEach(({$el}) => $el.remove())
+    const pngImages = images.filter(({type}) => type === 'image/png')
+    pngImages.forEach(({$el}) => $el.attr('src', loadingImg))
+    return pngImages
 }
 
-const persistInlineImages = ($editor, screenshotSaver) => {
-    Bacon.combineAsArray(
-        markAndGetInlineImages($editor)
-            .map(data => Bacon.fromPromise(
-                screenshotSaver(data)
-                    .then(screenshotUrl => $editor.find('#' + data.id).attr('src', screenshotUrl).removeAttr('id'))
-                    .fail(e => $editor.find('#' + data.id).remove())
-                )
-            )
+const persistInlineImages = ($editor, screenShotSaver) => {
+    Bacon.combineAsArray(markAndGetInlineImages($editor)
+        .map(data => Bacon.fromPromise(screenShotSaver(data)
+            .then(screenShotUrl => data.$el.attr('src', screenShotUrl))
+            .fail(e => data.$el.remove())
+        ))
     ).onValue(() => $editor.trigger('input'))
 }
 
