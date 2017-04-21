@@ -75,8 +75,8 @@ function markAndGetInlineImages($editor) {
 }
 
 function checkForImageLimit($editor, imageData, limit) {
-    const imageCount = $editor.find('img').size()
-    const equationCount = $editor.find(equationImageSelector).size()
+    const imageCount = $editor.find('img').length
+    const equationCount = $editor.find(equationImageSelector).length
     const screenshotCount = imageCount - equationCount
     return Bacon.once(screenshotCount > limit ? new Bacon.Error() : imageData)
 }
