@@ -1,6 +1,5 @@
-const {isCtrlKey, isKey, decodeBase64Image, insertToTextAreaAtCursor, sanitizeContent, sanitize, setCursorAfter} = require('./util')
+const {isCtrlKey, isKey, persistInlineImages, insertToTextAreaAtCursor, sanitizeContent, sanitize, setCursorAfter, equationImageSelector} = require('./util')
 const toolbars = require('./toolbars')
-const loadingImg = require('./loadingImg')
 const MQ = MathQuill.getInterface(2)
 const locales = {
     FI: require('./FI'),
@@ -11,7 +10,6 @@ const keyCodes = {
     ENTER: 13,
     ESC: 27
 }
-const equationImageSelector = 'img[src^="/math.svg"]'
 
 const $outerPlaceholder = $(`<div class="rich-text-editor-hidden" data-js="outerPlaceholder">`)
 
@@ -213,34 +211,6 @@ function onRichTextEditorFocusChanged(e) {
 
 function isMathEditorVisible() {
     return mathEditorVisible
-}
-
-const markAndGetInlineImages = $editor => {
-    const images = $editor.find('img[src^="data"]').toArray()
-        .map((el, index) => Object.assign(decodeBase64Image(el.getAttribute('src')), {
-            $el: $(el)
-        }))
-    images.filter(({type}) => type !== 'image/png').forEach(({$el}) => $el.remove())
-    const pngImages = images.filter(({type}) => type === 'image/png')
-    pngImages.forEach(({$el}) => $el.attr('src', loadingImg))
-    return pngImages
-}
-
-const checkForImageLimit = ($editor, imageData, limit) => {
-    const imageCount = $editor.find('img').size()
-    const equationCount = $editor.find(equationImageSelector).size()
-    const screenshotCount = imageCount - equationCount
-    return Bacon.once(screenshotCount > limit ? new Bacon.Error() : imageData)
-}
-
-const persistInlineImages = ($editor, screenshotSaver, screenshotCountLimit, onValueChanged) => {
-    Bacon.combineAsArray(markAndGetInlineImages($editor)
-        .map(data => checkForImageLimit($editor, data, screenshotCountLimit)
-            .doError(() => onValueChanged(new Bacon.Error('Screenshot limit reached!')))
-            .flatMapLatest(() => Bacon.fromPromise(screenshotSaver(data)))
-            .doAction(screenShotUrl => data.$el.attr('src', screenShotUrl))
-            .doError(() => data.$el.remove()))
-    ).onValue(k => $editor.trigger('input'))
 }
 
 const makeRichText = (element, options, onValueChanged = () => { }) => {

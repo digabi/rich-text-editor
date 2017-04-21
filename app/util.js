@@ -1,7 +1,10 @@
 const sanitizeHtml = require('sanitize-html')
 const sanitizeOpts = require('./sanitizeOpts')
+const loadingImg = require('./loadingImg')
+const equationImageSelector = 'img[src^="/math.svg"]'
 
-module.exports = {isKey, isCtrlKey, insertToTextAreaAtCursor, decodeBase64Image, sanitize, sanitizeContent, setCursorAfter}
+module.exports = {isKey, isCtrlKey, insertToTextAreaAtCursor, persistInlineImages, sanitize, sanitizeContent, setCursorAfter, equationImageSelector}
+
 
 function sanitize(html) {
     return sanitizeHtml(html, sanitizeOpts)
@@ -58,4 +61,32 @@ function setCursorAfter($img) {
     const sel = window.getSelection()
     sel.removeAllRanges()
     sel.addRange(range)
+}
+
+function markAndGetInlineImages($editor) {
+    const images = $editor.find('img[src^="data"]').toArray()
+        .map((el, index) => Object.assign(decodeBase64Image(el.getAttribute('src')), {
+            $el: $(el)
+        }))
+    images.filter(({type}) => type !== 'image/png').forEach(({$el}) => $el.remove())
+    const pngImages = images.filter(({type}) => type === 'image/png')
+    pngImages.forEach(({$el}) => $el.attr('src', loadingImg))
+    return pngImages
+}
+
+function checkForImageLimit($editor, imageData, limit) {
+    const imageCount = $editor.find('img').size()
+    const equationCount = $editor.find(equationImageSelector).size()
+    const screenshotCount = imageCount - equationCount
+    return Bacon.once(screenshotCount > limit ? new Bacon.Error() : imageData)
+}
+
+function persistInlineImages($editor, screenshotSaver, screenshotCountLimit, onValueChanged) {
+    Bacon.combineAsArray(markAndGetInlineImages($editor)
+        .map(data => checkForImageLimit($editor, data, screenshotCountLimit)
+            .doError(() => onValueChanged(new Bacon.Error('Screenshot limit reached!')))
+            .flatMapLatest(() => Bacon.fromPromise(screenshotSaver(data)))
+            .doAction(screenShotUrl => data.$el.attr('src', screenShotUrl))
+            .doError(() => data.$el.remove()))
+    ).onValue(k => $editor.trigger('input'))
 }
