@@ -44,7 +44,7 @@ function init(mathEditor, hasAnswerFocus, l) {
     return { $toolbar }
 }
 
-const specialCharacterToButton = char => `<button class="rich-text-editor-button rich-text-editor-button-grid${char.popular ? ' rich-text-editor-characters-popular' :''}" ${char.latexCommand ? `data-command="${char.latexCommand}"` : ''} data-title="${char.latexCommand || char.character}">${char.character}</button>`
+const specialCharacterToButton = char => `<button class="rich-text-editor-button rich-text-editor-button-grid${char.popular ? ' rich-text-editor-characters-popular' :''}" ${char.latexCommand ? `data-command="${char.latexCommand}"` : ''} ${char.latexCommand ? `data-title="${char.latexCommand}"`:''}>${char.character}</button>`
 
 const popularInGroup = group => group.characters.filter(character => character.popular).length
 
