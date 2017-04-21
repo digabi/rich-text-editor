@@ -28,6 +28,8 @@ let equationEditorFocus = false
 let mathEditorVisible = false
 let $currentEditor
 
+const equationImageSelector = 'img[src^="/math.svg"]'
+
 $('body').append($outerPlaceholder)
 
 const mathEditor = initMathEditor()
@@ -222,14 +224,22 @@ const markAndGetInlineImages = $editor => {
         .filter(({type}) => type === 'image/png')
 }
 
+const checkForImageLimit = ($editor, imageData) => {
+    const imageCount = $editor.find('img').size()
+    const equationCount = $editor.find(equationImageSelector).size()
+    const screenshotCount = imageCount - equationCount
+
+    return screenshotCount < 9 ? BPromise.resolve(imageData) : BPromise.error()
+}
+
 const persistInlineImages = ($editor, screenshotSaver) => {
     Bacon.combineAsArray(
         markAndGetInlineImages($editor)
             .map(data => Bacon.fromPromise(
-                screenshotSaver(data)
+                checkForImageLimit($editor, data)
+                    .then(screenshotSaver(data))
                     .then(screenshotUrl => $editor.find('#' + data.id).attr('src', screenshotUrl).removeAttr('id'))
-                    .fail(e => $editor.find('#' + data.id).remove())
-                )
+                    .fail(() => $editor.find('#' + data.id).remove()))
             )
     ).onValue(() => $editor.trigger('input'))
 }
@@ -252,7 +262,7 @@ const makeRichText = (element, options, onValueChanged = () => { }) => {
         .on('keydown', e => {
             if (isCtrlKey(e, keyCodes.ENTER) || isKey(e, keyCodes.ESC)) mathEditor.closeMathEditor(true)
         })
-        .on('mousedown', 'img[src^="/math.svg"]', e => {
+        .on('mousedown', equationImageSelector, e => {
             onEditorFocus($(e.target).closest('[data-js="answer"]'))
             mathEditor.openMathEditor($(e.target))
         })
