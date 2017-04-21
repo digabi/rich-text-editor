@@ -66,7 +66,7 @@ app.post('/save', (req, res) => {
 app.post('/saveImg', (req, res) => {
     const sessionId = req.session.id
     const {answerId} = req.query
-    const id = req.query.id
+    const id = String(new Date().getTime())
     const url = `/loadImg?answerId=${req.query.answerId}&id=${id}`
     const fileWriteStream = createFileWriteStream(sessionId, answerId, id + '.png')
     req.pipe(fileWriteStream).on('finish', () => res.json({url}))
