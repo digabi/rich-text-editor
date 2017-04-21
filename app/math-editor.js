@@ -232,17 +232,14 @@ const checkForImageLimit = ($editor, imageData, limit) => {
     return Bacon.once(screenshotCount > limit ? new Bacon.Error() : imageData)
 }
 
-const persistInlineImages = ($editor, screenshotSaver, screenshotCountLimit) => {
+const persistInlineImages = ($editor, screenshotSaver, screenshotCountLimit, onValueChanged) => {
     Bacon.combineAsArray(markAndGetInlineImages($editor)
-        .map(data => {
-                const s = checkForImageLimit($editor, data, screenshotCountLimit)
-                    .flatMapLatest(() => Bacon.fromPromise(screenshotSaver(data)))
-                    .doAction(screenShotUrl => data.$el.attr('src', screenShotUrl))
-                s.onError(() => data.$el.remove())
-                return s
-            }
-        )
-    ).onValue(() => $editor.trigger('input'))
+        .map(data => checkForImageLimit($editor, data, screenshotCountLimit)
+            .doError(() => onValueChanged(new Bacon.Error('Screenshot limit reached!')))
+            .flatMapLatest(() => Bacon.fromPromise(screenshotSaver(data)))
+            .doAction(screenShotUrl => data.$el.attr('src', screenShotUrl))
+            .doError(() => data.$el.remove()))
+    ).onValue(k => $editor.trigger('input'))
 }
 
 const makeRichText = (element, options, onValueChanged = () => { }) => {
@@ -302,7 +299,7 @@ const makeRichText = (element, options, onValueChanged = () => { }) => {
                     e.preventDefault()
                     window.document.execCommand('insertHTML', false, sanitize(clipboardDataAsHtml))
                 }
-                setTimeout(()=> persistInlineImages($currentEditor, saver, limit), 0)
+                setTimeout(()=> persistInlineImages($currentEditor, saver, limit, onValueChanged), 0)
             }
         })
 
