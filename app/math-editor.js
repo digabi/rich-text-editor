@@ -10,27 +10,79 @@ const keyCodes = {
     ENTER: 13,
     ESC: 27
 }
-
 const $outerPlaceholder = $(`<div class="rich-text-editor-hidden" data-js="outerPlaceholder">`)
-
-function moveElementAfter($element, $after) {
-    $after.after($element)
-}
-
-function hideElementInDOM($element) {
-    $outerPlaceholder.append($element)
-}
-
 let richTextFocus = true
 let latexFieldFocus = false
 let equationFieldFocus = false
 let mathEditorVisible = false
 let $currentEditor
-
 const mathEditor = initMathEditor()
 const {$toolbar} = toolbars.init(mathEditor, () => richTextFocus, l)
 
 $('body').append($outerPlaceholder, $toolbar)
+
+module.exports.makeRichText = (element, options, onValueChanged = () => { }) => {
+    const {
+        screenshot: {
+            saver,
+            limit
+        }
+    } = options
+    const $answer = $(element)
+    let pasteInProgress = false
+
+    $answer
+        .attr({
+            'contenteditable': 'true',
+            'spellcheck': 'false',
+            'data-js': 'answer'
+        })
+        .addClass('rich-text-editor')
+        .on('keydown', e => {
+            if (isCtrlKey(e, keyCodes.ENTER) || isKey(e, keyCodes.ESC)) mathEditor.closeMathEditor(true)
+        })
+        .on('mousedown', equationImageSelector, e => {
+            onRichTextEditorFocus($(e.target).closest('[data-js="answer"]'))
+            mathEditor.openMathEditor($(e.target))
+        })
+        .on('keypress', e => {
+            if (isCtrlKey(e, 'l') || isCtrlKey(e, 'i')) mathEditor.insertNewEquation()
+        })
+        .on('focus blur', e => {
+            if (isMathEditorVisible() && e.type === 'focus') mathEditor.closeMathEditor()
+            onRichTextEditorFocusChanged(e)
+        })
+        .on('keyup input', e => {
+            if(! pasteInProgress) onValueChanged(sanitizeContent(e.currentTarget))
+        })
+        .on('paste', e => {
+            pasteInProgress = true
+            setTimeout(() => pasteInProgress = false, 0)
+
+            if (e.target.tagName === 'TEXTAREA')
+                return
+            const clipboardData = e.originalEvent.clipboardData
+            const file = clipboardData.items && clipboardData.items[0].getAsFile()
+            if (file) {
+                e.preventDefault()
+                if(file.type !== 'image/png')
+                    return
+                saver({data: file, type: file.type, id: String(new Date().getTime())}).then(screenshotUrl => {
+                    const img = `<img src="${screenshotUrl}"/>`
+                    window.document.execCommand('insertHTML', false, img)
+                })
+            } else {
+                const clipboardDataAsHtml = clipboardData.getData('text/html')
+                if (clipboardDataAsHtml) {
+                    e.preventDefault()
+                    window.document.execCommand('insertHTML', false, sanitize(clipboardDataAsHtml))
+                }
+                setTimeout(()=> persistInlineImages($currentEditor, saver, limit, onValueChanged), 0)
+            }
+        })
+
+    setTimeout(() => document.execCommand("enableObjectResizing", false, false), 0)
+}
 
 function initMathEditor() {
     const $mathEditorContainer = $(`
@@ -46,6 +98,38 @@ function initMathEditor() {
     const $latexField = $mathEditorContainer.find('[data-js="latexField"]')
     const $equationField = $mathEditorContainer.find('[data-js="equationField"]')
     let mqEditTimeout
+    let focusChanged = null
+    const mqInstance = MQ.MathField($equationField.get(0), {
+        handlers: {
+            edit: onMqEdit,
+            enter: field => {
+                mathEditor.closeMathEditor(true)
+                setTimeout(() => insertNewEquation('<br>'), 2)
+            }
+        }
+    })
+    $equationField
+        .on('keydown', '.mq-textarea textarea', onMqEdit)
+        .on('focus blur', '.mq-textarea textarea', e => {
+            equationFieldFocus = e.type !== 'blur' && e.type !== 'focusout'
+            onFocusChanged()
+        })
+
+    $latexField
+        .keyup(onLatexUpdate)
+        .on('focus blur', e => {
+            latexFieldFocus = e.type !== 'blur'
+            onFocusChanged()
+        })
+
+    return {
+        insertNewEquation,
+        insertMath,
+        closeMathEditor,
+        openMathEditor,
+        onFocusChanged
+    }
+
     function onMqEdit() {
         clearTimeout(mqEditTimeout)
         mqEditTimeout = setTimeout(() => {
@@ -56,36 +140,11 @@ function initMathEditor() {
             updateMathImg($mathEditorContainer.prev(), latex)
         }, 100)
     }
-    const mqInstance = MQ.MathField($equationField.get(0), {
-        handlers: {
-            edit: onMqEdit,
-            enter: field => {
-                mathEditor.closeMathEditor(true)
-                setTimeout(() => insertNewEquation('<br>'), 2)
-            }
-        }
-    })
-    $equationField.on('keydown', '.mq-textarea textarea', onMqEdit)
-
-    $equationField
-        .on('focus blur', '.mq-textarea textarea', e => {
-            equationFieldFocus = e.type !== 'blur' && e.type !== 'focusout'
-            onFocusChanged()
-        })
 
     function onLatexUpdate() {
         updateMathImg($mathEditorContainer.prev(), $latexField.val())
         setTimeout(() => mqInstance.latex($latexField.val()), 1)
     }
-
-    $latexField
-        .keyup(onLatexUpdate)
-        .on('focus blur', e => {
-            latexFieldFocus = e.type !== 'blur'
-            onFocusChanged()
-        })
-
-    let focusChanged = null
 
     function onFocusChanged() {
         clearTimeout(focusChanged)
@@ -162,78 +221,14 @@ function initMathEditor() {
         toggleMathToolbar(true)
         setTimeout(() => mqInstance.focus(), 0)
     }
-
-    return {
-        insertNewEquation,
-        insertMath,
-        closeMathEditor,
-        openMathEditor,
-        onFocusChanged
-    }
 }
 
-const makeRichText = (element, options, onValueChanged = () => { }) => {
-    const {
-        screenshot: {
-            saver,
-            limit
-        }
-    } = options
-    const $answer = $(element)
+function moveElementAfter($element, $after) {
+    $after.after($element)
+}
 
-    let pasteInProgress = false
-
-    $answer
-        .attr({
-            'contenteditable': 'true',
-            'spellcheck': 'false',
-            'data-js': 'answer'
-        })
-        .addClass('rich-text-editor')
-        .on('keydown', e => {
-            if (isCtrlKey(e, keyCodes.ENTER) || isKey(e, keyCodes.ESC)) mathEditor.closeMathEditor(true)
-        })
-        .on('mousedown', equationImageSelector, e => {
-            onRichTextEditorFocus($(e.target).closest('[data-js="answer"]'))
-            mathEditor.openMathEditor($(e.target))
-        })
-        .on('keypress', e => {
-            if (isCtrlKey(e, 'l') || isCtrlKey(e, 'i')) mathEditor.insertNewEquation()
-        })
-        .on('focus blur', e => {
-            if (isMathEditorVisible() && e.type === 'focus') mathEditor.closeMathEditor()
-            onRichTextEditorFocusChanged(e)
-        })
-        .on('keyup input', e => {
-            if(! pasteInProgress) onValueChanged(sanitizeContent(e.currentTarget))
-        })
-        .on('paste', e => {
-            pasteInProgress = true
-            setTimeout(() => pasteInProgress = false, 0)
-
-            if (e.target.tagName === 'TEXTAREA')
-                return
-            const clipboardData = e.originalEvent.clipboardData
-            const file = clipboardData.items && clipboardData.items[0].getAsFile()
-            if (file) {
-                e.preventDefault()
-                if(file.type !== 'image/png')
-                    return
-                saver({data: file, type: file.type, id: String(new Date().getTime())}).then(screenshotUrl => {
-                    const img = `<img src="${screenshotUrl}"/>`
-                    window.document.execCommand('insertHTML', false, img)
-                })
-            } else {
-                const clipboardDataAsHtml = clipboardData.getData('text/html')
-                if (clipboardDataAsHtml) {
-                    e.preventDefault()
-                    window.document.execCommand('insertHTML', false, sanitize(clipboardDataAsHtml))
-                }
-                setTimeout(()=> persistInlineImages($currentEditor, saver, limit, onValueChanged), 0)
-            }
-        })
-
-    setTimeout(() => document.execCommand("enableObjectResizing", false, false), 0)
+function hideElementInDOM($element) {
+    $outerPlaceholder.append($element)
 }
 
 function toggleMathToolbar(isVisible) {
@@ -272,8 +267,4 @@ function richTextAndMathBlur() {
 
 function isMathEditorVisible() {
     return mathEditorVisible
-}
-
-module.exports = {
-    makeRichText
 }
