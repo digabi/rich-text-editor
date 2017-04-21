@@ -11,6 +11,7 @@ const keyCodes = {
     ENTER: 13,
     ESC: 27
 }
+const equationImageSelector = 'img[src^="/math.svg"]'
 
 const $outerPlaceholder = $(`<div class="math-editor-hidden" data-js="outerPlaceholder">`)
 
@@ -221,19 +222,31 @@ const markAndGetInlineImages = $editor => {
     return pngImages
 }
 
-const persistInlineImages = ($editor, screenShotSaver) => {
+const checkForImageLimit = ($editor, imageData, limit) => {
+    const imageCount = $editor.find('img').size()
+    const equationCount = $editor.find(equationImageSelector).size()
+    const screenshotCount = imageCount - equationCount
+    return Bacon.once(screenshotCount > limit ? new Bacon.Error() : imageData)
+}
+
+const persistInlineImages = ($editor, screenshotSaver, screenshotCountLimit) => {
     Bacon.combineAsArray(markAndGetInlineImages($editor)
-        .map(data => Bacon.fromPromise(screenShotSaver(data)
-            .then(screenShotUrl => data.$el.attr('src', screenShotUrl))
-            .fail(e => data.$el.remove())
-        ))
+        .map(data => {
+                const s = checkForImageLimit($editor, data, screenshotCountLimit)
+                    .flatMapLatest(() => Bacon.fromPromise(screenshotSaver(data)))
+                    .doAction(screenShotUrl => data.$el.attr('src', screenShotUrl))
+                s.onError(() => data.$el.remove())
+                return s
+            }
+        )
     ).onValue(() => $editor.trigger('input'))
 }
 
 const makeRichText = (element, options, onValueChanged = () => { }) => {
     const {
         screenshot: {
-            saver
+            saver,
+            limit
         }
     } = options
     const $answer = $(element)
@@ -248,7 +261,7 @@ const makeRichText = (element, options, onValueChanged = () => { }) => {
         .on('keydown', e => {
             if (isCtrlKey(e, keyCodes.ENTER) || isKey(e, keyCodes.ESC)) mathEditor.closeMathEditor(true)
         })
-        .on('mousedown', 'img[src^="/math.svg"]', e => {
+        .on('mousedown', equationImageSelector, e => {
             onEditorFocus($(e.target).closest('[data-js="answer"]'))
             mathEditor.openMathEditor($(e.target))
         })
@@ -283,9 +296,9 @@ const makeRichText = (element, options, onValueChanged = () => { }) => {
                 if (clipboardDataAsHtml) {
                     e.preventDefault()
                     window.document.execCommand('insertHTML', false, sanitize(clipboardDataAsHtml))
-                    setTimeout(()=> persistInlineImages($currentEditor, saver), 0)
+                    setTimeout(()=> persistInlineImages($currentEditor, saver, limit), 0)
                 } else {
-                    setTimeout(()=> persistInlineImages($currentEditor, saver), 0)
+                    setTimeout(()=> persistInlineImages($currentEditor, saver, limit), 0)
                 }
             }
         })
