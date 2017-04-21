@@ -21,7 +21,6 @@ function hideElementInDOM($element) {
     $outerPlaceholder.append($element)
 }
 
-// TODO: replace with data attributes?
 let richTextFocus = true
 let latexFieldFocus = false
 let equationFieldFocus = false
@@ -67,7 +66,6 @@ function initMathEditor() {
         handlers: {
             edit: onMqEdit,
             enter: field => {
-                // TODO: do not close editor / o not create  a new equation if there is no text?
                 mathEditor.closeMathEditor(true)
                 setTimeout(() => insertNewEquation('<br>'), 2)
             }
@@ -127,16 +125,16 @@ function initMathEditor() {
             } else {
                 mqInstance.typedText(symbol)
             }
-
             if (symbol.startsWith('\\')) mqInstance.keystroke('Tab')
             setTimeout(() => mqInstance.focus(), 0)
         }
     }
 
     function updateMathImg($img, latex) {
-        $img
-            .prop('src', '/math.svg?latex=' + encodeURIComponent(latex))
-            .prop('alt', latex)
+        $img.prop({
+            src: '/math.svg?latex=' + encodeURIComponent(latex),
+            alt: latex
+        })
     }
 
     function closeMathEditor(setFocusAfterClose = false) {
@@ -186,11 +184,8 @@ function onRichTextEditorFocus($element) {
 }
 
 function onRichTextEditorBlur() {
-    // TODO: remove event bindings
     $('body').removeClass('rich-text-editor-focus')
     mathEditor.closeMathEditor()
-    // $editor.off()
-
     richTextFocus = false
     mathEditorVisible = false
     latexFieldFocus = false
