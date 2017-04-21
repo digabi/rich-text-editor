@@ -293,6 +293,8 @@ const makeRichText = (element, options, onValueChanged = () => { }) => {
                 }
             }
         })
+
+    setTimeout(() => document.execCommand("enableObjectResizing", false, false), 0)
 }
 
 module.exports = {
