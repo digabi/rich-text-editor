@@ -27,16 +27,10 @@ let equationFieldFocus = false
 let mathEditorVisible = false
 let $currentEditor
 
-
 const mathEditor = initMathEditor()
 const {$toolbar} = toolbars.init(mathEditor, () => richTextFocus, l)
 
-function toggleMathToolbar(isVisible) {
-    $('body').toggleClass('math-editor-focus', isVisible)
-}
-$('body')
-    .append($outerPlaceholder)
-    .append($toolbar)
+$('body').append($outerPlaceholder, $toolbar)
 
 function initMathEditor() {
     const $mathEditorContainer = $(`
@@ -97,7 +91,7 @@ function initMathEditor() {
         clearTimeout(focusChanged)
         focusChanged = setTimeout(() => {
             if (!latexFieldFocus && !equationFieldFocus) closeMathEditor()
-            if (!richTextFocus && !mathEditorVisible && !latexFieldFocus && !equationFieldFocus) onRichTextEditorBlur()
+            if (richTextAndMathBlur()) onRichTextEditorBlur()
         }, 0)
     }
 
@@ -178,36 +172,6 @@ function initMathEditor() {
     }
 }
 
-function onRichTextEditorFocus($element) {
-    $currentEditor = $element
-    $('body').addClass('rich-text-editor-focus')
-}
-
-function onRichTextEditorBlur() {
-    $('body').removeClass('rich-text-editor-focus')
-    mathEditor.closeMathEditor()
-    richTextFocus = false
-    mathEditorVisible = false
-    latexFieldFocus = false
-}
-
-let richTextEditorBlurTimeout
-
-function onRichTextEditorFocusChanged(e) {
-    richTextFocus = e.type === 'focus'
-
-    clearTimeout(richTextEditorBlurTimeout)
-    richTextEditorBlurTimeout = setTimeout(() => {
-        if (!richTextFocus && !mathEditorVisible && !latexFieldFocus && !equationFieldFocus) onRichTextEditorBlur()
-        else if (richTextFocus && mathEditorVisible) mathEditor.closeMathEditor()
-        else onRichTextEditorFocus($(e.target))
-    }, 0)
-}
-
-function isMathEditorVisible() {
-    return mathEditorVisible
-}
-
 const makeRichText = (element, options, onValueChanged = () => { }) => {
     const {
         screenshot: {
@@ -270,6 +234,44 @@ const makeRichText = (element, options, onValueChanged = () => { }) => {
         })
 
     setTimeout(() => document.execCommand("enableObjectResizing", false, false), 0)
+}
+
+function toggleMathToolbar(isVisible) {
+    $('body').toggleClass('math-editor-focus', isVisible)
+}
+
+function onRichTextEditorFocus($element) {
+    $currentEditor = $element
+    $('body').addClass('rich-text-editor-focus')
+}
+
+function onRichTextEditorBlur() {
+    $('body').removeClass('rich-text-editor-focus')
+    mathEditor.closeMathEditor()
+    richTextFocus = false
+    mathEditorVisible = false
+    latexFieldFocus = false
+}
+
+let richTextEditorBlurTimeout
+
+function onRichTextEditorFocusChanged(e) {
+    richTextFocus = e.type === 'focus'
+
+    clearTimeout(richTextEditorBlurTimeout)
+    richTextEditorBlurTimeout = setTimeout(() => {
+        if (richTextAndMathBlur()) onRichTextEditorBlur()
+        else if (richTextFocus && mathEditorVisible) mathEditor.closeMathEditor()
+        else onRichTextEditorFocus($(e.target))
+    }, 0)
+}
+
+function richTextAndMathBlur() {
+    return !richTextFocus && !mathEditorVisible && !latexFieldFocus && !equationFieldFocus
+}
+
+function isMathEditorVisible() {
+    return mathEditorVisible
 }
 
 module.exports = {
