@@ -257,9 +257,11 @@ const makeRichText = (element, options, onValueChanged = () => { }) => {
     let pasteInProgress = false
 
     $answer
-        .attr('contenteditable', 'true')
-        .attr('spellcheck', 'false')
-        .attr('data-js', 'answer')
+        .attr({
+            'contenteditable': 'true',
+            'spellcheck': 'false',
+            'data-js': 'answer'
+        })
         .addClass('rich-text-editor')
         .on('keydown', e => {
             if (isCtrlKey(e, keyCodes.ENTER) || isKey(e, keyCodes.ESC)) mathEditor.closeMathEditor(true)
