@@ -24,15 +24,15 @@ function hideElementInDOM($element) {
 }
 
 // TODO: replace with data attributes?
-let answerFocus = true
-let latexEditorFocus = false
-let equationEditorFocus = false
+let richTextFocus = true
+let latexFieldFocus = false
+let equationFieldFocus = false
 let mathEditorVisible = false
 let $currentEditor
 
 
 const mathEditor = initMathEditor()
-const {$toolbar} = toolbars.init(mathEditor, () => answerFocus, l)
+const {$toolbar} = toolbars.init(mathEditor, () => richTextFocus, l)
 
 function toggleMathToolbar(isVisible) {
     $('body').toggleClass('math-editor-focus', isVisible)
@@ -58,7 +58,7 @@ function initMathEditor() {
     function onMqEdit() {
         clearTimeout(mqEditTimeout)
         mqEditTimeout = setTimeout(() => {
-            if (latexEditorFocus)
+            if (latexFieldFocus)
                 return
             const latex = mqInstance.latex()
             $latexEditor.val(latex)
@@ -79,7 +79,7 @@ function initMathEditor() {
 
     $equationEditor
         .on('focus blur', '.mq-textarea textarea', e => {
-            equationEditorFocus = e.type !== 'blur' && e.type !== 'focusout'
+            equationFieldFocus = e.type !== 'blur' && e.type !== 'focusout'
             onFocusChanged()
         })
 
@@ -91,7 +91,7 @@ function initMathEditor() {
     $latexEditor
         .keyup(onLatexUpdate)
         .on('focus blur', e => {
-            latexEditorFocus = e.type !== 'blur'
+            latexFieldFocus = e.type !== 'blur'
             onFocusChanged()
         })
 
@@ -100,8 +100,8 @@ function initMathEditor() {
     function onFocusChanged() {
         clearTimeout(focusChanged)
         focusChanged = setTimeout(() => {
-            if (!latexEditorFocus && !equationEditorFocus) closeMathEditor()
-            if (!answerFocus && !mathEditorVisible && !latexEditorFocus && !equationEditorFocus) onEditorBlur()
+            if (!latexFieldFocus && !equationFieldFocus) closeMathEditor()
+            if (!richTextFocus && !mathEditorVisible && !latexFieldFocus && !equationFieldFocus) onRichTextEditorBlur()
         }, 0)
     }
 
@@ -120,10 +120,10 @@ function initMathEditor() {
     }
 
     function insertMath(symbol, alternativeSymbol, useWrite) {
-        if (latexEditorFocus) {
+        if (latexFieldFocus) {
             insertToTextAreaAtCursor($latexEditor.get(0), alternativeSymbol || symbol)
             onLatexUpdate()
-        } else if (equationEditorFocus) {
+        } else if (equationFieldFocus) {
             if (useWrite) {
                 mqInstance.write(symbol)
             } else {
@@ -155,8 +155,8 @@ function initMathEditor() {
         toggleMathToolbar(false)
         hideElementInDOM($mathEditorContainer)
         mathEditorVisible = false
-        latexEditorFocus = false
-        equationEditorFocus = false
+        latexFieldFocus = false
+        equationFieldFocus = false
         if (setFocusAfterClose) $currentEditor.focus()
     }
 
@@ -181,32 +181,32 @@ function initMathEditor() {
     }
 }
 
-function onEditorFocus($element) {
+function onRichTextEditorFocus($element) {
     $currentEditor = $element
     $('body').addClass('rich-text-editor-focus')
 }
 
-function onEditorBlur() {
+function onRichTextEditorBlur() {
     // TODO: remove event bindings
     $('body').removeClass('rich-text-editor-focus')
     mathEditor.closeMathEditor()
     // $editor.off()
 
-    answerFocus = false
+    richTextFocus = false
     mathEditorVisible = false
-    latexEditorFocus = false
+    latexFieldFocus = false
 }
 
-let blurred
+let richTextEditorBlurTimeout
 
-function onEditorFocusChanged(e) {
-    answerFocus = e.type === 'focus'
+function onRichTextEditorFocusChanged(e) {
+    richTextFocus = e.type === 'focus'
 
-    clearTimeout(blurred)
-    blurred = setTimeout(() => {
-        if (!answerFocus && !mathEditorVisible && !latexEditorFocus && !equationEditorFocus) onEditorBlur()
-        else if (answerFocus && mathEditorVisible) mathEditor.closeMathEditor()
-        else onEditorFocus($(e.target))
+    clearTimeout(richTextEditorBlurTimeout)
+    richTextEditorBlurTimeout = setTimeout(() => {
+        if (!richTextFocus && !mathEditorVisible && !latexFieldFocus && !equationFieldFocus) onRichTextEditorBlur()
+        else if (richTextFocus && mathEditorVisible) mathEditor.closeMathEditor()
+        else onRichTextEditorFocus($(e.target))
     }, 0)
 }
 
@@ -265,7 +265,7 @@ const makeRichText = (element, options, onValueChanged = () => { }) => {
             if (isCtrlKey(e, keyCodes.ENTER) || isKey(e, keyCodes.ESC)) mathEditor.closeMathEditor(true)
         })
         .on('mousedown', equationImageSelector, e => {
-            onEditorFocus($(e.target).closest('[data-js="answer"]'))
+            onRichTextEditorFocus($(e.target).closest('[data-js="answer"]'))
             mathEditor.openMathEditor($(e.target))
         })
         .on('keypress', e => {
@@ -273,7 +273,7 @@ const makeRichText = (element, options, onValueChanged = () => { }) => {
         })
         .on('focus blur', e => {
             if (isMathEditorVisible() && e.type === 'focus') mathEditor.closeMathEditor()
-            onEditorFocusChanged(e)
+            onRichTextEditorFocusChanged(e)
         })
         .on('keyup input', e => {
             if(! pasteInProgress) onValueChanged(sanitizeContent(e.currentTarget))
