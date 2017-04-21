@@ -45,7 +45,7 @@ function initMathEditor() {
     const $mathEditorContainer = $(`
         <div class="math-editor" data-js="mathEditor">
             <div class="math-editor-boxes">
-                <div class="math-editor-equation-editor" data-js="equationEditor"></div>
+                <div class="math-editor-equation-editor" data-js="equationField"></div>
                 <textarea class="math-editor-latex-editor" data-js="latexField" placeholder="LaTex"></textarea>
             </div>
         </div>`)
@@ -53,7 +53,7 @@ function initMathEditor() {
     hideElementInDOM($mathEditorContainer)
 
     const $latexField = $mathEditorContainer.find('[data-js="latexField"]')
-    const $equationEditor = $mathEditorContainer.find('[data-js="equationEditor"]')
+    const $equationField = $mathEditorContainer.find('[data-js="equationField"]')
     let mqEditTimeout
     function onMqEdit() {
         clearTimeout(mqEditTimeout)
@@ -65,7 +65,7 @@ function initMathEditor() {
             updateMathImg($mathEditorContainer.prev(), latex)
         }, 100)
     }
-    const mqInstance = MQ.MathField($equationEditor.get(0), {
+    const mqInstance = MQ.MathField($equationField.get(0), {
         handlers: {
             edit: onMqEdit,
             enter: field => {
@@ -75,9 +75,9 @@ function initMathEditor() {
             }
         }
     })
-    $equationEditor.on('keydown', '.mq-textarea textarea', onMqEdit)
+    $equationField.on('keydown', '.mq-textarea textarea', onMqEdit)
 
-    $equationEditor
+    $equationField
         .on('focus blur', '.mq-textarea textarea', e => {
             equationFieldFocus = e.type !== 'blur' && e.type !== 'focusout'
             onFocusChanged()
