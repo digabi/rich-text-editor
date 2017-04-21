@@ -16,8 +16,10 @@
 .math-editor-latex-editor { font-size: 15px; width: 50%; }
 
 .math-editor-button {text-align: center;display: inline-block;position: relative;cursor: pointer;border: none;}
-.math-editor-button[data-title]:hover:after { background: #359BB7; border-radius: 5px; color: #fff; content: attr(data-title); left: 50%; top:100%; padding: 5px 15px; position: absolute; z-index: 32; transform: translate(-50%, 0); white-space: nowrap; }
-.math-editor-button[data-title]:hover:before { display: inline-block; border: solid; border-color: #359BB7 transparent; border-width: 0 6px 6px 6px; bottom: 0; content: ""; left: 50%; position: absolute; z-index: 99; margin-left: -6px; }
+.math-editor-focus .math-editor-button[data-title]:hover:after,
+.math-editor-button-action[data-title]:hover:after { background: #359BB7; border-radius: 5px; color: #fff; content: attr(data-title); left: 50%; top:100%; padding: 5px 15px; position: absolute; z-index: 32; transform: translate(-50%, 0); white-space: nowrap; }
+.math-editor-focus .math-editor-button[data-title]:hover:before,
+.math-editor-button-action[data-title]:hover:before { display: inline-block; border: solid; border-color: #359BB7 transparent; border-width: 0 6px 6px 6px; bottom: 0; content: ""; left: 50%; position: absolute; z-index: 99; margin-left: -6px; }
 .math-editor-button[data-title]:after:hover,
 .math-editor-button[data-title]:before:hover { display: none; }
 .math-editor-button:active { box-shadow: none; }
