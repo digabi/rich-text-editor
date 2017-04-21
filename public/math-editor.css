@@ -24,8 +24,8 @@
 .math-editor-button-action { padding: 5px 10px; font-weight: normal; background: none; border: none; font-family: SourceSansPro-Semibold, sans-serif; font-size: 16px; color: #359BB7; letter-spacing: 0; line-height: 22px; }
 .math-editor-new-equation { display: block; vertical-align: top; height: 35px; width: 150px; }
 .math-editor-focus .math-editor-new-equation { display: none; }
-.math-editor-tools { display: none; }
-.rich-text-editor-focus .math-editor-tools { display: block; z-index: 2; border-bottom: 1px solid #DFDFDF; border-top: 1px solid #DFDFDF; position: fixed; top: 0; left: 0; right: 0; box-shadow: 0 1px 10px 1px rgba(0, 0, 0, .2); line-height: 0; background: white; }
+.math-editor-tools { display: none; z-index: 2; border-bottom: 1px solid #DFDFDF; border-top: 1px solid #DFDFDF; position: fixed; top: 0; left: 0; right: 0; box-shadow: 0 1px 10px 1px rgba(0, 0, 0, .2); line-height: 0; background: white;}
+.rich-text-editor-focus .math-editor-tools { display: block;  }
 .math-editor-toolbar-wrapper { margin: auto; max-width: 990px; position: relative; }
 .math-editor-tools-row:nth-child(even) { background: #fff; }
 .math-editor-tools-row:nth-child(odd) { background: #fafafa; border-top: 1px solid #DFDFDF;}
