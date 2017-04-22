@@ -27,7 +27,7 @@ describe('math editor', () => {
 
     describe('keeps both fiels in sync', () => {
         before(() => $('[data-js="latexField"]').focus().val('x+y').keyup())
-        before(done => setTimeout(done, 200))
+        before(done => setTimeout(done, 0))
 
         it('shows math in latex field', () => expect($('[data-js="equationField"]')).to.have.text('x+y​'))
         it('shows math in img', () => expect($('img:first')).to.have.attr('src','/math.svg?latex=x%2By'))
