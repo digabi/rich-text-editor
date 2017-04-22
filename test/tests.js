@@ -12,7 +12,6 @@ describe('math editor', () => {
     describe('focus state', () => {
         before(() => {
             $('.answer1').focus()
-            $('.answer1').focus() // TODO why two calls is necessary?
         })
         before(waitUntil(() => $('[data-js="tools"]').is(':visible')))
 
