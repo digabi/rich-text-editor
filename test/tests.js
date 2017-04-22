@@ -18,7 +18,7 @@ describe('math editor', () => {
 
         it('shows tools', () => {
             expect($('[data-js="charactersList"]')).to.be.visible
-            expect($('.answer1').prev()).to.have.class('rich-text-editor-tools')
+            expect($('.rich-text-editor-tools')).to.be.visible
         })
     })
 
