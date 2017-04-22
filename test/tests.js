@@ -24,6 +24,14 @@ describe('math editor', () => {
         it('shows math tools', () => expect($('[data-js="mathToolbar"]')).to.be.visible)
         it('shows math editor', () => expect($('[data-js="mathEditor"]')).to.be.visible)
     })
+
+    describe('keeps both fiels in sync', () => {
+        before(() => $('[data-js="latexField"]').focus().val('x+y').keyup())
+        before(done => setTimeout(done, 200))
+
+        it('shows math in latex field', () => expect($('[data-js="equationField"]')).to.have.text('x+y​'))
+        it('shows math in img', () => expect($('img:first')).to.have.attr('src','/math.svg?latex=x%2By'))
+    })
 })
 
 function waitUntil(condition) {
