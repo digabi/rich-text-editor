@@ -2,33 +2,27 @@ describe('math editor', () => {
 
     before(waitUntil(() => $('[data-js="tools"]').length > 0 &&  $('[data-js="tools"]').is(':hidden')))
 
-    describe('initial state', () => {
+    describe('init', () => {
         it('answer field is contenteditable', () => {
             const $answer = $('[data-js="answer"]')
             expect($answer).to.have.attr('contenteditable', 'true')
         })
+        it('tools are hidden', () => expect($('.rich-text-editor-tools')).to.be.hidden)
     })
 
-    describe('focus state', () => {
-        before(() => {
-            $('.answer1').focus()
-        })
+    describe('focus rich text', () => {
+        before(() => $('.answer1').focus())
         before(waitUntil(() => $('[data-js="tools"]').is(':visible')))
 
-        it('shows tools', () => {
-            expect($('[data-js="charactersList"]')).to.be.visible
-            expect($('.rich-text-editor-tools')).to.be.visible
-        })
+        it('shows tools', () => expect($('[data-js="charactersList"]')).to.be.visible)
+        it('hide math tools', () => expect($('[data-js="mathToolbar"]')).to.be.hidden)
     })
 
     describe('start math', () => {
-        before(() => {
-            $('[data-js="newEquation"]').mousedown()
-        })
+        before(() => $('[data-js="newEquation"]').mousedown())
 
-        it('shows tools', () => {
-            expect($('[data-js="mathToolbar"]')).to.be.visible
-        })
+        it('shows math tools', () => expect($('[data-js="mathToolbar"]')).to.be.visible)
+        it('shows math editor', () => expect($('[data-js="mathEditor"]')).to.be.visible)
     })
 })
 
