@@ -87,10 +87,8 @@ module.exports.makeRichText = (element, options, onValueChanged = () => { }) => 
 function initMathEditor() {
     const $mathEditorContainer = $(`
         <div class="math-editor" data-js="mathEditor">
-            <div class="math-editor-boxes">
-                <div class="math-editor-equation-field" data-js="equationField"></div>
-                <textarea class="math-editor-latex-field" data-js="latexField" placeholder="LaTex"></textarea>
-            </div>
+            <div class="math-editor-equation-field" data-js="equationField"></div>
+            <textarea class="math-editor-latex-field" data-js="latexField" placeholder="LaTex"></textarea>
         </div>`)
 
     hideElementInDOM($mathEditorContainer)

@@ -1,7 +1,6 @@
 /*.rich-text-editor-list { margin-bottom: 10px; }*/
-.math-editor {z-index: 1;margin: 10px;position: relative;box-shadow: 1px 1px 10px 1px rgba(0, 0, 0, .2);}
+.math-editor {z-index: 1;margin: 10px;position: relative;box-shadow: 1px 1px 10px 1px rgba(0, 0, 0, .2);display: flex; }
 .rich-text-editor-hidden { display: none; }
-.math-editor-boxes { display: flex; }
 .rich-text-editor img[src^="/math.svg"] { vertical-align: middle; margin: 2px 0; padding: 3px 10px; cursor: pointer; }
 .rich-text-editor:focus img[src^="/math.svg"] {  background: #EDF9FF; }
 .rich-text-editor img[src^="/loadImg"] { margin-top: 2px; }
