@@ -94,7 +94,7 @@ function onPasteHtml(event, $answer, clipboardDataAsHtml, limit, saver, onValueC
         window.document.execCommand('insertHTML', false, u.sanitize(clipboardDataAsHtml))
         u.persistInlineImages($currentEditor, saver, limit, onValueChanged)
     } else {
-        onValueChanged(u.SCREENSHOT_LIMIT_ERROR)
+        onValueChanged(u.SCREENSHOT_LIMIT_ERROR())
     }
 }
 

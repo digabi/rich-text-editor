@@ -3,7 +3,7 @@ const sanitizeOpts = require('./sanitizeOpts')
 const loadingImg = require('./loadingImg')
 const equationImageSelector = 'img[src^="/math.svg"]'
 
-const SCREENSHOT_LIMIT_ERROR = new Bacon.Error('Screenshot limit reached!')
+const SCREENSHOT_LIMIT_ERROR = () => new Bacon.Error('Screenshot limit reached!')
 module.exports = {isKey, isCtrlKey, insertToTextAreaAtCursor, persistInlineImages, sanitize, sanitizeContent, setCursorAfter, equationImageSelector, totalImageCount, SCREENSHOT_LIMIT_ERROR}
 
 
@@ -92,7 +92,7 @@ function checkForImageLimit($editor, imageData, limit) {
 function persistInlineImages($editor, screenshotSaver, screenshotCountLimit, onValueChanged) {
     setTimeout(() => Bacon.combineAsArray(markAndGetInlineImages($editor)
         .map(data => checkForImageLimit($editor, data, screenshotCountLimit)
-            .doError(() => onValueChanged(SCREENSHOT_LIMIT_ERROR))
+            .doError(() => onValueChanged(SCREENSHOT_LIMIT_ERROR()))
             .flatMapLatest(() => Bacon.fromPromise(screenshotSaver(data)))
             .doAction(screenShotUrl => data.$el.attr('src', screenShotUrl))
             .doError(() => data.$el.remove()))
