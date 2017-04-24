@@ -1,5 +1,5 @@
 const $answer = $('.answer')
-const {makeRichText} = require('./math-editor')
+const {makeRichText} = require('./rich-text-editor')
 
 const save = ($elem, async = true) => $.post({
     url: '/save',
