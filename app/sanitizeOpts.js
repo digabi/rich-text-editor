@@ -7,6 +7,6 @@ module.exports = {
     allowedAttributes: {
         img: ['src', 'alt']
     },
-    allowedSchemes: ['data', 'http', 'https'],
+    allowedSchemes: ['data'],
     exclusiveFilter: function(frame) { return frame.attribs['data-js'] === 'mathEditor' }
 }

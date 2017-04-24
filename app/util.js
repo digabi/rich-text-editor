@@ -7,8 +7,12 @@ const SCREENSHOT_LIMIT_ERROR = new Bacon.Error('Screenshot limit reached!')
 module.exports = {isKey, isCtrlKey, insertToTextAreaAtCursor, persistInlineImages, sanitize, sanitizeContent, setCursorAfter, equationImageSelector, totalImageCount, SCREENSHOT_LIMIT_ERROR}
 
 
+function convertLinksToRelative(html) {
+    return html.replace(new RegExp(document.location.origin, 'g'), '')
+}
+
 function sanitize(html) {
-    return sanitizeHtml(html, sanitizeOpts)
+    return sanitizeHtml(convertLinksToRelative(html), sanitizeOpts)
 }
 function insertToTextAreaAtCursor(field, value) {
     const startPos = field.selectionStart
