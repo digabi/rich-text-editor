@@ -156,9 +156,7 @@ function initMathEditor() {
 
     function insertNewEquation(optionalMarkup = '') {
         window.document.execCommand('insertHTML', false, optionalMarkup + '<img data-js="new" alt="" style="display: none"/>')
-        const $img = $('[data-js="new"]')
-        $img.removeAttr('data-js')
-        showMathEditor($img)
+        showMathEditor($('[data-js="new"]').removeAttr('data-js'))
     }
 
     function openMathEditor($img) {
