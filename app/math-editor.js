@@ -155,16 +155,26 @@ function initMathEditor() {
     }
 
     function insertNewEquation(optionalMarkup = '') {
-        window.document.execCommand('insertHTML', false, optionalMarkup + '<img data-js="new" style="display: none"/>')
-        const $addedEquationImage = $('[data-js="new"]')
-        $addedEquationImage
-            .removeAttr('data-js')
+        window.document.execCommand('insertHTML', false, optionalMarkup + '<img data-js="new" alt="" style="display: none"/>')
+        const $img = $('[data-js="new"]')
+        $img.removeAttr('data-js')
+        showMathEditor($img)
+    }
 
-        $addedEquationImage.after($mathEditorContainer)
-        mqInstance.latex('')
+    function openMathEditor($img) {
+        if (mathEditorVisible) closeMathEditor()
+        setCursorAfter($img)
+        showMathEditor($img)
+    }
+
+    function showMathEditor($img) {
+        $img.hide()
+        $img.after($mathEditorContainer)
         mathEditorVisible = true
         toggleMathToolbar(true)
         setTimeout(() => mqInstance.focus(), 0)
+        $latexField.val($img.prop('alt'))
+        onLatexUpdate()
     }
 
     function insertMath(symbol, alternativeSymbol, useWrite) {
@@ -206,19 +216,6 @@ function initMathEditor() {
         focus.latexField = false
         focus.equationField = false
         if (setFocusAfterClose) $currentEditor.focus()
-    }
-
-    function openMathEditor($img) {
-        if (mathEditorVisible) closeMathEditor()
-        setCursorAfter($img)
-        $img.hide()
-        $img.after($mathEditorContainer)
-        const latex = $img.prop('alt')
-        $latexField.val(latex)
-        onLatexUpdate()
-        mathEditorVisible = true
-        toggleMathToolbar(true)
-        setTimeout(() => mqInstance.focus(), 0)
     }
 }
 
