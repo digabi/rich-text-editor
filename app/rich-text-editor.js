@@ -1,5 +1,6 @@
 const {isCtrlKey, isKey, persistInlineImages, sanitizeContent, sanitize, equationImageSelector} = require('./util')
 const toolbars = require('./toolbars')
+const mathEditor = require('./math-editor')
 const locales = {
     FI: require('./FI'),
     SV: require('./SV')
@@ -16,13 +17,13 @@ const focus = {
     equationField: false
 }
 let $currentEditor
-const mathEditor = require('./math-editor').init($outerPlaceholder, focus, onMathFocusChanged)
+const math = mathEditor.init($outerPlaceholder, focus, onMathFocusChanged)
 
 function onMathFocusChanged() {
     if (richTextAndMathBlur()) onRichTextEditorBlur()
 }
 
-const {$toolbar} = toolbars.init(mathEditor, () => focus.richText, l)
+const {$toolbar} = toolbars.init(math, () => focus.richText, l)
 
 $('body').append($outerPlaceholder, $toolbar)
 
@@ -45,14 +46,14 @@ module.exports.makeRichText = (element, options, onValueChanged = () => { }) => 
         .addClass('rich-text-editor')
         .on('mousedown', equationImageSelector, e => {
             onRichTextEditorFocus($(e.target).closest('[data-js="answer"]'))
-            mathEditor.openMathEditor($(e.target))
+            math.openMathEditor($(e.target))
         })
         .on('keypress', e => {
-            if (isCtrlKey(e, 'l') || isCtrlKey(e, 'i')) mathEditor.insertNewEquation()
-            if (isCtrlKey(e, keyCodes.ENTER) || isKey(e, keyCodes.ESC)) mathEditor.closeMathEditor(true)
+            if (isCtrlKey(e, 'l') || isCtrlKey(e, 'i')) math.insertNewEquation()
+            if (isCtrlKey(e, keyCodes.ENTER) || isKey(e, keyCodes.ESC)) math.closeMathEditor(true)
         })
         .on('focus blur', e => {
-            if (mathEditor.isVisible() && e.type === 'focus') mathEditor.closeMathEditor()
+            if (math.isVisible() && e.type === 'focus') math.closeMathEditor()
             onRichTextEditorFocusChanged(e)
         })
         .on('keyup input', e => {
@@ -97,7 +98,7 @@ function onRichTextEditorFocus($element) {
 
 function onRichTextEditorBlur() {
     toggleRichTextToolbar(false)
-    mathEditor.closeMathEditor()
+    math.closeMathEditor()
     focus.richText = false
 }
 
@@ -109,11 +110,11 @@ function onRichTextEditorFocusChanged(e) {
     clearTimeout(richTextEditorBlurTimeout)
     richTextEditorBlurTimeout = setTimeout(() => {
         if (richTextAndMathBlur()) onRichTextEditorBlur()
-        else if (focus.richText && mathEditor.isVisible()) mathEditor.closeMathEditor()
+        else if (focus.richText && math.isVisible()) math.closeMathEditor()
         else onRichTextEditorFocus($(e.target))
     }, 0)
 }
 
 function richTextAndMathBlur() {
-    return !focus.richText && !mathEditor.isVisible() && !focus.latexField && !focus.equationField
+    return !focus.richText && !math.isVisible() && !focus.latexField && !focus.equationField
 }
