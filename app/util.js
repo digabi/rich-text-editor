@@ -65,7 +65,11 @@ function sanitizeContent(answerElement) {
 
     const html = sanitize($answerElement.html())
 
-    return { answerHTML: html, answerText: text }
+    return {
+        answerHTML: html,
+        answerText: text,
+        imageCount: existingScreenshotCount($(`<div>${html}</div>`))
+    }
 }
 
 function setCursorAfter($img) {
