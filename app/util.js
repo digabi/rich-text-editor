@@ -60,7 +60,7 @@ function sanitizeContent(answerElement) {
     const $answerElement = $(answerElement)
     const $mathEditor = $answerElement.find('[data-js="mathEditor"]')
     $mathEditor.hide()
-    const text = $answerElement.text()
+    const text = $answerElement.get(0).innerText
     $mathEditor.show()
 
     const html = sanitize($answerElement.html())
