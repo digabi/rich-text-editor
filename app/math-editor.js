@@ -40,15 +40,13 @@ module.exports.makeRichText = (element, options, onValueChanged = () => { }) => 
             'data-js': 'answer'
         })
         .addClass('rich-text-editor')
-        .on('keydown', e => {
-            if (isCtrlKey(e, keyCodes.ENTER) || isKey(e, keyCodes.ESC)) mathEditor.closeMathEditor(true)
-        })
         .on('mousedown', equationImageSelector, e => {
             onRichTextEditorFocus($(e.target).closest('[data-js="answer"]'))
             mathEditor.openMathEditor($(e.target))
         })
         .on('keypress', e => {
             if (isCtrlKey(e, 'l') || isCtrlKey(e, 'i')) mathEditor.insertNewEquation()
+            if (isCtrlKey(e, keyCodes.ENTER) || isKey(e, keyCodes.ESC)) mathEditor.closeMathEditor(true)
         })
         .on('focus blur', e => {
             if (mathEditorVisible && e.type === 'focus') mathEditor.closeMathEditor()
