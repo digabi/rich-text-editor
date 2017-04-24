@@ -16,7 +16,6 @@ const focus = {
     latexField: false,
     equationField: false
 }
-let mathEditorVisible = false
 let $currentEditor
 const mathEditor = initMathEditor()
 const {$toolbar} = toolbars.init(mathEditor, () => focus.richText, l)
@@ -49,7 +48,7 @@ module.exports.makeRichText = (element, options, onValueChanged = () => { }) => 
             if (isCtrlKey(e, keyCodes.ENTER) || isKey(e, keyCodes.ESC)) mathEditor.closeMathEditor(true)
         })
         .on('focus blur', e => {
-            if (mathEditorVisible && e.type === 'focus') mathEditor.closeMathEditor()
+            if (mathEditor.isVisible() && e.type === 'focus') mathEditor.closeMathEditor()
             onRichTextEditorFocusChanged(e)
         })
         .on('keyup input', e => {
@@ -95,6 +94,7 @@ function initMathEditor() {
     const $latexField = $mathEditorContainer.find('[data-js="latexField"]')
     const $equationField = $mathEditorContainer.find('[data-js="equationField"]')
     let mqEditTimeout
+    let visible = false
     let focusChanged = null
     //noinspection JSUnusedGlobalSymbols,JSUnusedLocalSymbols
     const mqInstance = MQ.MathField($equationField.get(0), {
@@ -125,9 +125,13 @@ function initMathEditor() {
         insertMath,
         closeMathEditor,
         openMathEditor,
-        onFocusChanged
+        onFocusChanged,
+        isVisible
     }
 
+    function isVisible() {
+        return visible
+    }
     function onMqEdit() {
         clearTimeout(mqEditTimeout)
         mqEditTimeout = setTimeout(() => {
@@ -158,7 +162,7 @@ function initMathEditor() {
     }
 
     function openMathEditor($img) {
-        if (mathEditorVisible) closeMathEditor()
+        if (visible) closeMathEditor()
         setCursorAfter($img)
         showMathEditor($img)
     }
@@ -166,7 +170,7 @@ function initMathEditor() {
     function showMathEditor($img) {
         $img.hide()
         $img.after($mathEditorContainer)
-        mathEditorVisible = true
+        visible = true
         toggleMathToolbar(true)
         setTimeout(() => mqInstance.focus(), 0)
         $latexField.val($img.prop('alt'))
@@ -208,7 +212,7 @@ function initMathEditor() {
 
         toggleMathToolbar(false)
         $outerPlaceholder.append($mathEditorContainer)
-        mathEditorVisible = false
+        visible = false
         focus.latexField = false
         focus.equationField = false
         if (setFocusAfterClose) $currentEditor.focus()
@@ -241,11 +245,11 @@ function onRichTextEditorFocusChanged(e) {
     clearTimeout(richTextEditorBlurTimeout)
     richTextEditorBlurTimeout = setTimeout(() => {
         if (richTextAndMathBlur()) onRichTextEditorBlur()
-        else if (focus.richText && mathEditorVisible) mathEditor.closeMathEditor()
+        else if (focus.richText && mathEditor.isVisible()) mathEditor.closeMathEditor()
         else onRichTextEditorFocus($(e.target))
     }, 0)
 }
 
 function richTextAndMathBlur() {
-    return !focus.richText && !mathEditorVisible && !focus.latexField && !focus.equationField
+    return !focus.richText && !mathEditor.isVisible() && !focus.latexField && !focus.equationField
 }
