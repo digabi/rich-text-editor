@@ -1,4 +1,4 @@
-const {isCtrlKey, isKey, persistInlineImages, sanitizeContent, sanitize, equationImageSelector, totalImageCount} = require('./util')
+const u = require('./util')
 const toolbars = require('./toolbars')
 const mathEditor = require('./math-editor')
 const locales = {
@@ -44,20 +44,20 @@ module.exports.makeRichText = (element, options, onValueChanged = () => { }) => 
             'data-js': 'answer'
         })
         .addClass('rich-text-editor')
-        .on('mousedown', equationImageSelector, e => {
+        .on('mousedown', u.equationImageSelector, e => {
             onRichTextEditorFocus($(e.target).closest('[data-js="answer"]'))
             math.openMathEditor($(e.target))
         })
         .on('keypress', e => {
-            if (isCtrlKey(e, 'l') || isCtrlKey(e, 'i')) math.insertNewEquation()
-            if (isCtrlKey(e, keyCodes.ENTER) || isKey(e, keyCodes.ESC)) math.closeMathEditor(true)
+            if (u.isCtrlKey(e, 'l') || u.isCtrlKey(e, 'i')) math.insertNewEquation()
+            if (u.isCtrlKey(e, keyCodes.ENTER) || u.isKey(e, keyCodes.ESC)) math.closeMathEditor(true)
         })
         .on('focus blur', e => {
             if (math.isVisible() && e.type === 'focus') math.closeMathEditor()
             onRichTextEditorFocusChanged(e)
         })
         .on('keyup input', e => {
-            if(! pasteInProgress) onValueChanged(sanitizeContent(e.currentTarget))
+            if(! pasteInProgress) onValueChanged(u.sanitizeContent(e.currentTarget))
         })
         .on('paste', e => {
             pasteInProgress = true
@@ -79,14 +79,14 @@ module.exports.makeRichText = (element, options, onValueChanged = () => { }) => 
                 const clipboardDataAsHtml = clipboardData.getData('text/html')
                 if (clipboardDataAsHtml) {
                     e.preventDefault()
-                    if(totalImageCount($answer, clipboardDataAsHtml) <= limit) {
-                        window.document.execCommand('insertHTML', false, sanitize(clipboardDataAsHtml))
-                        setTimeout(() => persistInlineImages($currentEditor, saver, limit, onValueChanged), 0)
+                    if(u.totalImageCount($answer, clipboardDataAsHtml) <= limit) {
+                        window.document.execCommand('insertHTML', false, u.sanitize(clipboardDataAsHtml))
+                        setTimeout(() => u.persistInlineImages($currentEditor, saver, limit, onValueChanged), 0)
                     } else {
-                        onValueChanged(new Bacon.Error('Screenshot limit reached!'))
+                        onValueChanged(u.SCREENSHOT_LIMIT_ERROR)
                     }
                 } else {
-                    setTimeout(()=> persistInlineImages($currentEditor, saver, limit, onValueChanged), 0)
+                    setTimeout(()=> u.persistInlineImages($currentEditor, saver, limit, onValueChanged), 0)
                 }
 
             }

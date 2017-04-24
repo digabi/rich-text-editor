@@ -1,4 +1,4 @@
-const {insertToTextAreaAtCursor, setCursorAfter} = require('./util')
+const u = require('./util')
 
 const MQ = MathQuill.getInterface(2)
 module.exports = {init}
@@ -83,7 +83,7 @@ function init($outerPlaceholder, focus, onMathFocusChanged) {
 
     function openMathEditor($img) {
         if (visible) closeMathEditor()
-        setCursorAfter($img)
+        u.setCursorAfter($img)
         showMathEditor($img)
     }
 
@@ -99,7 +99,7 @@ function init($outerPlaceholder, focus, onMathFocusChanged) {
 
     function insertMath(symbol, alternativeSymbol, useWrite) {
         if (focus.latexField) {
-            insertToTextAreaAtCursor($latexField.get(0), alternativeSymbol || symbol)
+            u.insertToTextAreaAtCursor($latexField.get(0), alternativeSymbol || symbol)
             onLatexUpdate()
         } else if (focus.equationField) {
             if (useWrite) {
