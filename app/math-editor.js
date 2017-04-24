@@ -238,8 +238,6 @@ function onRichTextEditorBlur() {
     toggleRichTextToolbar(false)
     mathEditor.closeMathEditor()
     focus.richText = false
-    mathEditorVisible = false
-    focus.latexField = false
 }
 
 let richTextEditorBlurTimeout
