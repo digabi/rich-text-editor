@@ -92,14 +92,14 @@ function onPasteHtml(event, $answer, clipboardDataAsHtml, limit, saver, onValueC
     event.preventDefault()
     if (u.totalImageCount($answer, clipboardDataAsHtml) <= limit) {
         window.document.execCommand('insertHTML', false, u.sanitize(clipboardDataAsHtml))
-        setTimeout(() => u.persistInlineImages($currentEditor, saver, limit, onValueChanged), 0)
+        u.persistInlineImages($currentEditor, saver, limit, onValueChanged)
     } else {
         onValueChanged(u.SCREENSHOT_LIMIT_ERROR)
     }
 }
 
 function onLegacyPasteImage(saver, limit, onValueChanged) {
-    setTimeout(() => u.persistInlineImages($currentEditor, saver, limit, onValueChanged), 0)
+    u.persistInlineImages($currentEditor, saver, limit, onValueChanged)
 }
 
 function toggleRichTextToolbar(isVisible) {

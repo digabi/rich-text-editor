@@ -86,13 +86,13 @@ function checkForImageLimit($editor, imageData, limit) {
 }
 
 function persistInlineImages($editor, screenshotSaver, screenshotCountLimit, onValueChanged) {
-    Bacon.combineAsArray(markAndGetInlineImages($editor)
+    setTimeout(() => Bacon.combineAsArray(markAndGetInlineImages($editor)
         .map(data => checkForImageLimit($editor, data, screenshotCountLimit)
             .doError(() => onValueChanged(SCREENSHOT_LIMIT_ERROR))
             .flatMapLatest(() => Bacon.fromPromise(screenshotSaver(data)))
             .doAction(screenShotUrl => data.$el.attr('src', screenShotUrl))
             .doError(() => data.$el.remove()))
-    ).onValue(k => $editor.trigger('input'))
+    ).onValue(k => $editor.trigger('input')), 0)
 }
 
 function totalImageCount($answer, clipboardDataAsHtml) {
