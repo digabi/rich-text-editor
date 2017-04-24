@@ -1,5 +1,5 @@
-# Math editor
-Math editor for Finnish Matriculation Examination Board.
+# Rich text editor
+Rich text editor with math support for Finnish Matriculation Examination Board.
 Live demo can be found at [https://math-demo.abitti.fi/](https://math-demo.abitti.fi/)
 
 ## Getting started
