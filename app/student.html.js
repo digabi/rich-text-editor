@@ -43,7 +43,7 @@ module.exports = (obj) => { with(obj) return `
             ${updated} ${startedAt}
         </div>
         <div class="paragraph">
-            <a href="https://github.com/digabi/math-editor">GitHub</a>
+            <a href="https://github.com/digabi/rich-text-editor">GitHub</a>
         </div>
         <div class="paragraph">
             <a href="mailto:abitti@ylioppilastutkinto.fi?subject=Palaute / Math-editor">${sendFeedback}

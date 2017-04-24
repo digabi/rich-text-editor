@@ -1,9 +1,9 @@
 {
-  "name": "math-editor",
+  "name": "rich-text-editor",
   "version": "2.0.1",
   "description": "Matematiikkaeditori-spike",
   "author": "",
-  "homepage": "https://github.com/digabi/math-editor",
+  "homepage": "https://github.com/digabi/rich-text-editor",
   "scripts": {
     "start": "app/index.js",
     "dev": "supervisor -i public,test app/index.js",
@@ -12,7 +12,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/digabi/math-editor.git"
+    "url": "https://github.com/digabi/rich-text-editor.git"
   },
   "devDependencies": {
     "chai": "^3.5.0",

@@ -1,12 +1,12 @@
 {
-  "name": "math-editor",
+  "name": "rich-text-editor",
   "description": "YTL matematiikkaeditori-demo",
   "main": "dist/rich-text-editor.js",
   "authors": [
     "abitti@ylioppilastutkinto.fi"
   ],
   "license": "MIT",
-  "homepage": "https://github.com/digabi/math-editor",
+  "homepage": "https://github.com/digabi/rich-text-editor",
   "ignore": [
     "*",
     "!dist/*"
