@@ -11,13 +11,15 @@ const keyCodes = {
     ESC: 27
 }
 const $outerPlaceholder = $(`<div class="rich-text-editor-hidden" data-js="outerPlaceholder">`)
-let richTextFocus = true
-let latexFieldFocus = false
-let equationFieldFocus = false
+const focus = {
+    richText: true,
+    latexField: false,
+    equationField: false
+}
 let mathEditorVisible = false
 let $currentEditor
 const mathEditor = initMathEditor()
-const {$toolbar} = toolbars.init(mathEditor, () => richTextFocus, l)
+const {$toolbar} = toolbars.init(mathEditor, () => focus.richText, l)
 
 $('body').append($outerPlaceholder, $toolbar)
 
@@ -109,14 +111,14 @@ function initMathEditor() {
     $equationField
         .on('keydown', '.mq-textarea textarea', onMqEdit)
         .on('focus blur', '.mq-textarea textarea', e => {
-            equationFieldFocus = e.type !== 'blur' && e.type !== 'focusout'
+            focus.equationField = e.type !== 'blur' && e.type !== 'focusout'
             onFocusChanged()
         })
 
     $latexField
         .keyup(onLatexUpdate)
         .on('focus blur', e => {
-            latexFieldFocus = e.type !== 'blur'
+            focus.latexField = e.type !== 'blur'
             onFocusChanged()
         })
 
@@ -131,7 +133,7 @@ function initMathEditor() {
     function onMqEdit() {
         clearTimeout(mqEditTimeout)
         mqEditTimeout = setTimeout(() => {
-            if (latexFieldFocus)
+            if (focus.latexField)
                 return
             const latex = mqInstance.latex()
             $latexField.val(latex)
@@ -147,7 +149,7 @@ function initMathEditor() {
     function onFocusChanged() {
         clearTimeout(focusChanged)
         focusChanged = setTimeout(() => {
-            if (!latexFieldFocus && !equationFieldFocus) closeMathEditor()
+            if (!focus.latexField && !focus.equationField) closeMathEditor()
             if (richTextAndMathBlur()) onRichTextEditorBlur()
         }, 0)
     }
@@ -166,10 +168,10 @@ function initMathEditor() {
     }
 
     function insertMath(symbol, alternativeSymbol, useWrite) {
-        if (latexFieldFocus) {
+        if (focus.latexField) {
             insertToTextAreaAtCursor($latexField.get(0), alternativeSymbol || symbol)
             onLatexUpdate()
-        } else if (equationFieldFocus) {
+        } else if (focus.equationField) {
             if (useWrite) {
                 mqInstance.write(symbol)
             } else {
@@ -201,8 +203,8 @@ function initMathEditor() {
         toggleMathToolbar(false)
         $outerPlaceholder.append($mathEditorContainer)
         mathEditorVisible = false
-        latexFieldFocus = false
-        equationFieldFocus = false
+        focus.latexField = false
+        focus.equationField = false
         if (setFocusAfterClose) $currentEditor.focus()
     }
 
@@ -235,24 +237,24 @@ function onRichTextEditorFocus($element) {
 function onRichTextEditorBlur() {
     toggleRichTextToolbar(false)
     mathEditor.closeMathEditor()
-    richTextFocus = false
+    focus.richText = false
     mathEditorVisible = false
-    latexFieldFocus = false
+    focus.latexField = false
 }
 
 let richTextEditorBlurTimeout
 
 function onRichTextEditorFocusChanged(e) {
-    richTextFocus = e.type === 'focus'
+    focus.richText = e.type === 'focus'
 
     clearTimeout(richTextEditorBlurTimeout)
     richTextEditorBlurTimeout = setTimeout(() => {
         if (richTextAndMathBlur()) onRichTextEditorBlur()
-        else if (richTextFocus && mathEditorVisible) mathEditor.closeMathEditor()
+        else if (focus.richText && mathEditorVisible) mathEditor.closeMathEditor()
         else onRichTextEditorFocus($(e.target))
     }, 0)
 }
 
 function richTextAndMathBlur() {
-    return !richTextFocus && !mathEditorVisible && !latexFieldFocus && !equationFieldFocus
+    return !focus.richText && !mathEditorVisible && !focus.latexField && !focus.equationField
 }
