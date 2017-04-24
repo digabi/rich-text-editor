@@ -49,7 +49,7 @@ module.exports.makeRichText = (element, options, onValueChanged = () => { }) => 
             if (isCtrlKey(e, 'l') || isCtrlKey(e, 'i')) mathEditor.insertNewEquation()
         })
         .on('focus blur', e => {
-            if (isMathEditorVisible() && e.type === 'focus') mathEditor.closeMathEditor()
+            if (mathEditorVisible && e.type === 'focus') mathEditor.closeMathEditor()
             onRichTextEditorFocusChanged(e)
         })
         .on('keyup input', e => {
@@ -91,12 +91,12 @@ function initMathEditor() {
             <textarea class="math-editor-latex-field" data-js="latexField" placeholder="LaTex"></textarea>
         </div>`)
 
-    hideElementInDOM($mathEditorContainer)
-
+    $outerPlaceholder.append($mathEditorContainer)
     const $latexField = $mathEditorContainer.find('[data-js="latexField"]')
     const $equationField = $mathEditorContainer.find('[data-js="equationField"]')
     let mqEditTimeout
     let focusChanged = null
+    //noinspection JSUnusedGlobalSymbols,JSUnusedLocalSymbols
     const mqInstance = MQ.MathField($equationField.get(0), {
         handlers: {
             edit: onMqEdit,
@@ -158,8 +158,7 @@ function initMathEditor() {
         $addedEquationImage
             .removeAttr('data-js')
 
-        moveElementAfter($mathEditorContainer, $addedEquationImage)
-
+        $addedEquationImage.after($mathEditorContainer)
         mqInstance.latex('')
         mathEditorVisible = true
         toggleMathToolbar(true)
@@ -200,7 +199,7 @@ function initMathEditor() {
         }
 
         toggleMathToolbar(false)
-        hideElementInDOM($mathEditorContainer)
+        $outerPlaceholder.append($mathEditorContainer)
         mathEditorVisible = false
         latexFieldFocus = false
         equationFieldFocus = false
@@ -211,7 +210,7 @@ function initMathEditor() {
         if (mathEditorVisible) closeMathEditor()
         setCursorAfter($img)
         $img.hide()
-        moveElementAfter($mathEditorContainer, $img)
+        $img.after($mathEditorContainer)
         const latex = $img.prop('alt')
         $latexField.val(latex)
         onLatexUpdate()
@@ -221,25 +220,20 @@ function initMathEditor() {
     }
 }
 
-function moveElementAfter($element, $after) {
-    $after.after($element)
-}
-
-function hideElementInDOM($element) {
-    $outerPlaceholder.append($element)
-}
-
 function toggleMathToolbar(isVisible) {
     $('body').toggleClass('math-editor-focus', isVisible)
 }
 
+function toggleRichTextToolbar(isVisible) {
+    $('body').toggleClass('rich-text-editor-focus', isVisible)
+}
 function onRichTextEditorFocus($element) {
     $currentEditor = $element
-    $('body').addClass('rich-text-editor-focus')
+    toggleRichTextToolbar(true)
 }
 
 function onRichTextEditorBlur() {
-    $('body').removeClass('rich-text-editor-focus')
+    toggleRichTextToolbar(false)
     mathEditor.closeMathEditor()
     richTextFocus = false
     mathEditorVisible = false
@@ -261,8 +255,4 @@ function onRichTextEditorFocusChanged(e) {
 
 function richTextAndMathBlur() {
     return !richTextFocus && !mathEditorVisible && !latexFieldFocus && !equationFieldFocus
-}
-
-function isMathEditorVisible() {
-    return mathEditorVisible
 }
