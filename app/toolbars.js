@@ -5,7 +5,7 @@ module.exports = {
     init,
 }
 
-function init(mathEditor, hasAnswerFocus, l) {
+function init(mathEditor, hasRichTextFocus, l) {
     const $toolbar = $(`
         <div class="rich-text-editor-tools" data-js="tools">
             <div class="rich-text-editor-tools-button-wrapper">
@@ -37,9 +37,9 @@ function init(mathEditor, hasAnswerFocus, l) {
 
     const $newEquation = $toolbar.find('[data-js="newEquation"]')
     const $mathToolbar = $toolbar.find('[data-js="mathToolbar"]')
-    initSpecialCharacterToolbar($toolbar, mathEditor, hasAnswerFocus)
+    initSpecialCharacterToolbar($toolbar, mathEditor, hasRichTextFocus)
     initMathToolbar($mathToolbar, mathEditor)
-    initNewEquation($newEquation, mathEditor, hasAnswerFocus)
+    initNewEquation($newEquation, mathEditor, hasRichTextFocus)
 
     return { $toolbar }
 }
