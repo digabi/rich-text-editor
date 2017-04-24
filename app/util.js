@@ -4,8 +4,19 @@ const loadingImg = require('./loadingImg')
 const equationImageSelector = 'img[src^="/math.svg"]'
 
 const SCREENSHOT_LIMIT_ERROR = () => new Bacon.Error('Screenshot limit reached!')
-module.exports = {isKey, isCtrlKey, insertToTextAreaAtCursor, persistInlineImages, sanitize, sanitizeContent, setCursorAfter, equationImageSelector, totalImageCount, SCREENSHOT_LIMIT_ERROR}
-
+module.exports = {
+    isKey,
+    isCtrlKey,
+    insertToTextAreaAtCursor,
+    persistInlineImages,
+    sanitize,
+    sanitizeContent,
+    setCursorAfter,
+    equationImageSelector,
+    totalImageCount,
+    SCREENSHOT_LIMIT_ERROR,
+    existingScreenshotCount
+}
 
 function convertLinksToRelative(html) {
     return html.replace(new RegExp(document.location.origin, 'g'), '')

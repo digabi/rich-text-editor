@@ -68,7 +68,7 @@ module.exports.makeRichText = (element, options, onValueChanged = () => { }) => 
             const clipboardData = e.originalEvent.clipboardData
             const file = clipboardData.items && clipboardData.items[0].getAsFile()
             if (file) {
-                onPasteBlob(e, file, saver)
+                onPasteBlob(e, file, saver, $answer, onValueChanged, limit)
             } else {
                 const clipboardDataAsHtml = clipboardData.getData('text/html')
                 if (clipboardDataAsHtml) onPasteHtml(e, $answer, clipboardDataAsHtml, limit, saver, onValueChanged)
@@ -78,13 +78,17 @@ module.exports.makeRichText = (element, options, onValueChanged = () => { }) => 
     setTimeout(() => document.execCommand("enableObjectResizing", false, false), 0)
 }
 
-function onPasteBlob(event, file, saver) {
+function onPasteBlob(event, file, saver, $answer, onValueChanged, limit) {
     event.preventDefault()
     if (file.type === 'image/png') {
-        saver({data: file, type: file.type, id: String(new Date().getTime())}).then(screenshotUrl => {
-            const img = `<img src="${screenshotUrl}"/>`
-            window.document.execCommand('insertHTML', false, img)
-        })
+        if (u.existingScreenshotCount($answer) + 1 <= limit) {
+            saver({data: file, type: file.type, id: String(new Date().getTime())}).then(screenshotUrl => {
+                const img = `<img src="${screenshotUrl}"/>`
+                window.document.execCommand('insertHTML', false, img)
+            })
+        } else {
+            onValueChanged(u.SCREENSHOT_LIMIT_ERROR())
+        }
     }
 }
 
