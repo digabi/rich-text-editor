@@ -68,36 +68,44 @@ module.exports.makeRichText = (element, options, onValueChanged = () => { }) => 
             const clipboardData = e.originalEvent.clipboardData
             const file = clipboardData.items && clipboardData.items[0].getAsFile()
             if (file) {
-                e.preventDefault()
-                if(file.type !== 'image/png')
-                    return
-                saver({data: file, type: file.type, id: String(new Date().getTime())}).then(screenshotUrl => {
-                    const img = `<img src="${screenshotUrl}"/>`
-                    window.document.execCommand('insertHTML', false, img)
-                })
+                onPasteBlob(e, file, saver)
             } else {
                 const clipboardDataAsHtml = clipboardData.getData('text/html')
-                if (clipboardDataAsHtml) {
-                    e.preventDefault()
-                    if(u.totalImageCount($answer, clipboardDataAsHtml) <= limit) {
-                        window.document.execCommand('insertHTML', false, u.sanitize(clipboardDataAsHtml))
-                        setTimeout(() => u.persistInlineImages($currentEditor, saver, limit, onValueChanged), 0)
-                    } else {
-                        onValueChanged(u.SCREENSHOT_LIMIT_ERROR)
-                    }
-                } else {
-                    setTimeout(()=> u.persistInlineImages($currentEditor, saver, limit, onValueChanged), 0)
-                }
-
+                if (clipboardDataAsHtml) onPasteHtml(e, $answer, clipboardDataAsHtml, limit, saver, onValueChanged)
+                else onLegacyPasteImage(saver, limit, onValueChanged)
             }
         })
-
     setTimeout(() => document.execCommand("enableObjectResizing", false, false), 0)
+}
+
+function onPasteBlob(event, file, saver) {
+    event.preventDefault()
+    if (file.type === 'image/png') {
+        saver({data: file, type: file.type, id: String(new Date().getTime())}).then(screenshotUrl => {
+            const img = `<img src="${screenshotUrl}"/>`
+            window.document.execCommand('insertHTML', false, img)
+        })
+    }
+}
+
+function onPasteHtml(event, $answer, clipboardDataAsHtml, limit, saver, onValueChanged) {
+    event.preventDefault()
+    if (u.totalImageCount($answer, clipboardDataAsHtml) <= limit) {
+        window.document.execCommand('insertHTML', false, u.sanitize(clipboardDataAsHtml))
+        setTimeout(() => u.persistInlineImages($currentEditor, saver, limit, onValueChanged), 0)
+    } else {
+        onValueChanged(u.SCREENSHOT_LIMIT_ERROR)
+    }
+}
+
+function onLegacyPasteImage(saver, limit, onValueChanged) {
+    setTimeout(() => u.persistInlineImages($currentEditor, saver, limit, onValueChanged), 0)
 }
 
 function toggleRichTextToolbar(isVisible) {
     $('body').toggleClass('rich-text-editor-focus', isVisible)
 }
+
 function onRichTextEditorFocus($element) {
     $currentEditor = $element
     toggleRichTextToolbar(true)
