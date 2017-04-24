@@ -17,7 +17,7 @@ const focus = {
     equationField: false
 }
 let $currentEditor
-const mathEditor = initMathEditor()
+const mathEditor = initMathEditor($outerPlaceholder, focus)
 const {$toolbar} = toolbars.init(mathEditor, () => focus.richText, l)
 
 $('body').append($outerPlaceholder, $toolbar)
@@ -83,7 +83,7 @@ module.exports.makeRichText = (element, options, onValueChanged = () => { }) => 
     setTimeout(() => document.execCommand("enableObjectResizing", false, false), 0)
 }
 
-function initMathEditor() {
+function initMathEditor($outerPlaceholder, focus) {
     const $mathEditorContainer = $(`
         <div class="math-editor" data-js="mathEditor">
             <div class="math-editor-equation-field" data-js="equationField"></div>
@@ -217,10 +217,10 @@ function initMathEditor() {
         focus.equationField = false
         if (setFocusAfterClose) $currentEditor.focus()
     }
-}
 
-function toggleMathToolbar(isVisible) {
-    $('body').toggleClass('math-editor-focus', isVisible)
+    function toggleMathToolbar(isVisible) {
+        $('body').toggleClass('math-editor-focus', isVisible)
+    }
 }
 
 function toggleRichTextToolbar(isVisible) {
