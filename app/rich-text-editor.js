@@ -1,4 +1,4 @@
-const {isCtrlKey, isKey, persistInlineImages, sanitizeContent, sanitize, equationImageSelector} = require('./util')
+const {isCtrlKey, isKey, persistInlineImages, sanitizeContent, sanitize, equationImageSelector, totalImageCount} = require('./util')
 const toolbars = require('./toolbars')
 const mathEditor = require('./math-editor')
 const locales = {
@@ -79,9 +79,16 @@ module.exports.makeRichText = (element, options, onValueChanged = () => { }) => 
                 const clipboardDataAsHtml = clipboardData.getData('text/html')
                 if (clipboardDataAsHtml) {
                     e.preventDefault()
-                    window.document.execCommand('insertHTML', false, sanitize(clipboardDataAsHtml))
+                    if(totalImageCount($answer, clipboardDataAsHtml) <= limit) {
+                        window.document.execCommand('insertHTML', false, sanitize(clipboardDataAsHtml))
+                        setTimeout(() => persistInlineImages($currentEditor, saver, limit, onValueChanged), 0)
+                    } else {
+                        onValueChanged(new Bacon.Error('Screenshot limit reached!'))
+                    }
+                } else {
+                    setTimeout(()=> persistInlineImages($currentEditor, saver, limit, onValueChanged), 0)
                 }
-                setTimeout(()=> persistInlineImages($currentEditor, saver, limit, onValueChanged), 0)
+
             }
         })
 

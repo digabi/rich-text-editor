@@ -3,7 +3,7 @@ const sanitizeOpts = require('./sanitizeOpts')
 const loadingImg = require('./loadingImg')
 const equationImageSelector = 'img[src^="/math.svg"]'
 
-module.exports = {isKey, isCtrlKey, insertToTextAreaAtCursor, persistInlineImages, sanitize, sanitizeContent, setCursorAfter, equationImageSelector}
+module.exports = {isKey, isCtrlKey, insertToTextAreaAtCursor, persistInlineImages, sanitize, sanitizeContent, setCursorAfter, equationImageSelector, totalImageCount}
 
 
 function sanitize(html) {
@@ -74,11 +74,14 @@ function markAndGetInlineImages($editor) {
     return pngImages
 }
 
-function checkForImageLimit($editor, imageData, limit) {
+function existingScreenshotCount($editor) {
     const imageCount = $editor.find('img').length
     const equationCount = $editor.find(equationImageSelector).length
-    const screenshotCount = imageCount - equationCount
-    return Bacon.once(screenshotCount > limit ? new Bacon.Error() : imageData)
+    return imageCount - equationCount
+}
+
+function checkForImageLimit($editor, imageData, limit) {
+    return Bacon.once(existingScreenshotCount($editor) > limit ? new Bacon.Error() : imageData)
 }
 
 function persistInlineImages($editor, screenshotSaver, screenshotCountLimit, onValueChanged) {
@@ -89,4 +92,8 @@ function persistInlineImages($editor, screenshotSaver, screenshotCountLimit, onV
             .doAction(screenShotUrl => data.$el.attr('src', screenShotUrl))
             .doError(() => data.$el.remove()))
     ).onValue(k => $editor.trigger('input'))
+}
+
+function totalImageCount($answer, clipboardDataAsHtml) {
+    return existingScreenshotCount($answer) + existingScreenshotCount($(`<div>${clipboardDataAsHtml}</div>`))
 }
