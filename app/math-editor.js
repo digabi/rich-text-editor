@@ -12,7 +12,7 @@ const keyCodes = {
 }
 const $outerPlaceholder = $(`<div class="rich-text-editor-hidden" data-js="outerPlaceholder">`)
 const focus = {
-    richText: true,
+    richText: false,
     latexField: false,
     equationField: false
 }
