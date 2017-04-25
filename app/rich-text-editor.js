@@ -58,7 +58,7 @@ module.exports.makeRichText = (element, options, onValueChanged = () => { }) => 
             if (math.isVisible() && e.type === 'focus') math.closeMathEditor()
             onRichTextEditorFocusChanged(e)
         })
-        .on('keyup input', e => {
+        .on('input', e => {
             if(! pasteInProgress) onValueChanged(u.sanitizeContent(e.currentTarget))
         })
         .on('paste', e => {
