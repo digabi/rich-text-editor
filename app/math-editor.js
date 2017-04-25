@@ -95,6 +95,7 @@ function init($outerPlaceholder, focus, onMathFocusChanged) {
         setTimeout(() => mqInstance.focus(), 0)
         $latexField.val($img.prop('alt'))
         onLatexUpdate()
+        $mathEditorContainer.get(0).scrollIntoView(false)
     }
 
     function insertMath(symbol, alternativeSymbol, useWrite) {
