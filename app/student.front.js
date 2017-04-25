@@ -28,8 +28,10 @@ const richTextOptions = id => ({
 })
 
 $answer.each((i, answer) => {
-    makeRichText(answer, richTextOptions(answer.id))
-    $.get(`/load?answerId=${answer.id}`, data => data && $(answer).html(data.html))
+    $.get(`/load?answerId=${answer.id}`, data => {
+        data && $(answer).html(data.html)
+        makeRichText(answer, richTextOptions(answer.id), onValueChange)
+    })
 }).on('keypress', e => {
     if (e.ctrlKey && !e.altKey && !e.shiftKey && e.key === 's') {
         e.preventDefault()
@@ -37,3 +39,7 @@ $answer.each((i, answer) => {
     }
 })
 $('#answer1').focus()
+
+function onValueChange() {
+
+}
