@@ -22,7 +22,8 @@ function saveScreenshot(questionId) {
 }
 const richTextOptions = id => ({
     screenshot: {
-        saver: data => saveScreenshot(id)(data)
+        saver: data => saveScreenshot(id)(data),
+        limit: 10
     }
 })
 
