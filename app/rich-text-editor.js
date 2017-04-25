@@ -28,6 +28,7 @@ const {$toolbar} = toolbars.init(math, () => focus.richText, l)
 $('body').append($outerPlaceholder, $toolbar)
 
 module.exports.makeRichText = (element, options, onValueChanged = () => { }) => {
+    onValueChanged(u.sanitizeContent(element))
     const {
         screenshot: {
             saver,
@@ -77,7 +78,6 @@ module.exports.makeRichText = (element, options, onValueChanged = () => { }) => 
                 else onLegacyPasteImage($(e.currentTarget), saver, limit, onValueChanged)
             }
         })
-    onValueChanged(u.sanitizeContent($answer.get(0)))
     setTimeout(() => document.execCommand("enableObjectResizing", false, false), 0)
 }
 
