@@ -75,6 +75,7 @@ module.exports.makeRichText = (element, options, onValueChanged = () => { }) => 
                 else onLegacyPasteImage(saver, limit, onValueChanged)
             }
         })
+    onValueChanged(u.sanitizeContent($answer.get(0)))
     setTimeout(() => document.execCommand("enableObjectResizing", false, false), 0)
 }
 
