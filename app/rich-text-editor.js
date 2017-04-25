@@ -70,11 +70,11 @@ module.exports.makeRichText = (element, options, onValueChanged = () => { }) => 
             const clipboardData = e.originalEvent.clipboardData
             const file = clipboardData.items && clipboardData.items[0].getAsFile()
             if (file) {
-                onPasteBlob(e, file, saver, $answer, onValueChanged, limit)
+                onPasteBlob(e, file, saver, $(e.currentTarget), onValueChanged, limit)
             } else {
                 const clipboardDataAsHtml = clipboardData.getData('text/html')
-                if (clipboardDataAsHtml) onPasteHtml(e, $answer, clipboardDataAsHtml, limit, saver, onValueChanged)
-                else onLegacyPasteImage(saver, limit, onValueChanged)
+                if (clipboardDataAsHtml) onPasteHtml(e, $(e.currentTarget), clipboardDataAsHtml, limit, saver, onValueChanged)
+                else onLegacyPasteImage($(e.currentTarget), saver, limit, onValueChanged)
             }
         })
     onValueChanged(u.sanitizeContent($answer.get(0)))
@@ -105,8 +105,8 @@ function onPasteHtml(event, $answer, clipboardDataAsHtml, limit, saver, onValueC
     }
 }
 
-function onLegacyPasteImage(saver, limit, onValueChanged) {
-    u.persistInlineImages($currentEditor, saver, limit, onValueChanged)
+function onLegacyPasteImage($editor, saver, limit, onValueChanged) {
+    u.persistInlineImages($editor, saver, limit, onValueChanged)
 }
 
 function toggleRichTextToolbar(isVisible) {
