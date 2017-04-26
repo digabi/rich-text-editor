@@ -34,7 +34,7 @@ function init($outerPlaceholder, focus, onMathFocusChanged) {
         })
 
     $latexField
-        .keyup(onLatexUpdate)
+        .on('input paste', onLatexUpdate)
         .on('focus blur', e => {
             focus.latexField = e.type !== 'blur'
             onFocusChanged()
