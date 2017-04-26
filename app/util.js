@@ -15,7 +15,8 @@ module.exports = {
     equationImageSelector,
     totalImageCount,
     SCREENSHOT_LIMIT_ERROR,
-    existingScreenshotCount
+    existingScreenshotCount,
+    scrollIntoView
 }
 
 function convertLinksToRelative(html) {
@@ -122,4 +123,14 @@ function persistInlineImages($editor, screenshotSaver, screenshotCountLimit, onV
 
 function totalImageCount($answer, clipboardDataAsHtml) {
     return existingScreenshotCount($answer) + existingScreenshotCount($(`<div>${clipboardDataAsHtml}</div>`))
+}
+
+function scrollIntoView($element) {
+    const $window = $(window)
+    const windowHeight = $window.height() - 40
+    const scroll = windowHeight + $window.scrollTop()
+    const pos = $element.offset().top + $element.height()
+    if (scroll < pos) {
+        $window.scrollTop(pos - windowHeight)
+    }
 }
