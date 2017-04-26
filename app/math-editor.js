@@ -122,7 +122,6 @@ function init($outerPlaceholder, focus, onMathFocusChanged) {
     }
 
     function closeMathEditor(setFocusAfterClose = false) {
-        // TODO: remove event bindings
         const $currentEditor = $mathEditorContainer.closest('[data-js="answer"]')
         const $img = $mathEditorContainer.prev()
         if ($latexField.val().trim() === '') {
