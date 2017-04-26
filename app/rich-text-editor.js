@@ -19,7 +19,7 @@ const focus = {
 let $currentEditor
 
 function onMathFocusChanged() {
-    if (richTextAndMathBlur()) onRichTextEditorBlur()
+    if (richTextAndMathBlur()) onRichTextEditorBlur($currentEditor)
 }
 
 let firstCall = true
@@ -114,17 +114,18 @@ function onLegacyPasteImage($editor, saver, limit, onValueChanged) {
     u.persistInlineImages($editor, saver, limit, onValueChanged)
 }
 
-function toggleRichTextToolbar(isVisible) {
+function toggleRichTextToolbar(isVisible, $editor) {
     $('body').toggleClass('rich-text-editor-focus', isVisible)
+    $editor.toggleClass('rich-text-focused', isVisible)
 }
 
 function onRichTextEditorFocus($element) {
     $currentEditor = $element
-    toggleRichTextToolbar(true)
+    toggleRichTextToolbar(true, $currentEditor)
 }
 
-function onRichTextEditorBlur() {
-    toggleRichTextToolbar(false)
+function onRichTextEditorBlur($element) {
+    toggleRichTextToolbar(false, $element)
     math.closeMathEditor()
     focus.richText = false
 }
@@ -134,9 +135,12 @@ let richTextEditorBlurTimeout
 function onRichTextEditorFocusChanged(e) {
     focus.richText = e.type === 'focus'
 
+    $(e.currentTarget).toggleClass('rich-text-focused', focus.richText )
+
     clearTimeout(richTextEditorBlurTimeout)
     richTextEditorBlurTimeout = setTimeout(() => {
-        if (richTextAndMathBlur()) onRichTextEditorBlur()
+
+        if (richTextAndMathBlur()) onRichTextEditorBlur($(e.target))
         else if (focus.richText && math.isVisible()) math.closeMathEditor()
         else onRichTextEditorFocus($(e.target))
     }, 0)
