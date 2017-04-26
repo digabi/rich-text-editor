@@ -46,13 +46,19 @@ function decodeBase64Image(dataString) {
     }
 }
 
-function isKey(e, key) { return preventIfTrue(e, !e.altKey && !e.shiftKey && !e.ctrlKey  && keyOrKeyCode(e, key))}
+function isKey(e, key) {
+    return preventIfTrue(e, !e.altKey && !e.shiftKey && !e.ctrlKey && keyOrKeyCode(e, key))
+}
 
-function isCtrlKey(e, key) { return preventIfTrue(e, !e.altKey && !e.shiftKey && e.ctrlKey && keyOrKeyCode(e, key))}
+function isCtrlKey(e, key) {
+    return preventIfTrue(e, !e.altKey && !e.shiftKey && e.ctrlKey && keyOrKeyCode(e, key))
+}
 
-function keyOrKeyCode(e, val) { return typeof val === 'string' ? e.key === val : e.keyCode === val }
+function keyOrKeyCode(e, val) {
+    return typeof val === 'string' ? e.key === val : e.keyCode === val
+}
 function preventIfTrue(e, val) {
-    if(val) e.preventDefault()
+    if (val) e.preventDefault()
     return val
 }
 

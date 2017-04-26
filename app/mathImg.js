@@ -22,7 +22,7 @@ latexCommands.map(o => o.label ? o.label.replace(/X/g, '\\square') : o.action)
 function handler(req, res) {
     res.type('svg')
 
-    if(req.query.latex in cache) {
+    if (req.query.latex in cache) {
         res.send(cache[req.query.latex])
     } else {
         mjAPI.typeset({

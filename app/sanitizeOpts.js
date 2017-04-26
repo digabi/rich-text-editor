@@ -8,5 +8,5 @@ module.exports = {
         img: ['src', 'alt']
     },
     allowedSchemes: ['data'],
-    exclusiveFilter: function(frame) { return frame.attribs['data-js'] === 'mathEditor' }
+    exclusiveFilter: frame => frame.attribs['data-js'] === 'mathEditor'
 }

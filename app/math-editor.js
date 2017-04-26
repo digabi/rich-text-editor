@@ -52,6 +52,7 @@ function init($outerPlaceholder, focus, onMathFocusChanged) {
     function isVisible() {
         return visible
     }
+
     function onMqEdit() {
         clearTimeout(mqEditTimeout)
         mqEditTimeout = setTimeout(() => {

@@ -27,7 +27,7 @@ const {$toolbar} = toolbars.init(math, () => focus.richText, l)
 
 $('body').append($outerPlaceholder, $toolbar)
 
-module.exports.makeRichText = (element, options, onValueChanged = () => { }) => {
+module.exports.makeRichText = (element, options, onValueChanged = () => {}) => {
     onValueChanged(u.sanitizeContent(element))
     const {
         screenshot: {
@@ -60,7 +60,7 @@ module.exports.makeRichText = (element, options, onValueChanged = () => { }) => 
             onRichTextEditorFocusChanged(e)
         })
         .on('input', e => {
-            if(! pasteInProgress) onValueChanged(u.sanitizeContent(e.currentTarget))
+            if (!pasteInProgress) onValueChanged(u.sanitizeContent(e.currentTarget))
         })
         .on('paste', e => {
             pasteInProgress = true
