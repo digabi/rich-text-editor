@@ -1,8 +1,8 @@
 .rich-text-editor-hidden { display: none; }
-.rich-text-editor img[src^="/math.svg"] { vertical-align: middle; margin: 2px 0; padding: 3px 10px; cursor: pointer; }
-.rich-text-editor:focus img[src^="/math.svg"] {  background: #EDF9FF; }
+.rich-text-editor img[src^="/math.svg"] { vertical-align: middle; margin: 2px 0; padding: 3px 10px; cursor: pointer; border: 1px solid transparent;}
+.rich-text-editor:focus img[src^="/math.svg"] {  background: #EDF9FF; border: 1px solid #E6F2F8; }
 .rich-text-editor img[src^="/screenshot"] { margin: 4px; }
-.rich-text-editor:focus img[src^="/screenshot"] { box-shadow: 0 0 10px 0 rgba(0, 0, 0, .2); }
+.rich-text-editor:focus img[src^="/screenshot"] { box-shadow: 0 0 3px 1px rgba(0, 0, 0, .2); }
 .rich-text-editor .mq-math-mode .mq-root-block { white-space: normal; }
 .rich-text-editor:focus,
 .rich-text-editor .mq-editable-field.mq-focused,
