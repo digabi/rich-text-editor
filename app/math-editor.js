@@ -27,7 +27,7 @@ function init($outerPlaceholder, focus, onMathFocusChanged) {
         }
     })
     $equationField
-        .on('keydown', '.mq-textarea textarea', onMqEdit)
+        .on('keyup', '.mq-textarea textarea', onMqEdit)
         .on('focus blur', '.mq-textarea textarea', e => {
             focus.equationField = e.type !== 'blur' && e.type !== 'focusout'
             onFocusChanged()
