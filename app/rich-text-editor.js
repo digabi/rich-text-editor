@@ -1,5 +1,6 @@
 const u = require('./util')
 const toolbars = require('./toolbars')
+const clipboard = require('./clipboard')
 const mathEditor = require('./math-editor')
 const locales = {
     FI: require('./FI'),
@@ -74,45 +75,9 @@ module.exports.makeRichText = (element, options, onValueChanged = () => {}) => {
 
             if (e.target.tagName === 'TEXTAREA')
                 return
-            const clipboardData = e.originalEvent.clipboardData
-            const file = clipboardData.items && clipboardData.items[0].getAsFile()
-            if (file) {
-                onPasteBlob(e, file, saver, $(e.currentTarget), onValueChanged, limit)
-            } else {
-                const clipboardDataAsHtml = clipboardData.getData('text/html')
-                if (clipboardDataAsHtml) onPasteHtml(e, $(e.currentTarget), clipboardDataAsHtml, limit, saver, onValueChanged)
-                else onLegacyPasteImage($(e.currentTarget), saver, limit, onValueChanged)
-            }
+            clipboard.onPaste(e, saver, onValueChanged, limit)
         })
     setTimeout(() => document.execCommand("enableObjectResizing", false, false), 0)
-}
-
-function onPasteBlob(event, file, saver, $answer, onValueChanged, limit) {
-    event.preventDefault()
-    if (file.type === 'image/png') {
-        if (u.existingScreenshotCount($answer) + 1 <= limit) {
-            saver({data: file, type: file.type, id: String(new Date().getTime())}).then(screenshotUrl => {
-                const img = `<img src="${screenshotUrl}"/>`
-                window.document.execCommand('insertHTML', false, img)
-            })
-        } else {
-            onValueChanged(u.SCREENSHOT_LIMIT_ERROR())
-        }
-    }
-}
-
-function onPasteHtml(event, $answer, clipboardDataAsHtml, limit, saver, onValueChanged) {
-    event.preventDefault()
-    if (u.totalImageCount($answer, clipboardDataAsHtml) <= limit) {
-        window.document.execCommand('insertHTML', false, u.sanitize(clipboardDataAsHtml))
-        u.persistInlineImages($currentEditor, saver, limit, onValueChanged)
-    } else {
-        onValueChanged(u.SCREENSHOT_LIMIT_ERROR())
-    }
-}
-
-function onLegacyPasteImage($editor, saver, limit, onValueChanged) {
-    u.persistInlineImages($editor, saver, limit, onValueChanged)
 }
 
 function toggleRichTextToolbar(isVisible, $editor) {
