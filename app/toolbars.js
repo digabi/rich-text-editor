@@ -7,7 +7,7 @@ module.exports = {
 
 function init(mathEditor, hasRichTextFocus, l) {
     const $toolbar = $(`
-        <div class="rich-text-editor-tools" data-js="tools">
+        <div class="rich-text-editor-tools" data-js="tools" style="display: none">
             <div class="rich-text-editor-tools-button-wrapper">
                 <div class="rich-text-editor-toolbar-wrapper">
                     <button class="rich-text-editor-characters-expand-collapse" data-js="expandCollapseCharacters" style="z-index: 100"></button>
@@ -41,7 +41,7 @@ function init(mathEditor, hasRichTextFocus, l) {
     initMathToolbar($mathToolbar, mathEditor)
     initNewEquation($newEquation, mathEditor, hasRichTextFocus)
 
-    return { $toolbar }
+    return $toolbar
 }
 
 const specialCharacterToButton = char => `<button class="rich-text-editor-button rich-text-editor-button-grid${char.popular ? ' rich-text-editor-characters-popular' :''}" ${char.latexCommand ? `data-command="${char.latexCommand}"` : ''}>${char.character}</button>`

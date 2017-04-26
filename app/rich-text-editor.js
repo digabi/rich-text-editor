@@ -10,24 +10,29 @@ const keyCodes = {
     ENTER: 13,
     ESC: 27
 }
-const $outerPlaceholder = $(`<div class="rich-text-editor-hidden" data-js="outerPlaceholder">`)
+const $outerPlaceholder = $(`<div class="rich-text-editor-hidden" style="display: none;" data-js="outerPlaceholder">`)
 const focus = {
     richText: false,
     latexField: false,
     equationField: false
 }
 let $currentEditor
-const math = mathEditor.init($outerPlaceholder, focus, onMathFocusChanged)
 
 function onMathFocusChanged() {
     if (richTextAndMathBlur()) onRichTextEditorBlur()
 }
 
-const {$toolbar} = toolbars.init(math, () => focus.richText, l)
-
-$('body').append($outerPlaceholder, $toolbar)
+let firstCall = true
+let math
+let $toolbar
 
 module.exports.makeRichText = (element, options, onValueChanged = () => {}) => {
+    if (firstCall) {
+        math = mathEditor.init($outerPlaceholder, focus, onMathFocusChanged)
+        $toolbar = toolbars.init(math, () => focus.richText, l)
+        $('body').append($outerPlaceholder, $toolbar)
+        firstCall = false
+    }
     onValueChanged(u.sanitizeContent(element))
     const {
         screenshot: {

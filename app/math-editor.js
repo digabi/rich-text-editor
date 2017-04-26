@@ -1,9 +1,13 @@
 const u = require('./util')
 
-const MQ = MathQuill.getInterface(2)
+let MQ
 module.exports = {init}
+let firstTime = true
 
 function init($outerPlaceholder, focus, onMathFocusChanged) {
+    if(firstTime) {
+        MQ = MathQuill.getInterface(2)
+    }
     const $mathEditorContainer = $(`
         <div class="math-editor" data-js="mathEditor">
             <div class="math-editor-equation-field" data-js="equationField"></div>
