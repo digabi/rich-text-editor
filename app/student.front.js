@@ -40,6 +40,10 @@ $answer.each((i, answer) => {
 })
 $('#answer1').focus()
 
+$('.toggleInstructions').click(e => {
+    e.preventDefault()
+    $('.instructions').toggleClass('hide')
+})
 function onValueChange() {
 
 }
