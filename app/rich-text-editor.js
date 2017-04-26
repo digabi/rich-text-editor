@@ -8,7 +8,8 @@ const locales = {
 const l = locales[window.locale || 'FI'].editor
 const keyCodes = {
     ENTER: 13,
-    ESC: 27
+    ESC: 27,
+    I: 73
 }
 const $outerPlaceholder = $(`<div class="rich-text-editor-hidden" style="display: none;" data-js="outerPlaceholder">`)
 const focus = {
@@ -58,7 +59,7 @@ module.exports.makeRichText = (element, options, onValueChanged = () => {}) => {
             if (u.isCtrlKey(e, keyCodes.ENTER) || u.isKey(e, keyCodes.ESC)) math.closeMathEditor(true)
         })
         .on('keyup', e => {
-            if (u.isCtrlKey(e, 'i')) math.insertNewEquation()
+            if (u.isCtrlKey(e, keyCodes.I)) math.insertNewEquation()
         })
         .on('focus blur', e => {
             if (math.isVisible() && e.type === 'focus') math.closeMathEditor()
