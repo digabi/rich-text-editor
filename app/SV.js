@@ -26,7 +26,8 @@ module.exports = {
         sendFeedback: 'Skicka feedback',
         langLink: '/',
         langLabel: 'Suomeksi',
-        answerTitle: 'Svar'
+        answerTitle: 'Svar',
+        toggleInstructions: 'Visa intruktioner'
     },
     annotating: {
         sendFeedback: 'Skicka respons',

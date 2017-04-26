@@ -31,7 +31,8 @@ lisätä kuvia.</li></ul>`,
         sendFeedback: 'Lähetä palautetta',
         langLink: '/sv',
         langLabel: 'På svenska',
-        answerTitle: 'Vastaus'
+        answerTitle: 'Vastaus',
+        toggleInstructions: 'Näytä ohjeet'
     },
     annotating: {
         sendFeedback: 'Lähetä palautetta',

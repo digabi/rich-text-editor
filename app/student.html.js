@@ -21,7 +21,7 @@ module.exports = (obj) => { with(obj) return `
     <section>
         <h1>${title}</h1>
 
-        <a class="toggleInstructions" href="javascript:void(0);">Näytä ohjeet</a>
+        <a class="toggleInstructions" href="javascript:void(0);">${toggleInstructions}</a>
         <div class="instructions hide">
             <div style="width: 55%">
                 ${description}
