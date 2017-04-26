@@ -1,16 +1,16 @@
-/*.rich-text-editor-list { margin-bottom: 10px; }*/
-.math-editor {z-index: 1;margin: 10px 5px 0;position: relative;box-shadow: 1px 1px 10px 1px rgba(0, 0, 0, .2);display: flex; }
 .rich-text-editor-hidden { display: none; }
 .rich-text-editor img[src^="/math.svg"] { vertical-align: middle; margin: 2px 0; padding: 3px 10px; cursor: pointer; }
 .rich-text-editor:focus img[src^="/math.svg"] {  background: #EDF9FF; }
-.rich-text-editor img[src^="/loadImg"] { margin-top: 2px; }
+.rich-text-editor img[src^="/screenshot"] { margin: 4px; }
+.rich-text-editor:focus img[src^="/screenshot"] { box-shadow: 0 0 10px 0 rgba(0, 0, 0, .2); }
 .rich-text-editor .mq-math-mode .mq-root-block { white-space: normal; }
 .rich-text-editor:focus,
 .rich-text-editor .mq-editable-field.mq-focused,
 .rich-text-editor textarea:focus { box-shadow: none; outline: 1px solid #359BB7; z-index:2;}
 .rich-text-editor img { max-width: 100%; max-height: 1000px; }
-.math-editor textarea { height: auto; box-shadow: none; border-radius: 0; resize: none; border: none;}
 
+.math-editor {z-index: 1;margin: 10px 5px 0;position: relative;box-shadow: 0 0 10px 0 rgba(0, 0, 0, .2);display: flex; }
+.math-editor textarea { height: auto; box-shadow: none; border-radius: 0; resize: none; border: none;}
 .math-editor-equation-field { width: 50%; padding: 5px 10px; border: none; background: #fff;}
 .math-editor-latex-field { font-size: 15px; width: 50%; padding: 5px 10px; letter-spacing: 1px; }
 
