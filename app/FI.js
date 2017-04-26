@@ -13,12 +13,12 @@ lisätä kuvia.</li></ul>`,
         shortcutTitle: `Pikanäppäinvinkkejä`,
         shortcuts: `<table><tbody>
 <tr><th>Liitä kuva leikepöydältä</th><td>Ctrl-V</td></tr>
-<tr><th>Kirjoita kaava</th><td>Ctrl-L tai Ctrl-I</td></tr>
+<tr><th>Kirjoita kaava</th><td>Ctrl-I</td></tr>
 <tr><th colspan="2">Kaavassa</th></tr>
 <tr><th>Jakoviiva</th><td>/</td></tr>
 <tr><th>Kertomerkki</th><td>*</td></tr>
 <tr><th>Eksponentti</th><td>^</td></tr>
-<tr><th>Sulje kaava</th><td>Ctrl-Enter tai Esc</td></tr>
+<tr><th>Sulje kaava</th><td>Esc</td></tr>
 <tr><th>Lisää kaava seuraavalle riville</th><td>Enter</td></tr>
 </tbody>
 </table>`,

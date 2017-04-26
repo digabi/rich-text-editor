@@ -10,11 +10,11 @@ module.exports = {
         shortcutTitle: `Tips på tangentkombinationer`,
         shortcuts: `<table><tbody>
 <tr><th>Lägg till en bild från urklippet</th><td>Ctrl-V</td></tr>
-<tr><th>Skriv en formel</th><td>Ctrl-L / Ctrl-I</td></tr>
+<tr><th>Skriv en formel</th><td>Ctrl-I</td></tr>
 <tr><th colspan="2">I formeln </th></tr>
 <tr><th>Bråkstreck</th><td>/</td></tr>
 <tr><th>Multiplikationstecken</th><td>*</td></tr>
-<tr><th>Stäng formeln</th><td>Ctrl-Enter eller Esc</td></tr>
+<tr><th>Stäng formeln</th><td>Esc</td></tr>
 </tbody>
 </table>`,
         formatting: 'Formatering',

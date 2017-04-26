@@ -52,8 +52,8 @@ module.exports.makeRichText = (element, options, onValueChanged = () => {}) => {
         .on('keydown', e => {
             if (u.isCtrlKey(e, keyCodes.ENTER) || u.isKey(e, keyCodes.ESC)) math.closeMathEditor(true)
         })
-        .on('keypress', e => {
-            if (u.isCtrlKey(e, 'l') || u.isCtrlKey(e, 'i')) math.insertNewEquation()
+        .on('keyup', e => {
+            if (u.isCtrlKey(e, 'i')) math.insertNewEquation()
         })
         .on('focus blur', e => {
             if (math.isVisible() && e.type === 'focus') math.closeMathEditor()
