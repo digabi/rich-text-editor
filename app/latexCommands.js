@@ -22,5 +22,5 @@ module.exports = [
     {action: '|', label: '|X|'},
     {action: '(', label: '(X)'},
     {action: '_{ }^{ } ', label: '_{X}^{X}X', useWrite: true},
-    {action: '\\text', label: '\\text{T}'},
+    {action: '\\mathrm', label: '\\mathrm{T}'},
 ]
