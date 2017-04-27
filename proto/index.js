@@ -9,8 +9,8 @@ const mathImg = require('./mathImg')
 const fs = require('fs')
 const path = require('path')
 const startedAt = new Date()
-const FI = require('./FI')
-const SV = require('./SV')
+const FI = require('../app/FI')
+const SV = require('../app/SV')
 const studentHtmlFI = studentHtml((Object.assign({startedAt: formatDate(startedAt), locale: 'FI'}, FI.editor)))
 const studentHtmlSV = studentHtml((Object.assign({startedAt: formatDate(startedAt), locale: 'SV'}, SV.editor)))
 const teacherHtml = require('./teacher.html')
@@ -21,7 +21,7 @@ const port = process.env.PORT || process.env.OPENSHIFT_NODEJS_PORT || 5000
 const app = express()
 let savedMarkers = {}
 
-const sanitizeOpts = require('./sanitizeOpts')
+const sanitizeOpts = require('../app/sanitizeOpts')
 
 app.use(session({
     secret: 'alsdjfwernfeklbjweiugerpfiorq3jlkhewfbads',

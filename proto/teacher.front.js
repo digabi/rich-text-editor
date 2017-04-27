@@ -5,8 +5,8 @@ let timestamp = null
 const $answer = $('.answer')
 const sampleAnswer = require('./sampleAnswer')
 const locales = {
-    FI: require('./FI'),
-    SV: require('./SV')
+    FI: require('../app/FI'),
+    SV: require('../app/SV')
 }
 const l = locales[window.locale].editor
 

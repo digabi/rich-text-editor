@@ -1,5 +1,5 @@
 const mjAPI = require("mathjax-node")
-const latexCommands = require('./latexCommands')
+const latexCommands = require('../app/latexCommands')
 
 module.exports = {handler}
 
