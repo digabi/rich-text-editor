@@ -2,6 +2,7 @@ module.exports = [
     {
         label: 'Perusmerit ja kreikkalaiset aakkoset',
         characters: [
+            { character: '°', popular: true },
             { character: '·', latexCommand: '\\cdot', popular: true },
             { character: '±', latexCommand: '\\pm', popular: true },
             { character: '∞', latexCommand: '\\infty', popular: true },
@@ -10,8 +11,8 @@ module.exports = [
             { character: '½', latexCommand: '1/2', popular: true },
             { character: '⅓', latexCommand: '1/3', popular: true },
             { character: 'π', latexCommand: '\\pi', popular: true },
-            { character: 'α', latexCommand: '\\alpha' },
-            { character: 'β', latexCommand: '\\beta' },
+            { character: 'α', latexCommand: '\\alpha', popular: true },
+            { character: 'β', latexCommand: '\\beta', popular: true  },
             { character: 'Γ', latexCommand: '\\Gamma' },
             { character: 'γ', latexCommand: '\\gamma' },
             { character: 'Δ', latexCommand: '\\Delta' },
@@ -33,8 +34,8 @@ module.exports = [
             { character: '∑', latexCommand: '\\Sigma' },
             { character: 'σ', latexCommand: '\\sigma' },
             { character: 'τ', latexCommand: '\\tau' },
-            { character: 'Υ', latexCommand: '\\Upsilon' },        
-            { character: 'υ', latexCommand: '\\upsilon' },        
+            { character: 'Υ', latexCommand: '\\Upsilon' },
+            { character: 'υ', latexCommand: '\\upsilon' },
             { character: 'Φ', latexCommand: '\\Phi' },
             { character: 'Ф', latexCommand: '\\phi' },
             { character: 'χ', latexCommand: '\\chi' },
@@ -42,7 +43,7 @@ module.exports = [
             { character: 'ψ', latexCommand: '\\psi' },
             { character: 'Ω', latexCommand: '\\Omega' },
             { character: 'ω', latexCommand: '\\omega' },
-            { character: '∂', latexCommand: '\\partial' }   
+            { character: '∂', latexCommand: '\\partial' }
 
         ]
     },
@@ -64,10 +65,9 @@ module.exports = [
     {
         label: 'Geometria ja vektorioppi',
         characters: [
-            { character: '°', popular: true },
             { character: '∠', latexCommand: '\\angle', popular: true },
             { character: '→', latexCommand: '\\rightarrow', popular: true },
-            { character: '⇅' },
+            { character: '⇅', popular: true  },
             { character: '↑', latexCommand: '\\uparrow' },
             { character: '↓', latexCommand: '\\downarrow' },
             { character: '↔', latexCommand: '\\leftrightarrow' },
