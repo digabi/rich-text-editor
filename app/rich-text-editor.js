@@ -69,6 +69,11 @@ module.exports.makeRichText = (element, options, onValueChanged = () => {}) => {
         .on('input', e => {
             if (!pasteInProgress) onValueChanged(u.sanitizeContent(e.currentTarget))
         })
+        .on('drop', e => {
+            setTimeout(() => {
+                $(e.target).html(u.sanitize(e.target.innerHTML))
+            },0)
+        })
         .on('paste', e => {
             pasteInProgress = true
             setTimeout(() => pasteInProgress = false, 0)
