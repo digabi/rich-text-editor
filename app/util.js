@@ -74,8 +74,9 @@ function setCursorAfter($img) {
 
 function existingScreenshotCount($editor) {
     const imageCount = $editor.find('img').length
+    const emptyImageCount = $editor.find('img[src=""]').length
     const equationCount = $editor.find(equationImageSelector).length
-    return imageCount - equationCount
+    return imageCount - equationCount - emptyImageCount
 }
 
 function scrollIntoView($element) {

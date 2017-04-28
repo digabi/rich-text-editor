@@ -82,7 +82,7 @@ function init($outerPlaceholder, focus, onMathFocusChanged) {
     }
 
     function insertNewEquation(optionalMarkup = '') {
-        window.document.execCommand('insertHTML', false, optionalMarkup + '<img data-js="new" alt="" style="display: none"/>')
+        window.document.execCommand('insertHTML', false, optionalMarkup + '<img data-js="new" alt="" src="" style="display: none"/>')
         showMathEditor($('[data-js="new"]').removeAttr('data-js'))
     }
 
