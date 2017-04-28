@@ -25,7 +25,7 @@ function init(mathEditor, hasRichTextFocus, l) {
             </div>
             <div class="rich-text-editor-tools-button-wrapper">
                 <div class="rich-text-editor-toolbar-wrapper">
-                    <button class="rich-text-editor-new-equation rich-text-editor-button rich-text-editor-button-action" data-js="newEquation" data-command="Ctrl-I">Σ ${l.insertEquation}</button>
+                    <button class="rich-text-editor-new-equation rich-text-editor-button rich-text-editor-button-action" data-js="newEquation" data-command="Ctrl-E">Σ ${l.insertEquation}</button>
                 </div>
             </div>
         </div>
