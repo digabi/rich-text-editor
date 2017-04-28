@@ -1,6 +1,7 @@
 const sanitizeHtml = require('sanitize-html')
 const sanitizeOpts = require('./sanitizeOpts')
 const equationImageSelector = 'img[src^="/math.svg"]'
+const screenshotImageSelector = 'img[src^="/screenshot/"]'
 
 module.exports = {
     isKey,
@@ -54,8 +55,10 @@ function sanitizeContent(answerElement) {
 
     const html = sanitize($answerElement.html())
 
+    const answerConsideredEmpty = (text.trim().length + $answerElement.find(equationImageSelector).length + $answerElement.find(screenshotImageSelector).length) === 0
+
     return {
-        answerHTML: html,
+        answerHTML: answerConsideredEmpty ? '' : html,
         answerText: text,
         imageCount: existingScreenshotCount($(`<div>${html}</div>`))
     }
