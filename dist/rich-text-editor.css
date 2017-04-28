@@ -1,4 +1,3 @@
-.rich-text-editor * {box-sizing: border-box;}
 .rich-text-editor-hidden { display: none; }
 .rich-text-editor img[src^="/math.svg"] { vertical-align: middle; margin: 4px; padding: 3px 10px; cursor: pointer; border: 1px solid transparent;}
 .rich-text-editor:focus img[src^="/math.svg"],

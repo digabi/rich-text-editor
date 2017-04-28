@@ -5,6 +5,8 @@ module.exports = {init}
 let firstTime = true
 
 function init($outerPlaceholder, focus, onMathFocusChanged) {
+    let updateMathImgTimeout
+
     if(firstTime) {
         MQ = MathQuill.getInterface(2)
     }
@@ -31,7 +33,7 @@ function init($outerPlaceholder, focus, onMathFocusChanged) {
         }
     })
     $equationField
-        .on('keyup', '.mq-textarea textarea', onMqEdit)
+        .on('input', '.mq-textarea textarea', onMqEdit)
         .on('focus blur', '.mq-textarea textarea', e => {
             focus.equationField = e.type !== 'blur' && e.type !== 'focusout'
             onFocusChanged()
@@ -57,19 +59,21 @@ function init($outerPlaceholder, focus, onMathFocusChanged) {
         return visible
     }
 
-    function onMqEdit() {
+    function onMqEdit(e) {
+        e && e.originalEvent && e.originalEvent.stopPropagation()
         clearTimeout(mqEditTimeout)
         mqEditTimeout = setTimeout(() => {
             if (focus.latexField)
                 return
             const latex = mqInstance.latex()
             $latexField.val(latex)
-            updateMathImg($mathEditorContainer.prev(), latex)
-        }, 100)
+            updateMathImgWithDebounce($mathEditorContainer.prev(), latex)
+        }, 0)
     }
 
-    function onLatexUpdate() {
-        updateMathImg($mathEditorContainer.prev(), $latexField.val())
+    function onLatexUpdate(e) {
+        e && e.originalEvent && e.originalEvent.stopPropagation()
+        updateMathImgWithDebounce($mathEditorContainer.prev(), $latexField.val())
         setTimeout(() => mqInstance.latex($latexField.val()), 1)
     }
 
@@ -123,6 +127,14 @@ function init($outerPlaceholder, focus, onMathFocusChanged) {
             src: '/math.svg?latex=' + encodeURIComponent(latex),
             alt: latex
         })
+        $img.closest('[data-js="answer"]').trigger('input')
+    }
+
+    function updateMathImgWithDebounce($img, latex) {
+        clearTimeout(updateMathImgTimeout)
+        updateMathImgTimeout = setTimeout(() => {
+            updateMathImg($img, latex)
+        }, 500)
     }
 
     function closeMathEditor(setFocusAfterClose = false) {
