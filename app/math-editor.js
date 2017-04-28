@@ -13,7 +13,7 @@ function init($outerPlaceholder, focus, onMathFocusChanged) {
     const $mathEditorContainer = $(`
         <div class="math-editor" data-js="mathEditor">
             <div class="math-editor-equation-field" data-js="equationField"></div>
-            <textarea class="math-editor-latex-field" data-js="latexField" placeholder="LaTex"></textarea>
+            <textarea rows="1" class="math-editor-latex-field" data-js="latexField" placeholder="LaTex"></textarea>
         </div>`)
 
     $outerPlaceholder.append($mathEditorContainer)
