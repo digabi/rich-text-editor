@@ -1,7 +1,7 @@
 module.exports = {
     editor: {
         mathEditor: 'Matematikeditor',
-        title: 'Formeleditorns första utvecklingsversion',
+        title: 'Formeleditorns utvecklingsversion',
         description: `<ul>
 <li>Editorn fungerar bäst med browsern Firefox.</li>
  <li>Under knappen “Lägg till formel” hittar du de vanligaste beteckningarna som används i matematik, fysik och kemi. Dessutom kan du använda specialtecken för att skriva formler.</li>
