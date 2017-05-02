@@ -4,6 +4,7 @@ let markers = {}
 let timestamp = null
 const $answer = $('.answer')
 const sampleAnswer = require('./sampleAnswer')
+const mathSelector = 'img[src^="/math.svg"]'
 const locales = {
     FI: require('../app/FI'),
     SV: require('../app/SV')
@@ -18,7 +19,7 @@ $(document).keypress(e => {
 })
 
 $.when(
-    $.get('/load'),
+    $.get('/load?answerId=answer1'),
     $.get('/loadMarkers')
 ).done(([answer], [markers]) => {
     if (!answer)
@@ -35,25 +36,25 @@ $.when(
 })
 function updateAnswer(html) {
     $answer.html(html)
-        .find('.result')
+        .find(mathSelector)
         .each((i, elem) => $(elem).prop('id', i))
         .wrap('<div class="resultWrapper">')
 }
 let mouseDownPos = null
 let $rectangle = null
-$answer.on('mousedown', '.result', e => {
+$answer.on('mousedown', mathSelector, e => {
     e.preventDefault()
     mouseDownPos = point(e)
     $rectangle = $('<div class="rectangle">')
     $(e.target).after($rectangle)
-}).on('mousemove', '.result', e => {
+}).on('mousemove', mathSelector, e => {
     e.preventDefault()
     if (e.buttons === 0) {
         if ($rectangle) onEnd(e)
     } else {
         setPos($rectangle, mouseDownPos, point(e))
     }
-}).on('mouseup', '.result', e => {
+}).on('mouseup', mathSelector, e => {
     e.preventDefault()
     onEnd(e)
 })
@@ -113,5 +114,5 @@ function setPos($img, pos1, pos2) {
     $img.css(toCss(pos1, pos2))
 }
 function latexToImg(latex) {
-    return '<img class="result" src="/math.svg?latex=' + encodeURIComponent(latex) + '"/>'
+    return '<img src="/math.svg?latex=' + encodeURIComponent(latex) + '"/>'
 }
