@@ -19,7 +19,8 @@
     "chai-jquery": "^2.0.0",
     "jshint": "^2.9.4",
     "mocha": "^3.2.0",
-    "supervisor": "^0.12.0"
+    "supervisor": "^0.12.0",
+    "web-console-reporter": "^1.0.0"
   },
   "dependencies": {
     "bacon.jquery": "^0.4.12",

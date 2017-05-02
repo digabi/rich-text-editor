@@ -42,7 +42,8 @@ exposeModules([
     'mathjax',
     'chai',
     'chai-jquery',
-    'mocha',])
+    'mocha',
+    'web-console-reporter'])
 const doctype = '<!DOCTYPE html>'
 app.get('/tarkistus', (req, res) => res.send(doctype + teacherHtmlFI))
 app.get('/', (req, res) => res.send(doctype + studentHtmlFI))

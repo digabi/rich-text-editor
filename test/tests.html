@@ -15,6 +15,7 @@
     <script src="/mocha/mocha.js"></script>
     <script src="/chai/chai.js"></script>
     <script src="/chai-jquery/chai-jquery.js"></script>
+    <script src="/web-console-reporter/WebConsole.js"></script>
     <script>
         window.locale = 'FI'
     </script>
@@ -42,7 +43,10 @@
     <title>Mocha Tests</title>
 </head>
 <body>
-<script>mocha.setup('bdd')</script>
+<script>mocha.setup({
+    ui: 'bdd',
+    reporter: WebConsole
+})</script>
 <script>expect = chai.expect</script>
 <script src="tests.js"></script>
 <script>
