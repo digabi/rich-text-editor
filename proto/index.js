@@ -39,7 +39,6 @@ exposeModules([
     'baconjs',
     'bacon.jquery',
     'mathquill',
-    'mathjax',
     'chai',
     'chai-jquery',
     'mocha',
