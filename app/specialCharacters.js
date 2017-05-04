@@ -44,7 +44,6 @@ module.exports = [
             { character: 'Ω', latexCommand: '\\Omega' },
             { character: 'ω', latexCommand: '\\omega' },
             { character: '∂', latexCommand: '\\partial' }
-
         ]
     },
     {
@@ -58,8 +57,7 @@ module.exports = [
             { character: '≡', latexCommand: '\\equiv' },
             { character: '≢' }, // \nequiv or \not\equiv
             { character: '∘', latexCommand: '\\circ' },
-            { character: '…', latexCommand: '\\dots' }, // matriisialgebra?
-
+            { character: '…', latexCommand: '\\ldots' }
         ]
     },
     {
@@ -98,7 +96,6 @@ module.exports = [
             { character: '∧', latexCommand: '\\and' },
             { character: '∨', latexCommand: '\\or' },
             { character: '¬' }
-
         ]
     }
 ]
