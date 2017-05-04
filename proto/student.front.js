@@ -29,7 +29,7 @@ const richTextOptions = id => ({
 
 $answer.each((i, answer) => {
     $.get(`/load?answerId=${answer.id}`, data => {
-        data && $(answer).html(data.html)
+        !window.IS_TEST && data && $(answer).html(data.html)
         makeRichText(answer, richTextOptions(answer.id), onValueChange)
     })
 }).on('keypress', e => {
