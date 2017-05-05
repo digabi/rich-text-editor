@@ -22,7 +22,7 @@ describe('math editor', () => {
         before(() => $answer1.focus())
         before('wait for tools visible', waitUntil(() => $('[data-js="tools"]').is(':visible')))
 
-        it('shows tools', () => expect($('[data-js="charactersList"]')).to.be.visible)
+        it('shows character list', () => expect($('[data-js="charactersList"]')).to.be.visible)
         it('hide math tools', () => expect($('[data-js="mathToolbar"]')).to.be.hidden)
 
         describe('pasting images', () => {
