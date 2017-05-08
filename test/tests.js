@@ -65,21 +65,22 @@ describe('math editor', () => {
             it('shows math editor', () => expect($('[data-js="mathEditor"]')).to.be.visible)
 
             describe('keeps equation field in sync', () => {
-                before(() => $('[data-js="latexField"]').focus().val('x+y').trigger('input'))
-                before(done => setTimeout(done, 810))
-
-                after(() => $('[data-js="latexField"]').val('').trigger('input'))
-                after(done => setTimeout(done, 0))
+                before(() => $('[data-js="latexField"]').focus().val('xy').trigger('input'))
+                before(done => setTimeout(done, 0))
+                before(() => $answer1.focus())
 
                 it('shows math in equation field', () => {
-                    expect($('[data-js="equationField"]')).to.have.text('x+y​')
+                    expect($('[data-js="equationField"]')).to.have.text('xy')
                 })
-                it('shows math in img', () => expect($('img:first')).to.have.attr('src', '/math.svg?latex=x%2By'))
+                it('shows math in img', () => expect($('img:first')).to.have.attr('src', '/math.svg?latex=xy'))
             })
 
             describe('keeps latex field in sync', () => {
+                before(() => $('img:first').trigger({type: 'click', which: 1}))
+                before(() => $('[data-js="latexField"]').val('').trigger('input'))
                 before(() => $('[data-js="equationField"] textarea').val('a+b').trigger('paste'))
-                before(done => setTimeout(done, 810))
+                before(done => setTimeout(done, 100))
+                before(() => $answer1.focus())
 
                 it('shows math in latex field', () => {
                     expect($('[data-js="latexField"]')).to.have.value('a+b')
