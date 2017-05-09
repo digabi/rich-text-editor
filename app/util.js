@@ -67,9 +67,7 @@ function sanitizeContent(answerElement) {
 function setCursorAfter($img) {
     const range = document.createRange()
     const img = $img.get(0)
-    const nextSibling = img.nextSibling && img.nextSibling.tagName === 'BR' ? img.nextSibling : img
-    range.setStart(nextSibling, 0)
-    range.setEnd(nextSibling, 0)
+    range.setStartAfter(img)
     const sel = window.getSelection()
     sel.removeAllRanges()
     sel.addRange(range)
