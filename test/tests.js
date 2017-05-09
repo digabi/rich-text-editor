@@ -16,6 +16,7 @@ describe('math editor', () => {
         $el.equationField = $('[data-js="equationField"]')
         $el.mathToolbar = $('[data-js="mathToolbar"]')
         $el.tools = $('[data-js="tools"]')
+        $el.mathEditor = $('[data-js="mathEditor"]')
     })
     describe('init', () => {
         it('answer field is contenteditable', () => {
@@ -67,7 +68,7 @@ describe('math editor', () => {
             before(() => $('[data-js="newEquation"]').mousedown())
 
             it('shows math tools', () => expect($el.mathToolbar).to.be.visible)
-            it('shows math editor', () => expect($('[data-js="mathEditor"]')).to.be.visible)
+            it('shows math editor', () => expect($el.mathEditor).to.be.visible)
 
             describe('keeps equation field in sync', () => {
                 before(() => $el.latexField.focus().val('xy').trigger('input'))
@@ -91,6 +92,15 @@ describe('math editor', () => {
                     expect($el.latexField).to.have.value('a+b')
                 })
                 it('shows math in img', () => expect($('img:first')).to.have.attr('src', '/math.svg?latex=a%2Bb'))
+            })
+
+            describe('equation click opens and esc closes math editor', () => {
+                before(() => $('img:first').trigger({type: 'click', which: 1}))
+                it('editor is visible and then hidden', () => {
+                    expect($el.mathEditor).to.be.visible
+                    $el.answer1.trigger({type: 'keydown', keyCode: 27})
+                    expect($el.mathEditor).to.be.hidden
+                })
             })
 
             describe('when clicking special character from toolbar', () => {
