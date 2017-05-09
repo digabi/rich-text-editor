@@ -92,6 +92,14 @@ describe('math editor', () => {
                 })
                 it('shows math in img', () => expect($('img:first')).to.have.attr('src', '/math.svg?latex=a%2Bb'))
             })
+
+            describe('when clicking special character from toolbar', () => {
+                before(() => $('.rich-text-editor-toolbar-characters-group button:first').mousedown())
+
+                it('inserts special character to answer body', () => {
+                    expect($el.answer1).to.have.text('°')
+                })
+            })
         })
     })
 })
