@@ -117,7 +117,7 @@ function init($outerPlaceholder, focus, onMathFocusChanged) {
             } else {
                 mqInstance.typedText(symbol)
             }
-            if (symbol.startsWith('\\')) mqInstance.keystroke('Tab')
+            if (~symbol.indexOf('\\')) mqInstance.keystroke('Tab')
             setTimeout(() => mqInstance.focus(), 0)
         }
     }
