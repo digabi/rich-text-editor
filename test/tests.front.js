@@ -1,4 +1,6 @@
 const u = require('./testUtil')
+window.locale = 'FI'
+window.IS_TEST = true
 mocha.setup({
     ui: 'bdd',
 //    reporter: WebConsole
