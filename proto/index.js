@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 const express = require('express')
 const bodyParser = require('body-parser')
-const browserify = require('browserify-middleware')
+const babelify = require('express-babelify-middleware')
 const sanitizeHtml = require('sanitize-html')
 const session = require('express-session')
 const studentHtml = require('./student.html')
@@ -29,8 +29,8 @@ app.use(session({
     resave: true
 }))
 
-app.use('/student.js', browserify(__dirname + '/student.front.js'))
-app.use('/teacher.js', browserify(__dirname + '/teacher.front.js'))
+app.use('/student.js', babelify(__dirname + '/student.front.js'))
+app.use('/teacher.js', babelify(__dirname + '/teacher.front.js'))
 app.use(express.static(__dirname + '/../public'))
 app.use(express.static(__dirname + '/../test'))
 exposeModules([
