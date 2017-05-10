@@ -1,4 +1,10 @@
 const u = require('./testUtil')
+mocha.setup({
+    ui: 'bdd',
+//    reporter: WebConsole
+})
+window.expect = chai.expect
+
 describe('math editor', () => {
     const $el = {}
     const pasteEventMock = {
