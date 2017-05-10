@@ -1,7 +1,5 @@
+dist: trusty
+group: beta
 language: node_js
 node_js:
   - stable
-branches:
-  only:
-    - master
-    - travis
