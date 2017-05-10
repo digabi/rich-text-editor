@@ -110,7 +110,20 @@ app.get('/version', (req, res) => {
         currentServerTime: new Date().toString()
     })
 })
-app.listen(port, interfaceIP, () => console.log('Server started at localhost:' + port))
+const server = app.listen(0, interfaceIP, () => {
+    const spawn = require('child_process').spawn;
+    const ls = spawn('mocha-phantomjs',  [`http://localhost:${server.address().port}/tests.html`])
+    let response = []
+    ls.stdout.on('data', (data) => {
+        response.push(data.toString());
+    });
+    ls.on('close', code => {
+        console.log(response.join(''))
+        console.log(code)
+        process.exit(code)
+    })
+    console.log('Server started at localhost:' + server.address().port)
+})
 
 function isUnsafe(param) {
     return param.indexOf('/') >= 0 || param.indexOf('..') >= 0
