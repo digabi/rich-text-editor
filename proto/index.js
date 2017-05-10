@@ -31,6 +31,7 @@ app.use(session({
 
 app.use('/student.js', babelify(__dirname + '/student.front.js'))
 app.use('/teacher.js', babelify(__dirname + '/teacher.front.js'))
+app.use('/tests.js', babelify(__dirname + '/../test/tests.front.js'))
 app.use(express.static(__dirname + '/../public'))
 app.use(express.static(__dirname + '/../test'))
 exposeModules([

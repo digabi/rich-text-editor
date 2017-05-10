@@ -1,3 +1,4 @@
+const u = require('./testUtil')
 describe('math editor', () => {
     const $el = {}
     const pasteEventMock = {
@@ -9,7 +10,7 @@ describe('math editor', () => {
         }
     }
 
-    before('wait for tools to hide', window.waitUntil(() => isOutsideViewPort($('[data-js="tools"]'))))
+    before('wait for tools to hide', u.waitUntil(() => isOutsideViewPort($('[data-js="tools"]'))))
     before(() => {
         $el.answer1 = $('.answer1')
         $el.latexField = $('[data-js="latexField"]')
@@ -24,20 +25,20 @@ describe('math editor', () => {
         })
     })
 
-    describe('focus rich text', () => {
-        before(() => $el.answer1.focus())
-        before('wait for tools visible', window.waitUntil(() => $el.tools.is(':visible')))
+    describe('when focusing rich text', () => {
+        before('focus', () => $el.answer1.focus())
+        before('wait for tools visible', u.waitUntil(() => $el.tools.is(':visible')))
 
         it('shows character list', () => expect($('[data-js="charactersList"]')).to.be.visible)
         it('hide math tools', () => expect($el.mathToolbar).to.be.hidden)
 
-        describe('pasting images', () => {
+        describe('when pasting images', () => {
             describe('png', () => {
-                before(done => {
+                before('paste image', done => {
                     $el.answer1
-                        .append(window.PNG_IMAGE)
+                        .append(u.PNG_IMAGE)
                     $el.answer1.find('img:last').get(0).onload = e => {
-                        if (e.target.src.startsWith('http')) done()
+                        if (~e.target.src.indexOf('http')) done()
                     }
                     $el.answer1.trigger(pasteEventMock)
                 })
@@ -47,7 +48,7 @@ describe('math editor', () => {
             })
             describe('not png', () => {
                 let currentImgAmout
-                before(done => {
+                before('#3', done => {
                     currentImgAmout = $el.answer1.find('img').length
                     $el.answer1
                         .append('<img src="data:image/gif;base64,R0lGODlhAQABAIAAAAUEBAAAACwAAAAAAQABAAACAkQBADs=">')
@@ -64,16 +65,16 @@ describe('math editor', () => {
 
         describe('start math', () => {
             before(() => $el.answer1.focus())
-            before('wait for tools visible', window.waitUntil(() => $el.tools.is(':visible')))
+            before('wait for tools visible', u.waitUntil(() => $el.tools.is(':visible')))
             before(() => $('[data-js="newEquation"]').mousedown())
 
             it('shows math tools', () => expect($el.mathToolbar).to.be.visible)
             it('shows math editor', () => expect($el.mathEditor).to.be.visible)
 
             describe('keeps equation field in sync', () => {
-                before(() => $el.latexField.focus().val('xy').trigger('input'))
-                before(done => setTimeout(done, 0))
-                before(() => $el.answer1.focus())
+                before('type', () => $el.latexField.focus().val('xy').trigger('input'))
+                before('suspend', done => setTimeout(done, 0))
+                before('focus', () => $el.answer1.focus())
 
                 it('shows math in equation field', () => {
                     expect($el.equationField).to.have.text('xy')
