@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/digabi/rich-text-editor.svg?branch=master)](https://travis-ci.org/digabi/rich-text-editor)
+
 # Rich text editor
 Rich text editor with math support for Finnish Matriculation Examination Board.
 Live demo can be found at [https://math-demo.abitti.fi/](https://math-demo.abitti.fi/)
