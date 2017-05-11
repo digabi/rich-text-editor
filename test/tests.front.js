@@ -27,6 +27,7 @@ describe('rich text editor', () => {
 
     it('shows character list', () => expect($('[data-js="charactersList"]')).to.be.visible)
     it('hide math tools', () => expect($el.mathToolbar).to.be.hidden)
+    it('answer has focus style', () => expect($el.answer1).to.have.class('rich-text-focused'))
 
     describe('when pasting images', () => {
         describe('png', () => {
@@ -64,6 +65,8 @@ describe('rich text editor', () => {
 
         it('shows math tools', () => expect($el.mathToolbar).to.be.visible)
         it('shows math editor', () => expect($el.mathEditor).to.be.visible)
+        it('answer still has focus style', () => expect($el.answer1).to.have.class('rich-text-focused'))
+
 
         describe('when focus in latex field', () => {
             before('type', () => $el.latexField.focus().val('xy').trigger('input'))
@@ -72,6 +75,7 @@ describe('rich text editor', () => {
             before(u.delay)
             before('focus', () => $el.answer1.focus())
 
+            it('answer still has focus style', () => expect($el.answer1).to.have.class('rich-text-focused'))
             it('shows math in equation field', () => expect($el.equationField).to.have.text('xy±'))
             it('shows math in latex field', () => expect($el.latexField).to.have.value('xy\\pm'))
             it('shows math in img', () => expect($('img:first')).to.have.attr('src', '/math.svg?latex=xy%5Cpm'))
@@ -86,6 +90,7 @@ describe('rich text editor', () => {
             before(u.delay)
             before(() => $el.answer1.focus())
 
+            it('answer still has focus style', () => expect($el.answer1).to.have.class('rich-text-focused'))
             it('shows math in equation field', () => expect($el.equationField).to.have.text('a+b∞'))
             it('shows math in latex field', () => expect($el.latexField).to.have.value('a+b\\infty'))
             it('shows math in img', () => expect($('img:first')).to.have.attr('src', '/math.svg?latex=a%2Bb%5Cinfty'))
@@ -107,5 +112,12 @@ describe('rich text editor', () => {
                 expect($el.answer1).to.have.text('°')
             })
         })
+    })
+
+    describe('when leaving answer box', () => {
+        before(() => $el.answer1.blur())
+        before(u.delay)
+
+        it('removes focus style from answer', () => expect($el.answer1).to.not.have.class('rich-text-focused'))
     })
 })
