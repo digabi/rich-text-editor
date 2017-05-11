@@ -26,7 +26,7 @@ function init(mathEditor, hasRichTextFocus, l) {
             <div class="rich-text-editor-tools-button-wrapper">
                 <div class="rich-text-editor-toolbar-wrapper">
                     <button class="rich-text-editor-new-equation rich-text-editor-button rich-text-editor-button-action" data-js="newEquation" data-command="Ctrl-E">Σ ${l.insertEquation}</button>
-                <button class="math-editor-new-equation math-editor-button math-editor-button-action" data-js="newGroup" >Yhtälöryhmä</button>
+                    <button class="rich-text-editor-new-equation rich-text-editor-button rich-text-editor-button-action new-group" data-js="newGroup" >{</button>
                 </div>
             </div>
         </div>
@@ -41,6 +41,7 @@ function init(mathEditor, hasRichTextFocus, l) {
     initSpecialCharacterToolbar($toolbar, mathEditor, hasRichTextFocus)
     initMathToolbar($mathToolbar, mathEditor)
     initNewEquation($newEquation, mathEditor, hasRichTextFocus)
+    initNewGroup($toolbar, hasRichTextFocus)
 
     return $toolbar
 }

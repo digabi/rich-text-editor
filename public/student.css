@@ -1,7 +1,7 @@
 @import url("common.css");
 
 .answer { border: 1px solid #aaa; padding: 5px; box-sizing: content-box; min-height: 100px; font: 17px "Times New Roman";}
-.group { border: 5px solid #eee;min-height: 20px; min-width: 20px; display: inline-block;margin-right: 5px;
+.group { border: 5px solid #eee;min-height: 20px; min-width: 20px; display: inline-block;margin-right: 5px;vertical-align: middle;
     padding: 2px 5px 2px 20px;
     background-repeat: no-repeat;
     background-position: 3px 0;
@@ -11,3 +11,4 @@
 .answer:after {
     content: '\200B';
 }
+.new-group { position:relative; left:-90px;}
