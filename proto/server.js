@@ -106,6 +106,7 @@ app.get('/screenshot', (req, res) => {
 app.get('/loadMarkers', (req, res) => res.send(savedMarkers[req.session.id]))
 app.get('/math.svg', (req, res) => {
     if (req.query.latex in latexCommandCache) {
+        res.type('svg')
         res.send(latexCommandCache[req.query.latex])
     } else {
         mathSvg.mathSvgResponse(req, res)
