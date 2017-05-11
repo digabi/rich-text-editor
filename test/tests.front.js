@@ -8,17 +8,9 @@ mocha.setup({
 window.expect = chai.expect
 
 const $el = {}
-const pasteEventMock = {
-    type: 'paste', originalEvent: {
-        clipboardData: {
-            getData: () => {
-            }
-        }
-    }
-}
 
 describe('rich text editor', () => {
-    before('wait for tools to hide', u.waitUntil(() => isOutsideViewPort($('[data-js="tools"]'))))
+    before('wait for tools to hide', u.waitUntil(() => u.isOutsideViewPort($('[data-js="tools"]'))))
     before('wait answer field to initialize', u.waitUntil(() => $('.answer1').attr('contenteditable')))
     before(() => {
         $el.answer1 = $('.answer1')
@@ -37,12 +29,11 @@ describe('rich text editor', () => {
     describe('when pasting images', () => {
         describe('png', () => {
             before('paste image', done => {
-                $el.answer1
-                    .append(u.PNG_IMAGE)
+                $el.answer1.append(u.PNG_IMAGE)
                 $el.answer1.find('img:last').get(0).onload = e => {
                     if (~e.target.src.indexOf('http')) done()
                 }
-                $el.answer1.trigger(pasteEventMock)
+                $el.answer1.trigger(u.pasteEventMock)
             })
             it('saves pasted image', () => {
                 expect($el.answer1.find('img:last')).to.have.attr('src').match(/\/screenshot/)
@@ -57,7 +48,7 @@ describe('rich text editor', () => {
                 $('.answer1 img:last').get(0).onload = e => {
                     done()
                 }
-                $el.answer1.trigger(pasteEventMock)
+                $el.answer1.trigger(u.pasteEventMock)
             })
             it('ignores other than png images', () => {
                 expect($el.answer1.find('img').length).to.equal(currentImgAmout)
@@ -75,9 +66,9 @@ describe('rich text editor', () => {
 
         describe('when focus in latex field', () => {
             before('type', () => $el.latexField.focus().val('xy').trigger('input'))
-            before('suspend', done => setTimeout(done, 0))
+            before(u.delay)
             before(() => $('.rich-text-editor-toolbar-characters-group button:eq(2)').mousedown())
-            before('suspend', done => setTimeout(done, 0))
+            before(u.delay)
             before('focus', () => $el.answer1.focus())
 
             it('shows math in equation field', () => expect($el.equationField).to.have.text('xy±'))
@@ -89,9 +80,9 @@ describe('rich text editor', () => {
             before(() => $('img:first').trigger({type: 'click', which: 1}))
             before(() => $el.latexField.trigger('blur').val('').trigger('input'))
             before(() => $el.equationField.find('textarea').trigger('focusin').val('a+b').trigger('paste'))
-            before(done => setTimeout(done, 0))
+            before(u.delay)
             before(() => $('.rich-text-editor-toolbar-characters-group button:eq(3)').mousedown())
-            before(done => setTimeout(done, 0))
+            before(u.delay)
             before(() => $el.answer1.focus())
 
             it('shows math in equation field', () => expect($el.equationField).to.have.text('a+b∞'))
@@ -117,8 +108,3 @@ describe('rich text editor', () => {
         })
     })
 })
-
-function isOutsideViewPort($elem) {
-    return $elem.length > 0 && $elem.position().top < 0
-}
-
