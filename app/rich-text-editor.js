@@ -8,8 +8,6 @@ const locales = {
 }
 const l = locales[window.locale || 'FI'].editor
 const keyCodes = {
-    ENTER: 13,
-    ESC: 27,
     E: 69
 }
 const $outerPlaceholder = $(`<div class="rich-text-editor-hidden" style="display: none;" data-js="outerPlaceholder">`)
@@ -57,9 +55,6 @@ module.exports.makeRichText = (element, options, onValueChanged = () => {}) => {
                 onRichTextEditorFocus($(e.target).closest('[data-js="answer"]'))
                 math.openMathEditor($(e.target))
             }
-        })
-        .on('keydown', e => {
-            if (u.isCtrlKey(e, keyCodes.ENTER) || u.isKey(e, keyCodes.ESC)) math.closeMathEditor(true)
         })
         .on('keyup', e => {
             if (u.isCtrlKey(e, keyCodes.E)) math.insertNewEquation()

@@ -1,4 +1,8 @@
 const u = require('./util')
+const keyCodes = {
+    ENTER: 13,
+    ESC: 27
+}
 
 let MQ
 module.exports = {init}
@@ -38,6 +42,8 @@ function init($outerPlaceholder, focus, onMathFocusChanged) {
             focus.equationField = e.type !== 'blur' && e.type !== 'focusout'
             onFocusChanged()
         })
+        .on('keydown', onClose)
+
 
     $latexField
         .on('input paste', onLatexUpdate)
@@ -45,6 +51,11 @@ function init($outerPlaceholder, focus, onMathFocusChanged) {
             focus.latexField = e.type !== 'blur'
             onFocusChanged()
         })
+        .on('keydown', onClose)
+
+    function onClose(e) {
+        if (u.isCtrlKey(e, keyCodes.ENTER) || u.isKey(e, keyCodes.ESC)) closeMathEditor(true)
+    }
 
     return {
         insertNewEquation,

@@ -105,7 +105,7 @@ describe('rich text editor', () => {
                 $('img:first').trigger({type: 'click', which: 1})
                 expect($el.answer1).to.have.class('rich-text-focused')
                 expect($el.mathEditor).to.be.visible
-                $el.answer1.trigger({type: 'keydown', keyCode: 27})
+                $el.equationFieldTextArea.trigger({type: 'keydown', keyCode: 27})
                 expect($el.mathEditor).to.be.hidden
             })
         })
