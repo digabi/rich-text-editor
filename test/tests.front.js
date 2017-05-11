@@ -1,4 +1,5 @@
 const u = require('./testUtil')
+const base64png = require('./base64png')
 window.locale = 'FI'
 window.IS_TEST = true
 mocha.setup({
@@ -29,7 +30,7 @@ describe('rich text editor', () => {
     describe('when pasting images', () => {
         describe('png', () => {
             before('paste image', done => {
-                $el.answer1.append(u.PNG_IMAGE)
+                $el.answer1.append(base64png)
                 $el.answer1.find('img:last').get(0).onload = e => {
                     if (~e.target.src.indexOf('http')) done()
                 }
