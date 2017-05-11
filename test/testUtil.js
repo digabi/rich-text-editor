@@ -10,6 +10,7 @@ const pasteEventMock = {
 module.exports = {
     waitUntil: condition => done => _waitUntil(condition, done),
     delay,
+    delayFor,
     isOutsideViewPort,
     pasteEventMock
 }
@@ -21,6 +22,10 @@ function _waitUntil(condition, done) {
 
 function delay(done) {
     setTimeout(done, 0)
+}
+
+function delayFor(ms) {
+    return done => setTimeout(done, ms)
 }
 
 function isOutsideViewPort($elem) {

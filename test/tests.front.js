@@ -121,8 +121,9 @@ describe('rich text editor', () => {
 
     describe('when leaving answer box', () => {
         before(() => $el.answer1.blur())
-        before(u.delay)
+        before(u.delayFor(100))
 
         it('removes focus style from answer', () => expect($el.answer1).to.not.have.class('rich-text-focused'))
+        it('hides toolbaar', () => expect($el.tools.position().top).to.be.below(-10))
     })
 })
