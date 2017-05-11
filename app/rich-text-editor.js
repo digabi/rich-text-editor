@@ -74,9 +74,6 @@ module.exports.makeRichText = (element, options, onValueChanged = () => {}) => {
         .on('paste', e => {
             pasteInProgress = true
             setTimeout(() => pasteInProgress = false, 0)
-
-            if (e.target.tagName === 'TEXTAREA')
-                return
             clipboard.onPaste(e, saver, onValueChanged, limit)
         })
     setTimeout(() => document.execCommand("enableObjectResizing", false, false), 0)

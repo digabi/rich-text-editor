@@ -43,6 +43,7 @@ function init($outerPlaceholder, focus, onMathFocusChanged) {
             onFocusChanged()
         })
         .on('keydown', onClose)
+        .on('paste', e => e.stopPropagation())
 
 
     $latexField
@@ -52,6 +53,7 @@ function init($outerPlaceholder, focus, onMathFocusChanged) {
             onFocusChanged()
         })
         .on('keydown', onClose)
+        .on('paste', e => e.stopPropagation())
 
     function onClose(e) {
         if (u.isCtrlKey(e, keyCodes.ENTER) || u.isKey(e, keyCodes.ESC)) closeMathEditor(true)
