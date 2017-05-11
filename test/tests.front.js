@@ -28,11 +28,6 @@ describe('math editor', () => {
         $el.tools = $('[data-js="tools"]')
         $el.mathEditor = $('[data-js="mathEditor"]')
     })
-    describe('init', () => {
-        it('answer field is contenteditable', () => {
-            expect($el.answer1).to.have.attr('contenteditable', 'true')
-        })
-    })
 
     describe('when focusing rich text', () => {
         before('focus', () => $el.answer1.focus())
