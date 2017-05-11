@@ -82,9 +82,11 @@ describe('rich text editor', () => {
         })
 
         describe('when focus in equation field', () => {
+            before(() => $el.answer1.blur())
+            before(u.delay)
             before(() => $('img:first').trigger({type: 'click', which: 1}))
-            before(() => $el.latexField.trigger('blur').val('').trigger('input'))
-            before(() => $el.equationFieldTextArea.trigger('focusin').val('a+b').trigger('paste'))
+            before(() => $el.latexField.val('').trigger('input'))
+            before(() => $el.equationFieldTextArea.val('a+b').trigger('paste'))
             before(u.delay)
             before(() => $('.rich-text-editor-toolbar-characters-group button:eq(3)').mousedown())
             before(u.delay)
@@ -97,8 +99,11 @@ describe('rich text editor', () => {
         })
 
         describe('equation click opens and esc closes math editor', () => {
-            before(() => $('img:first').trigger({type: 'click', which: 1}))
+            before(() => $el.answer1.blur())
             it('editor is visible and then hidden', () => {
+                expect($el.answer1).to.not.have.class('rich-text-focused')
+                $('img:first').trigger({type: 'click', which: 1})
+                expect($el.answer1).to.have.class('rich-text-focused')
                 expect($el.mathEditor).to.be.visible
                 $el.answer1.trigger({type: 'keydown', keyCode: 27})
                 expect($el.mathEditor).to.be.hidden
