@@ -4,12 +4,14 @@ const babelify = require('express-babelify-middleware')
 const sanitizeHtml = require('sanitize-html')
 const session = require('express-session')
 const studentHtml = require('./student.html')
-const mathImg = require('./mathImg')
+const mathSvg = require('../server/mathSvg')
 const fs = require('fs')
 const path = require('path')
 const startedAt = new Date()
 const FI = require('../app/FI')
 const SV = require('../app/SV')
+const mjAPI = require("mathjax-node")
+const latexCommands = require('../app/latexCommands')
 const studentHtmlFI = studentHtml((Object.assign({startedAt: formatDate(startedAt), locale: 'FI'}, FI.editor)))
 const studentHtmlSV = studentHtml((Object.assign({startedAt: formatDate(startedAt), locale: 'SV'}, SV.editor)))
 const teacherHtml = require('./teacher.html')
@@ -17,6 +19,8 @@ const teacherHtmlFI = teacherHtml(Object.assign({startedAt: formatDate(startedAt
 const teacherHtmlSV = teacherHtml(Object.assign({startedAt: formatDate(startedAt), locale: 'SV'}, SV.annotating))
 const app = express()
 let savedMarkers = {}
+const latexCommandCache = {}
+cacheLatexCommands()
 
 const sanitizeOpts = require('../app/sanitizeOpts')
 
@@ -78,7 +82,7 @@ app.get('/load', (req, res) => {
     const answerId = req.query.answerId
     const pathToFile = getPathToFile(sessionId, answerId, 'answer.json');
 
-    if(fs.existsSync(pathToFile)) {
+    if (fs.existsSync(pathToFile)) {
         res.json(JSON.parse(fs.readFileSync(pathToFile, 'utf-8')))
     } else {
         res.json(null)
@@ -100,7 +104,13 @@ app.get('/screenshot', (req, res) => {
     else res.sendStatus(404)
 })
 app.get('/loadMarkers', (req, res) => res.send(savedMarkers[req.session.id]))
-app.get('/math.svg', mathImg.handler)
+app.get('/math.svg', (req, res) => {
+    if (req.query.latex in latexCommandCache) {
+        res.send(latexCommandCache[req.query.latex])
+    } else {
+        mathSvg.mathSvgResponse(req, res)
+    }
+})
 app.get('/version', (req, res) => {
     res.send({
         serverStarted: startedAt.toString(),
@@ -153,4 +163,18 @@ function formatDate(date) {
 
 function pad(num) {
     return (num > 9 ? '' : '0') + num
+}
+
+function cacheLatexCommands() {
+    latexCommands.map(o => o.label ? o.label.replace(/X/g, '\\square') : o.action)
+        .forEach(latex => {
+            mjAPI.typeset({
+                math: latex,
+                format: "TeX", // "inline-TeX", "MathML"
+                mml: false,
+                svg: true,
+            }, function (data) {
+                latexCommandCache[latex] = data.svg
+            })
+        })
 }
