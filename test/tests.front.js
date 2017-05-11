@@ -19,6 +19,7 @@ describe('math editor', () => {
     }
 
     before('wait for tools to hide', u.waitUntil(() => isOutsideViewPort($('[data-js="tools"]'))))
+    before('wait for tools to hide', u.waitUntil(() => $('.answer1').attr('contenteditable')))
     before(() => {
         $el.answer1 = $('.answer1')
         $el.latexField = $('[data-js="latexField"]')
@@ -79,14 +80,14 @@ describe('math editor', () => {
             it('shows math tools', () => expect($el.mathToolbar).to.be.visible)
             it('shows math editor', () => expect($el.mathEditor).to.be.visible)
 
-            describe('keeps equation field in sync', () => {
+            describe('keeps equation field in sync when typing or clicking buttons', () => {
                 before('type', () => $el.latexField.focus().val('xy').trigger('input'))
                 before('suspend', done => setTimeout(done, 0))
+                before(() => $('.rich-text-editor-toolbar-characters-group button:eq(2)').mousedown())
                 before('focus', () => $el.answer1.focus())
 
-                it('shows math in equation field', () => {
-                    expect($el.equationField).to.have.text('xy')
-                })
+                it('shows math in equation field', () => expect($el.equationField).to.have.text('xy±'))
+                it('shows math in latex field', () => expect($el.latexField).to.have.value('xy\\pm'))
                 it('shows math in img', () => expect($('img:first')).to.have.attr('src', '/math.svg?latex=xy'))
             })
 
@@ -95,11 +96,11 @@ describe('math editor', () => {
                 before(() => $el.latexField.val('').trigger('input'))
                 before(() => $el.equationField.find('textarea').val('a+b').trigger('paste'))
                 before(done => setTimeout(done, 100))
+                before(() => $('.rich-text-editor-toolbar-characters-group button:eq(3)').mousedown())
                 before(() => $el.answer1.focus())
 
-                it('shows math in latex field', () => {
-                    expect($el.latexField).to.have.value('a+b')
-                })
+                it('shows math in equation field', () => expect($el.equationField).to.have.text('a+b∞'))
+                it('shows math in latex field', () => expect($el.latexField).to.have.value('a+b\\infty'))
                 it('shows math in img', () => expect($('img:first')).to.have.attr('src', '/math.svg?latex=a%2Bb'))
             })
 
