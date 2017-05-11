@@ -4,6 +4,10 @@
   "description": "Matematiikkaeditori-spike",
   "author": "",
   "homepage": "https://github.com/digabi/rich-text-editor",
+  "main": "server/mathSvg.js",
+  "files": [
+    "server/mathSvg.js"
+  ],
   "scripts": {
     "start": "proto/index.js",
     "test": "proto/testRunner.js",
