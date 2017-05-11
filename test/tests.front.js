@@ -17,6 +17,7 @@ describe('rich text editor', () => {
         $el.answer1 = $('.answer1')
         $el.latexField = $('[data-js="latexField"]')
         $el.equationField = $('[data-js="equationField"]')
+        $el.equationFieldTextArea = $el.equationField.find('textarea')
         $el.mathToolbar = $('[data-js="mathToolbar"]')
         $el.tools = $('[data-js="tools"]')
         $el.mathEditor = $('[data-js="mathEditor"]')
@@ -58,7 +59,6 @@ describe('rich text editor', () => {
     })
 
     describe('start math', () => {
-        before(() => $el.answer1.focus())
         before('wait for tools visible', u.waitUntil(() => $el.tools.is(':visible')))
         before(() => $('[data-js="newEquation"]').mousedown())
 
@@ -80,7 +80,7 @@ describe('rich text editor', () => {
         describe('when focus in equation field', () => {
             before(() => $('img:first').trigger({type: 'click', which: 1}))
             before(() => $el.latexField.trigger('blur').val('').trigger('input'))
-            before(() => $el.equationField.find('textarea').trigger('focusin').val('a+b').trigger('paste'))
+            before(() => $el.equationFieldTextArea.trigger('focusin').val('a+b').trigger('paste'))
             before(u.delay)
             before(() => $('.rich-text-editor-toolbar-characters-group button:eq(3)').mousedown())
             before(u.delay)
