@@ -15,6 +15,7 @@ describe('rich text editor', () => {
     before('wait answer field to initialize', u.waitUntil(() => $('.answer1').attr('contenteditable')))
     before(() => {
         $el.answer1 = $('.answer1')
+        $el.answer2 = $('.answer2')
         $el.latexField = $('[data-js="latexField"]')
         $el.equationField = $('[data-js="equationField"]')
         $el.equationFieldTextArea = $el.equationField.find('textarea')
@@ -125,5 +126,19 @@ describe('rich text editor', () => {
 
         it('removes focus style from answer', () => expect($el.answer1).to.not.have.class('rich-text-focused'))
         it('hides toolbaar', () => expect($el.tools.position().top).to.be.below(-10))
+
+    })
+
+    describe('when moving to next answer while math is open', () => {
+        before(() => $el.answer1.focus())
+        before(() => $('[data-js="newEquation"]').mousedown())
+        before(() => $el.answer1.blur())
+        before(u.delay)
+        before(() => $el.answer2.focus())
+        before(u.delayFor(300))
+
+        it('removes focus style from previous answer', () => expect($el.answer1).to.not.have.class('rich-text-focused'))
+        it('adds focus tyle to current answer', () => expect($el.answer2).to.have.class('rich-text-focused'))
+        it('keeps toolbar visible', () => expect($el.tools.position().top).to.equal(0))
     })
 })
