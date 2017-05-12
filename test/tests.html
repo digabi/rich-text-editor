@@ -42,8 +42,10 @@
     <script src="/chai/chai.js"></script>
     <script src="/chai-jquery/chai-jquery.js"></script>
     <script src="/web-console-reporter/WebConsole.js"></script>
-    <script>
-    </script>
+    <style>
+        body {margin: 0 10px;}
+        .answer { border: 1px solid #aaa; padding: 5px; box-sizing: content-box; min-height: 100px; font: 17px "Times New Roman";}
+    </style>
 </head>
 <body>
 <article>
@@ -56,7 +58,9 @@
         <div class="answer answer2"></div>
         <button class="save actionButton" style="display: none">Tallenna</button>
     </section>
-    <div id="mocha"></div>
+    <section>
+        <div id="mocha"></div>
+    </section>
 
 </article>
 <script src="/student.js"></script>
