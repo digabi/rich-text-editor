@@ -60,7 +60,6 @@ module.exports.makeRichText = (element, options, onValueChanged = () => {}) => {
             if (u.isCtrlKey(e, keyCodes.E)) math.insertNewEquation()
         })
         .on('focus blur', e => {
-            if (math.isVisible() && e.type === 'focus') math.closeMathEditor()
             onRichTextEditorFocusChanged(e)
         })
         .on('input', e => {
@@ -91,7 +90,6 @@ function onRichTextEditorFocus($element) {
 
 function onRichTextEditorBlur($element) {
     toggleRichTextToolbar(false, $element)
-    math.closeMathEditor()
     focus.richText = false
 }
 
@@ -106,7 +104,7 @@ function onRichTextEditorFocusChanged(e) {
     richTextEditorBlurTimeout = setTimeout(() => {
 
         if (richTextAndMathBlur()) onRichTextEditorBlur($(e.target))
-        else if (focus.richText && math.isVisible()) math.closeMathEditor()
+        else if (focus.richText && math.isVisible()) {}
         else onRichTextEditorFocus($(e.target))
     }, 0)
 }
