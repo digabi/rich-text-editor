@@ -57,7 +57,7 @@ module.exports.makeRichText = (element, options, onValueChanged = () => {}) => {
         })
         .on('mathfocus', e => {
             $(e.currentTarget).toggleClass('rich-text-focused', e.hasFocus )
-            if (!focus.richText && !focus.latexField && !focus.equationField) onRichTextEditorBlur($currentEditor)
+            if (richTextAndMathBlur()) onRichTextEditorBlur($currentEditor)
         })
         .on('focus blur', e => {
             onRichTextEditorFocusChanged(e)
@@ -97,16 +97,15 @@ let richTextEditorBlurTimeout
 
 function onRichTextEditorFocusChanged(e) {
     focus.richText = e.type === 'focus'
-
     $(e.currentTarget).toggleClass('rich-text-focused', focus.richText )
 
     clearTimeout(richTextEditorBlurTimeout)
     richTextEditorBlurTimeout = setTimeout(() => {
         if (richTextAndMathBlur()) onRichTextEditorBlur($(e.target))
-        else if (!(focus.richText && math.isVisible())) onRichTextEditorFocus($(e.target))
+        else onRichTextEditorFocus($(e.target))
     }, 0)
 }
 
 function richTextAndMathBlur() {
-    return !focus.richText && !math.isVisible() && !focus.latexField && !focus.equationField
+    return !focus.richText && !focus.latexField && !focus.equationField
 }
