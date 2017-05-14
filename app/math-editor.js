@@ -8,7 +8,7 @@ let MQ
 module.exports = {init}
 let firstTime = true
 
-function init($outerPlaceholder, focus, onMathFocusChanged) {
+function init($outerPlaceholder, focus) {
     let updateMathImgTimeout
 
     if(firstTime) {
@@ -93,8 +93,8 @@ function init($outerPlaceholder, focus, onMathFocusChanged) {
     function onFocusChanged() {
         clearTimeout(focusChanged)
         focusChanged = setTimeout(() => {
+            $mathEditorContainer.trigger({ type:'mathfocus', hasFocus: focus.latexField || focus.equationField})
             if (!focus.latexField && !focus.equationField) closeMathEditor()
-            onMathFocusChanged()
         }, 0)
     }
 

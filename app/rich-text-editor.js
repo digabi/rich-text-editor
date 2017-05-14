@@ -18,17 +18,13 @@ const focus = {
 }
 let $currentEditor
 
-function onMathFocusChanged() {
-    if (richTextAndMathBlur()) onRichTextEditorBlur($currentEditor)
-}
-
 let firstCall = true
 let math
 let $toolbar
 
 module.exports.makeRichText = (element, options, onValueChanged = () => {}) => {
     if (firstCall) {
-        math = mathEditor.init($outerPlaceholder, focus, onMathFocusChanged)
+        math = mathEditor.init($outerPlaceholder, focus)
         $toolbar = toolbars.init(math, () => focus.richText, l)
         $('body').append($outerPlaceholder, $toolbar)
         firstCall = false
@@ -58,6 +54,10 @@ module.exports.makeRichText = (element, options, onValueChanged = () => {}) => {
         })
         .on('keyup', e => {
             if (u.isCtrlKey(e, keyCodes.E)) math.insertNewEquation()
+        })
+        .on('mathfocus', e => {
+            $(e.currentTarget).toggleClass('rich-text-focused', e.hasFocus )
+            if (!focus.richText && !focus.latexField && !focus.equationField) onRichTextEditorBlur($currentEditor)
         })
         .on('focus blur', e => {
             onRichTextEditorFocusChanged(e)
@@ -102,10 +102,8 @@ function onRichTextEditorFocusChanged(e) {
 
     clearTimeout(richTextEditorBlurTimeout)
     richTextEditorBlurTimeout = setTimeout(() => {
-
         if (richTextAndMathBlur()) onRichTextEditorBlur($(e.target))
-        else if (focus.richText && math.isVisible()) {}
-        else onRichTextEditorFocus($(e.target))
+        else if (!(focus.richText && math.isVisible())) onRichTextEditorFocus($(e.target))
     }, 0)
 }
 
