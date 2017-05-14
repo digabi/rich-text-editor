@@ -65,11 +65,6 @@ function init($outerPlaceholder, focus) {
         closeMathEditor,
         openMathEditor,
         onFocusChanged,
-        isVisible
-    }
-
-    function isVisible() {
-        return visible
     }
 
     function onMqEdit(e) {
