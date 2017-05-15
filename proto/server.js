@@ -69,7 +69,7 @@ app.post('/saveImg', (req, res) => {
     const sessionId = req.session.id
     const {answerId} = req.query
     const id = String(new Date().getTime())
-    const url = `/screenshot?answerId=${req.query.answerId}&id=${id}`
+    const url = `/screenshot/?answerId=${req.query.answerId}&id=${id}`
     const fileWriteStream = createFileWriteStream(sessionId, answerId, id + '.png')
     req.pipe(fileWriteStream).on('finish', () => res.json({url}))
 })
@@ -88,7 +88,7 @@ app.get('/load', (req, res) => {
         res.json(null)
     }
 })
-app.get('/screenshot', (req, res) => {
+app.get('/screenshot/', (req, res) => {
     const {answerId, id} = req.query
     if (isUnsafe(answerId) || isUnsafe(id)) {
         res.send(404)
