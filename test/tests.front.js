@@ -1,5 +1,22 @@
 const u = require('./testUtil')
 const base64png = require('./base64png')
+const $answer = $('.answer')
+const {makeRichText} = require('../app/rich-text-editor')
+const {saveScreenshot} = require('../proto/saver')
+
+const richTextOptions = id => ({
+    screenshot: {
+        saver: data => saveScreenshot(id)(data),
+        limit: 10
+    }
+})
+
+$answer.each((i, answer) => makeRichText(answer, richTextOptions(answer.id), onValueChange))
+
+function onValueChange() {
+    console.log('onValue change')
+}
+
 window.locale = 'FI'
 window.IS_TEST = true
 mocha.setup({
