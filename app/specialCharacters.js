@@ -57,8 +57,7 @@ module.exports = [
             { character: '≡', latexCommand: '\\equiv' },
             { character: '≢' }, // \nequiv or \not\equiv
             { character: '∘', latexCommand: '\\circ' },
-            { character: '…', latexCommand: '\\ldots' },
-            { character: '|' }
+            { character: '…', latexCommand: '\\ldots' }
         ]
     },
     {
@@ -72,7 +71,8 @@ module.exports = [
             { character: '↔', latexCommand: '\\leftrightarrow' },
             { character: '⊥', latexCommand: '\\perp'},
             { character: '‖', latexCommand: '\\parallel'},
-            { character: '⇌' } // \rightleftharpoons
+            { character: '⇌' }, // \rightleftharpoons
+            { character: '|' } // \pipe
         ]
     },
     {
