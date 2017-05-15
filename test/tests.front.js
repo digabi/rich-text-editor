@@ -3,6 +3,7 @@ const base64png = require('./base64png')
 const $answer = $('.answer')
 const {makeRichText} = require('../app/rich-text-editor')
 const {saveScreenshot} = require('../proto/saver')
+let savedValues = []
 
 const richTextOptions = id => ({
     screenshot: {
@@ -12,9 +13,8 @@ const richTextOptions = id => ({
 })
 
 $answer.each((i, answer) => makeRichText(answer, richTextOptions(answer.id), onValueChange))
-
-function onValueChange() {
-    console.log('onValue change')
+function onValueChange(data) {
+    savedValues.push(data)
 }
 
 window.locale = 'FI'
@@ -58,6 +58,12 @@ describe('rich text editor', () => {
             })
             it('saves pasted image', () => {
                 expect($el.answer1.find('img:last')).to.have.attr('src').match(/\/screenshot/)
+            })
+            it('saves markup', () => {
+                const lastData = savedValues.pop()
+                expect(lastData.answerHTML).to.match(/<img src=\"\/screenshot\/\?answerId=&amp;id=[\d]+\" alt \/>/)
+                expect(lastData.answerText).to.equal('')
+                expect(lastData.imageCount).to.equal(1)
             })
         })
         describe('not png', () => {
