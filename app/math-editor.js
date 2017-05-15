@@ -62,9 +62,7 @@ function init($outerPlaceholder, focus) {
     return {
         insertNewEquation,
         insertMath,
-        closeMathEditor,
-        openMathEditor,
-        onFocusChanged,
+        openMathEditor
     }
 
     function onMqEdit(e) {
