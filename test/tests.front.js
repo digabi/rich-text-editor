@@ -188,8 +188,8 @@ describe('rich text editor', () => {
         })
         it('inserts sanitized content', () => {
             const lastData = savedValues.pop()
-            expect(lastData.answerHTML).to.equal('<div>paste</div><div>bar</div>link text ')
-            expect(lastData.answerText).to.equal('paste\nbar\nlink text ')
+            expect(lastData.answerHTML.trim()).to.equal('<div>paste</div><div>bar</div>link text')
+            expect(lastData.answerText.trim()).to.equal('paste\nbar\nlink text')
             expect(lastData.imageCount).to.equal(0)
         })
     })
@@ -202,7 +202,7 @@ describe('rich text editor', () => {
         })
         before(u.delay)
 
-        it('inserts sanitized content', () => {
+        it('drops sanitized content', () => {
             expect($el.answer1).to.have.html('<div>drop</div><div>bar</div>link text ')
             const lastData = savedValues.pop()
             expect(lastData.answerHTML).to.equal('<div>drop</div><div>bar</div>link text ')
