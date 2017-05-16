@@ -54,7 +54,7 @@ describe('rich text editor', () => {
                 $el.answer1.find('img:last').get(0).onload = e => {
                     if (~e.target.src.indexOf('http')) done()
                 }
-                $el.answer1.trigger(u.pasteEventMock)
+                $el.answer1.trigger(u.pasteEventMock())
             })
             it('saves pasted image', () => {
                 expect($el.answer1.find('img:last')).to.have.attr('src').match(/\/screenshot/)
@@ -75,7 +75,7 @@ describe('rich text editor', () => {
                 $('.answer1 img:last').get(0).onload = e => {
                     done()
                 }
-                $el.answer1.trigger(u.pasteEventMock)
+                $el.answer1.trigger(u.pasteEventMock())
             })
             it('ignores other than png images', () => {
                 expect($el.answer1.find('img').length).to.equal(currentImgAmout)
@@ -176,5 +176,17 @@ describe('rich text editor', () => {
         it('removes focus style from previous answer', () => expect($el.answer1).to.not.have.class('rich-text-focused'))
         it('adds focus tyle to current answer', () => expect($el.answer2).to.have.class('rich-text-focused'))
         it('keeps toolbar visible', () => expect($el.tools.position().top).to.equal(0))
+    })
+
+    describe('when trying to insert unsanitized content', () => {
+        before('pasting banned tags', () => {
+            $el.answer1.trigger(u.pasteEventMock('<div class="forbidden"><b>foo</b></div><div>bar</div><a href="/">link text</a> '))
+        })
+        it('inserts sanitized content', () => {
+            const lastData = savedValues.pop()
+            expect(lastData.answerHTML).to.equal('<div>foo</div><div>bar</div>link text ')
+            expect(lastData.answerText).to.equal('foo\nbar\nlink text ')
+            expect(lastData.imageCount).to.equal(0)
+        })
     })
 })

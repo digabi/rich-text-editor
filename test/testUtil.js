@@ -1,11 +1,11 @@
-const pasteEventMock = {
+const pasteEventMock = html => ({
     type: 'paste', originalEvent: {
         clipboardData: {
-            getData: () => {
-            }
+            getData: () => html
         }
-    }
-}
+    },
+    preventDefault: () => {}
+})
 
 module.exports = {
     waitUntil: condition => done => _waitUntil(condition, done),
