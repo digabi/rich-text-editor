@@ -19,10 +19,14 @@ function onValueChange(data) {
 
 window.locale = 'FI'
 window.IS_TEST = true
-mocha.setup({
-    ui: 'bdd',
-//    reporter: WebConsole
-})
+const reporter = window.URL && new URL(document.location.href).searchParams.get('test')
+const mochaOpts = {
+    ui: 'bdd'
+}
+if(reporter === 'console') {
+    mochaOpts.reporter = WebConsole
+}
+mocha.setup(mochaOpts)
 window.expect = chai.expect
 
 const $el = {}
