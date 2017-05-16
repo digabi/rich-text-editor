@@ -180,12 +180,29 @@ describe('rich text editor', () => {
 
     describe('when trying to insert unsanitized content', () => {
         before('pasting banned tags', () => {
-            $el.answer1.trigger(u.pasteEventMock('<div class="forbidden"><b>foo</b></div><div>bar</div><a href="/">link text</a> '))
+            $el.answer1.trigger(u.pasteEventMock('<div class="forbidden"><b>paste</b></div><div>bar</div><a href="/">link text</a> '))
         })
         it('inserts sanitized content', () => {
             const lastData = savedValues.pop()
-            expect(lastData.answerHTML).to.equal('<div>foo</div><div>bar</div>link text ')
-            expect(lastData.answerText).to.equal('foo\nbar\nlink text ')
+            expect(lastData.answerHTML).to.equal('<div>paste</div><div>bar</div>link text ')
+            expect(lastData.answerText).to.equal('paste\nbar\nlink text ')
+            expect(lastData.imageCount).to.equal(0)
+        })
+    })
+
+    describe('when trying to drag unsanitized content', () => {
+        before('dropping banned tags', () => {
+            $el.answer1.html('<div class="forbidden"><b>drop</b></div><div>bar</div><a href="/">link text</a> ')
+            $el.answer1.trigger('drop')
+            $el.answer1.trigger('input')
+        })
+        before(u.delay)
+
+        it('inserts sanitized content', () => {
+            expect($el.answer1).to.have.html('<div>drop</div><div>bar</div>link text ')
+            const lastData = savedValues.pop()
+            expect(lastData.answerHTML).to.equal('<div>drop</div><div>bar</div>link text ')
+            expect(lastData.answerText).to.equal('drop\nbar\nlink text')
             expect(lastData.imageCount).to.equal(0)
         })
     })
