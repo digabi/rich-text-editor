@@ -22,24 +22,23 @@ let firstCall = true
 let math
 let $toolbar
 
-module.exports.makeRichText = (element, options, onValueChanged = () => {}) => {
+module.exports.makeRichText = (answer, options, onValueChanged = () => {}) => {
     if (firstCall) {
         math = mathEditor.init($outerPlaceholder, focus)
         $toolbar = toolbars.init(math, () => focus.richText, l)
         $('body').append($outerPlaceholder, $toolbar)
         firstCall = false
     }
-    onValueChanged(u.sanitizeContent(element))
+    onValueChanged(u.sanitizeContent(answer))
     const {
         screenshot: {
             saver,
             limit
         }
     } = options
-    const $answer = $(element)
     let pasteInProgress = false
 
-    $answer
+    $(answer)
         .attr({
             'contenteditable': 'true',
             'spellcheck': 'false',
