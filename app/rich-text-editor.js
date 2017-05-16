@@ -40,8 +40,8 @@ module.exports.makeRichText = (answer, options, onValueChanged = () => {}) => {
 
     $(answer)
         .attr({
-            'contenteditable': 'true',
-            'spellcheck': 'false',
+            contenteditable: true,
+            spellcheck: false,
             'data-js': 'answer'
         })
         .addClass('rich-text-editor')
