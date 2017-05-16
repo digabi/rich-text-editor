@@ -61,7 +61,7 @@ describe('rich text editor', () => {
             })
             it('saves markup', () => {
                 const lastData = savedValues.pop()
-                expect(lastData.answerHTML).to.match(/<img src=\"\/screenshot\/\?answerId=&amp;id=[\d]+\" alt \/>/)
+                expect(lastData.answerHTML).to.match(/^<img src=\"\/screenshot\/\?answerId=&amp;id=[\d]+\" alt \/>$/)
                 expect(lastData.answerText).to.equal('')
                 expect(lastData.imageCount).to.equal(1)
             })
@@ -105,7 +105,7 @@ describe('rich text editor', () => {
             it('shows math in img', () => expect($('img:first')).to.have.attr('src', '/math.svg?latex=xy%5Cpm'))
         })
 
-        describe('when focus in equation field', () => {
+        describe('when focus in equation field, pasting content and adding char', () => {
             before(() => $el.answer1.blur())
             before(u.delay)
             before(() => $('img:first').trigger({type: 'click', which: 1}))
@@ -120,6 +120,12 @@ describe('rich text editor', () => {
             it('shows math in equation field', () => expect($el.equationField).to.have.text('a+b∞'))
             it('shows math in latex field', () => expect($el.latexField).to.have.value('a+b\\infty'))
             it('shows math in img', () => expect($('img:first')).to.have.attr('src', '/math.svg?latex=a%2Bb%5Cinfty'))
+            it('stores latest data', () => {
+                const lastData = savedValues.pop()
+                expect(lastData.answerHTML).to.match(/^<img alt=\"a\+b\\infty" src=\"\/math\.svg\?latex=a%2Bb%5Cinfty\" \/><img src=\"\/screenshot\/\?answerId=&amp;id=[\d]+\" alt \/>$/)
+                expect(lastData.answerText).to.equal('')
+                expect(lastData.imageCount).to.equal(1)
+            })
         })
 
         describe('equation click opens and esc closes math editor', () => {
@@ -140,6 +146,13 @@ describe('rich text editor', () => {
             it('inserts special character to answer body', () => {
                 expect($el.answer1).to.have.text('°')
             })
+            it('stores latest data', () => {
+                const lastData = savedValues.pop()
+                expect(lastData.answerHTML).to.match(/^<img alt=\"a\+b\\infty" src=\"\/math\.svg\?latex=a%2Bb%5Cinfty\" \/>°<img src=\"\/screenshot\/\?answerId=&amp;id=[\d]+\" alt \/>$/)
+                expect(lastData.answerText).to.equal('°')
+                expect(lastData.imageCount).to.equal(1)
+            })
+
         })
     })
 
