@@ -60,6 +60,7 @@ module.exports.makeRichText = (element, options, onValueChanged = () => {}) => {
             if (richTextAndMathBlur()) onRichTextEditorBlur($currentEditor)
         })
         .on('focus blur', e => {
+            if(e.type === 'focus') math.closeMathEditor()
             onRichTextEditorFocusChanged(e)
         })
         .on('input', e => {

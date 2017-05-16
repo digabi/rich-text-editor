@@ -62,7 +62,8 @@ function init($outerPlaceholder, focus) {
     return {
         insertNewEquation,
         insertMath,
-        openMathEditor
+        openMathEditor,
+        closeMathEditor
     }
 
     function onMqEdit(e) {
@@ -154,10 +155,11 @@ function init($outerPlaceholder, focus) {
         }
 
         toggleMathToolbar(false)
-        $outerPlaceholder.append($mathEditorContainer)
         visible = false
         focus.latexField = false
         focus.equationField = false
+        $mathEditorContainer.trigger({ type:'mathfocus', hasFocus: focus.latexField || focus.equationField})
+        $outerPlaceholder.append($mathEditorContainer)
         if (setFocusAfterClose) $currentEditor.focus()
     }
 
