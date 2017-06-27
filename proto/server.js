@@ -33,6 +33,8 @@ app.use(session({
 app.use('/student.js', babelify(__dirname + '/student.front.js'))
 app.use('/teacher.js', babelify(__dirname + '/teacher.front.js'))
 app.use('/tests.js', babelify(__dirname + '/../test/tests.front.js'))
+app.use('/rich-text-editor-bundle.js', babelify(__dirname + '/rich-text-editor-bundle.js'))
+app.use('/saver.js', babelify(__dirname + '/../proto/saver.js'))
 app.use(express.static(__dirname + '/../public'))
 app.use(express.static(__dirname + '/../test'))
 exposeModules([

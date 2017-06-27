@@ -1,4 +1,5 @@
 module.exports = {saveScreenshot}
+window.saveScreenshot = saveScreenshot
 
 function saveScreenshot(questionId) {
     return ({data, type}) => {
