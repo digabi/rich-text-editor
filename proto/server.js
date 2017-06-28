@@ -30,7 +30,6 @@ app.use(session({
     resave: true
 }))
 
-app.use('/student.js', babelify(__dirname + '/student.front.js'))
 app.use('/teacher.js', babelify(__dirname + '/teacher.front.js'))
 app.use('/tests.js', babelify(__dirname + '/../test/tests.front.js'))
 app.use('/rich-text-editor-bundle.js', babelify(__dirname + '/rich-text-editor-bundle.js'))
