@@ -5,51 +5,28 @@
   <title>Rich text editor example</title>
   <link rel="stylesheet" type="text/css" href="https://math-demo.abitti.fi/mathquill/build/mathquill.css">
   <link rel="stylesheet" type="text/css" href="https://math-demo.abitti.fi/rich-text-editor.css"/>
-  <link rel="stylesheet" type="text/css" href="https://math-demo.abitti.fi/student.css"/>
   <script src="https://math-demo.abitti.fi/jquery/dist/jquery.js"></script>
   <script src="https://math-demo.abitti.fi/baconjs/dist/Bacon.js"></script>
-  <script src="https://math-demo.abitti.fi/bacon.jquery/dist/bacon.jquery.js"></script>
   <script src="https://math-demo.abitti.fi/mathquill/build/mathquill.js"></script>
-  <script>
-    window.locale = 'FI'
-  </script>
+  <script src="https://math-demo.abitti.fi/rich-text-editor-bundle.js"></script>
+  <style>
+    .answer { border: 1px solid #aaa; padding: 5px; box-sizing: content-box; min-height: 100px; font: 17px "Times New Roman";}
+  </style>
 </head>
 <body>
 <article>
   <section>
     <h1>Example of rich text editor</h1>
 
-    <h2>Answer 1</h2>
+    <h2>Answer</h2>
     <div class="answer" id="answer1"></div>
-    <h2>Answer 2</h2>
-    <div class="answer" id="answer2"></div>
-    <button class="save actionButton" style="display: none">Save</button>
   </section>
 </article>
-<script src="https://math-demo.abitti.fi/saver.js"></script>
-<script src="https://math-demo.abitti.fi/rich-text-editor-bundle.js"></script>
 <script>
-  const $answer = $('.answer')
-  const save = ($elem, async = true) => $.post({
-    url: '/save',
-    data: {text: $elem.html(), answerId: $elem.attr('id')},
-    async
-  })
-
-  const richTextOptions = id => ({
-    screenshot: {
-      saver: data => saveScreenshot(id)(data),
-      limit: 10
-    },
+  makeRichText(document.querySelector('#answer1'), {
+    screenshot: {saver: () => {}},
     baseUrl: 'https://math-demo.abitti.fi'
   })
-
-  $answer.each((i, answer) => {
-    makeRichText(answer, richTextOptions(answer.id), onValueChange)
-  })
-
-  function onValueChange() {
-  }
 </script>
 </body>
 </html>
