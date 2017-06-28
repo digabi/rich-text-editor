@@ -24,7 +24,15 @@
 </article>
 <script>
   makeRichText(document.querySelector('#answer1'), {
-    screenshot: {saver: () => {}},
+    screenshot: {
+      saver: ({data}) =>
+        new Promise(resolve => {
+          const reader = new FileReader()
+          reader.onload = evt => resolve(evt.target.result)
+          reader.readAsDataURL(data)
+        }),
+      limit: 10
+    },
     baseUrl: 'https://math-demo.abitti.fi'
   })
 </script>
