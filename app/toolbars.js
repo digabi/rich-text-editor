@@ -5,7 +5,7 @@ module.exports = {
     init,
 }
 
-function init(mathEditor, hasRichTextFocus, l) {
+function init(mathEditor, hasRichTextFocus, l, baseUrl)  {
     const $toolbar = $(`
         <div class="rich-text-editor-tools" data-js="tools" style="display: none">
             <div class="rich-text-editor-tools-button-wrapper">
@@ -38,7 +38,7 @@ function init(mathEditor, hasRichTextFocus, l) {
     const $newEquation = $toolbar.find('[data-js="newEquation"]')
     const $mathToolbar = $toolbar.find('[data-js="mathToolbar"]')
     initSpecialCharacterToolbar($toolbar, mathEditor, hasRichTextFocus)
-    initMathToolbar($mathToolbar, mathEditor)
+    initMathToolbar($mathToolbar, mathEditor, baseUrl)
     initNewEquation($newEquation, mathEditor, hasRichTextFocus)
 
     return $toolbar
@@ -67,10 +67,10 @@ function initSpecialCharacterToolbar($toolbar, mathEditor, hasAnswerFocus) {
         })
 }
 
-function initMathToolbar($mathToolbar, mathEditor) {
+function initMathToolbar($mathToolbar, mathEditor, baseUrl) {
     $mathToolbar.append(latexCommands
         .map(o => `<button class="rich-text-editor-button rich-text-editor-button-grid" data-command="${o.action}" data-latexcommand="${o.label || ''}" data-usewrite="${o.useWrite || false}">
-<img src="/math.svg?latex=${encodeURIComponent(o.label ? o.label.replace(/X/g, '\\square') : o.action)}"/>
+<img src="${baseUrl}/math.svg?latex=${encodeURIComponent(o.label ? o.label.replace(/X/g, '\\square') : o.action)}"/>
 </button>`).join('')
     ).on('mousedown', 'button', e => {
         e.preventDefault()

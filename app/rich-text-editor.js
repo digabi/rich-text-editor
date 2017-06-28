@@ -23,19 +23,17 @@ let math
 let $toolbar
 
 module.exports.makeRichText = (answer, options, onValueChanged = () => {}) => {
+    const saver = options.screenshot.saver
+    const limit = options.screenshot.limit
+    const baseUrl = options.baseUrl || ''
+
     if (firstCall) {
-        math = mathEditor.init($outerPlaceholder, focus)
-        $toolbar = toolbars.init(math, () => focus.richText, l)
+        math = mathEditor.init($outerPlaceholder, focus, baseUrl)
+        $toolbar = toolbars.init(math, () => focus.richText, l, baseUrl)
         $('body').append($outerPlaceholder, $toolbar)
         firstCall = false
     }
     onValueChanged(u.sanitizeContent(answer))
-    const {
-        screenshot: {
-            saver,
-            limit
-        }
-    } = options
     let pasteInProgress = false
 
     $(answer)

@@ -8,7 +8,7 @@ let MQ
 module.exports = {init}
 let firstTime = true
 
-function init($outerPlaceholder, focus) {
+function init($outerPlaceholder, focus, baseUrl) {
     let updateMathImgTimeout
 
     if(firstTime) {
@@ -131,7 +131,7 @@ function init($outerPlaceholder, focus) {
 
     function updateMathImg($img, latex) {
         $img.prop({
-            src: '/math.svg?latex=' + encodeURIComponent(latex),
+            src: baseUrl + '/math.svg?latex=' + encodeURIComponent(latex),
             alt: latex
         })
         $img.closest('[data-js="answer"]').trigger('input')
