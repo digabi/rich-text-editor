@@ -13,7 +13,7 @@
   ],
   "version": "3.0.1",
   "dependencies": {
-    "jquery": "2.2.4",
+    "jquery": "^2.2.4",
     "bacon.jquery": "^0.4.12",
     "bacon": "^0.7.92",
     "mathquill": "digabi/mathquill#0.10.1-dist",
