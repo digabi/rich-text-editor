@@ -6,6 +6,7 @@ module.exports = {
 }
 
 const SCREENSHOT_LIMIT_ERROR = () => new Bacon.Error('Screenshot limit reached!')
+const fileTypes = ['image/png', 'image/jpeg']
 
 function onPaste(e, saver, onValueChanged, limit) {
     const clipboardData = e.originalEvent.clipboardData
@@ -21,7 +22,7 @@ function onPaste(e, saver, onValueChanged, limit) {
 
 function onPasteBlob(event, file, saver, $answer, onValueChanged, limit) {
     event.preventDefault()
-    if (file.type === 'image/png') {
+    if (fileTypes.indexOf(file.type) >= 0) {
         if (u.existingScreenshotCount($answer) + 1 <= limit) {
             saver({data: file, type: file.type, id: String(new Date().getTime())}).then(screenshotUrl => {
                 const img = `<img src="${screenshotUrl}"/>`
@@ -71,8 +72,8 @@ function markAndGetInlineImages($editor) {
         .map((el, index) => Object.assign(decodeBase64Image(el.getAttribute('src')), {
             $el: $(el)
         }))
-    images.filter(({type}) => type !== 'image/png').forEach(({$el}) => $el.remove())
-    const pngImages = images.filter(({type}) => type === 'image/png')
+    images.filter(({type}) => fileTypes.indexOf(type) === -1).forEach(({$el}) => $el.remove())
+    const pngImages = images.filter(({type}) => fileTypes.indexOf(type) >=0 )
     pngImages.forEach(({$el}) => $el.attr('src', loadingImg))
     return pngImages
 }
