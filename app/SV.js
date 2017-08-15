@@ -2,7 +2,9 @@ module.exports = {
     editor: {
         mathEditor: 'Matematikeditor',
         title: 'Formeleditorns utvecklingsversion',
-        description: `<ul>
+        description: `
+<p><em>I editorn fattas fortfarande bl.a. ekvationssystem, styckvis definierad funktion och substitutionstecken för integralberäkning.</em></p>
+<ul>
 <li>Editorn fungerar bäst med browsern Firefox.</li>
  <li>Under knappen “Lägg till formel” hittar du de vanligaste beteckningarna som används i matematik, fysik och kemi. Dessutom kan du använda specialtecken för att skriva formler.</li>
 <li>Det går att konstruera formler genom att klicka på beteckningarna i menyerna och/eller genom att skriva LaTeX.</li>

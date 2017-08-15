@@ -2,7 +2,9 @@ module.exports = {
     editor: {
         mathEditor: 'Matikkaeditori',
         title: 'Kaavaeditorin kehitysversio',
-        description: `<ul>
+        description: `
+<p><em>Editorista puuttuu vielä mm. yhtälöryhmä, paloittain määritelty funktio ja integraalin sijoitusmerkintä.</em></p>
+<ul>
 <li>Editori toimii parhaiten Firefox-selaimella.</li>
 <li>“Lisää kaava” -napin alta löydät yleisimpiä matematiikassa, fysiikassa ja
 kemiassa käytettäviä merkintöjä. Lisäksi erikoismerkkejä voi käyttää kaavan kirjoittamiseen.</li>
