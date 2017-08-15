@@ -1,10 +1,10 @@
 .rich-text-editor-hidden { display: none; }
 
-.rich-text-editor img[src^="/math.svg"] { vertical-align: middle; margin: 4px; padding: 3px 10px; cursor: pointer; border: 1px solid transparent;}
-.rich-text-editor img[src="/math.svg?latex="],
+.rich-text-editor img[src*="/math.svg"] { vertical-align: middle; margin: 4px; padding: 3px 10px; cursor: pointer; border: 1px solid transparent;}
+.rich-text-editor img[src$="/math.svg?latex="],
 .rich-text-editor img[src=""] { display: none;}
-.rich-text-editor:focus img[src^="/math.svg"],
-.rich-text-editor.rich-text-focused img[src^="/math.svg"] {  background: #EDF9FF; border: 1px solid #E6F2F8; }
+.rich-text-editor:focus img[src*="/math.svg"],
+.rich-text-editor.rich-text-focused img[src*="/math.svg"] {  background: #EDF9FF; border: 1px solid #E6F2F8; }
 .rich-text-editor img[src^="/screenshot"] { margin: 4px; }
 .rich-text-editor:focus img[src^="/screenshot"],
 .rich-text-editor.rich-text-focused img[src^="/screenshot"] { box-shadow: 0 0 3px 1px rgba(0, 0, 0, .2); }
