@@ -122,7 +122,7 @@ app.get('/version', (req, res) => {
 module.exports = app
 
 function isUnsafe(param) {
-    return param.indexOf('/') >= 0 || param.indexOf('..') >= 0
+    return String(param).indexOf('/') >= 0 || String(param).indexOf('..') >= 0
 }
 
 function mkdir(dir) {
