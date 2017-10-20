@@ -56,7 +56,16 @@ app.get('/sv/bedomning', (req, res) => res.send(doctype + teacherHtmlSV))
 app.get('/sv', (req, res) => res.send(doctype + studentHtmlSV))
 app.use(bodyParser.urlencoded({extended: false, limit: '5mb'}))
 app.use(bodyParser.json({limit: '5mb', strict: false}))
-app.post('/save', (req, res) => {
+app.post('/save', onSave)
+app.post('/saveImg', onSaveImg)
+app.post('/saveMarkers', onSaveMarkers)
+app.get('/load', onLoad)
+app.get('/screenshot/', onScreenshot)
+app.get('/loadMarkers', (req, res) => res.send(savedMarkers[req.session.id]))
+app.get('/math.svg', onMathSvg)
+app.get('/version', onVersion)
+
+function onSave(req, res) {
     const sessionId = req.session.id;
     const {answerId, text} = req.body
 
@@ -68,20 +77,23 @@ app.post('/save', (req, res) => {
     )
     fileWriteStream.end()
     res.sendStatus(200)
-})
-app.post('/saveImg', (req, res) => {
+}
+
+function onSaveImg(req, res) {
     const sessionId = req.session.id
     const {answerId} = req.query
     const id = String(new Date().getTime())
     const url = `/screenshot/?answerId=${req.query.answerId}&id=${id}`
     const fileWriteStream = createFileWriteStream(sessionId, answerId, id + '.png')
     req.pipe(fileWriteStream).on('finish', () => res.json({url}))
-})
-app.post('/saveMarkers', (req, res) => {
+}
+
+function onSaveMarkers(req, res) {
     savedMarkers[req.session.id] = req.body
     res.sendStatus(200)
-})
-app.get('/load', (req, res) => {
+}
+
+function onLoad(req, res) {
     const sessionId = req.session.id
     const answerId = req.query.answerId
     const pathToFile = getPathToFile(sessionId, answerId, 'answer.json');
@@ -91,8 +103,9 @@ app.get('/load', (req, res) => {
     } else {
         res.json(null)
     }
-})
-app.get('/screenshot/', (req, res) => {
+}
+
+function onScreenshot(req, res) {
     const {answerId, id} = req.query
     if (isUnsafe(answerId) || isUnsafe(id)) {
         res.send(404)
@@ -106,22 +119,24 @@ app.get('/screenshot/', (req, res) => {
         fs.createReadStream(filePath).pipe(res)
     }
     else res.sendStatus(404)
-})
-app.get('/loadMarkers', (req, res) => res.send(savedMarkers[req.session.id]))
-app.get('/math.svg', (req, res) => {
+}
+
+function onMathSvg(req, res) {
     if (req.query.latex in latexCommandCache) {
         res.type('svg')
         res.send(latexCommandCache[req.query.latex])
     } else {
         mathSvg.mathSvgResponse(req, res)
     }
-})
-app.get('/version', (req, res) => {
+}
+
+function onVersion(req, res) {
     res.send({
         serverStarted: startedAt.toString(),
         currentServerTime: new Date().toString()
     })
-})
+}
+
 module.exports = app
 
 function isUnsafe(param) {
