@@ -72,10 +72,7 @@ module.exports = (obj) => { with(obj) return `
         copyLatexToClipboard()
     })
     $answer.each((i, answer) => {
-        $.get('/load?answerId=' + answer.id, data => {
-            !window.IS_TEST && data && $(answer).html(data.html)
-            makeRichText(answer, richTextOptions(answer.id), onValueChange)
-        })
+        makeRichText(answer, richTextOptions(answer.id), onValueChange)
     }).on('keypress', e => {
         if (e.ctrlKey && !e.altKey && !e.shiftKey && e.key === 's') {
             e.preventDefault()

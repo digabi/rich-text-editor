@@ -18,7 +18,6 @@ module.exports = (obj) => { with(obj) return `
             <a href="${backLink}">${backLinkLabel}</a>
         </p>
         <div class="answer"></div>
-        <button class="save actionButton">${save}</button>
     </section>
 </article>
 <footer>

@@ -1,5 +1,4 @@
 const $ = require('jquery')
-const Bacon = require('baconjs')
 let markers = {}
 let timestamp = null
 const $answer = $('.answer')
@@ -11,29 +10,8 @@ const locales = {
 }
 const l = locales[window.locale].editor
 
-$(document).keypress(e => {
-    if (e.ctrlKey && !e.altKey && !e.shiftKey && e.key === 'e') {
-        e.preventDefault()
-        updateAnswer('<div>Esimerkki:</div>' + latexToImg(sampleAnswer) + '<div>Esimerkki 2:</div>' + latexToImg(sampleAnswer))
-    }
-})
+updateAnswer('<div>Esimerkki:</div>' + latexToImg(sampleAnswer) + '<div>Esimerkki 2:</div>' + latexToImg(sampleAnswer))
 
-$.when(
-    $.get('/load?answerId=answer1'),
-    $.get('/loadMarkers')
-).done(([answer], [markers]) => {
-    if (!answer)
-        return
-    timestamp = answer.timestamp
-    updateAnswer(answer.html)
-    if (markers.timestamp !== timestamp)
-        return
-    Object.keys(markers.markers).forEach(key => {
-        markers.markers[key].forEach(marker => {
-            restoreRectangle($answer.find('#' + key), marker)
-        })
-    })
-})
 function updateAnswer(html) {
     $answer.html(html)
         .find(mathSelector)
@@ -59,15 +37,6 @@ $answer.on('mousedown', mathSelector, e => {
     onEnd(e)
 })
 
-$('.save').click(() => {
-    $.ajax({
-        type: 'POST',
-        url: '/saveMarkers',
-        data: JSON.stringify({timestamp, markers}),
-        dataType: 'json',
-        contentType: 'application/json; charset=utf-8'
-    })
-})
 $answer.on('submit', '.description', e => {
     e.preventDefault()
     const $form = $(e.target)
@@ -90,11 +59,6 @@ function point(e) {
         left: e.offsetX,
         top: e.offsetY
     }
-}
-function restoreRectangle($img, pos) {
-    const $rectangle = $('<div class="rectangle">').css(pos)
-    $img.after($rectangle)
-    savePos($img, pos)
 }
 function savePos($imgWrapper, pos) {
     const index = $imgWrapper.prop('id')
