@@ -64,7 +64,7 @@ module.exports = (obj) => { with(obj) return `
                 }),
             limit: 10
         },
-        baseUrl: 'https://math-demo.abitti.fi'
+        baseUrl: ''
     })
     answer.focus()
 </script>
