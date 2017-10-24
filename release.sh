@@ -26,8 +26,10 @@ fs.writeFileSync(bowerJsonFileName, JSON.stringify(bowerJson, null, 2))
 EOF
 echo Building distributable files...
 npm run bowerify
+npm run browserify
 echo Done.
 git add dist
+git add proto
 git add bower.json
 git commit --amend --no-edit
 git tag -a -m "Release ${NEW_VERSION}" -f v${NEW_VERSION}
