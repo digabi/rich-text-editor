@@ -9,8 +9,14 @@
   <script src="https://math-demo.abitti.fi/baconjs/dist/Bacon.js"></script>
   <script src="https://math-demo.abitti.fi/mathquill/build/mathquill.js"></script>
   <script src="https://math-demo.abitti.fi/rich-text-editor-bundle.js"></script>
+  <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.2/MathJax.js">
+  </script>
   <style>
-    .answer { border: 1px solid #aaa; padding: 5px; box-sizing: content-box; min-height: 100px; font: 17px "Times New Roman";}
+    .answer { border: 1px solid #aaa; padding: 5px; box-sizing: content-box; min-height: 100px; font: 17px "Times New Roman"; }
+    .rich-text-editor img[src*="data:image/svg+xml"] { vertical-align: middle; margin: 4px; padding: 3px 10px; cursor: pointer; border: 1px solid transparent;}
+    .rich-text-editor.rich-text-focused img[src*="data:image/svg+xml"],
+    .rich-text-editor:focus img[src*="data:image/svg+xml"] {  background: #EDF9FF; border: 1px solid #E6F2F8; }
+    .result {display: none;}
   </style>
 </head>
 <body>
@@ -22,8 +28,19 @@
     <div class="answer" id="answer1"></div>
   </section>
 </article>
+<div class="result">\({}\)</div>
 <script>
-  makeRichText(document.querySelector('#answer1'), {
+  MathJax.Hub.Config({
+    jax: ["input/TeX", "output/SVG"],
+    extensions: ["toMathML.js", "tex2jax.js", "MathMenu.js", "MathZoom.js", "fast-preview.js", "AssistiveMML.js", "a11y/accessibility-menu.js"],
+    TeX: {
+      extensions: ["AMSmath.js", "AMSsymbols.js", "noErrors.js", "noUndefined.js"]
+    },
+    SVG: {useFontCache: true, useGlobalCache: false, EqnChunk: 1000000, EqnDelay: 0}
+  });
+
+  const answer = document.querySelector('#answer1')
+  makeRichText(answer, {
     screenshot: {
       saver: ({data}) =>
         new Promise(resolve => {
@@ -34,6 +51,33 @@
       limit: 10
     },
     baseUrl: 'https://math-demo.abitti.fi'
+  })
+
+  let math = null
+  MathJax.Hub.queue.Push(function () {
+    math = MathJax.Hub.getAllJax('MathOutput')[0];
+  });
+  const updateMath = function (latex, cb) {
+    MathJax.Hub.queue.Push(['Text', math, '\\displaystyle{' + latex + '}']);
+    MathJax.Hub.Queue(() => {
+      const svgMarkup = $('.result svg').attr('xmlns', "http://www.w3.org/2000/svg").get(0).outerHTML
+      const dataUrl = 'data:image/svg+xml,' + encodeURIComponent(svgMarkup)
+      cb(dataUrl)
+    })
+  }
+
+  let studentDisplay = null
+  MathJax.Hub.Queue(function () {
+    studentDisplay = MathJax.Hub.getAllJax(document.querySelector('.result'))[0];
+  });
+
+  $(answer).on('input', answer => {
+    const $images = $(answer.target).find('img[src*="/math.svg"]')
+    $images.each((i, img) => {
+      updateMath(img.alt, url => {
+        img.src=url
+      })
+    })
   })
 </script>
 </body>
