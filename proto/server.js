@@ -22,7 +22,11 @@ const app = express()
 let savedMarkers = {}
 const latexCommandCache = {}
 cacheLatexCommands()
-
+app.use(function(req, res, next) {
+    res.header("Access-Control-Allow-Origin", "*");
+    res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+    next();
+});
 app.use('/teacher.js', babelify(__dirname + '/teacher.front.js'))
 app.use('/tests.js', babelify(__dirname + '/../test/tests.front.js'))
 app.use('/rich-text-editor-bundle.js', babelify(__dirname + '/rich-text-editor-bundle.js'))
