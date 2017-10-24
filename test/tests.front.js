@@ -2,12 +2,11 @@ const u = require('./testUtil')
 const base64png = require('./base64png')
 const $answer = $('.answer')
 const {makeRichText} = require('../app/rich-text-editor')
-const {saveScreenshot} = require('../proto/saver')
 let savedValues = []
 
 const richTextOptions = id => ({
     screenshot: {
-        saver: data => saveScreenshot(id)(data),
+        saver: () => Promise.resolve('/screenshot/screenshot.png'),
         limit: 10
     }
 })
@@ -65,7 +64,7 @@ describe('rich text editor', () => {
             })
             it('saves markup', () => {
                 const lastData = savedValues.pop()
-                expect(lastData.answerHTML).to.match(/^<img src=\"\/screenshot\/\?answerId=&amp;id=[\d]+\" alt \/>$/)
+                expect(lastData.answerHTML).to.equal('<img src="/screenshot/screenshot.png" alt />')
                 expect(lastData.answerText).to.equal('')
                 expect(lastData.imageCount).to.equal(1)
             })
@@ -126,7 +125,7 @@ describe('rich text editor', () => {
             it('shows math in img', () => expect($('img:first')).to.have.attr('src', '/math.svg?latex=a%2Bb%5Cinfty'))
             it('stores latest data', () => {
                 const lastData = savedValues.pop()
-                expect(lastData.answerHTML).to.match(/^<img alt=\"a\+b\\infty" src=\"\/math\.svg\?latex=a%2Bb%5Cinfty\" \/><img src=\"\/screenshot\/\?answerId=&amp;id=[\d]+\" alt \/>$/)
+                expect(lastData.answerHTML).to.equal('<img alt="a+b\\infty" src="/math.svg?latex=a%2Bb%5Cinfty" /><img src="/screenshot/screenshot.png" alt />')
                 expect(lastData.answerText).to.equal('')
                 expect(lastData.imageCount).to.equal(1)
             })
@@ -152,7 +151,7 @@ describe('rich text editor', () => {
             })
             it('stores latest data', () => {
                 const lastData = savedValues.pop()
-                expect(lastData.answerHTML).to.match(/^<img alt=\"a\+b\\infty" src=\"\/math\.svg\?latex=a%2Bb%5Cinfty\" \/>°<img src=\"\/screenshot\/\?answerId=&amp;id=[\d]+\" alt \/>$/)
+                expect(lastData.answerHTML).to.equal('<img alt="a+b\\infty" src="/math.svg?latex=a%2Bb%5Cinfty" />°<img src="/screenshot/screenshot.png" alt />')
                 expect(lastData.answerText).to.equal('°')
                 expect(lastData.imageCount).to.equal(1)
             })
