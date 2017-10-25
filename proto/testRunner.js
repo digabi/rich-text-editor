@@ -2,7 +2,7 @@
 const server = require('./server')
 const serverInfo = server.listen(0, () => {
     const spawn = require('child_process').spawn
-    const mochaPhantomjs = spawn('mocha-phantomjs',  [`http://localhost:${serverInfo.address().port}/tests.html`])
+    const mochaPhantomjs = spawn('mocha-chrome',  [`http://localhost:${serverInfo.address().port}/tests.html`])
     mochaPhantomjs.stdout.pipe(process.stdout)
     mochaPhantomjs.on('close', code => {
         process.exit(code)
