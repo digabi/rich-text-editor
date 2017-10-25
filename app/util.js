@@ -1,7 +1,7 @@
 const sanitizeHtml = require('sanitize-html')
 const sanitizeOpts = require('./sanitizeOpts')
-const equationImageSelector = 'img[src^="/math.svg"]'
-const screenshotImageSelector = 'img[src^="/screenshot/"]'
+const equationImageSelector = 'img[src^="/math.svg"], img[src^="data:image/svg+xml"]'
+const screenshotImageSelector = 'img[src^="/screenshot/"], img[src^="data:image/png"]'
 
 module.exports = {
     isKey,
