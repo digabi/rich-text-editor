@@ -13,14 +13,13 @@
   </script>
   <style>
     .answer { border: 1px solid #aaa; padding: 5px; box-sizing: content-box; min-height: 100px; font: 17px "Times New Roman"; }
-    .rich-text-editor img[src^="data:image/svg+xml"] { vertical-align: middle; margin: 4px; padding: 3px 10px; cursor: pointer; border: 1px solid transparent;}
+    .rich-text-editor img[src^="data:image/svg+xml"] { vertical-align: middle; margin: 4px; padding: 3px 10px; cursor: pointer; border: 1px solid transparent; }
     .rich-text-editor.rich-text-focused img[src^="data:image/svg+xml"],
-    .rich-text-editor:focus img[src^="data:image/svg+xml"] {  background: #EDF9FF; border: 1px solid #E6F2F8; }
+    .rich-text-editor:focus img[src^="data:image/svg+xml"] { background: #EDF9FF; border: 1px solid #E6F2F8; }
     .rich-text-editor img[src*="data:image/png"] { margin: 4px; }
     .rich-text-editor:focus img[src*="data:image/png"],
     .rich-text-editor.rich-text-focused img[src*="data:image/png"] { box-shadow: 0 0 3px 1px rgba(0, 0, 0, .2); }
-
-    .result {display: none;}
+    .result { display: none; }
   </style>
 </head>
 <body>
@@ -41,7 +40,7 @@
       extensions: ["AMSmath.js", "AMSsymbols.js", "noErrors.js", "noUndefined.js"]
     },
     SVG: {useFontCache: true, useGlobalCache: false, EqnChunk: 1000000, EqnDelay: 0}
-  });
+  })
 
   const answer = document.querySelector('#answer1')
   makeRichText(answer, {
@@ -58,28 +57,38 @@
   })
 
   let math = null
-  MathJax.Hub.queue.Push(function () {
-    math = MathJax.Hub.getAllJax('MathOutput')[0];
-  });
+  MathJax.Hub.queue.Push(() => {
+    math = MathJax.Hub.getAllJax('MathOutput')[0]
+  })
   const updateMath = function (latex, cb) {
-    MathJax.Hub.queue.Push(['Text', math, '\\displaystyle{' + latex + '}']);
+    MathJax.Hub.queue.Push(['Text', math, '\\displaystyle{' + latex + '}'])
     MathJax.Hub.Queue(() => {
-      const svgMarkup = $('.result svg').attr('xmlns', "http://www.w3.org/2000/svg").get(0).outerHTML
-      const dataUrl = 'data:image/svg+xml,' + encodeURIComponent(svgMarkup)
-      cb(dataUrl)
+      const $svg = $('.result svg').attr('xmlns', "http://www.w3.org/2000/svg")
+      $svg.find('use').each(function () {
+        const $use = $(this)
+        if ($use[0].outerHTML.indexOf('xmlns:xlink') === -1) {
+          $use.attr('xmlns:xlink', 'http://www.w3.org/1999/xlink') //add these for safari
+        }
+      })
+      let svgHtml = $svg.prop('outerHTML')
+      //firefox fix
+      svgHtml = svgHtml.replace(' xlink=', ' xmlns:xlink=')
+      // Safari xlink ns issue fix
+      svgHtml = svgHtml.replace(/ ns\d+:href/gi, ' xlink:href')
+      cb('data:image/svg+xml;base64,' + window.btoa(svgHtml))
     })
   }
 
   let studentDisplay = null
   MathJax.Hub.Queue(function () {
     studentDisplay = MathJax.Hub.getAllJax(document.querySelector('.result'))[0];
-  });
+  })
 
   $(answer).on('input', answer => {
     const $images = $(answer.target).find('img[src*="/math.svg"]')
     $images.each((i, img) => {
       updateMath(img.alt, url => {
-        img.src=url
+        img.src = url
       })
     })
   })
