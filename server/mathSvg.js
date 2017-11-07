@@ -1,14 +1,19 @@
 const mjAPI = require("mathjax-node")
 
-module.exports = {mathSvgResponse}
+module.exports = {mathSvgResponse, latexToSvg}
 
 mjAPI.config({MathJax: {}})
 mjAPI.start()
 
 function mathSvgResponse(req, res) {
     res.type('svg')
+    const latex = req.query.latex
+    latexToSvg(latex, svg => res.send(svg))
+}
+
+function latexToSvg(latex, cb) {
     mjAPI.typeset({
-        math: req.query.latex,
+        math: latex,
         format: "TeX", // "inline-TeX", "MathML"
         mml: false,
         svg: true,
@@ -16,7 +21,7 @@ function mathSvgResponse(req, res) {
         width: 100
     }, function (data) {
         if (data.errors) {
-            res.send(`<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+            cb(`<?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <svg width="17px" height="15px" viewBox="0 0 17 15" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
     <title>Group 2</title>
     <defs></defs>
@@ -34,7 +39,7 @@ function mathSvgResponse(req, res) {
     </g>
 </svg>`)
         } else {
-            res.send(data.svg)
+            cb(data.svg)
         }
     })
 }
