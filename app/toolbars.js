@@ -1,5 +1,5 @@
 const specialCharacterGroups = require('./specialCharacters')
-const latexCommands = require('./latexCommands')
+const latexCommandsWithSvg = require('./latexCommandsWithSvg')
 
 module.exports = {
     init,
@@ -68,9 +68,9 @@ function initSpecialCharacterToolbar($toolbar, mathEditor, hasAnswerFocus) {
 }
 
 function initMathToolbar($mathToolbar, mathEditor, baseUrl) {
-    $mathToolbar.append(latexCommands
+    $mathToolbar.append(latexCommandsWithSvg
         .map(o => `<button class="rich-text-editor-button rich-text-editor-button-grid" data-command="${o.action}" data-latexcommand="${o.label || ''}" data-usewrite="${o.useWrite || false}">
-<img src="${baseUrl}/math.svg?latex=${encodeURIComponent(o.label ? o.label.replace(/X/g, '\\square') : o.action)}"/>
+<img src="${o.svg}"/>
 </button>`).join('')
     ).on('mousedown', 'button', e => {
         e.preventDefault()
