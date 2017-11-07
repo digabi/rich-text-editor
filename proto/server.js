@@ -8,6 +8,7 @@ const startedAt = new Date()
 const FI = require('../app/FI')
 const SV = require('../app/SV')
 const mjAPI = require("mathjax-node")
+const fs = require('fs')
 const latexCommands = require('../app/latexCommands')
 const studentHtmlFI = studentHtml((Object.assign({startedAt: formatDate(startedAt), locale: 'FI'}, FI.editor)))
 const censorHtmlFI = censorHtml((Object.assign({startedAt: formatDate(startedAt), locale: 'FI'}, FI.editor)))
@@ -23,6 +24,32 @@ app.use(function(req, res, next) {
     res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
     next();
 });
+
+let generateSite = process.env.GENERATE_SITE
+const siteRoot = __dirname + '/../site'
+
+if(generateSite) {
+    if (!fs.existsSync(siteRoot)) {
+        fs.mkdirSync(siteRoot)
+    }
+}
+function createDirsIfNeeded(root, path) {
+    path.split('/').forEach(folder => {
+        root = root + '/' + folder
+        if(!fs.existsSync(root))
+            fs.mkdirSync(root)
+    })
+}
+
+function definePath(path, content) {
+    if(generateSite) {
+        createDirsIfNeeded(siteRoot, path)
+        fs.writeFileSync(siteRoot + path + '/index.html', content, 'utf8')
+    } else {
+        app.get(path, (req, res) => res.send(content))
+    }
+}
+
 app.use('/teacher.js', babelify(__dirname + '/teacher.front.js'))
 app.use('/tests.js', babelify(__dirname + '/../test/tests.front.js'))
 app.use('/rich-text-editor-bundle.js', babelify(__dirname + '/rich-text-editor-bundle.js'))
@@ -39,15 +66,14 @@ exposeModules([
     'mocha',
     'web-console-reporter'])
 const doctype = '<!DOCTYPE html>'
-app.get('/tarkistus', (req, res) => res.send(doctype + teacherHtmlFI))
-app.get('/', (req, res) => res.send(doctype + studentHtmlFI))
-app.get('/censor', (req, res) => res.send(doctype + censorHtmlFI))
-app.get('/sv/bedomning', (req, res) => res.send(doctype + teacherHtmlSV))
-app.get('/sv', (req, res) => res.send(doctype + studentHtmlSV))
+definePath('/tarkistus', doctype + teacherHtmlFI)
+definePath('/', doctype + studentHtmlFI)
+definePath('/censor', doctype + censorHtmlFI)
+definePath('/sv/bedomning', doctype + teacherHtmlSV)
+definePath('/sv', doctype + studentHtmlSV)
 app.use(bodyParser.urlencoded({extended: false, limit: '5mb'}))
 app.use(bodyParser.json({limit: '5mb', strict: false}))
 app.get('/math.svg', onMathSvg)
-app.get('/version', onVersion)
 
 function onMathSvg(req, res) {
     if (req.query.latex in latexCommandCache) {
@@ -56,13 +82,6 @@ function onMathSvg(req, res) {
     } else {
         mathSvg.mathSvgResponse(req, res)
     }
-}
-
-function onVersion(req, res) {
-    res.send({
-        serverStarted: startedAt.toString(),
-        currentServerTime: new Date().toString()
-    })
 }
 
 module.exports = app
