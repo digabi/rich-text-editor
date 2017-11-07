@@ -279,7 +279,17 @@ let MQ
 module.exports = {init}
 let firstTime = true
 
-function init($outerPlaceholder, focus, baseUrl) {
+function init($outerPlaceholder, focus, baseUrl, updateMathImg) {
+    function defaultUpdateMathImg($img, latex) {
+        $img.prop({
+            src: baseUrl + '/math.svg?latex=' + encodeURIComponent(latex),
+            alt: latex
+        })
+        $img.closest('[data-js="answer"]').trigger('input')
+    }
+
+    updateMathImg = updateMathImg || defaultUpdateMathImg
+
     let updateMathImgTimeout
 
     if(firstTime) {
@@ -400,14 +410,6 @@ function init($outerPlaceholder, focus, baseUrl) {
         }
     }
 
-    function updateMathImg($img, latex) {
-        $img.prop({
-            src: baseUrl + '/math.svg?latex=' + encodeURIComponent(latex),
-            alt: latex
-        })
-        $img.closest('[data-js="answer"]').trigger('input')
-    }
-
     function updateMathImgWithDebounce($img, latex) {
         clearTimeout(updateMathImgTimeout)
         updateMathImgTimeout = setTimeout(() => {
@@ -470,7 +472,7 @@ module.exports.makeRichText = (answer, options, onValueChanged = () => {}) => {
     const baseUrl = options.baseUrl || ''
 
     if (firstCall) {
-        math = mathEditor.init($outerPlaceholder, focus, baseUrl)
+        math = mathEditor.init($outerPlaceholder, focus, baseUrl, options.updateMathImg)
         $toolbar = toolbars.init(math, () => focus.richText, l, baseUrl)
         $('body').append($outerPlaceholder, $toolbar)
         firstCall = false

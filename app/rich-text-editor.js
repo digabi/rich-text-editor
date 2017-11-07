@@ -28,7 +28,7 @@ module.exports.makeRichText = (answer, options, onValueChanged = () => {}) => {
     const baseUrl = options.baseUrl || ''
 
     if (firstCall) {
-        math = mathEditor.init($outerPlaceholder, focus, baseUrl)
+        math = mathEditor.init($outerPlaceholder, focus, baseUrl, options.updateMathImg)
         $toolbar = toolbars.init(math, () => focus.richText, l, baseUrl)
         $('body').append($outerPlaceholder, $toolbar)
         firstCall = false

@@ -8,7 +8,17 @@ let MQ
 module.exports = {init}
 let firstTime = true
 
-function init($outerPlaceholder, focus, baseUrl) {
+function init($outerPlaceholder, focus, baseUrl, updateMathImg) {
+    function defaultUpdateMathImg($img, latex) {
+        $img.prop({
+            src: baseUrl + '/math.svg?latex=' + encodeURIComponent(latex),
+            alt: latex
+        })
+        $img.closest('[data-js="answer"]').trigger('input')
+    }
+
+    updateMathImg = updateMathImg || defaultUpdateMathImg
+
     let updateMathImgTimeout
 
     if(firstTime) {
@@ -127,14 +137,6 @@ function init($outerPlaceholder, focus, baseUrl) {
             if (~symbol.indexOf('\\')) mqInstance.keystroke('Tab')
             setTimeout(() => mqInstance.focus(), 0)
         }
-    }
-
-    function updateMathImg($img, latex) {
-        $img.prop({
-            src: baseUrl + '/math.svg?latex=' + encodeURIComponent(latex),
-            alt: latex
-        })
-        $img.closest('[data-js="answer"]').trigger('input')
     }
 
     function updateMathImgWithDebounce($img, latex) {

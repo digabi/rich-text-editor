@@ -53,7 +53,16 @@
         }),
       limit: 10
     },
-    baseUrl: 'https://math-demo.abitti.fi'
+    baseUrl: 'https://math-demo.abitti.fi',
+    updateMathImg: ($img, latex) => {
+      updateMath(latex, svg => {
+        $img.prop({
+          src: svg,
+          alt: latex
+        })
+        $img.closest('[data-js="answer"]').trigger('input')
+      })
+    }
   })
 
   let math = null
@@ -95,7 +104,6 @@
         </g>
     </g>
 </svg>`))
-
       }
     })
   }
@@ -103,15 +111,6 @@
   let studentDisplay = null
   MathJax.Hub.Queue(function () {
     studentDisplay = MathJax.Hub.getAllJax(document.querySelector('.result'))[0];
-  })
-
-  $(answer).on('input', answer => {
-    const $images = $(answer.target).find('img[src*="/math.svg"]')
-    $images.each((i, img) => {
-      updateMath(img.alt, url => {
-        img.src = url
-      })
-    })
   })
 </script>
 </body>
