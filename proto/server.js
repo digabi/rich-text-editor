@@ -1,12 +1,9 @@
 const express = require('express')
 const bodyParser = require('body-parser')
 const babelify = require('express-babelify-middleware')
-const sanitizeHtml = require('sanitize-html')
 const studentHtml = require('./student.html')
 const censorHtml = require('./censor.html')
 const mathSvg = require('../server/mathSvg')
-const fs = require('fs')
-const path = require('path')
 const startedAt = new Date()
 const FI = require('../app/FI')
 const SV = require('../app/SV')
@@ -19,7 +16,6 @@ const teacherHtml = require('./teacher.html')
 const teacherHtmlFI = teacherHtml(Object.assign({startedAt: formatDate(startedAt), locale: 'FI'}, FI.annotating))
 const teacherHtmlSV = teacherHtml(Object.assign({startedAt: formatDate(startedAt), locale: 'SV'}, SV.annotating))
 const app = express()
-let savedMarkers = {}
 const latexCommandCache = {}
 cacheLatexCommands()
 app.use(function(req, res, next) {
