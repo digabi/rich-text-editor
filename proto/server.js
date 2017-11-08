@@ -7,9 +7,7 @@ const mathSvg = require('../server/mathSvg')
 const startedAt = new Date()
 const FI = require('../app/FI')
 const SV = require('../app/SV')
-const mjAPI = require("mathjax-node")
 const fs = require('fs')
-const latexCommands = require('../app/latexCommands')
 const studentHtmlFI = studentHtml((Object.assign({startedAt: formatDate(startedAt), locale: 'FI'}, FI.editor)))
 const censorHtmlFI = censorHtml((Object.assign({startedAt: formatDate(startedAt), locale: 'FI'}, FI.editor)))
 const studentHtmlSV = studentHtml((Object.assign({startedAt: formatDate(startedAt), locale: 'SV'}, SV.editor)))
@@ -17,8 +15,6 @@ const teacherHtml = require('./teacher.html')
 const teacherHtmlFI = teacherHtml(Object.assign({startedAt: formatDate(startedAt), locale: 'FI'}, FI.annotating))
 const teacherHtmlSV = teacherHtml(Object.assign({startedAt: formatDate(startedAt), locale: 'SV'}, SV.annotating))
 const app = express()
-const latexCommandCache = {}
-cacheLatexCommands()
 app.use(function(req, res, next) {
     res.header("Access-Control-Allow-Origin", "*");
     res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
@@ -73,16 +69,7 @@ definePath('/sv/bedomning', doctype + teacherHtmlSV)
 definePath('/sv', doctype + studentHtmlSV)
 app.use(bodyParser.urlencoded({extended: false, limit: '5mb'}))
 app.use(bodyParser.json({limit: '5mb', strict: false}))
-app.get('/math.svg', onMathSvg)
-
-function onMathSvg(req, res) {
-    if (req.query.latex in latexCommandCache) {
-        res.type('svg')
-        res.send(latexCommandCache[req.query.latex])
-    } else {
-        mathSvg.mathSvgResponse(req, res)
-    }
-}
+app.get('/math.svg', mathSvg.mathSvgResponse)
 
 module.exports = app
 
@@ -96,18 +83,4 @@ function formatDate(date) {
 
 function pad(num) {
     return (num > 9 ? '' : '0') + num
-}
-
-function cacheLatexCommands() {
-    latexCommands.map(o => o.label ? o.label.replace(/X/g, '\\square') : o.action)
-        .forEach(latex => {
-            mjAPI.typeset({
-                math: latex,
-                format: "TeX", // "inline-TeX", "MathML"
-                mml: false,
-                svg: true,
-            }, function (data) {
-                latexCommandCache[latex] = data.svg
-            })
-        })
 }
