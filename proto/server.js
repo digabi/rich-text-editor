@@ -71,6 +71,11 @@ app.use(bodyParser.urlencoded({extended: false, limit: '5mb'}))
 app.use(bodyParser.json({limit: '5mb', strict: false}))
 app.get('/math.svg', mathSvg.mathSvgResponse)
 
+app.use((error, req, res, next) => {
+    console.log('Request error: ', error.stack)
+    res.status(500).end()
+})
+
 module.exports = app
 
 function exposeModules(names) {
