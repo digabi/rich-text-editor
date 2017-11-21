@@ -15,6 +15,11 @@ const teacherHtml = require('./teacher.html')
 const teacherHtmlFI = teacherHtml(Object.assign({startedAt: formatDate(startedAt), locale: 'FI'}, FI.annotating))
 const teacherHtmlSV = teacherHtml(Object.assign({startedAt: formatDate(startedAt), locale: 'SV'}, SV.annotating))
 const app = express()
+
+process.on('uncaughtException', function(err) {
+    console.log('Uncaught exception: ', err.stack)
+})
+
 app.use(function(req, res, next) {
     res.header("Access-Control-Allow-Origin", "*");
     res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
