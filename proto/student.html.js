@@ -10,6 +10,7 @@ module.exports = (obj) => { with(obj) return `
     <script src="/baconjs/dist/Bacon.js"></script>
     <script src="/bacon.jquery/dist/bacon.jquery.js"></script>
     <script src="/mathquill/build/mathquill.js"></script>
+    <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.2/MathJax.js"></script>
     <link rel="icon" href="/rich-text-editor-favicon.ico" type="image/x-icon"/>
     <link rel="shortcut icon" href="/rich-text-editor-favicon.ico" type="image/x-icon"/>
     <script>
@@ -52,22 +53,7 @@ module.exports = (obj) => { with(obj) return `
     </section>
 </footer>
 <script src="/rich-text-editor-bundle.js"></script>
-<script>
-    const answer = document.getElementById('answer1')
-    makeRichText(answer, {
-        screenshot: {
-            saver: ({data}) =>
-                new Promise(resolve => {
-                    const reader = new FileReader()
-                    reader.onload = evt => resolve(evt.target.result)
-                    reader.readAsDataURL(data)
-                }),
-            limit: 10
-        },
-        baseUrl: ''
-    })
-    answer.focus()
-</script>
+<script src="/student.js"></script>
 <script>
     (function (i, s, o, g, r, a, m) {
         i['GoogleAnalyticsObject'] = r;
