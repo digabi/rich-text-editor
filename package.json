@@ -9,7 +9,8 @@
     "server/mathSvg.js"
   ],
   "scripts": {
-    "start": "npm run stop; forever start proto/index.js",
+    "start": "proto/index.js",
+    "start-forever": "npm run stop; forever start proto/index.js",
     "stop": "forever stop proto/index.js",
     "test": "proto/testRunner.js",
     "dev": "supervisor -i public,test proto/index.js",
