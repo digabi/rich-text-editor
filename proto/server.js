@@ -18,6 +18,7 @@ const app = express()
 
 process.on('uncaughtException', function(err) {
     console.log('Uncaught exception: ', err.stack)
+    process.exit(1)
 })
 
 app.use(function(req, res, next) {
