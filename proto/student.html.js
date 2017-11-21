@@ -69,7 +69,6 @@ module.exports = (obj) => { with(obj) return `
 
     ga('create', 'UA-49446143-7', 'auto');
     ga('send', 'pageview');
-
 </script>
 </body>
 </html>`}

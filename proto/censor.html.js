@@ -10,6 +10,7 @@ module.exports = (obj) => { with(obj) return `
     <script src="/baconjs/dist/Bacon.js"></script>
     <script src="/bacon.jquery/dist/bacon.jquery.js"></script>
     <script src="/mathquill/build/mathquill.js"></script>
+    <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.2/MathJax.js"></script>
     <link rel="icon" href="/rich-text-editor-favicon.ico" type="image/x-icon"/>
     <link rel="shortcut icon" href="/rich-text-editor-favicon.ico" type="image/x-icon"/>
     <script>
@@ -42,51 +43,23 @@ module.exports = (obj) => { with(obj) return `
         </div>
     </section>
 </footer>
-<script src="/saver.js"></script>
 <script src="/rich-text-editor-bundle.js"></script>
+<script src="/censor.js"></script>
 <script>
-    const $answer = $('.answer')
-    const save = ($elem, async = true) => $.post({
-        url: '/save',
-        data: {text: $elem.html(), answerId: $elem.attr('id')},
-        async
-    })
+    (function (i, s, o, g, r, a, m) {
+        i['GoogleAnalyticsObject'] = r;
+        i[r] = i[r] || function () {
+            (i[r].q = i[r].q || []).push(arguments)
+        }, i[r].l = 1 * new Date();
+        a = s.createElement(o),
+            m = s.getElementsByTagName(o)[0];
+        a.async = 1;
+        a.src = g;
+        m.parentNode.insertBefore(a, m)
+    })(window, document, 'script', 'https://www.google-analytics.com/analytics.js', 'ga');
 
-    const richTextOptions = id => ({
-        screenshot: {
-            saver: data => saveScreenshot(id)(data),
-            limit: 10
-        }
-    })
-
-    function copyLatexToClipboard() {
-        const latex = $('[data-js="latexField"]').val()
-        const escapedLatex = '\\\\\\\\(' + latex.replace(/\\\\/g, '\\\\\\\\') + '\\\\\\\\)'
-        $('#clipboardContent').removeAttr('disabled').val(escapedLatex).select()
-        document.execCommand('copy')
-        $('#clipboardContent').attr('disabled', true)
-    }
-
-    $('#copy').on('click', e => {
-        e.preventDefault()
-        copyLatexToClipboard()
-    })
-    $answer.each((i, answer) => {
-        makeRichText(answer, richTextOptions(answer.id), onValueChange)
-    }).on('keypress', e => {
-        if (e.ctrlKey && !e.altKey && !e.shiftKey && e.key === 's') {
-            e.preventDefault()
-            copyLatexToClipboard()
-        }
-    })
-    $('#answer1').focus()
-
-    $('.toggleInstructions').click(e => {
-        e.preventDefault()
-        $('.instructions').toggleClass('hide')
-    })
-    function onValueChange() {
-    }
+    ga('create', 'UA-49446143-7', 'auto');
+    ga('send', 'pageview');
 </script>
 </body>
 </html>`}
