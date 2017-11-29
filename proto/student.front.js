@@ -23,3 +23,18 @@ makeRichText(answer, {
     }
 })
 answer.focus()
+
+const trackError = (e = {}) => {
+    const category = 'JavaScript error'
+    const action = e.message
+    const label = e.filename + ':' + e.lineno
+    ga('send', 'event', category, action, label)
+}
+
+if (window.addEventListener) {
+    window.addEventListener('error', trackError, false)
+} else if (window.attachEvent) {
+    window.attachEvent('onerror', trackError)
+} else {
+    window.onerror = trackError
+}

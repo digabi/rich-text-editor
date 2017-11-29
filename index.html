@@ -112,6 +112,21 @@
   MathJax.Hub.Queue(function () {
     studentDisplay = MathJax.Hub.getAllJax(document.querySelector('.result'))[0];
   })
+  const trackError = (e = {}) => {
+    const category = 'JavaScript error'
+    const action = e.message
+    const label = e.filename + ':' + e.lineno
+    ga('send', 'event', category, action, label)
+  }
+
+  if (window.addEventListener) {
+    window.addEventListener('error', trackError, false)
+  } else if (window.attachEvent) {
+    window.attachEvent('onerror', trackError)
+  } else {
+    window.onerror = trackError
+  }
+
 </script>
 </body>
 </html>
