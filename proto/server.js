@@ -1,6 +1,7 @@
 const express = require('express')
 const bodyParser = require('body-parser')
-const babelify = require('express-babelify-middleware')
+const babelifyMiddleware = require('express-babelify-middleware')
+const browserify = require('browserify')
 const studentHtml = require('./student.html')
 const censorHtml = require('./censor.html')
 const mathSvg = require('../server/mathSvg')
@@ -52,11 +53,21 @@ function definePath(path, content) {
     }
 }
 
-app.use('/teacher.js', babelify(__dirname + '/teacher.front.js'))
-app.use('/student.js', babelify(__dirname + '/student.front.js'))
-app.use('/censor.js', babelify(__dirname + '/censor.front.js'))
-app.use('/tests.js', babelify(__dirname + '/../test/tests.front.js'))
-app.use('/rich-text-editor-bundle.js', babelify(__dirname + '/rich-text-editor-bundle.js'))
+function defineFile(url, relativePath) {
+    if(generateSite) {
+        browserify(__dirname + relativePath)
+            .transform("babelify", {presets: ["env"]})
+            .bundle()
+            .pipe(fs.createWriteStream(siteRoot + url))
+    } else {
+        app.use(url, babelifyMiddleware(__dirname + relativePath))
+    }
+}
+defineFile('/teacher.js', '/teacher.front.js')
+defineFile('/student.js', '/student.front.js')
+defineFile('/censor.js', '/censor.front.js')
+defineFile('/tests.js', '/../test/tests.front.js')
+defineFile('/rich-text-editor-bundle.js', '/rich-text-editor-bundle.js')
 app.use(express.static(__dirname + '/../public'))
 app.use(express.static(__dirname + '/../test'))
 exposeModules([
