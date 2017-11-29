@@ -1,5 +1,3 @@
-const updateMath = require('./updateMath')
-updateMath.init()
 const answer = document.getElementById('answer1')
 makeRichText(answer, {
     screenshot: {
@@ -11,16 +9,7 @@ makeRichText(answer, {
             }),
         limit: 10
     },
-    baseUrl: '',
-    updateMathImg: ($img, latex) => {
-        updateMath.updateMath(latex, svg => {
-            $img.prop({
-                src: svg,
-                alt: latex
-            })
-            $img.closest('[data-js="answer"]').trigger('input')
-        })
-    }
+    baseUrl: ''
 })
 answer.focus()
 
