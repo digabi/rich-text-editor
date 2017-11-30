@@ -54,6 +54,8 @@ module.exports = [
             { character: '≈', latexCommand: '\\approx', popular: true },
             { character: '≤', latexCommand: '\\leq', popular: true },
             { character: '≥', latexCommand: '\\geq' },
+            { character: '<' },
+            { character: '>' },
             { character: '∼', latexCommand: '\\sim' },
             { character: '≡', latexCommand: '\\equiv' },
             { character: '≢' }, // \nequiv or \not\equiv
