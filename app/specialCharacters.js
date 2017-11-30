@@ -43,7 +43,8 @@ module.exports = [
             { character: 'ψ', latexCommand: '\\psi' },
             { character: 'Ω', latexCommand: '\\Omega' },
             { character: 'ω', latexCommand: '\\omega' },
-            { character: '∂', latexCommand: '\\partial' }
+            { character: '∂', latexCommand: '\\partial' },
+            { character: 'φ', latexCommand: '\\varphi' }
         ]
     },
     {
