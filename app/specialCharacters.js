@@ -58,7 +58,8 @@ module.exports = [
             { character: '≡', latexCommand: '\\equiv' },
             { character: '≢' }, // \nequiv or \not\equiv
             { character: '∘', latexCommand: '\\circ' },
-            { character: '…', latexCommand: '\\ldots' }
+            { character: '…', latexCommand: '\\ldots' },
+            { character: '∝', latexCommand: '\\propto' }
         ]
     },
     {
