@@ -58,6 +58,7 @@
     "express-babelify-middleware": "^0.2.1",
     "jquery": "3.2.0",
     "jshint": "^2.9.4",
+    "mathjax": "^2.7.2",
     "mathquill": "0.10.1",
     "mocha": "^3.2.0",
     "mocha-chrome": "^1.0.0",
