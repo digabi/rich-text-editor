@@ -9,7 +9,7 @@
     "server/mathSvg.js"
   ],
   "scripts": {
-    "start": "npm run stop; HOME=${OPENSHIFT_DATA_DIR:-${HOME}} forever start proto/index.js",
+    "start": "HOME=${OPENSHIFT_DATA_DIR:-${HOME}} forever start proto/index.js",
     "stop": "HOME=${OPENSHIFT_DATA_DIR:-${HOME}} forever stop proto/index.js",
     "test": "proto/testRunner.js",
     "dev": "supervisor -i public,test proto/index.js",
