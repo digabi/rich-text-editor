@@ -591,7 +591,7 @@ module.exports = [
             { character: 'η', latexCommand: '\\eta' },
             { character: 'Θ', latexCommand: '\\Theta' },
             { character: 'ϑ', latexCommand: '\\vartheta' },
-            { character: '𝜄', latexCommand: '\\iota' },
+            { character: '&iota;', latexCommand: '\\iota' },
             { character: 'κ', latexCommand: '\\kappa' },
             { character: 'Λ', latexCommand: '\\Lambda' },
             { character: 'λ', latexCommand: '\\lambda' },
@@ -612,7 +612,8 @@ module.exports = [
             { character: 'ψ', latexCommand: '\\psi' },
             { character: 'Ω', latexCommand: '\\Omega' },
             { character: 'ω', latexCommand: '\\omega' },
-            { character: '∂', latexCommand: '\\partial' }
+            { character: '∂', latexCommand: '\\partial' },
+            { character: 'φ', latexCommand: '\\varphi' }
         ]
     },
     {
@@ -622,11 +623,14 @@ module.exports = [
             { character: '≈', latexCommand: '\\approx', popular: true },
             { character: '≤', latexCommand: '\\leq', popular: true },
             { character: '≥', latexCommand: '\\geq' },
+            { character: '<' },
+            { character: '>' },
             { character: '∼', latexCommand: '\\sim' },
             { character: '≡', latexCommand: '\\equiv' },
             { character: '≢' }, // \nequiv or \not\equiv
             { character: '∘', latexCommand: '\\circ' },
-            { character: '…', latexCommand: '\\ldots' }
+            { character: '…', latexCommand: '\\ldots' },
+            { character: '∝', latexCommand: '\\propto' }
         ]
     },
     {
