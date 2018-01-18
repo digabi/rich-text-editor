@@ -22,7 +22,7 @@ module.exports = [
             { character: 'η', latexCommand: '\\eta' },
             { character: 'Θ', latexCommand: '\\Theta' },
             { character: 'ϑ', latexCommand: '\\vartheta' },
-            { character: '𝜄', latexCommand: '\\iota' },
+            { character: '&iota;', latexCommand: '\\iota' },
             { character: 'κ', latexCommand: '\\kappa' },
             { character: 'Λ', latexCommand: '\\Lambda' },
             { character: 'λ', latexCommand: '\\lambda' },
