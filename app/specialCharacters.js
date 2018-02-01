@@ -76,7 +76,7 @@ module.exports = [
             { character: '⊥', latexCommand: '\\perp'},
             { character: '‖', latexCommand: '\\parallel'},
             { character: '⇌' }, // \rightleftharpoons
-            { character: '|' } // \pipe
+            { character: '|' , latexCommand: '\\mid'} // \pipe
         ]
     },
     {
