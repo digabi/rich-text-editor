@@ -16,7 +16,7 @@
     "jquery": "^2.2.4",
     "bacon.jquery": "^0.4.12",
     "bacon": "^0.7.92",
-    "mathquill": "digabi/mathquill#0.10.1-dist",
+    "mathquill": "digabi/mathquill#0.10.1+digabi.6",
     "sanitize-html": "^1.11.4",
     "buffer": "^3.46.1"
   }
