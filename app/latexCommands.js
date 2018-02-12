@@ -23,5 +23,7 @@ module.exports = [
     {action: '(', label: '(X)'},
     {action: '_{ }^{ } ', label: '_{X}^{X}X', useWrite: true},
     {action: '\\cases', label: '\\begin{cases}X\\\\X\\end{cases}'},
-    {action: '\\mathrm', label: '\\mathrm{T}'},
+    {action: '\\frac{a}{b}^{\\text{(}x}', label: '\\frac{X}{X}^{\\text{(}X}', useWrite: true},
+    {action: '^{x\\text{)}}\\frac{a}{b}', label: '^{X\\text{)}}\\frac{X}{X}', useWrite: true},
+    {action: '\\mathrm', label: '\\mathrm{T}'}
 ]
