@@ -57,6 +57,7 @@ function init($outerPlaceholder, focus, baseUrl, updateMathImg) {
 
 
     $latexField
+        .on('keydown', transformLatexKeydown)
         .on('input paste', onLatexUpdate)
         .on('focus blur', e => {
             focus.latexField = e.type !== 'blur'
@@ -86,6 +87,14 @@ function init($outerPlaceholder, focus, baseUrl, updateMathImg) {
             $latexField.val(latex)
             updateMathImgWithDebounce($mathEditorContainer.prev(), latex)
         }, 0)
+    }
+
+    function transformLatexKeydown(e) {
+        if (e.originalEvent.key === ',') {
+            e.preventDefault()
+            u.insertToTextAreaAtCursor($latexField.get(0), '{,}')
+        }
+        onLatexUpdate(e)
     }
 
     function onLatexUpdate(e) {
