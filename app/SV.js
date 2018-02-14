@@ -3,7 +3,6 @@ module.exports = {
         mathEditor: 'Matematikeditor',
         title: 'Formeleditorns utvecklingsversion',
         description: `
-<p><em>I editorn fattas fortfarande bl.a. substitutionstecken för integralberäkning.</em></p>
 <ul>
 <li>Editorn fungerar bäst med browsern Firefox.</li>
  <li>Under knappen “Lägg till formel” hittar du de vanligaste beteckningarna som används i matematik, fysik och kemi. Dessutom kan du använda specialtecken för att skriva formler.</li>
