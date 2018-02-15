@@ -5,7 +5,7 @@ module.exports = {
         title: 'Kaavaeditorin kehitysversio',
         description: `
 <ul>
-<li>Editori toimii parhaiten Firefox-selaimella.</li>
+<li class="warning">Nämä puuttuvat vielä koeympäristöstä: yhtälöryhmä, paloittain määritelty funktio ja integraalin sijoitusmerkintä</li>
 <li>“Lisää kaava” -napin alta löydät yleisimpiä matematiikassa, fysiikassa ja
 kemiassa käytettäviä merkintöjä. Lisäksi erikoismerkkejä voi käyttää kaavan kirjoittamiseen.</li>
  <li>Kaavoja voi rakentaa
@@ -56,7 +56,7 @@ module.exports = {
         title: 'Formeleditorns utvecklingsversion',
         description: `
 <ul>
-<li>Editorn fungerar bäst med browsern Firefox.</li>
+<li class="warning">Följande saknas ännu i provsystemet: ekvationssystem, styckvis definierad funktion och substitutionstecken för integralberäkning</li>
  <li>Under knappen “Lägg till formel” hittar du de vanligaste beteckningarna som används i matematik, fysik och kemi. Dessutom kan du använda specialtecken för att skriva formler.</li>
 <li>Det går att konstruera formler genom att klicka på beteckningarna i menyerna och/eller genom att skriva LaTeX.</li>
 <li>Det går förutom att skriva text och formler, att också att lägga till bilder i svarsfältet.</li></ul>`,
@@ -310,7 +310,7 @@ function init($outerPlaceholder, focus, baseUrl, updateMathImg) {
     const $mathEditorContainer = $(`
         <div class="math-editor" data-js="mathEditor">
             <div class="math-editor-equation-field" data-js="equationField"></div>
-            <textarea rows="1" class="math-editor-latex-field" data-js="latexField" placeholder="LaTex"></textarea>
+            <textarea rows="1" class="math-editor-latex-field" data-js="latexField" placeholder="LaTeΧ"></textarea>
         </div>`)
 
     $outerPlaceholder.append($mathEditorContainer)
@@ -340,6 +340,7 @@ function init($outerPlaceholder, focus, baseUrl, updateMathImg) {
 
 
     $latexField
+        .on('keydown', transformLatexKeydown)
         .on('input paste', onLatexUpdate)
         .on('focus blur', e => {
             focus.latexField = e.type !== 'blur'
@@ -368,13 +369,28 @@ function init($outerPlaceholder, focus, baseUrl, updateMathImg) {
             const latex = mqInstance.latex()
             $latexField.val(latex)
             updateMathImgWithDebounce($mathEditorContainer.prev(), latex)
+            updateLatexFieldHeight()
         }, 0)
+    }
+
+    function transformLatexKeydown(e) {
+        if (e.originalEvent.key === ',') {
+            e.preventDefault()
+            u.insertToTextAreaAtCursor($latexField.get(0), '{,}')
+        }
+        onLatexUpdate(e)
     }
 
     function onLatexUpdate(e) {
         e && e.originalEvent && e.originalEvent.stopPropagation()
         updateMathImgWithDebounce($mathEditorContainer.prev(), $latexField.val())
         setTimeout(() => mqInstance.latex($latexField.val()), 1)
+        updateLatexFieldHeight()
+    }
+
+    function updateLatexFieldHeight() {
+        $latexField.get(0).style.height = 'auto'
+        $latexField.get(0).style.height = $latexField.get(0).scrollHeight + 'px'
     }
 
     function onFocusChanged() {
