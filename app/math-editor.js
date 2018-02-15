@@ -27,7 +27,7 @@ function init($outerPlaceholder, focus, baseUrl, updateMathImg) {
     const $mathEditorContainer = $(`
         <div class="math-editor" data-js="mathEditor">
             <div class="math-editor-equation-field" data-js="equationField"></div>
-            <textarea rows="1" class="math-editor-latex-field" data-js="latexField" placeholder="LaTex"></textarea>
+            <textarea rows="1" class="math-editor-latex-field" data-js="latexField" placeholder="LaTeΧ"></textarea>
         </div>`)
 
     $outerPlaceholder.append($mathEditorContainer)
