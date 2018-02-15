@@ -3,7 +3,6 @@ module.exports = {
         mathEditor: 'Matikkaeditori',
         title: 'Kaavaeditorin kehitysversio',
         description: `
-<p><em>Editorista puuttuu vielä mm. integraalin sijoitusmerkintä.</em></p>
 <ul>
 <li>Editori toimii parhaiten Firefox-selaimella.</li>
 <li>“Lisää kaava” -napin alta löydät yleisimpiä matematiikassa, fysiikassa ja

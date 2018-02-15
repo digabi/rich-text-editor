@@ -60,7 +60,7 @@
     "jquery": "3.3.1",
     "jshint": "^2.9.5",
     "mathjax": "^2.7.2",
-    "mathquill": "digabi/mathquill#0.10.1+digabi.8",
+    "mathquill": "digabi/mathquill#0.10.1+digabi.14",
     "mocha": "^5.0.0",
     "mocha-chrome": "^1.0.3",
     "node-sass-middleware": "^0.11.0",

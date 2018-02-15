@@ -3,6 +3,7 @@ module.exports = [
     {action: '^', label: 'x^{X}'},
     {action: '\\frac', label: '\\frac{X}{X}'},
     {action: '\\int', label: '\\int_{X}^{X}'},
+    {action: '\\intsub', label: '\\bigg/_{\\!\\!\\!\\!X}^{X}'},
     {action: '\\lim_', label: '\\lim_{X}'},
     {action: '\\lim_{x\\rightarrow\\infty}', label: '\\lim_{x\\rightarrow\\infty}', useWrite:true},
     {action: '\\overrightarrow', label: '\\overrightarrow{X}'},
