@@ -4,7 +4,6 @@ module.exports = {
         title: 'Kaavaeditorin kehitysversio',
         description: `
 <ul>
-<li>Editori toimii parhaiten Firefox-selaimella.</li>
 <li>“Lisää kaava” -napin alta löydät yleisimpiä matematiikassa, fysiikassa ja
 kemiassa käytettäviä merkintöjä. Lisäksi erikoismerkkejä voi käyttää kaavan kirjoittamiseen.</li>
  <li>Kaavoja voi rakentaa
