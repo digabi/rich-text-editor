@@ -86,6 +86,7 @@ function init($outerPlaceholder, focus, baseUrl, updateMathImg) {
             const latex = mqInstance.latex()
             $latexField.val(latex)
             updateMathImgWithDebounce($mathEditorContainer.prev(), latex)
+            updateLatexFieldHeight()
         }, 0)
     }
 
@@ -101,6 +102,12 @@ function init($outerPlaceholder, focus, baseUrl, updateMathImg) {
         e && e.originalEvent && e.originalEvent.stopPropagation()
         updateMathImgWithDebounce($mathEditorContainer.prev(), $latexField.val())
         setTimeout(() => mqInstance.latex($latexField.val()), 1)
+        updateLatexFieldHeight()
+    }
+
+    function updateLatexFieldHeight() {
+        $latexField.get(0).style.height = 'auto'
+        $latexField.get(0).style.height = $latexField.get(0).scrollHeight + 'px'
     }
 
     function onFocusChanged() {
