@@ -27,3 +27,5 @@ if (window.addEventListener) {
 } else {
     window.onerror = trackError
 }
+const $tools = $('[data-js="tools"]')
+$tools.on('mousedown', '[data-js="expandCollapseCharacters"]', () => ga('send', 'event', 'toolbar', 'toggle', ($tools.hasClass('rich-text-editor-characters-expanded') ? 'expand' : 'collapse')))
