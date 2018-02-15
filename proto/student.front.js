@@ -29,3 +29,5 @@ if (window.addEventListener) {
 }
 const $tools = $('[data-js="tools"]')
 $tools.on('mousedown', '[data-js="expandCollapseCharacters"]', () => ga('send', 'event', 'toolbar', 'toggle', ($tools.hasClass('rich-text-editor-characters-expanded') ? 'expand' : 'collapse')))
+$('[data-js="mathToolbar"]').on('mousedown', 'button', e => ga('send', 'event', 'toolbar', 'latex', e.currentTarget.dataset.latexcommand))
+$('[data-js="charactersList"]').on('mousedown', 'button', e => ga('send', 'event', 'toolbar', 'character', e.currentTarget.innerText))
