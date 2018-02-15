@@ -26,3 +26,4 @@ li {}
 .instructions {display:flex; margin-top: 10px;}
 .hide {display: none;}
 .rich-text-editor-toolbar-characters.rich-text-editor-toolbar-button-list .rich-text-editor-button { font-family: "Times New Roman", monospace; color: #555; }
+.warning { font-weight: bold; color: #a00;}
