@@ -56,6 +56,7 @@ $('[data-js="equationField"]').on('input', '.mq-textarea textarea', () => {
     events.metric2++
     hasEvents = true
 })
+$('[data-js="newEquation"]').on('mousedown', () => ga('send', 'event', 'mathEditor', 'open', 'button'))
 $(answer).on('mathfocus', e => {
     if (!e.hasFocus && hasEvents) {
         events.dimension1 = $('[data-js="latexField"]').val()
@@ -65,5 +66,9 @@ $(answer).on('mathfocus', e => {
         events.metric2 = 0
         events.metric3 = 0
         events.metric4 = 0
+    }
+}).on('keyup', e => {
+    if(!e.altKey && !e.shiftKey && e.ctrlKey && e.keyCode === 69) {
+        ga('send', 'event', 'mathEditor', 'open', 'shortcut')
     }
 })
