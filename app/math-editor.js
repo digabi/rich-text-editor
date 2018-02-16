@@ -57,7 +57,7 @@ function init($outerPlaceholder, focus, baseUrl, updateMathImg) {
 
 
     $latexField
-        .on('keydown', transformLatexKeydown)
+        .on('keypress', transformLatexKeydown)
         .on('input paste', onLatexUpdate)
         .on('focus blur', e => {
             focus.latexField = e.type !== 'blur'
