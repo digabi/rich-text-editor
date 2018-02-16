@@ -50,7 +50,9 @@ module.exports.makeRichText = (answer, options, onValueChanged = () => {}) => {
             }
         })
         .on('keyup', e => {
-            if (u.isCtrlKey(e, keyCodes.E)) math.insertNewEquation()
+            if (u.isCtrlKey(e, keyCodes.E) && !$(e.target).hasClass('math-editor-latex-field')) {
+                math.insertNewEquation()
+            }
         })
         .on('mathfocus', e => {
             $(e.currentTarget).toggleClass('rich-text-focused', e.hasFocus )
