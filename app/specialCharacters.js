@@ -67,9 +67,10 @@ module.exports = [
     {
         label: 'Geometria ja vektorioppi',
         characters: [
-            { character: '∠', latexCommand: '\\angle', popular: true },
+            { character: '∢', popular: true },
             { character: '→', latexCommand: '\\rightarrow', popular: true },
             { character: '⇅', popular: true  },
+            { character: '∠', latexCommand: '\\angle' },
             { character: '↑', latexCommand: '\\uparrow' },
             { character: '↓', latexCommand: '\\downarrow' },
             { character: '↔', latexCommand: '\\leftrightarrow' },
