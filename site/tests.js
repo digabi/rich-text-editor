@@ -309,7 +309,7 @@ function init($outerPlaceholder, focus, baseUrl, updateMathImg) {
         return e.stopPropagation();
     });
 
-    $latexField.on('keydown', transformLatexKeydown).on('input paste', onLatexUpdate).on('focus blur', function (e) {
+    $latexField.on('keypress', transformLatexKeydown).on('input paste', onLatexUpdate).on('focus blur', function (e) {
         focus.latexField = e.type !== 'blur';
         onFocusChanged();
     }).on('keydown', onClose).on('paste', function (e) {
@@ -500,7 +500,9 @@ module.exports.makeRichText = function (answer, options) {
             math.openMathEditor($(e.target));
         }
     }).on('keyup', function (e) {
-        if (u.isCtrlKey(e, keyCodes.E)) math.insertNewEquation();
+        if (u.isCtrlKey(e, keyCodes.E) && !$(e.target).hasClass('math-editor-latex-field')) {
+            math.insertNewEquation();
+        }
     }).on('mathfocus', function (e) {
         $(e.currentTarget).toggleClass('rich-text-focused', e.hasFocus);
         if (richTextAndMathBlur()) onRichTextEditorBlur($currentEditor);
@@ -582,7 +584,7 @@ module.exports = [{
     { character: '∘', latexCommand: '\\circ' }, { character: '…', latexCommand: '\\ldots' }, { character: '∝', latexCommand: '\\propto' }]
 }, {
     label: 'Geometria ja vektorioppi',
-    characters: [{ character: '∠', latexCommand: '\\angle', popular: true }, { character: '→', latexCommand: '\\rightarrow', popular: true }, { character: '⇅', popular: true }, { character: '↑', latexCommand: '\\uparrow' }, { character: '↓', latexCommand: '\\downarrow' }, { character: '↔', latexCommand: '\\leftrightarrow' }, { character: '⊥', latexCommand: '\\perp' }, { character: '‖', latexCommand: '\\parallel' }, { character: '⇌' }, // \rightleftharpoons
+    characters: [{ character: '∢', popular: true }, { character: '→', latexCommand: '\\rightarrow', popular: true }, { character: '⇅', popular: true }, { character: '∠', latexCommand: '\\angle' }, { character: '↑', latexCommand: '\\uparrow' }, { character: '↓', latexCommand: '\\downarrow' }, { character: '↔', latexCommand: '\\leftrightarrow' }, { character: '⊥', latexCommand: '\\perp' }, { character: '‖', latexCommand: '\\parallel' }, { character: '⇌' }, // \rightleftharpoons
     { character: '|', latexCommand: '\\mid' // \pipe
     }]
 }, {

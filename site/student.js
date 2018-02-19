@@ -38,46 +38,49 @@ if (window.addEventListener) {
 }
 var $tools = $('[data-js="tools"]');
 var events = {
-    typeLatex: 0,
-    typeMathquill: 0,
-    clickChar: 0,
-    clickLatex: 0
+    metric1: 0, //typeLatex
+    metric2: 0, //typeMathquill
+    metric3: 0, //clickChar
+    metric4: 0 //clickLatex
 };
 var hasEvents = false;
 $tools.on('mousedown', '[data-js="expandCollapseCharacters"]', function () {
     ga('send', 'event', 'toolbar', 'toggle', $tools.hasClass('rich-text-editor-characters-expanded') ? 'expand' : 'collapse');
 });
 $('[data-js="mathToolbar"]').on('mousedown', 'button', function (e) {
-    events.clickLatex++;
+    events.metric4++;
     hasEvents = true;
     ga('send', 'event', 'toolbar', 'latex', e.currentTarget.dataset.latexcommand);
 });
 $('[data-js="charactersList"]').on('mousedown', 'button', function (e) {
-    events.clickChar++;
+    events.metric3++;
     hasEvents = true;
     ga('send', 'event', 'toolbar', 'character', e.currentTarget.innerText);
 });
 $('[data-js="latexField"]').on('input paste', function () {
-    events.typeLatex++;
+    events.metric1++;
     hasEvents = true;
 });
 $('[data-js="equationField"]').on('input', '.mq-textarea textarea', function () {
-    events.typeMathquill++;
+    events.metric2++;
     hasEvents = true;
+});
+$('[data-js="newEquation"]').on('mousedown', function () {
+    return ga('send', 'event', 'mathEditor', 'open', 'button');
 });
 $(answer).on('mathfocus', function (e) {
     if (!e.hasFocus && hasEvents) {
+        events.dimension1 = $('[data-js="latexField"]').val();
+        ga('send', 'event', 'mathEditor', 'close', events);
         hasEvents = false;
-        ga('send', 'event', 'completeMath', $('[data-js="latexField"]').val(), {
-            metric1: events.typeLatex,
-            metric2: events.typeMathquill,
-            metric3: events.clickChar,
-            metric4: events.clickLatex
-        });
-        events.typeLatex = 0;
-        events.typeMathquill = 0;
-        events.clickChar = 0;
-        events.clickLatex = 0;
+        events.metric1 = 0;
+        events.metric2 = 0;
+        events.metric3 = 0;
+        events.metric4 = 0;
+    }
+}).on('keyup', function (e) {
+    if (!e.altKey && !e.shiftKey && e.ctrlKey && e.keyCode === 69) {
+        ga('send', 'event', 'mathEditor', 'open', 'shortcut');
     }
 });
 
