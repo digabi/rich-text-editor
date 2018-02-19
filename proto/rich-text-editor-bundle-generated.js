@@ -340,7 +340,7 @@ function init($outerPlaceholder, focus, baseUrl, updateMathImg) {
 
 
     $latexField
-        .on('keydown', transformLatexKeydown)
+        .on('keypress', transformLatexKeydown)
         .on('input paste', onLatexUpdate)
         .on('focus blur', e => {
             focus.latexField = e.type !== 'blur'
@@ -522,7 +522,9 @@ module.exports.makeRichText = (answer, options, onValueChanged = () => {}) => {
             }
         })
         .on('keyup', e => {
-            if (u.isCtrlKey(e, keyCodes.E)) math.insertNewEquation()
+            if (u.isCtrlKey(e, keyCodes.E) && !$(e.target).hasClass('math-editor-latex-field')) {
+                math.insertNewEquation()
+            }
         })
         .on('mathfocus', e => {
             $(e.currentTarget).toggleClass('rich-text-focused', e.hasFocus )
@@ -664,9 +666,10 @@ module.exports = [
     {
         label: 'Geometria ja vektorioppi',
         characters: [
-            { character: '∠', latexCommand: '\\angle', popular: true },
+            { character: '∢', popular: true },
             { character: '→', latexCommand: '\\rightarrow', popular: true },
             { character: '⇅', popular: true  },
+            { character: '∠', latexCommand: '\\angle' },
             { character: '↑', latexCommand: '\\uparrow' },
             { character: '↓', latexCommand: '\\downarrow' },
             { character: '↔', latexCommand: '\\leftrightarrow' },
