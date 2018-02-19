@@ -58,7 +58,7 @@ module.exports = [
             { character: '>' },
             { character: '∼', latexCommand: '\\sim' },
             { character: '≡', latexCommand: '\\equiv' },
-            { character: '≢' }, // \nequiv or \not\equiv
+            { character: '≢', latexCommand: '\\not\\equiv' },
             { character: '∘', latexCommand: '\\circ' },
             { character: '…', latexCommand: '\\ldots' },
             { character: '∝', latexCommand: '\\propto' }
@@ -67,7 +67,7 @@ module.exports = [
     {
         label: 'Geometria ja vektorioppi',
         characters: [
-            { character: '∢', popular: true },
+            { character: '∢', latexCommand: '\\sphericalangle', popular: true },
             { character: '→', latexCommand: '\\rightarrow', popular: true },
             { character: '⇅', popular: true  },
             { character: '∠', latexCommand: '\\angle' },
@@ -87,10 +87,10 @@ module.exports = [
             { character: '⇔', latexCommand: '\\Leftrightarrow', popular: true },
             { character: '∃', latexCommand: '\\exists', popular: true },
             { character: '∀', latexCommand: '\\forall', popular: true },
-            { character: 'ℝ', popular: true },
-            { character: 'ℕ' },
-            { character: 'ℤ' },
-            { character: 'ℚ' },
+            { character: 'ℝ', latexCommand: '\\mathbb{R}', popular: true },
+            { character: 'ℕ', latexCommand: '\\mathbb{N}' },
+            { character: 'ℤ', latexCommand: '\\mathbb{Z}' },
+            { character: 'ℚ', latexCommand: '\\mathbb{Q}' },
             { character: '∩', latexCommand: '\\cap' },
             { character: '∪', latexCommand: '\\cup' },
             { character: '∖', latexCommand: '\\setminus' },

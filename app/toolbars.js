@@ -63,7 +63,7 @@ function initSpecialCharacterToolbar($toolbar, mathEditor, hasAnswerFocus) {
             const character = e.currentTarget.innerText
             const command = e.currentTarget.dataset.command
             if (hasAnswerFocus()) window.document.execCommand('insertText', false, character)
-            else mathEditor.insertMath(command || character)
+            else mathEditor.insertMath(command || character, undefined, true)
         })
 }
 
