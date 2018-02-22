@@ -28,7 +28,8 @@ module.exports = {
         langLink: '/',
         langLabel: 'Suomeksi',
         answerTitle: 'Svar',
-        toggleInstructions: 'Visa intruktioner'
+        toggleInstructions: 'Visa intruktioner',
+        confirmExit: 'Vill du lämna den här sidan?'
     },
     annotating: {
         sendFeedback: 'Skicka respons',

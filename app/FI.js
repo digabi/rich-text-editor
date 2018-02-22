@@ -33,7 +33,8 @@ lisätä kuvia.</li></ul>`,
         langLink: '/sv',
         langLabel: 'På svenska',
         answerTitle: 'Vastaus',
-        toggleInstructions: 'Näytä ohjeet'
+        toggleInstructions: 'Näytä ohjeet',
+        confirmExit: 'Haluatko varmasti poistua?'
     },
     annotating: {
         sendFeedback: 'Lähetä palautetta',
