@@ -54,6 +54,13 @@ module.exports = (obj) => { with(obj) return `
 <script src="/rich-text-editor-bundle.js"></script>
 <script src="/student.js"></script>
 <script>
+    window.onbeforeunload = function(e) {
+        var dialogText = '${confirmExit}'
+        e.returnValue = dialogText
+        return dialogText
+    }
+</script>
+<script>
     (function (i, s, o, g, r, a, m) {
         i['GoogleAnalyticsObject'] = r;
         i[r] = i[r] || function () {
