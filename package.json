@@ -49,7 +49,6 @@
     "babel-polyfill": "^6.26.0",
     "babel-register": "^6.26.0",
     "babelify": "^8.0.0",
-    "bacon.jquery": "^0.4.12",
     "baconjs": "^2.0.0",
     "body-parser": "^1.18.2",
     "browserify": "^15.2.0",
