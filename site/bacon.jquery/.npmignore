@@ -1,0 +1,10 @@
+node_modules*
+npm-debug.log
+**/.DS_Store
+.DS_Store
+.idea/
+*.iml
+browsertest/bundle.js
+examples/**/components
+examples/**/bower_components
+scratchpad.coffee

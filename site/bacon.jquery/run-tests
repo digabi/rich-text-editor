@@ -1,0 +1,13 @@
+#!/bin/bash -e
+
+npm install
+
+export grep=$1
+
+./node_modules/mocha/bin/mocha --compilers coffee:coffee-script test/**
+
+if [ ! $grep ]; then
+  node_modules/mocha-phantomjs/bin/mocha-phantomjs browsertest/runner.html
+else
+  echo "skipping browser tests"
+fi

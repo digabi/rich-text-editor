@@ -1,0 +1,55 @@
+{
+  "_from": "web-console-reporter@^1.0.0",
+  "_id": "web-console-reporter@1.0.0",
+  "_inBundle": false,
+  "_integrity": "sha1-ty+Vo91XnJB6+LiY4sJgJZ0etUU=",
+  "_location": "/web-console-reporter",
+  "_phantomChildren": {},
+  "_requested": {
+    "type": "range",
+    "registry": true,
+    "raw": "web-console-reporter@^1.0.0",
+    "name": "web-console-reporter",
+    "escapedName": "web-console-reporter",
+    "rawSpec": "^1.0.0",
+    "saveSpec": null,
+    "fetchSpec": "^1.0.0"
+  },
+  "_requiredBy": [
+    "#DEV:/"
+  ],
+  "_resolved": "https://registry.npmjs.org/web-console-reporter/-/web-console-reporter-1.0.0.tgz",
+  "_shasum": "b72f95a3dd579c907af8b898e2c260259d1eb545",
+  "_spec": "web-console-reporter@^1.0.0",
+  "_where": "/Users/eeroan/ytl/rich-text-editor",
+  "author": {
+    "name": "Eero Anttila"
+  },
+  "bugs": {
+    "url": "https://github.com/eeroan/WebConsole-reporter/issues"
+  },
+  "bundleDependencies": false,
+  "deprecated": false,
+  "description": "Web console reporter for Mocha testing framework",
+  "directories": {
+    "example": "example"
+  },
+  "homepage": "https://github.com/eeroan/WebConsole-reporter#readme",
+  "keywords": [
+    "mocha",
+    "console",
+    "reporter",
+    "browser"
+  ],
+  "license": "MIT",
+  "main": "WebConsole.js",
+  "name": "web-console-reporter",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/eeroan/WebConsole-reporter.git"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "version": "1.0.0"
+}

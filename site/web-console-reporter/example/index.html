@@ -1,0 +1,26 @@
+<html>
+  <head>
+    <title>Mocha</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <script src="../lib/mocha.js"></script>
+    <script src="../WebConsole.js"></script>
+    <script type="text/javascript">
+      mocha.setup({ui:'bdd', reporter:WebConsole})
+    </script>
+    <script>
+      function assert(expr, msg) {
+        if (!expr) throw new Error(msg || 'failed');
+      }
+    </script>
+    <script src="array.js"></script>
+    <script>
+      onload = function(){
+        var runner = mocha.run();
+      };
+    </script>
+  </head>
+  <body>
+    <h1>Example of running console reporter</h1>
+    <p>Open console to see</p>
+  </body>
+</html>

@@ -1,0 +1,62 @@
+{
+  "_from": "chai-jquery@^2.0.0",
+  "_id": "chai-jquery@2.0.0",
+  "_inBundle": false,
+  "_integrity": "sha1-D0MEIwjddGMyvZgWSq70pPRboWc=",
+  "_location": "/chai-jquery",
+  "_phantomChildren": {},
+  "_requested": {
+    "type": "range",
+    "registry": true,
+    "raw": "chai-jquery@^2.0.0",
+    "name": "chai-jquery",
+    "escapedName": "chai-jquery",
+    "rawSpec": "^2.0.0",
+    "saveSpec": null,
+    "fetchSpec": "^2.0.0"
+  },
+  "_requiredBy": [
+    "#DEV:/"
+  ],
+  "_resolved": "https://registry.npmjs.org/chai-jquery/-/chai-jquery-2.0.0.tgz",
+  "_shasum": "0f43042308dd746332bd98164aaef4a4f45ba167",
+  "_spec": "chai-jquery@^2.0.0",
+  "_where": "/Users/eeroan/ytl/rich-text-editor",
+  "author": {
+    "name": "John Firebaugh",
+    "email": "john.firebaugh@gmail.com"
+  },
+  "bugs": {
+    "url": "https://github.com/chaijs/chai-jquery/issues"
+  },
+  "bundleDependencies": false,
+  "deprecated": false,
+  "description": "jQuery assertions for the Chai assertion library",
+  "devDependencies": {
+    "chai": "1",
+    "jquery": "2.1.0",
+    "mocha": "1",
+    "mocha-phantomjs": "3"
+  },
+  "engines": {
+    "node": ">= 0.4.0"
+  },
+  "homepage": "https://github.com/chaijs/chai-jquery#readme",
+  "keywords": [
+    "test",
+    "assertion",
+    "assert",
+    "testing",
+    "jQuery"
+  ],
+  "main": "./chai-jquery",
+  "name": "chai-jquery",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/chaijs/chai-jquery.git"
+  },
+  "scripts": {
+    "test": "mocha-phantomjs test/index.html"
+  },
+  "version": "2.0.0"
+}

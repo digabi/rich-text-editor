@@ -1,0 +1,16 @@
+{
+  "name": "example-app",
+  "version": "0.0.0",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "components"
+  ],
+  "dependencies": {
+    "jquery": "~1.8",
+    "bacon": "~0.6",
+    "bacon.model": "~0.1",
+    "requirejs": "2.1.6",
+    "bacon.jquery": "~0"
+  }
+}

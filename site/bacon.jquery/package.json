@@ -1,0 +1,59 @@
+{
+  "_from": "bacon.jquery@^0.4.12",
+  "_id": "bacon.jquery@0.4.12",
+  "_inBundle": false,
+  "_integrity": "sha1-x/cq9dRwcSooHeX5vUxWbhHC5nk=",
+  "_location": "/bacon.jquery",
+  "_phantomChildren": {},
+  "_requested": {
+    "type": "range",
+    "registry": true,
+    "raw": "bacon.jquery@^0.4.12",
+    "name": "bacon.jquery",
+    "escapedName": "bacon.jquery",
+    "rawSpec": "^0.4.12",
+    "saveSpec": null,
+    "fetchSpec": "^0.4.12"
+  },
+  "_requiredBy": [
+    "#DEV:/"
+  ],
+  "_resolved": "https://registry.npmjs.org/bacon.jquery/-/bacon.jquery-0.4.12.tgz",
+  "_shasum": "c7f72af5d470712a281de5f9bd4c566e11c2e679",
+  "_spec": "bacon.jquery@^0.4.12",
+  "_where": "/Users/eeroan/ytl/rich-text-editor",
+  "author": {
+    "name": "Juha Paananen"
+  },
+  "bundleDependencies": false,
+  "dependencies": {
+    "baconjs": "~0.7.8"
+  },
+  "deprecated": false,
+  "description": "A JQuery data binding library for [Bacon.js](https://github.com/baconjs/bacon.js).",
+  "devDependencies": {
+    "bacon.model": "~0.1.6",
+    "chai": "1.9.0",
+    "coffee-script": "1.4.0",
+    "grunt": "0.4.1",
+    "grunt-cli": "0.1.13",
+    "grunt-contrib-clean": "~0.4.1",
+    "grunt-contrib-coffee": "~0.10.0",
+    "grunt-contrib-copy": "~0.4.0",
+    "grunt-contrib-uglify": "~0.2.2",
+    "jquery": "~2",
+    "mocha": "~1.17",
+    "mocha-phantomjs": "~3.3",
+    "phantomjs": "~1"
+  },
+  "licenses": [
+    "MIT"
+  ],
+  "main": "dist/bacon.jquery.js",
+  "name": "bacon.jquery",
+  "scripts": {
+    "prepublish": "node_modules/grunt-cli/bin/grunt",
+    "test": "./run-tests"
+  },
+  "version": "0.4.12"
+}

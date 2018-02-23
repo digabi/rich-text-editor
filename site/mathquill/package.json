@@ -1,0 +1,48 @@
+{
+  "_from": "github:digabi/mathquill#0.10.1+digabi.21",
+  "_id": "mathquill@0.10.1",
+  "_inBundle": false,
+  "_location": "/mathquill",
+  "_phantomChildren": {},
+  "_requested": {
+    "type": "git",
+    "raw": "mathquill@github:digabi/mathquill#0.10.1+digabi.21",
+    "name": "mathquill",
+    "escapedName": "mathquill",
+    "rawSpec": "github:digabi/mathquill#0.10.1+digabi.21",
+    "saveSpec": "github:digabi/mathquill#0.10.1+digabi.21",
+    "fetchSpec": null,
+    "gitCommittish": "0.10.1+digabi.21"
+  },
+  "_requiredBy": [
+    "#DEV:/"
+  ],
+  "_resolved": "github:digabi/mathquill#c4a6642f2c721d50debaed6c546b79f8562bcb3c",
+  "_spec": "mathquill@github:digabi/mathquill#0.10.1+digabi.21",
+  "_where": "/Users/eeroan/ytl/rich-text-editor",
+  "bugs": {
+    "url": "https://github.com/mathquill/mathquill/issues"
+  },
+  "bundleDependencies": false,
+  "deprecated": false,
+  "description": "Easily type math in your webapp",
+  "devDependencies": {
+    "less": ">=1.5.1",
+    "mocha": ">=2.4.1",
+    "pjs": ">=3.1.0 <5.0.0",
+    "uglify-js": "2.x"
+  },
+  "files": [
+    "build/mathquill.{css,js,min.js}",
+    "build/fonts/Symbola.*",
+    "quickstart.html"
+  ],
+  "homepage": "https://github.com/mathquill/mathquill#readme",
+  "license": "MPL-2.0",
+  "name": "mathquill",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/mathquill/mathquill.git"
+  },
+  "version": "0.10.1"
+}

@@ -1,0 +1,18 @@
+#!/usr/bin/env node
+
+// Custom browserify script to shim JQuery
+
+var browserify = require('browserify')
+  , shim = require('browserify-shim')
+  , fs = require('fs')
+
+shim(browserify(), {
+  // jQuery attaches itself to the window as '$' so we assign the exports accordingly
+  jquery: { path: './jquery.js', exports: '$' }
+})
+.require(require.resolve('./example.js'), { entry: true })
+.bundle(function (err, src) {
+  if (err) return console.error(err);
+
+  fs.writeFileSync("bundle.js", src);
+});
