@@ -63,6 +63,7 @@
     "mathquill": "digabi/mathquill#0.10.1+digabi.21",
     "mocha": "^5.0.0",
     "mocha-chrome": "^1.0.3",
+    "ncp": "^2.0.0",
     "node-sass-middleware": "^0.11.0",
     "sanitize-html": "^1.17.0",
     "supervisor": "^0.12.0",

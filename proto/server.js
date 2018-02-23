@@ -17,6 +17,7 @@ const teacherHtmlFI = teacherHtml(Object.assign({startedAt: formatDate(startedAt
 const teacherHtmlSV = teacherHtml(Object.assign({startedAt: formatDate(startedAt), locale: 'SV'}, SV.annotating))
 const app = express()
 const morgan = require('morgan')
+const ncp = require('ncp').ncp
 
 app.use(morgan('short'))
 
@@ -71,8 +72,12 @@ defineFile('/student.js', '/student.front.js')
 defineFile('/censor.js', '/censor.front.js')
 defineFile('/tests.js', '/../test/tests.front.js')
 defineFile('/rich-text-editor-bundle.js', '/rich-text-editor-bundle.js')
-app.use(express.static(__dirname + '/../public'))
-app.use(express.static(__dirname + '/../test'))
+if (generateSite) {
+    ncp(__dirname + '/../public', siteRoot, () => {})
+} else {
+    app.use(express.static(__dirname + '/../public'))
+    app.use(express.static(__dirname + '/../test'))
+}
 exposeModules([
     'bootstrap',
     'jquery',
@@ -102,10 +107,11 @@ module.exports = app
 
 function exposeModules(names) {
     names.forEach(name => {
+        const sourcePath = __dirname + '/../node_modules/' + name
         if (generateSite) {
-
+            ncp(sourcePath, siteRoot + '/' + name, () => {})
         } else {
-            app.use('/' + name, express.static(__dirname + '/../node_modules/' + name))
+            app.use('/' + name, express.static(sourcePath))
         }
 
     })
