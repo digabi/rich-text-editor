@@ -28,16 +28,15 @@ Here's the stuff.
 - [TodoMVC with Bacon.js and jQuery](https://github.com/raimohanska/todomvc/blob/bacon-jquery/labs/architecture-examples/baconjs/js/app.js)
 - [Stack Overflow](http://stackoverflow.com/questions/tagged/bacon.js) for well-formed questions. Use the "bacon.js" tag.
 - [Gitter](https://gitter.im/baconjs/bacon.js) chat for developers of Bacon.
-
-You can also check out my entertaining (LOL), interactive, solid-ass [slideshow](http://raimohanska.github.com/bacon.js-slides/).
+- [Migrating to 2.0](https://github.com/baconjs/bacon.js/wiki/Migration-from-version-1.0-to-2.0)
 
 And remember to give me feedback on the bacon! Let me know if you've
 used it. Tell me how it worked for you. What's missing? What's wrong?
 Please contribute!
 
 [![Build Status](https://travis-ci.org/baconjs/bacon.js.svg?branch=master)](https://travis-ci.org/baconjs/bacon.js)
+[![BrowserStack Status](https://www.browserstack.com/automate/badge.svg?badge_key=RDRnTElXMlRsK2pWdXhYQXVOMkQvdz09LS1mbmgyL0l2NlVBUFZQNWEzYlIvWit3PT0=--779bf4c07cb76abcbee64b15f00e1998f7880ff2%)](https://www.browserstack.com/automate/public-build/RDRnTElXMlRsK2pWdXhYQXVOMkQvdz09LS1mbmgyL0l2NlVBUFZQNWEzYlIvWit3PT0=--779bf4c07cb76abcbee64b15f00e1998f7880ff2%)
 [![NPM version](http://img.shields.io/npm/v/baconjs.svg)](https://www.npmjs.org/package/baconjs)
-[![NuGet version](http://img.shields.io/nuget/v/Bacon.js.svg)](https://www.nuget.org/packages/Bacon.js)
 [![Dependency Status](https://david-dm.org/baconjs/bacon.js.svg)](https://david-dm.org/baconjs/bacon.js)
 [![devDependency Status](https://david-dm.org/baconjs/bacon.js/dev-status.svg)](https://david-dm.org/baconjs/bacon.js#info=devDependencies)
 
@@ -101,9 +100,6 @@ Starting from 0.7.45, you can build your own Bacon.js bundle with selected featu
 only. See instructions [here](#build).
 
 Prefer to drink from the firehose? Download from Github [master](https://raw.github.com/baconjs/bacon.js/master/dist/Bacon.js).
-
-Visual Studio users can obtain version 0.7.76 via NuGet Packages
-    https://www.nuget.org/packages/Bacon.js/0.7.76
 
 
 Intro
@@ -216,13 +212,21 @@ You can also pass an optional function that transforms the promise value into Ev
 Check out this [example](https://github.com/raimohanska/baconjs-examples/blob/master/resources/public/index.html).
 
 <a name="bacon-fromevent"></a>
-[`Bacon.fromEvent(target, eventName [, eventTransformer])`](#bacon-fromevent "Bacon.fromEvent(target : EventTarget | EventEmitter, eventName : String [, eventTransformer]) : EventStream") creates an EventStream from events
+[`Bacon.fromEvent(target, eventSource [, eventTransformer])`](#bacon-fromevent "Bacon.fromEvent(target : EventTarget | EventEmitter, eventSource : String | Function [, eventTransformer]) : EventStream") creates an EventStream from events
 on a DOM EventTarget or Node.JS EventEmitter object, or an object that supports event listeners using `on`/`off` methods.
 You can also pass an optional function that transforms the emitted
 events' parameters.
 
 ```js
 Bacon.fromEvent(document.body, "click").onValue(function() { alert("Bacon!") })
+Bacon.fromEvent(
+  window,
+  function(binder, listener) {
+    binder("scroll", listener, {passive: true})
+  }
+).onValue(function() {
+  console.log(window.scrollY)
+})
 ```
 
 <a name="bacon-fromcallback"></a>

@@ -1,26 +1,26 @@
 {
-  "_from": "baconjs@^2.0.0",
-  "_id": "baconjs@2.0.0",
+  "_from": "baconjs@^2.0.5",
+  "_id": "baconjs@2.0.5",
   "_inBundle": false,
-  "_integrity": "sha1-kLsBPtXGyMJtVnlsns9bkCo9rbY=",
+  "_integrity": "sha512-f/hJFyt6itfPmSYRGLbXIuCg36zEiDEjW0jhIeCAw8iB0ynZXgyIuNhRPY1EGemMBp7ekyTpijZ65igoy4r1lg==",
   "_location": "/baconjs",
   "_phantomChildren": {},
   "_requested": {
     "type": "range",
     "registry": true,
-    "raw": "baconjs@^2.0.0",
+    "raw": "baconjs@^2.0.5",
     "name": "baconjs",
     "escapedName": "baconjs",
-    "rawSpec": "^2.0.0",
+    "rawSpec": "^2.0.5",
     "saveSpec": null,
-    "fetchSpec": "^2.0.0"
+    "fetchSpec": "^2.0.5"
   },
   "_requiredBy": [
     "#DEV:/"
   ],
-  "_resolved": "https://registry.npmjs.org/baconjs/-/baconjs-2.0.0.tgz",
-  "_shasum": "90bb013ed5c6c8c26d56796c9ecf5b902a3dadb6",
-  "_spec": "baconjs@^2.0.0",
+  "_resolved": "https://registry.npmjs.org/baconjs/-/baconjs-2.0.5.tgz",
+  "_shasum": "525a507ad8040bc102b1fb0123d4317d7914a8da",
+  "_spec": "baconjs@^2.0.5",
   "_where": "/Users/eeroan/ytl/rich-text-editor",
   "author": {
     "name": "Juha Paananen",
@@ -123,8 +123,9 @@
     "perftest": "performance/PerformanceTest.coffee",
     "prepublish": "npm run lint && npm run dist && npm run readme",
     "readme": "coffee readme/readme.coffee",
+    "release": "scripts/release",
     "test": "./scripts/runtests",
-    "version": "scripts/version"
+    "version": "2.0.5"
   },
-  "version": "2.0.0"
+  "version": "2.0.5"
 }
