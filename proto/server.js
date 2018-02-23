@@ -101,7 +101,14 @@ app.use((error, req, res, next) => {
 module.exports = app
 
 function exposeModules(names) {
-    names.forEach(name => app.use('/' + name, express.static(__dirname + '/../node_modules/' + name)))
+    names.forEach(name => {
+        if (generateSite) {
+
+        } else {
+            app.use('/' + name, express.static(__dirname + '/../node_modules/' + name))
+        }
+
+    })
 }
 
 function formatDate(date) {
