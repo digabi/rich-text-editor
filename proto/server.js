@@ -78,15 +78,37 @@ if (generateSite) {
     app.use(express.static(__dirname + '/../public'))
     app.use(express.static(__dirname + '/../test'))
 }
-exposeModules([
-    'bootstrap',
-    'jquery',
-    'baconjs',
-    'mathquill',
+
+const devModules = [
     'chai',
     'chai-jquery',
     'mocha',
-    'web-console-reporter'])
+    'web-console-reporter']
+
+const prodModules = [
+    'jquery',
+    'baconjs',
+    'mathquill']
+
+function sourcePath(name) {
+    return __dirname + '/../node_modules/' + name
+}
+
+devModules.forEach(name => {
+    if (!generateSite) {
+        app.use('/' + name, express.static(sourcePath(name)))
+    }
+})
+
+prodModules.forEach(name => {
+    if (generateSite) {
+        ncp(sourcePath(name), siteRoot + '/' + name, () => {
+        })
+    } else {
+        app.use('/' + name, express.static(sourcePath(name)))
+    }
+})
+
 const doctype = '<!DOCTYPE html>'
 definePath('/tarkistus', doctype + teacherHtmlFI)
 definePath('/', doctype + studentHtmlFI)
@@ -103,18 +125,6 @@ app.use((error, req, res, next) => {
 })
 
 module.exports = app
-
-function exposeModules(names) {
-    names.forEach(name => {
-        const sourcePath = __dirname + '/../node_modules/' + name
-        if (generateSite) {
-            ncp(sourcePath, siteRoot + '/' + name, () => {})
-        } else {
-            app.use('/' + name, express.static(sourcePath))
-        }
-
-    })
-}
 
 function formatDate(date) {
     return `${date.getDate()}.${date.getMonth() + 1}.${date.getFullYear()} ${pad(date.getHours())}:${pad(date.getMinutes())}`
