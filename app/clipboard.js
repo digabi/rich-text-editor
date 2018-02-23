@@ -1,5 +1,6 @@
 const loadingImg = require('./loadingImg')
 const u = require('./util')
+const Bacon = require('baconjs')
 
 module.exports = {
     onPaste
