@@ -82,7 +82,6 @@ exposeModules([
     'bootstrap',
     'jquery',
     'baconjs',
-    'bacon.jquery',
     'mathquill',
     'chai',
     'chai-jquery',
