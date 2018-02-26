@@ -53,7 +53,7 @@
     "body-parser": "^1.18.2",
     "browserify": "^15.2.0",
     "chai": "^4.1.2",
-    "chai-jquery": "^2.0.1",
+    "chai-jquery": "^2.0.0",
     "express": "^4.16.2",
     "express-babelify-middleware": "^0.2.1",
     "jquery": "3.3.1",
