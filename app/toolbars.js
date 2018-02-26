@@ -30,6 +30,9 @@ function init(mathEditor, hasRichTextFocus, l, baseUrl)  {
             </div>
         </div>
         `)
+        .on('mousedown', e => {
+            e.preventDefault()
+        })
         .on('mousedown', '[data-js="expandCollapseCharacters"]', e => {
             e.preventDefault()
             $toolbar.toggleClass('rich-text-editor-characters-expanded')
