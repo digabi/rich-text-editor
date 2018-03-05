@@ -69,14 +69,14 @@ module.exports = [
         characters: [
             { character: '∢', latexCommand: '\\sphericalangle', popular: true },
             { character: '→', latexCommand: '\\rightarrow', popular: true },
-            { character: '⇅', popular: true  },
+            { character: '⇌', popular: true}, // \rightleftharpoons
+            { character: '⇅' },
             { character: '∠', latexCommand: '\\angle' },
             { character: '↑', latexCommand: '\\uparrow' },
             { character: '↓', latexCommand: '\\downarrow' },
             { character: '↔', latexCommand: '\\leftrightarrow' },
             { character: '⊥', latexCommand: '\\perp'},
             { character: '‖', latexCommand: '\\parallel'},
-            { character: '⇌' }, // \rightleftharpoons
             { character: '|' , latexCommand: '\\mid'} // \pipe
         ]
     },
