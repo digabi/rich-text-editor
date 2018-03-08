@@ -27,6 +27,7 @@ module.exports = [
             { character: 'Λ', latexCommand: '\\Lambda' },
             { character: 'λ', latexCommand: '\\lambda' },
             { character: 'µ', latexCommand: '\\mu' },
+            { character: 'ν', latexCommand: '\\nu' },
             { character: 'Ξ', latexCommand: '\\Xi' },
             { character: 'ξ', latexCommand: '\\xi' },
             { character: '∏', latexCommand: '\\Pi' },
