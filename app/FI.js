@@ -11,7 +11,7 @@ kemiassa käytettäviä merkintöjä. Lisäksi erikoismerkkejä voi käyttää k
 klikkaamalla valikon merkintöjä ja/tai kirjoittamalla LaTeXia.</li>
  <li>Editorin vastauskenttään voi kirjoittaa tekstiä ja kaavoja sekä
 lisätä kuvia.</li></ul>`,
-        shortcutTitle: `Pikanäppäinvinkkejä`,
+        shortcutTitle: 'Pikanäppäinvinkkejä',
         shortcuts: `<table><tbody>
 <tr><th>Liitä kuva leikepöydältä</th><td>Ctrl-V</td></tr>
 <tr><th>Kirjoita kaava</th><td>Ctrl-E</td></tr>

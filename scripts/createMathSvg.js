@@ -8,7 +8,7 @@ Promise.all(latexCommands.map(o => {
     if (o === '<br>') {
         return Promise.resolve(o)
     }
-    return new Promise((resolve, reject) => {
+    return new Promise(resolve => {
         const latex = o.label ? o.label.replace(/X/g, '\\square') : o.action
         mathSvg.latexToSvg(latex, svg => resolve(Object.assign(o, {svg: 'data:image/svg+xml;base64,' + Buffer.from(svg).toString('base64')})))
     })

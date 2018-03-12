@@ -1,14 +1,8 @@
 const $ = require('jquery')
 let markers = {}
-let timestamp = null
 const $answer = $('.answer')
 const sampleAnswer = require('./sampleAnswer')
 const mathSelector = 'img[src^="/math.svg"]'
-const locales = {
-    FI: require('../app/FI'),
-    SV: require('../app/SV')
-}
-const l = locales[window.locale].editor
 
 updateAnswer('<div>Esimerkki:</div>' + latexToImg(sampleAnswer) + '<div>Esimerkki 2:</div>' + latexToImg(sampleAnswer))
 

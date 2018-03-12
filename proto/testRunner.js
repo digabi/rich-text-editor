@@ -1,4 +1,5 @@
 #!/usr/bin/env node
+/* eslint-disable no-console */
 const server = require('./server')
 const serverInfo = server.listen(0, () => {
     const spawn = require('child_process').spawn

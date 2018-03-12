@@ -1,4 +1,4 @@
-const mjAPI = require("mathjax-node")
+const mjAPI = require('mathjax-node')
 
 module.exports = {mathSvgResponse, latexToSvg}
 
@@ -14,7 +14,7 @@ function mathSvgResponse(req, res) {
 function latexToSvg(latex, cb) {
     mjAPI.typeset({
         math: latex,
-        format: "TeX", // "inline-TeX", "MathML"
+        format: 'TeX', // "inline-TeX", "MathML"
         mml: false,
         svg: true,
         linebreaks: true,

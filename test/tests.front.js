@@ -1,10 +1,11 @@
+/* global expect, WebConsole, chai */
 const u = require('./testUtil')
 const base64png = require('./base64png')
 const $answer = $('.answer')
 const {makeRichText} = require('../app/rich-text-editor')
 let savedValues = []
 
-const richTextOptions = id => ({
+const richTextOptions = () => ({
     screenshot: {
         saver: () => Promise.resolve('/screenshot/screenshot.png'),
         limit: 10
@@ -75,7 +76,7 @@ describe('rich text editor', () => {
                 currentImgAmout = $el.answer1.find('img').length
                 $el.answer1
                     .append('<img src="data:image/gif;base64,R0lGODlhAQABAIAAAAUEBAAAACwAAAAAAQABAAACAkQBADs=">')
-                $('.answer1 img:last').get(0).onload = e => {
+                $('.answer1 img:last').get(0).onload = () => {
                     done()
                 }
                 $el.answer1.trigger(u.pasteEventMock())

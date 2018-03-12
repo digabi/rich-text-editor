@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 const express = require('express')
 const bodyParser = require('body-parser')
 const babelifyMiddleware = require('express-babelify-middleware')
@@ -27,10 +28,10 @@ process.on('uncaughtException', function(err) {
 })
 
 app.use(function(req, res, next) {
-    res.header("Access-Control-Allow-Origin", "*");
-    res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
-    next();
-});
+    res.header('Access-Control-Allow-Origin', '*')
+    res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept')
+    next()
+})
 
 let generateSite = process.env.GENERATE_SITE
 const siteRoot = __dirname + '/../site'
@@ -60,7 +61,7 @@ function definePath(path, content) {
 function defineFile(url, relativePath) {
     if(generateSite) {
         browserify(__dirname + relativePath)
-            .transform("babelify", {presets: ["env"]})
+            .transform('babelify', {presets: ['env']})
             .bundle()
             .pipe(fs.createWriteStream(siteRoot + url))
     } else {
@@ -119,6 +120,7 @@ app.use(bodyParser.urlencoded({extended: false, limit: '5mb'}))
 app.use(bodyParser.json({limit: '5mb', strict: false}))
 app.get('/math.svg', mathSvg.mathSvgResponse)
 
+// eslint-disable-next-line no-unused-vars
 app.use((error, req, res, next) => {
     console.log('Request error: ', error.stack)
     res.status(500).end()

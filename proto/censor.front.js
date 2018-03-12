@@ -1,3 +1,4 @@
+/* global makeRichText */
 const updateMath = require('./updateMath')
 updateMath.init()
 const answer = document.getElementById('answer1')

@@ -1,22 +1,22 @@
+/* global MathJax */
 let math = null
 let $result
 const init = () => {
-    $result = $(`<div class="result">\\({}\\)</div>`)
+    $result = $('<div class="result">\\({}\\)</div>')
     $('body').append($result)
     MathJax.Hub.Config({
-        jax: ["input/TeX", "output/SVG"],
-        extensions: ["toMathML.js", "tex2jax.js", "MathMenu.js", "MathZoom.js", "fast-preview.js", "AssistiveMML.js", "a11y/accessibility-menu.js"],
+        jax: ['input/TeX', 'output/SVG'],
+        extensions: ['toMathML.js', 'tex2jax.js', 'MathMenu.js', 'MathZoom.js', 'fast-preview.js', 'AssistiveMML.js', 'a11y/accessibility-menu.js'],
         TeX: {
-            extensions: ["AMSmath.js", "AMSsymbols.js", "noErrors.js", "noUndefined.js"]
+            extensions: ['AMSmath.js', 'AMSsymbols.js', 'noErrors.js', 'noUndefined.js']
         },
         SVG: {useFontCache: true, useGlobalCache: false, EqnChunk: 1000000, EqnDelay: 0}
     })
     MathJax.Hub.queue.Push(() => {
         math = MathJax.Hub.getAllJax('MathOutput')[0]
     })
-    let studentDisplay = null
     MathJax.Hub.Queue(function () {
-        studentDisplay = MathJax.Hub.getAllJax(document.querySelector('.result'))[0];
+        MathJax.Hub.getAllJax(document.querySelector('.result'))
     })
 }
 
@@ -27,13 +27,13 @@ const updateMath = function (latex, cb) {
     MathJax.Hub.Queue(() => {
         const $svg = $result.find('svg')
         if ($svg.length) {
-            $svg.attr('xmlns', "http://www.w3.org/2000/svg")
+            $svg.attr('xmlns', 'http://www.w3.org/2000/svg')
                 .find('use').each(function () {
-                const $use = $(this)
-                if ($use[0].outerHTML.indexOf('xmlns:xlink') === -1) {
-                    $use.attr('xmlns:xlink', 'http://www.w3.org/1999/xlink') //add these for safari
-                }
-            })
+                    const $use = $(this)
+                    if ($use[0].outerHTML.indexOf('xmlns:xlink') === -1) {
+                        $use.attr('xmlns:xlink', 'http://www.w3.org/1999/xlink') //add these for safari
+                    }
+                })
             let svgHtml = $svg.prop('outerHTML')
             svgHtml = svgHtml.replace(' xlink=', ' xmlns:xlink=') //firefox fix
             svgHtml = svgHtml.replace(/ ns\d+:href/gi, ' xlink:href') // Safari xlink ns issue fix

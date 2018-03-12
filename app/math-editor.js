@@ -1,3 +1,4 @@
+/* global MathQuill */
 const u = require('./util')
 const keyCodes = {
     ENTER: 13,
@@ -40,7 +41,7 @@ function init($outerPlaceholder, focus, baseUrl, updateMathImg) {
     const mqInstance = MQ.MathField($equationField.get(0), {
         handlers: {
             edit: onMqEdit,
-            enter: field => {
+            enter: () => {
                 closeMathEditor(true)
                 setTimeout(() => insertNewEquation('<br>'), 2)
             }

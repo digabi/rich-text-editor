@@ -61,7 +61,7 @@ function persistInlineImages($editor, screenshotSaver, screenshotCountLimit, onV
             .flatMapLatest(() => Bacon.fromPromise(screenshotSaver(data)))
             .doAction(screenShotUrl => data.$el.attr('src', screenShotUrl))
             .doError(() => data.$el.remove()))
-    ).onValue(k => $editor.trigger('input')), 0)
+    ).onValue(() => $editor.trigger('input')), 0)
 }
 
 function totalImageCount($answer, clipboardDataAsHtml) {
@@ -70,7 +70,7 @@ function totalImageCount($answer, clipboardDataAsHtml) {
 
 function markAndGetInlineImages($editor) {
     const images = $editor.find('img[src^="data"]').toArray()
-        .map((el, index) => Object.assign(decodeBase64Image(el.getAttribute('src')), {
+        .map(el => Object.assign(decodeBase64Image(el.getAttribute('src')), {
             $el: $(el)
         }))
     images.filter(({type}) => fileTypes.indexOf(type) === -1).forEach(({$el}) => $el.remove())
@@ -82,7 +82,7 @@ function markAndGetInlineImages($editor) {
 function decodeBase64Image(dataString) {
     if (!dataString)
         return null
-    const matches = dataString.match(/^data:([A-Za-z-+\/]+);base64,(.+)$/)
+    const matches = dataString.match(/^data:([A-Za-z-+/]+);base64,(.+)$/)
     if (matches.length !== 3) {
         return null
     }

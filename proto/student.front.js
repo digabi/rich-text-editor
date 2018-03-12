@@ -1,3 +1,4 @@
+/* global ga, makeRichText */
 const answer = document.getElementById('answer1')
 makeRichText(answer, {
     screenshot: {

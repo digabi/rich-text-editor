@@ -18,7 +18,8 @@
     "bowerify": "browserify app/rich-text-editor.js -t babelify --no-bundle-external -d -s I -o dist/rich-text-editor.js && browserify node_modules/sanitize-html/index.js -t babelify -d -s I -o dist/sanitize-html.js && cp public/{rich-text-editor.css,*.svg} dist/",
     "browserify": "browserify proto/rich-text-editor-bundle.js -o proto/rich-text-editor-bundle-generated.js",
     "generateMathButtons": "scripts/createMathSvg.js",
-    "generateSite": "rm -rf site; GENERATE_SITE=true node proto/server.js"
+    "generateSite": "rm -rf site; GENERATE_SITE=true node proto/server.js",
+    "lint": "eslint ."
   },
   "repository": {
     "type": "git",
@@ -54,6 +55,12 @@
     "browserify": "^15.2.0",
     "chai": "^4.1.2",
     "chai-jquery": "^2.0.0",
+    "eslint": "^4.18.2",
+    "eslint-config-standard": "^11.0.0",
+    "eslint-plugin-import": "^2.9.0",
+    "eslint-plugin-node": "^6.0.1",
+    "eslint-plugin-promise": "^3.7.0",
+    "eslint-plugin-standard": "^3.0.1",
     "express": "^4.16.2",
     "express-babelify-middleware": "^0.2.1",
     "jquery": "3.3.1",

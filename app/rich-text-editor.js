@@ -10,7 +10,7 @@ const l = locales[window.locale || 'FI'].editor
 const keyCodes = {
     E: 69
 }
-const $outerPlaceholder = $(`<div class="rich-text-editor-hidden" style="display: none;" data-js="outerPlaceholder">`)
+const $outerPlaceholder = $('<div class="rich-text-editor-hidden" style="display: none;" data-js="outerPlaceholder">')
 const focus = {
     richText: false,
     latexField: false,
@@ -75,7 +75,7 @@ module.exports.makeRichText = (answer, options, onValueChanged = () => {}) => {
             setTimeout(() => pasteInProgress = false, 0)
             clipboard.onPaste(e, saver, onValueChanged, limit)
         })
-    setTimeout(() => document.execCommand("enableObjectResizing", false, false), 0)
+    setTimeout(() => document.execCommand('enableObjectResizing', false, false), 0)
 }
 
 function toggleRichTextToolbar(isVisible, $editor) {

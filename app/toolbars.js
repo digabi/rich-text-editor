@@ -70,14 +70,14 @@ function initSpecialCharacterToolbar($toolbar, mathEditor, hasAnswerFocus) {
         })
 }
 
-function initMathToolbar($mathToolbar, mathEditor, baseUrl) {
+function initMathToolbar($mathToolbar, mathEditor) {
     $mathToolbar.append(latexCommandsWithSvg
         .map(o => o === '<br>' ? o : `<button class="rich-text-editor-button rich-text-editor-button-grid" data-command="${o.action}" data-latexcommand="${o.label || ''}" data-usewrite="${o.useWrite || false}">
 <img src="${o.svg}"/>
 </button>`).join('')
     ).on('mousedown', 'button', e => {
         e.preventDefault()
-        const dataset = e.currentTarget.dataset;
+        const dataset = e.currentTarget.dataset
         mathEditor.insertMath(dataset.command, dataset.latexcommand, dataset.usewrite === 'true')
     })
 }
