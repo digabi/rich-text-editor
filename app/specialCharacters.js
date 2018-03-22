@@ -69,35 +69,37 @@ module.exports = [
         label: 'Geometria ja vektorioppi',
         characters: [
             { character: '∢', latexCommand: '\\sphericalangle', popular: true },
-            { character: '→', latexCommand: '\\rightarrow', popular: true },
-            { character: '⇌', popular: true}, // \rightleftharpoons
+            { character: '|' , latexCommand: '\\mid', popular: true }, // \pipe,
+            { character: '‖', latexCommand: '\\parallel', popular: true},
+            { character: '⇌'}, // \rightleftharpoons
             { character: '⇅' },
             { character: '∠', latexCommand: '\\angle' },
             { character: '↑', latexCommand: '\\uparrow' },
+            { character: '↗', latexCommand: '\\nearrow' },
+            { character: '↘', latexCommand: '\\searrow' },
             { character: '↓', latexCommand: '\\downarrow' },
             { character: '↔', latexCommand: '\\leftrightarrow' },
-            { character: '⊥', latexCommand: '\\perp'},
-            { character: '‖', latexCommand: '\\parallel'},
-            { character: '|' , latexCommand: '\\mid'} // \pipe
+            { character: '⊥', latexCommand: '\\perp'}
         ]
     },
     {
         label: 'Logiikka ja joukko-oppi',
         characters: [
+            { character: '→', latexCommand: '\\rightarrow', popular: true },
             { character: '⇒', latexCommand: '\\Rightarrow', popular: true },
-            { character: '⇔', latexCommand: '\\Leftrightarrow', popular: true },
-            { character: '∃', latexCommand: '\\exists', popular: true },
-            { character: '∀', latexCommand: '\\forall', popular: true },
+            { character: '∈', latexCommand: '\\in', popular: true },
+            { character: 'ℤ', latexCommand: '\\mathbb{Z}', popular: true },
             { character: 'ℝ', latexCommand: '\\mathbb{R}', popular: true },
+            { character: '⇔', latexCommand: '\\Leftrightarrow' },
+            { character: '∃', latexCommand: '\\exists' },
+            { character: '∀', latexCommand: '\\forall' },
             { character: 'ℕ', latexCommand: '\\mathbb{N}' },
-            { character: 'ℤ', latexCommand: '\\mathbb{Z}' },
             { character: 'ℚ', latexCommand: '\\mathbb{Q}' },
             { character: '∩', latexCommand: '\\cap' },
             { character: '∪', latexCommand: '\\cup' },
             { character: '∖', latexCommand: '\\setminus' },
             { character: '⊂', latexCommand: '\\subset' },
             { character: '⊄', latexCommand: '\\notsubset' },
-            { character: '∈', latexCommand: '\\in' },
             { character: '∉', latexCommand: '\\notin' },
             { character: '∅', latexCommand: '\\empty' },
             { character: '∧', latexCommand: '\\and' },
