@@ -11,7 +11,7 @@
     "*",
     "!dist/*"
   ],
-  "version": "3.1.2",
+  "version": "3.2.0",
   "dependencies": {
     "jquery": "^2.2.4",
     "bacon": "^2.0.5",
