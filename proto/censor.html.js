@@ -9,7 +9,6 @@ module.exports = (obj) => { with(obj) return `
     <link rel="stylesheet" type="text/css" href="/student.css"/>
     <script src="/jquery/dist/jquery.js"></script>
     <script src="/baconjs/dist/Bacon.js"></script>
-    <script src="/bacon.jquery/dist/bacon.jquery.js"></script>
     <script src="/mathquill/build/mathquill.js"></script>
     <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.2/MathJax.js"></script>
     <link rel="icon" href="/rich-text-editor-favicon.ico" type="image/x-icon"/>
