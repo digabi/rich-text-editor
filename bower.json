@@ -15,7 +15,7 @@
   "dependencies": {
     "jquery": "^2.2.4",
     "bacon": "^0.7.43",
-    "mathquill": "digabi/mathquill#0.10.1+digabi.6",
+    "mathquill": "digabi/mathquill#0.10.1+digabi.21",
     "sanitize-html": "^1.11.4",
     "buffer": "^3.46.1"
   }
