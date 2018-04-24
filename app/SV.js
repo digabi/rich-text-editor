@@ -4,7 +4,6 @@ module.exports = {
         title: 'Formeleditorns utvecklingsversion',
         description: `
 <ul>
-<li class="warning">Följande egenskaper tilläggs till följande version av provmiljön: ekvationssystem, styckvis definierad funktion och substitutionstecken för integralberäkning</li>
  <li>Under knappen “Lägg till formel” hittar du de vanligaste beteckningarna som används i matematik, fysik och kemi. Dessutom kan du använda specialtecken för att skriva formler.</li>
 <li>Det går att konstruera formler genom att klicka på beteckningarna i menyerna och/eller genom att skriva LaTeX.</li>
 <li>Det går förutom att skriva text och formler, att också att lägga till bilder i svarsfältet.</li></ul>`,
