@@ -89,6 +89,7 @@ const devModules = [
 const prodModules = [
     'jquery',
     'baconjs',
+    'mathjax',
     'mathquill']
 
 function sourcePath(name) {
