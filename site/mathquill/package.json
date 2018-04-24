@@ -1,24 +1,24 @@
 {
-  "_from": "github:digabi/mathquill#0.10.1+digabi.21",
+  "_from": "github:digabi/mathquill#0.10.1+digabi.22",
   "_id": "mathquill@0.10.1",
   "_inBundle": false,
   "_location": "/mathquill",
   "_phantomChildren": {},
   "_requested": {
     "type": "git",
-    "raw": "mathquill@github:digabi/mathquill#0.10.1+digabi.21",
+    "raw": "mathquill@github:digabi/mathquill#0.10.1+digabi.22",
     "name": "mathquill",
     "escapedName": "mathquill",
-    "rawSpec": "github:digabi/mathquill#0.10.1+digabi.21",
-    "saveSpec": "github:digabi/mathquill#0.10.1+digabi.21",
+    "rawSpec": "github:digabi/mathquill#0.10.1+digabi.22",
+    "saveSpec": "github:digabi/mathquill#0.10.1+digabi.22",
     "fetchSpec": null,
-    "gitCommittish": "0.10.1+digabi.21"
+    "gitCommittish": "0.10.1+digabi.22"
   },
   "_requiredBy": [
     "#DEV:/"
   ],
-  "_resolved": "github:digabi/mathquill#c4a6642f2c721d50debaed6c546b79f8562bcb3c",
-  "_spec": "mathquill@github:digabi/mathquill#0.10.1+digabi.21",
+  "_resolved": "github:digabi/mathquill#8a3df9807bd4ac51804c366f5d0d1639da0eb1bf",
+  "_spec": "mathquill@github:digabi/mathquill#0.10.1+digabi.22",
   "_where": "/Users/eeroan/ytl/rich-text-editor",
   "bugs": {
     "url": "https://github.com/mathquill/mathquill/issues"

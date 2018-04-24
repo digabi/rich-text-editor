@@ -13,5 +13,5 @@ Promise.all(latexCommands.map(o => {
         mathSvg.latexToSvg(latex, svg => resolve(Object.assign(o, {svg: 'data:image/svg+xml;base64,' + Buffer.from(svg).toString('base64')})))
     })
 })).then(data => {
-    fs.writeFileSync(__dirname + '/../app/latexCommandsWithSvg.js', 'module.exports = ' + util.inspect(data, {depth: null}), 'utf8')
+    fs.writeFileSync(__dirname + '/../app/latexCommandsWithSvg.js', '/* eslint-disable indent */\nmodule.exports = ' + util.inspect(data, {depth: null}), 'utf8')
 })

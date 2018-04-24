@@ -1,74 +1,4 @@
 (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
-'use strict';
-
-module.exports = {
-    editor: {
-        mathEditor: 'Matikkaeditori',
-        title: 'Kaavaeditorin kehitysversio',
-        description: '\n<ul>\n<li class="warning">N\xE4m\xE4 ominaisuudet tulevat vasta seuraavaan koeymp\xE4rist\xF6n versioon: yht\xE4l\xF6ryhm\xE4, paloittain m\xE4\xE4ritelty funktio ja integraalin sijoitusmerkint\xE4</li>\n<li>\u201CLis\xE4\xE4 kaava\u201D -napin alta l\xF6yd\xE4t yleisimpi\xE4 matematiikassa, fysiikassa ja\nkemiassa k\xE4ytett\xE4vi\xE4 merkint\xF6j\xE4. Lis\xE4ksi erikoismerkkej\xE4 voi k\xE4ytt\xE4\xE4 kaavan kirjoittamiseen.</li>\n <li>Kaavoja voi rakentaa\nklikkaamalla valikon merkint\xF6j\xE4 ja/tai kirjoittamalla LaTeXia.</li>\n <li>Editorin vastauskentt\xE4\xE4n voi kirjoittaa teksti\xE4 ja kaavoja sek\xE4\nlis\xE4t\xE4 kuvia.</li></ul>',
-        shortcutTitle: 'Pikan\xE4pp\xE4invinkkej\xE4',
-        shortcuts: '<table><tbody>\n<tr><th>Liit\xE4 kuva leikep\xF6yd\xE4lt\xE4</th><td>Ctrl-V</td></tr>\n<tr><th>Kirjoita kaava</th><td>Ctrl-E</td></tr>\n<tr><th colspan="2">Kaavassa</th></tr>\n<tr><th>Jakoviiva</th><td>/</td></tr>\n<tr><th>Kertomerkki</th><td>*</td></tr>\n<tr><th>Eksponentti</th><td>^</td></tr>\n<tr><th>Sulje kaava</th><td>Esc</td></tr>\n<tr><th>Lis\xE4\xE4 kaava seuraavalle riville</th><td>Enter</td></tr>\n</tbody>\n</table>',
-        formatting: 'Muotoilu',
-        specialCharacters: 'Erikoismerkit',
-        insertEquation: 'Lisää kaava',
-        close: 'sulje',
-        save: 'Tallenna',
-        updated: 'Päivitetty',
-        sendFeedback: 'Lähetä palautetta',
-        langLink: '/sv',
-        langLabel: 'På svenska',
-        answerTitle: 'Vastaus',
-        toggleInstructions: 'Näytä ohjeet'
-    },
-    annotating: {
-        sendFeedback: 'Lähetä palautetta',
-        updated: 'Päivitetty',
-        mathEditor: 'Matikkaeditori',
-        title: 'Arvostelu',
-        backLink: '/',
-        backLinkLabel: 'Palaa kaavaeditoriin',
-        save: 'Tallenna merkinnät',
-        langLink: '/sv/bedomning',
-        langLabel: 'På svenska'
-    }
-};
-
-},{}],2:[function(require,module,exports){
-'use strict';
-
-module.exports = {
-    editor: {
-        mathEditor: 'Matematikeditor',
-        title: 'Formeleditorns utvecklingsversion',
-        description: '\n<ul>\n<li class="warning">F\xF6ljande egenskaper till\xE4ggs till f\xF6ljande version av provmilj\xF6n: ekvationssystem, styckvis definierad funktion och substitutionstecken f\xF6r integralber\xE4kning</li>\n <li>Under knappen \u201CL\xE4gg till formel\u201D hittar du de vanligaste beteckningarna som anv\xE4nds i matematik, fysik och kemi. Dessutom kan du anv\xE4nda specialtecken f\xF6r att skriva formler.</li>\n<li>Det g\xE5r att konstruera formler genom att klicka p\xE5 beteckningarna i menyerna och/eller genom att skriva LaTeX.</li>\n<li>Det g\xE5r f\xF6rutom att skriva text och formler, att ocks\xE5 att l\xE4gga till bilder i svarsf\xE4ltet.</li></ul>',
-        shortcutTitle: 'Tips p\xE5 tangentkombinationer',
-        shortcuts: '<table><tbody>\n<tr><th>L\xE4gg till en bild fr\xE5n urklippet</th><td>Ctrl-V</td></tr>\n<tr><th>Skriv en formel</th><td>Ctrl-E</td></tr>\n<tr><th colspan="2">I formeln </th></tr>\n<tr><th>Br\xE5kstreck</th><td>/</td></tr>\n<tr><th>Multiplikationstecken</th><td>*</td></tr>\n<tr><th>St\xE4ng formeln</th><td>Esc</td></tr>\n</tbody>\n</table>',
-        formatting: 'Formatering',
-        specialCharacters: 'Specialtecken',
-        insertEquation: 'Lägg till formel',
-        close: 'stäng',
-        save: 'Spara',
-        updated: 'Uppdaterad',
-        sendFeedback: 'Skicka feedback',
-        langLink: '/',
-        langLabel: 'Suomeksi',
-        answerTitle: 'Svar',
-        toggleInstructions: 'Visa intruktioner'
-    },
-    annotating: {
-        sendFeedback: 'Skicka respons',
-        updated: 'Uppdaterad',
-        mathEditor: 'Matematikeditor',
-        title: 'Bedömning',
-        backLink: '/sv',
-        backLinkLabel: 'Matematikeditor',
-        save: 'Spara anteckningar',
-        langLink: '/tarkistus',
-        langLabel: 'Suomeksi'
-    }
-};
-
-},{}],3:[function(require,module,exports){
 /*!
  * jQuery JavaScript Library v3.3.1
  * https://jquery.com/
@@ -10434,25 +10364,19 @@ if ( !noGlobal ) {
 return jQuery;
 } );
 
-},{}],4:[function(require,module,exports){
-"use strict";
+},{}],2:[function(require,module,exports){
+'use strict';
 
-module.exports = "\\frac{x}{1-x}+\\frac{x}{1+x}=\\frac{x\\left(1+x\\right)}{\\left(1-x\\right)\\left(1+x\\right)}+\\frac{x\\left(1-x\\right)}{\\left(1+x\\right)\\left(1-x\\right)}=\\frac{x\\left(1+x+1-x\\right)}{\\left(1-x\\right)\\left(1+x\\right)}=\\frac{2x}{1-x^2}";
+module.exports = '\\frac{x}{1-x}+\\frac{x}{1+x}=\\frac{x\\left(1+x\\right)}{\\left(1-x\\right)\\left(1+x\\right)}+\\frac{x\\left(1-x\\right)}{\\left(1+x\\right)\\left(1-x\\right)}=\\frac{x\\left(1+x+1-x\\right)}{\\left(1-x\\right)\\left(1+x\\right)}=\\frac{2x}{1-x^2}';
 
-},{}],5:[function(require,module,exports){
+},{}],3:[function(require,module,exports){
 'use strict';
 
 var $ = require('jquery');
 var markers = {};
-var timestamp = null;
 var $answer = $('.answer');
 var sampleAnswer = require('./sampleAnswer');
 var mathSelector = 'img[src^="/math.svg"]';
-var locales = {
-    FI: require('../app/FI'),
-    SV: require('../app/SV')
-};
-var l = locales[window.locale].editor;
 
 updateAnswer('<div>Esimerkki:</div>' + latexToImg(sampleAnswer) + '<div>Esimerkki 2:</div>' + latexToImg(sampleAnswer));
 
@@ -10523,4 +10447,4 @@ function latexToImg(latex) {
     return '<img src="/math.svg?latex=' + encodeURIComponent(latex) + '"/>';
 }
 
-},{"../app/FI":1,"../app/SV":2,"./sampleAnswer":4,"jquery":3}]},{},[5]);
+},{"./sampleAnswer":2,"jquery":1}]},{},[3]);

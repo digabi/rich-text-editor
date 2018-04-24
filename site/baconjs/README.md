@@ -28,15 +28,16 @@ Here's the stuff.
 - [TodoMVC with Bacon.js and jQuery](https://github.com/raimohanska/todomvc/blob/bacon-jquery/labs/architecture-examples/baconjs/js/app.js)
 - [Stack Overflow](http://stackoverflow.com/questions/tagged/bacon.js) for well-formed questions. Use the "bacon.js" tag.
 - [Gitter](https://gitter.im/baconjs/bacon.js) chat for developers of Bacon.
-- [Migrating to 2.0](https://github.com/baconjs/bacon.js/wiki/Migration-from-version-1.0-to-2.0)
+
+You can also check out my entertaining (LOL), interactive, solid-ass [slideshow](http://raimohanska.github.com/bacon.js-slides/).
 
 And remember to give me feedback on the bacon! Let me know if you've
 used it. Tell me how it worked for you. What's missing? What's wrong?
 Please contribute!
 
 [![Build Status](https://travis-ci.org/baconjs/bacon.js.svg?branch=master)](https://travis-ci.org/baconjs/bacon.js)
-[![BrowserStack Status](https://www.browserstack.com/automate/badge.svg?badge_key=RDRnTElXMlRsK2pWdXhYQXVOMkQvdz09LS1mbmgyL0l2NlVBUFZQNWEzYlIvWit3PT0=--779bf4c07cb76abcbee64b15f00e1998f7880ff2%)](https://www.browserstack.com/automate/public-build/RDRnTElXMlRsK2pWdXhYQXVOMkQvdz09LS1mbmgyL0l2NlVBUFZQNWEzYlIvWit3PT0=--779bf4c07cb76abcbee64b15f00e1998f7880ff2%)
 [![NPM version](http://img.shields.io/npm/v/baconjs.svg)](https://www.npmjs.org/package/baconjs)
+[![NuGet version](http://img.shields.io/nuget/v/Bacon.js.svg)](https://www.nuget.org/packages/Bacon.js)
 [![Dependency Status](https://david-dm.org/baconjs/bacon.js.svg)](https://david-dm.org/baconjs/bacon.js)
 [![devDependency Status](https://david-dm.org/baconjs/bacon.js/dev-status.svg)](https://david-dm.org/baconjs/bacon.js#info=devDependencies)
 
@@ -59,7 +60,7 @@ Table of contents
     - [Latest value of Property or EventStream](#latest-value-of-property-or-eventstream)
     - [Bus](#bus)
     - [Event](#event)
-        - [Event properties](#event-properties)
+        - [Event properties and methods](#event-properties-and-methods)
     - [Errors](#errors)
     - [Join Patterns](#join-patterns)
         - [Join patterns as a "chemical machine"](#join-patterns-as-a-chemical-machine)
@@ -100,6 +101,9 @@ Starting from 0.7.45, you can build your own Bacon.js bundle with selected featu
 only. See instructions [here](#build).
 
 Prefer to drink from the firehose? Download from Github [master](https://raw.github.com/baconjs/bacon.js/master/dist/Bacon.js).
+
+Visual Studio users can obtain version 0.7.76 via NuGet Packages
+    https://www.nuget.org/packages/Bacon.js/0.7.76
 
 
 Intro
@@ -212,21 +216,13 @@ You can also pass an optional function that transforms the promise value into Ev
 Check out this [example](https://github.com/raimohanska/baconjs-examples/blob/master/resources/public/index.html).
 
 <a name="bacon-fromevent"></a>
-[`Bacon.fromEvent(target, eventSource [, eventTransformer])`](#bacon-fromevent "Bacon.fromEvent(target : EventTarget | EventEmitter, eventSource : String | Function [, eventTransformer]) : EventStream") creates an EventStream from events
+[`Bacon.fromEvent(target, eventName [, eventTransformer])`](#bacon-fromevent "Bacon.fromEvent(target : EventTarget | EventEmitter, eventName : String [, eventTransformer]) : EventStream") creates an EventStream from events
 on a DOM EventTarget or Node.JS EventEmitter object, or an object that supports event listeners using `on`/`off` methods.
 You can also pass an optional function that transforms the emitted
 events' parameters.
 
 ```js
 Bacon.fromEvent(document.body, "click").onValue(function() { alert("Bacon!") })
-Bacon.fromEvent(
-  window,
-  function(binder, listener) {
-    binder("scroll", listener, {passive: true})
-  }
-).onValue(function() {
-  console.log(window.scrollY)
-})
 ```
 
 <a name="bacon-fromcallback"></a>
@@ -374,6 +370,9 @@ For example:
 var stream = Bacon.fromBinder(function(sink) {
   sink("first value")
   sink([new Bacon.Next("2nd"), new Bacon.Next("3rd")])
+  sink(new Bacon.Next(function() {
+    return "This one will be evaluated lazily"
+  }))
   sink(new Bacon.Error("oops, an error"))
   sink(new Bacon.End())
   return function() {
@@ -409,6 +408,23 @@ function is called only after the last listener has been removed.
 The subscribe-unsubscribe cycle may of course be repeated indefinitely,
 so prepare for multiple calls to the subscribe function.
 
+A note about the `new Bacon.Next(..)` constructor: You can use it like
+
+```js
+new Bacon.Next("value")
+```
+
+But the canonical way would be
+```js
+new Bacon.Next(function() { return "value"; })
+```
+
+The former version is safe only when you know that the actual value in
+the stream is not a function.
+
+The idea in using a function instead of a plain value is that the internals on Bacon.js take
+advantage of [lazy evaluation](#lazy-evaluation) by deferring the evaluations of values
+created by [`map`](#observable-map), [`combine`](#combining-multiple-streams-and-properties).
 
 <a name="bacon-nomore"></a>
 [`Bacon.noMore`](#bacon-nomore "Bacon.noMore") The opaque value `sink` function may return. See [`Bacon.fromBinder`](#bacon-frombinder).
@@ -482,6 +498,7 @@ value. For instance map(".keyCode") will pluck the keyCode field from
 the input values. If keyCode was a function, the result stream would
 contain the values returned by the function.
 The [Function Construction rules](#function-construction-rules) below apply here.
+The [`map`](#observable-map) method, among many others, uses [lazy evaluation](#lazy-evaluation).
 
 <a name="stream-map"></a>
 [`stream.map(property)`](#stream-map "stream.map(property)") maps the stream events to the current value of
@@ -838,9 +855,9 @@ numbers in the stream and output the value on stream end:
 ```js
 Bacon.fromArray([1,2,3])
   .withStateMachine(0, function(sum, event) {
-    if (event.hasValue)
-      return [sum + event.value, []]
-    else if (event.isEnd)
+    if (event.hasValue())
+      return [sum + event.value(), []]
+    else if (event.isEnd())
       return [undefined, [new Bacon.Next(sum), event]]
     else
       return [sum, [event]]
@@ -893,7 +910,7 @@ and end the stream if you choose. For example, to send an error and end
 the stream in case a value is below zero:
 
 ```js
-if (event.hasValue && event.value < 0) {
+if (event.hasValue() && event.value() < 0) {
   this.push(new Bacon.Error("Value below zero"));
   return this.push(end());
 } else {
@@ -1322,7 +1339,36 @@ at least [`onValue`](#observable-onvalue), [`onError`](#observable-onerror), [`o
 Lazy evaluation
 ---------------
 
-Lazy evaluation of event values has been removed in version 2.0
+Methods such as [`map`](#observable-map) and the [`combine`](#observable-combine) use lazy evaluation to avoid evaluating
+values that aren't actually needed. This can be generally considered a Good Thing,
+but it has it's pitfalls.
+
+If you pass a function that referentially transparent, you'll
+be fine. This means that your function should return the same value regardless of
+when it's called.
+
+On the other hand, if you pass a function that returns a value depending on time,
+you may have problems. Consider a property `contents` that's derived from events
+like below.
+
+```javascript
+var items = clicks.map(getCurrentValueFromUI).toProperty()
+var submittedItems = items.sampledBy(submitClick)
+```
+
+Now the `submittedItems` stream will produce the current value of the `items` property
+when an event occurs in the `submitClick` stream. Or so you'd think. In fact, the value
+of `submittedItems` is evaluated at the time of the event in the `submitClick` stream,
+which means that it will actually produce the value of `getCurrentValueFromUI` at that time,
+instead of at the time of the original `click` event.
+
+To force evaluation at the time of original event, you can just use [`flatMap`](#observable-flatmap) instead of [`map`](#observable-map).
+As in here.
+
+```javascript
+var items = clicks.flatMap(getCurrentValueFromUI).toProperty()
+```
+
 
 Latest value of Property or EventStream
 ---------------------------------------
@@ -1373,42 +1419,42 @@ Event
 [`Bacon.Event`](#bacon-event "Bacon.Event") has subclasses [`Bacon.Next`](#bacon-next), [`Bacon.End`](#bacon-end), [`Bacon.Error`](#bacon-error) and [`Bacon.Initial`](#bacon-initial)
 
 <a name="bacon-next"></a>
-[`Bacon.Next`](#bacon-next "Bacon.Next") next value in an EventStream or a Property. Check [`event.isNext`](#event-isnext) to
+[`Bacon.Next`](#bacon-next "Bacon.Next") next value in an EventStream or a Property. Call isNext() to
 distinguish a Next event from other events.
 
 <a name="bacon-end"></a>
-[`Bacon.End`](#bacon-end "Bacon.End") an end-of-stream event of EventStream or Property. Check [`event.isEnd`](#event-isend) to
+[`Bacon.End`](#bacon-end "Bacon.End") an end-of-stream event of EventStream or Property. Call isEnd() to
 distinguish an End from other events.
 
 <a name="bacon-error"></a>
-[`Bacon.Error`](#bacon-error "Bacon.Error") an error event. Check [`event.isError`](#event-iserror) to distinguish these events
+[`Bacon.Error`](#bacon-error "Bacon.Error") an error event. Call isError() to distinguish these events
 in your subscriber, or use [`onError`](#observable-onerror) to react to error events only.
 `errorEvent.error` returns the associated error object (usually string).
 
 <a name="bacon-initial"></a>
-[`Bacon.Initial`](#bacon-initial "Bacon.Initial") the initial (current) value of a Property. Check [`event.isInitial`](#event-isinitial) to
+[`Bacon.Initial`](#bacon-initial "Bacon.Initial") the initial (current) value of a Property. Call isInitial() to
 distinguish from other events. Only sent immediately after subscription
 to a Property.
 
-### Event properties
+### Event properties and methods
 
 <a name="event-value"></a>
-[`event.value`](#event-value "event.value") the value associated with a Next or Initial event
+[`event.value()`](#event-value "event.value(@ : Event[A]) : A") returns the value associated with a Next or Initial event
 
 <a name="event-hasvalue"></a>
-[`event.hasValue`](#event-hasvalue "event.hasValue") true for events of type Initial and Next
+[`event.hasValue()`](#event-hasvalue "event.hasValue(@ : Event[A]) : Bool") returns true for events of type Initial and Next
 
 <a name="event-isnext"></a>
-[`event.isNext`](#event-isnext "event.isNext") true for Next events
+[`event.isNext()`](#event-isnext "event.isNext(@ : Event[A]) : Bool") true for Next events
 
 <a name="event-isinitial"></a>
-[`event.isInitial`](#event-isinitial "event.isInitial") true for Initial events
+[`event.isInitial()`](#event-isinitial "event.isInitial(@ : Event[A]) : Bool") true for Initial events
 
 <a name="event-iserror"></a>
-[`event.isError`](#event-iserror "event.isError") true for Error events
+[`event.isError()`](#event-iserror "event.isError()") true for Error events
 
 <a name="event-isend"></a>
-[`event.isEnd`](#event-isend "event.isEnd") true for End events
+[`event.isEnd()`](#event-isend "event.isEnd()") true for End events
 
 <a name="event-error"></a>
 [`event.error`](#event-error "event.error") the error value of Error events
@@ -1825,22 +1871,20 @@ First check out the Bacon.js repository and run `npm install`.
 
 Then build the coffeescript sources into javascript:
 
-    npm run dist
+    ./build
 
 Result javascript files will be generated in `dist` directory. If your planning
 to develop Bacon.js yourself, you'll want to run [tests] too.
 
 You can also build a bundle with selected features only. For instance
 
-    scripts/dist flatmap combine takeuntil
+    ./build flatmap combine takeuntil
 
 The build system will do its best to determine the dependencies of the selected
 features and include those into the bundle too. You can also test the integrity
 of the bundle with your selected features using
 
-    scripts/runtests flatmap combine takeuntil
-
-TODO: partial testing currently broken.
+    ./test flatmap combine takeuntil
 
 
 Test
@@ -1964,7 +2008,7 @@ Contribute
 
 Use [GitHub issues](https://github.com/baconjs/bacon.js/issues) and [Pull Requests](https://github.com/baconjs/bacon.js/pulls).
 
-Note: this readme is generated from `readme-src.coffee`. After updating the src file, run `npm run readme`.
+Note: this readme is generated from `readme-src.coffee`. After updating the src file, run `grunt readme`.
 
 
 Sponsors
