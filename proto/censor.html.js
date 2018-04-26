@@ -4,15 +4,15 @@ module.exports = (obj) => { with(obj) return `
 <head>
     <meta charset='utf-8'>
     <title>${mathEditor}</title>
-    <link rel="stylesheet" type="text/css" href="/mathquill/build/mathquill.css">
-    <link rel="stylesheet" type="text/css" href="/rich-text-editor.css"/>
-    <link rel="stylesheet" type="text/css" href="/student.css"/>
-    <script src="/jquery/dist/jquery.js"></script>
-    <script src="/baconjs/dist/Bacon.js"></script>
-    <script src="/mathquill/build/mathquill.js"></script>
-    <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.2/MathJax.js"></script>
-    <link rel="icon" href="/rich-text-editor-favicon.ico" type="image/x-icon"/>
-    <link rel="shortcut icon" href="/rich-text-editor-favicon.ico" type="image/x-icon"/>
+    <link rel="stylesheet" type="text/css" href="../mathquill/build/mathquill.css">
+    <link rel="stylesheet" type="text/css" href="../rich-text-editor.css"/>
+    <link rel="stylesheet" type="text/css" href="../student.css"/>
+    <script src="../jquery/dist/jquery.js"></script>
+    <script src="../baconjs/dist/Bacon.js"></script>
+    <script src="../mathquill/build/mathquill.js"></script>
+    <script type="text/javascript" src="../mathjax/MathJax.js"></script>
+    <link rel="icon" href="../rich-text-editor-favicon.ico" type="image/x-icon"/>
+    <link rel="shortcut icon" href="../rich-text-editor-favicon.ico" type="image/x-icon"/>
     <script>
         window.locale = '${locale}'
     </script>
@@ -21,6 +21,7 @@ module.exports = (obj) => { with(obj) return `
 <article>
     <section>
         <h1>Työkalu tehtävän laadintaan</h1>
+        <div style="height: 100px"></div>
         <div class="answer" id="answer1"></div>
         <button id="copy">Kopioi LaTeX leikepöydälle (ctrl-s)</button>
         <textarea disabled id="clipboardContent" placeholder="Tähän tulee leikepöydälle kopioitu sisältö"></textarea>
@@ -43,8 +44,8 @@ module.exports = (obj) => { with(obj) return `
         </div>
     </section>
 </footer>
-<script src="/rich-text-editor-bundle.js"></script>
-<script src="/censor.js"></script>
+<script src="../rich-text-editor-bundle.js"></script>
+<script src="../censor.js"></script>
 <script>
     (function (i, s, o, g, r, a, m) {
         i['GoogleAnalyticsObject'] = r;
