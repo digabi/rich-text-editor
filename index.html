@@ -155,11 +155,14 @@
   document.getElementById("input").addEventListener("change", handleFiles, false)
 
   function handleFiles() {
+    ga('send', 'event', 'mathEditor', 'import')
     const file = this.files[0]
     reader.readAsText(file)
   }
 
   $('#export').click(e => {
+    ga('send', 'event', 'mathEditor', 'export')
+
     const link = 'data:text/html;base64,'+btoa($('.answer').html())
     $(e.target)
       .attr('href', link)
