@@ -33,6 +33,8 @@
     <div class="answer" id="answer1"></div>
   </section>
 </article>
+<div>Import: <input  type="file" id="input"></div>
+<div><a download="math-demo-answer.html" id="export" href="javascript:void(0)">Export</a></div>
 <div class="result">\({}\)</div>
 <script>
   (function (i, s, o, g, r, a, m) {
@@ -144,6 +146,26 @@
   } else {
     window.onerror = trackError
   }
+
+//    <input  type="file" id="input">
+
+  const reader = new FileReader()
+  reader.onload = x => $('.answer').html(x.target.result)
+
+  document.getElementById("input").addEventListener("change", handleFiles, false)
+
+  function handleFiles() {
+    const file = this.files[0]
+    reader.readAsText(file)
+  }
+
+  $('#export').click(e => {
+    const link = 'data:text/html;base64,'+btoa($('.answer').html())
+    $(e.target)
+      .attr('href', link)
+      .attr('download', 'math-demo-answer-' + new Date().toISOString().split('.')[0] + '.html')
+
+  })
 
 </script>
 </body>
