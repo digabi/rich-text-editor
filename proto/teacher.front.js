@@ -1,8 +1,9 @@
 const $ = require('jquery')
-let markers = {}
+window.markers = {}
 const $answer = $('.answer')
 const sampleAnswer = require('./sampleAnswer')
 const mathSelector = 'img[src^="/math.svg"]'
+const wrapper = '.resultWrapper'
 
 updateAnswer('<div>Esimerkki:</div>' + latexToImg(sampleAnswer) + '<div>Esimerkki 2:</div>' + latexToImg(sampleAnswer))
 
@@ -14,19 +15,24 @@ function updateAnswer(html) {
 }
 let mouseDownPos = null
 let $rectangle = null
-$answer.on('mousedown', mathSelector, e => {
+let currentResultWrapper = null
+$answer.on('mousedown', wrapper, e => {
     e.preventDefault()
     mouseDownPos = point(e)
     $rectangle = $('<div class="rectangle">')
-    $(e.target).after($rectangle)
-}).on('mousemove', mathSelector, e => {
+    currentResultWrapper = getResultWrapper(e)
+    currentResultWrapper.append($rectangle)
+}).on('mousemove', wrapper, e => {
     e.preventDefault()
+    if(!areSame(getResultWrapper(e), currentResultWrapper)) {
+        return
+    }
     if (e.buttons === 0) {
         if ($rectangle) onEnd(e)
     } else {
         setPos($rectangle, mouseDownPos, point(e))
     }
-}).on('mouseup', mathSelector, e => {
+}).on('mouseup', wrapper, e => {
     e.preventDefault()
     onEnd(e)
 })
@@ -39,32 +45,56 @@ $answer.on('submit', '.description', e => {
     $form.remove()
 })
 function onEnd(e) {
-    const $form = $('<form class="description"><input type="text"/><button type="submit" class="actionButton">Merkitse</button>')
-        .css(point(e))
-    let $imgWrapper = $(e.target).parent()
-    $rectangle.after($form)
-    $form.find('input').focus()
+    let $imgWrapper = getResultWrapper(e)
     savePos($imgWrapper, toCss(mouseDownPos, point(e)))
     $rectangle = null
 }
 
+function getResultWrapper(e) {
+    return $(e.target).closest('.resultWrapper')
+}
+
+function areSame($el1, $el2) {
+    return $el1 && $el2 && $el1.get(0) === $el2.get(0)
+}
 function point(e) {
-    return {
+    return $(e.target).hasClass('rectangle') ? {
+        left: e.target.offsetLeft + e.offsetX,
+        top: e.target.offsetTop + e.offsetY
+    } : {
         left: e.offsetX,
         top: e.offsetY
     }
 }
 function savePos($imgWrapper, pos) {
-    const index = $imgWrapper.prop('id')
-    markers[index] = (markers[index] || []).concat(pos)
+    const index = $imgWrapper.find('img').prop('id')
+    window.markers[index] = (window.markers[index] || []).concat(pos)
 }
 
 function toCss(pos1, pos2) {
-    return {
-        left: Math.min(pos1.left, pos2.left),
-        top: pos1.top,
-        width: Math.abs(pos2.left - pos1.left),
-        height: 5
+    const height = Math.abs(pos2.top - pos1.top)
+    const width = Math.abs(pos2.left - pos1.left)
+    if(height < 10) {
+        return {
+            left: Math.min(pos1.left, pos2.left),
+            width: Math.abs(pos2.left - pos1.left),
+            top: pos1.top - 2,
+            height: 4,
+        }
+    } else if(width < 10) {
+        return {
+            left: pos1.left - 2,
+            width: 5,
+            top: Math.min(pos1.top, pos2.top),
+            height: Math.abs(pos2.top - pos1.top)
+        }
+    } else {
+        return {
+            left: Math.min(pos1.left, pos2.left),
+            width: Math.abs(pos2.left - pos1.left),
+            top: Math.min(pos1.top, pos2.top),
+            height: Math.abs(pos2.top - pos1.top)
+        }
     }
 }
 
