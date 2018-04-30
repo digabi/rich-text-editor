@@ -2,14 +2,14 @@ const $ = require('jquery')
 window.markers = {}
 const $answer = $('.answer')
 const sampleAnswer = require('./sampleAnswer')
-const mathSelector = 'img[src^="/math.svg"]'
 const wrapper = '.resultWrapper'
 
-updateAnswer('<div>Esimerkki:</div>' + latexToImg(sampleAnswer) + '<div>Esimerkki 2:</div>' + latexToImg(sampleAnswer))
+updateAnswer('<div>Esimerkki:</div>' + latexToImg(sampleAnswer) + '<div>Esimerkki 2:</div>' + latexToImg(sampleAnswer)+
+'<br>Ja kuvaa<br><img src="/sample_screenshot.jpg">')
 
 function updateAnswer(html) {
     $answer.html(html)
-        .find(mathSelector)
+        .find('img')
         .each((i, elem) => $(elem).prop('id', i))
         .wrap('<div class="resultWrapper">')
 }
