@@ -50,7 +50,7 @@
 .rich-text-editor-toolbar-characters.rich-text-editor-toolbar-button-list .rich-text-editor-button { font-family: Symbola, monospace; color: #555; }
 .rich-text-editor-toolbar-equation { display: none; }
 .math-editor-focus .rich-text-editor-toolbar-equation { display: inline-block; }
-.rich-text-editor-toolbar-characters-group { margin-right: 24px; display: inline-block; vertical-align: top; }
+.rich-text-editor-toolbar-characters-group { margin-right: 35px; display: inline-block; vertical-align: top; }
 .rich-text-editor-toolbar-characters .rich-text-editor-button { display: none; }
 
 .rich-text-editor-characters-expanded .rich-text-editor-toolbar-characters .rich-text-editor-button,
