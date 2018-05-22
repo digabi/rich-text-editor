@@ -2,7 +2,10 @@ const mjAPI = require('mathjax-node')
 
 module.exports = {mathSvgResponse, latexToSvg}
 
-mjAPI.config({MathJax: {}})
+//mjAPI.config({MathJax: { TeX: {extensions: ['mhchem.js']} }})
+mjAPI.config({
+    extensions: 'TeX/mhchem.js'
+})
 mjAPI.start()
 
 function mathSvgResponse(req, res) {
