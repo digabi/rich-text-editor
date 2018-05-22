@@ -27,7 +27,7 @@ module.exports = [
     {action: '\\overline{\\text{k}}', useWrite: true},
     {action: '(', label: '(X)'},
     {action: '_{ }^{ } ', label: '_{X}^{X}X', useWrite: true},
-    {action: '\\array', label: '\\begin{array}{l|l}X&X\\\\\\hlineX&X\\\\X&X\\end{array}'},
+    {action: '\\array', label: '\\begin{array}{l|l}X&X\\\\\\hlineX&X\\end{array}'},
     {action: '^{x\\text{)}}\\frac{a}{b}', label: '^{X\\text{)}}\\frac{X}{X}', useWrite: true},
     {action: '\\mathrm', label: '\\mathrm{T}'},
 ]
