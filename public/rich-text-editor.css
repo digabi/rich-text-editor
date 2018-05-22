@@ -21,7 +21,7 @@
 .math-editor-equation-field { width: 50%; padding: 5px 10px; border: none; background: #fff;}
 .math-editor-latex-field { font-size: 15px; width: 50%; padding: 5px 10px; letter-spacing: 1px; }
 
-.rich-text-editor-button {text-align: center;display: inline-block;position: relative;cursor: pointer;border: none;}
+.rich-text-editor-button {text-align: center;display: inline-block;position: relative;cursor: pointer;border: none; padding: 0;}
 .math-editor-focus .rich-text-editor-button[data-command]:hover:after,
 .rich-text-editor-button-action[data-command]:hover:after { background: #359BB7; border-radius: 5px; color: #fff; content: attr(data-command); left: 50%; top:100%; padding: 5px 15px; position: absolute; z-index: 32; transform: translate(-50%, 0); white-space: nowrap; }
 .math-editor-focus .rich-text-editor-button[data-command]:hover:before,
@@ -45,7 +45,7 @@
 .rich-text-editor-toolbar .rich-text-editor-button:hover { background: #eee; }
 .rich-text-editor-button-grid { width: 35px; height: 35px; }
 
-.rich-text-editor-toolbar.rich-text-editor-toolbar-button-list img { max-width: 20px; max-height: 20px; }
+.rich-text-editor-toolbar.rich-text-editor-toolbar-button-list img { max-width: 24px; max-height: 25px; }
 .rich-text-editor-toolbar-button-list.rich-text-editor-button:hover {background: #ECECEC;}
 .rich-text-editor-toolbar-characters.rich-text-editor-toolbar-button-list .rich-text-editor-button { font-family: Symbola, monospace; color: #555; }
 .rich-text-editor-toolbar-equation { display: none; }
