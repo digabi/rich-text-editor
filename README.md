@@ -3,6 +3,13 @@
 Rich text editor with math support for Finnish Matriculation Examination Board.
 Live demo can be found at [https://math-demo.abitti.fi/](https://math-demo.abitti.fi/)
 
+## Dependencies
+
+- MathQuill (https://github.com/digabi/mathquill)
+- MathJax-Node
+- Bacon
+- Jquery
+- sanitize-html
 
 ## Getting started
 
