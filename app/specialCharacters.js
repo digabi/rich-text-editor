@@ -20,7 +20,7 @@ module.exports = [
             { character: 'ε', latexCommand: '\\varepsilon' },
             { character: 'ζ', latexCommand: '\\zeta' },
             { character: 'η', latexCommand: '\\eta' },
-            { character: 'Θ', latexCommand: '\\Theta' },
+            { character: 'θ', latexCommand: '\\theta' },
             { character: 'ϑ', latexCommand: '\\vartheta' },
             { character: '&iota;', latexCommand: '\\iota' },
             { character: 'κ', latexCommand: '\\kappa' },
