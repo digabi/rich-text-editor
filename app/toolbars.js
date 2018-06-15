@@ -25,7 +25,7 @@ function init(mathEditor, hasRichTextFocus, l, baseUrl)  {
             </div>
             <div class="rich-text-editor-tools-button-wrapper">
                 <div class="rich-text-editor-toolbar-wrapper">
-                    <button class="rich-text-editor-new-equation rich-text-editor-button rich-text-editor-button-action" data-js="newEquation" data-command="Ctrl-E">Σ ${l.insertEquation}</button>
+                    <button class="rich-text-editor-new-equation rich-text-editor-button rich-text-editor-button-action" data-js="newEquation" data-command="Ctrl-E" data-i18n="rich_text_editor.insert_equation">Σ ${l.insertEquation}</button>
                 </div>
             </div>
         </div>
@@ -43,6 +43,12 @@ function init(mathEditor, hasRichTextFocus, l, baseUrl)  {
     initSpecialCharacterToolbar($toolbar, mathEditor, hasRichTextFocus)
     initMathToolbar($mathToolbar, mathEditor, baseUrl)
     initNewEquation($newEquation, mathEditor, hasRichTextFocus)
+
+    if ($.fn.i18n) {
+        $toolbar.i18n()
+    } else if ($.fn.localize)  {
+        $toolbar.localize()
+    }
 
     return $toolbar
 }
