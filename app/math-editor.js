@@ -151,7 +151,7 @@ function init($outerPlaceholder, focus, baseUrl, updateMathImg) {
             } else {
                 mqInstance.typedText(symbol)
             }
-            if (~symbol.indexOf('\\')) mqInstance.keystroke('Tab')
+            if (~symbol.indexOf('\\')) mqInstance.keystroke('Spacebar')
             setTimeout(() => mqInstance.focus(), 0)
         }
     }
