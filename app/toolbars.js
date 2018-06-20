@@ -53,7 +53,7 @@ function init(mathEditor, hasRichTextFocus, l, baseUrl)  {
     return $toolbar
 }
 
-const specialCharacterToButton = char => `<button class="rich-text-editor-button rich-text-editor-button-grid${char.popular ? ' rich-text-editor-characters-popular' :''}" ${char.latexCommand ? `data-command="${char.latexCommand}"` : ''}>${char.character}</button>`
+const specialCharacterToButton = char => `<button class="rich-text-editor-button rich-text-editor-button-grid${char.popular ? ' rich-text-editor-characters-popular' :''}" ${char.latexCommand ? `data-command="${char.latexCommand}"` : ''} data-usewrite="${!char.noWrite}">${char.character}</button>`
 
 const popularInGroup = group => group.characters.filter(character => character.popular).length
 
@@ -62,7 +62,7 @@ function initSpecialCharacterToolbar($toolbar, mathEditor, hasAnswerFocus) {
 
     $toolbar.find('[data-js="charactersList"]')
         .append(specialCharacterGroups.map(group =>
-            `<div class="rich-text-editor-toolbar-characters-group" 
+            `<div class="rich-text-editor-toolbar-characters-group"
                   style="width: ${popularInGroup(group) * gridButtonWidthPx}px">
                   ${group.characters.map(specialCharacterToButton).join('')}
              </div>`))
@@ -71,8 +71,9 @@ function initSpecialCharacterToolbar($toolbar, mathEditor, hasAnswerFocus) {
 
             const character = e.currentTarget.innerText
             const command = e.currentTarget.dataset.command
+            const useWrite = Boolean(e.currentTarget.dataset.useWrite)
             if (hasAnswerFocus()) window.document.execCommand('insertText', false, character)
-            else mathEditor.insertMath(command || character, undefined, true)
+            else mathEditor.insertMath(command || character, undefined, useWrite)
         })
 }
 

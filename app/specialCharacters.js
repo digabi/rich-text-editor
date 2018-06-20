@@ -71,7 +71,7 @@ module.exports = [
             { character: '∢', latexCommand: '\\sphericalangle', popular: true },
             { character: '|' , latexCommand: '\\mid', popular: true }, // \pipe,
             { character: '‖', latexCommand: '\\parallel', popular: true},
-            { character: '⇌'}, // \rightleftharpoons
+            { character: '⇌', latexCommand: '\\xrightleftharpoons', noWrite: true},
             { character: '⇅' },
             { character: '∠', latexCommand: '\\angle' },
             { character: '↑', latexCommand: '\\uparrow' },
