@@ -79,7 +79,7 @@ function initSpecialCharacterToolbar($toolbar, mathEditor, hasAnswerFocus) {
 
 function initMathToolbar($mathToolbar, mathEditor) {
     $mathToolbar.append(latexCommandsWithSvg
-        .map(o => o === '<br>' ? o : `<button class="rich-text-editor-button rich-text-editor-button-grid" data-command="${o.action}" data-latexcommand="${o.label || ''}" data-usewrite="${o.useWrite || false}">
+        .map(o => typeof o === 'string' ? o : `<button class="rich-text-editor-button rich-text-editor-button-grid" data-command="${o.action}" data-latexcommand="${o.label || ''}" data-usewrite="${o.useWrite || false}">
 <img src="${o.svg}"/>
 </button>`).join('')
     ).on('mousedown', 'button', e => {
