@@ -441,7 +441,7 @@ function init($outerPlaceholder, focus, baseUrl, updateMathImg) {
             } else {
                 mqInstance.typedText(symbol)
             }
-            if (~symbol.indexOf('\\')) mqInstance.keystroke('Tab')
+            if (~symbol.indexOf('\\')) mqInstance.keystroke('Spacebar')
             setTimeout(() => mqInstance.focus(), 0)
         }
     }
@@ -678,7 +678,7 @@ module.exports = [
             { character: '∢', latexCommand: '\\sphericalangle', popular: true },
             { character: '|' , latexCommand: '\\mid', popular: true }, // \pipe,
             { character: '‖', latexCommand: '\\parallel', popular: true},
-            { character: '⇌'}, // \rightleftharpoons
+            { character: '⇌', latexCommand: '\\xrightleftharpoons', noWrite: true},
             { character: '⇅' },
             { character: '∠', latexCommand: '\\angle' },
             { character: '↑', latexCommand: '\\uparrow' },
@@ -772,7 +772,7 @@ function init(mathEditor, hasRichTextFocus, l, baseUrl)  {
     return $toolbar
 }
 
-const specialCharacterToButton = char => `<button class="rich-text-editor-button rich-text-editor-button-grid${char.popular ? ' rich-text-editor-characters-popular' :''}" ${char.latexCommand ? `data-command="${char.latexCommand}"` : ''}>${char.character}</button>`
+const specialCharacterToButton = char => `<button class="rich-text-editor-button rich-text-editor-button-grid${char.popular ? ' rich-text-editor-characters-popular' :''}" ${char.latexCommand ? `data-command="${char.latexCommand}"` : ''} data-usewrite="${!char.noWrite}">${char.character}</button>`
 
 const popularInGroup = group => group.characters.filter(character => character.popular).length
 
@@ -781,7 +781,7 @@ function initSpecialCharacterToolbar($toolbar, mathEditor, hasAnswerFocus) {
 
     $toolbar.find('[data-js="charactersList"]')
         .append(specialCharacterGroups.map(group =>
-            `<div class="rich-text-editor-toolbar-characters-group" 
+            `<div class="rich-text-editor-toolbar-characters-group"
                   style="width: ${popularInGroup(group) * gridButtonWidthPx}px">
                   ${group.characters.map(specialCharacterToButton).join('')}
              </div>`))
@@ -790,14 +790,15 @@ function initSpecialCharacterToolbar($toolbar, mathEditor, hasAnswerFocus) {
 
             const character = e.currentTarget.innerText
             const command = e.currentTarget.dataset.command
+            const useWrite = Boolean(e.currentTarget.dataset.useWrite)
             if (hasAnswerFocus()) window.document.execCommand('insertText', false, character)
-            else mathEditor.insertMath(command || character, undefined, true)
+            else mathEditor.insertMath(command || character, undefined, useWrite)
         })
 }
 
 function initMathToolbar($mathToolbar, mathEditor) {
     $mathToolbar.append(latexCommandsWithSvg
-        .map(o => o === '<br>' ? o : `<button class="rich-text-editor-button rich-text-editor-button-grid" data-command="${o.action}" data-latexcommand="${o.label || ''}" data-usewrite="${o.useWrite || false}">
+        .map(o => typeof o === 'string' ? o : `<button class="rich-text-editor-button rich-text-editor-button-grid" data-command="${o.action}" data-latexcommand="${o.label || ''}" data-usewrite="${o.useWrite || false}">
 <img src="${o.svg}"/>
 </button>`).join('')
     ).on('mousedown', 'button', e => {
