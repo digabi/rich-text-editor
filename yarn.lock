@@ -3127,9 +3127,9 @@ mathjax@^2.7.2:
   version "2.7.4"
   resolved "https://registry.yarnpkg.com/mathjax/-/mathjax-2.7.4.tgz#a88c55392b69a9715813cdc041ce02de6548a603"
 
-mathquill@digabi/mathquill#0.10.1+digabi.23:
+mathquill@digabi/mathquill#0.10.1+digabi.24:
   version "0.10.1"
-  resolved "https://codeload.github.com/digabi/mathquill/tar.gz/aa085fc3c0d64837543e9a6d374fd0af135ac197"
+  resolved "https://codeload.github.com/digabi/mathquill/tar.gz/100d4b83afb30bf32b56fdc173d07230969d5dea"
 
 md5.js@^1.3.4:
   version "1.3.4"
