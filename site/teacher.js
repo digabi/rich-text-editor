@@ -1,4 +1,4 @@
-(function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
+(function(){function r(e,n,t){function o(i,f){if(!n[i]){if(!e[i]){var c="function"==typeof require&&require;if(!f&&c)return c(i,!0);if(u)return u(i,!0);var a=new Error("Cannot find module '"+i+"'");throw a.code="MODULE_NOT_FOUND",a}var p=n[i]={exports:{}};e[i][0].call(p.exports,function(r){var n=e[i][1][r];return o(n||r)},p,p.exports,r,e,n,t)}return n[i].exports}for(var u="function"==typeof require&&require,i=0;i<t.length;i++)o(t[i]);return o}return r})()({1:[function(require,module,exports){
 /*!
  * jQuery JavaScript Library v3.3.1
  * https://jquery.com/
@@ -10373,33 +10373,38 @@ module.exports = '\\frac{x}{1-x}+\\frac{x}{1+x}=\\frac{x\\left(1+x\\right)}{\\le
 'use strict';
 
 var $ = require('jquery');
-var markers = {};
+window.markers = {};
 var $answer = $('.answer');
 var sampleAnswer = require('./sampleAnswer');
-var mathSelector = 'img[src^="/math.svg"]';
+var wrapper = '.resultWrapper';
 
-updateAnswer('<div>Esimerkki:</div>' + latexToImg(sampleAnswer) + '<div>Esimerkki 2:</div>' + latexToImg(sampleAnswer));
+updateAnswer('<div>Esimerkki:</div>' + latexToImg(sampleAnswer) + '<div>Esimerkki 2:</div>' + latexToImg(sampleAnswer) + '<br>Ja kuvaa<br><img src="/sample_screenshot.jpg">');
 
 function updateAnswer(html) {
-    $answer.html(html).find(mathSelector).each(function (i, elem) {
+    $answer.html(html).find('img').each(function (i, elem) {
         return $(elem).prop('id', i);
     }).wrap('<div class="resultWrapper">');
 }
 var mouseDownPos = null;
 var $rectangle = null;
-$answer.on('mousedown', mathSelector, function (e) {
+var currentResultWrapper = null;
+$answer.on('mousedown', wrapper, function (e) {
     e.preventDefault();
     mouseDownPos = point(e);
     $rectangle = $('<div class="rectangle">');
-    $(e.target).after($rectangle);
-}).on('mousemove', mathSelector, function (e) {
+    currentResultWrapper = getResultWrapper(e);
+    currentResultWrapper.append($rectangle);
+}).on('mousemove', wrapper, function (e) {
     e.preventDefault();
+    if (!areSame(getResultWrapper(e), currentResultWrapper)) {
+        return;
+    }
     if (e.buttons === 0) {
         if ($rectangle) onEnd(e);
     } else {
         setPos($rectangle, mouseDownPos, point(e));
     }
-}).on('mouseup', mathSelector, function (e) {
+}).on('mouseup', wrapper, function (e) {
     e.preventDefault();
     onEnd(e);
 });
@@ -10412,32 +10417,57 @@ $answer.on('submit', '.description', function (e) {
     $form.remove();
 });
 function onEnd(e) {
-    var $form = $('<form class="description"><input type="text"/><button type="submit" class="actionButton">Merkitse</button>').css(point(e));
-    var $imgWrapper = $(e.target).parent();
-    $rectangle.after($form);
-    $form.find('input').focus();
+    var $imgWrapper = getResultWrapper(e);
     savePos($imgWrapper, toCss(mouseDownPos, point(e)));
     $rectangle = null;
 }
 
+function getResultWrapper(e) {
+    return $(e.target).closest('.resultWrapper');
+}
+
+function areSame($el1, $el2) {
+    return $el1 && $el2 && $el1.get(0) === $el2.get(0);
+}
 function point(e) {
-    return {
+    return $(e.target).hasClass('rectangle') ? {
+        left: e.target.offsetLeft + e.offsetX,
+        top: e.target.offsetTop + e.offsetY
+    } : {
         left: e.offsetX,
         top: e.offsetY
     };
 }
 function savePos($imgWrapper, pos) {
-    var index = $imgWrapper.prop('id');
-    markers[index] = (markers[index] || []).concat(pos);
+    var index = $imgWrapper.find('img').prop('id');
+    window.markers[index] = (window.markers[index] || []).concat(pos);
 }
 
 function toCss(pos1, pos2) {
-    return {
-        left: Math.min(pos1.left, pos2.left),
-        top: pos1.top,
-        width: Math.abs(pos2.left - pos1.left),
-        height: 5
-    };
+    var height = Math.abs(pos2.top - pos1.top);
+    var width = Math.abs(pos2.left - pos1.left);
+    if (height < 10) {
+        return {
+            left: Math.min(pos1.left, pos2.left),
+            width: Math.abs(pos2.left - pos1.left),
+            top: pos1.top - 2,
+            height: 4
+        };
+    } else if (width < 10) {
+        return {
+            left: pos1.left - 2,
+            width: 5,
+            top: Math.min(pos1.top, pos2.top),
+            height: Math.abs(pos2.top - pos1.top)
+        };
+    } else {
+        return {
+            left: Math.min(pos1.left, pos2.left),
+            width: Math.abs(pos2.left - pos1.left),
+            top: Math.min(pos1.top, pos2.top),
+            height: Math.abs(pos2.top - pos1.top)
+        };
+    }
 }
 
 function setPos($img, pos1, pos2) {

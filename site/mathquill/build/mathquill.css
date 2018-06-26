@@ -437,6 +437,27 @@
 .mq-math-mode .mq-underarrow:after {
   bottom: -1px;
 }
+.mq-math-mode .mq-harpoons {
+  text-align: center;
+  position: relative;
+}
+.mq-math-mode .mq-harpoons-numerator,
+.mq-math-mode .mq-harpoons-denominator,
+.mq-math-mode .mq-harpoons-harpoons {
+  display: block;
+}
+.mq-math-mode .mq-harpoons-numerator,
+.mq-math-mode .mq-harpoons-denominator {
+  font-size: 70%;
+}
+.mq-math-mode .mq-harpoons-numerator {
+  padding: 0 0.1em;
+}
+.mq-math-mode .mq-harpoons-denominator {
+  float: right;
+  width: 100%;
+  padding: 0.1em;
+}
 @supports (-moz-appearance:meterbar) and (background-blend-mode:difference,normal) {
   .mq-math-mode .mq-overarrow:before,
   .mq-math-mode .mq-underarrow:before,

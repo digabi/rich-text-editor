@@ -4013,6 +4013,7 @@ var NonSymbolaSymbol = P(Symbol, function(_, super_) {
 });
 
 LatexCmds['@'] = NonSymbolaSymbol;
+LatexCmds['#'] = bind(NonSymbolaSymbol, '\\#', '#');
 LatexCmds['&'] = bind(NonSymbolaSymbol, '\\&', '&amp;');
 LatexCmds['%'] = bind(NonSymbolaSymbol, '\\%', '%');
 
@@ -4162,9 +4163,26 @@ var LatexFragment = P(MathCommand, function(_) {
 // [2]: http://en.wikipedia.org/wiki/Number_Forms
 // [3]: http://en.wikipedia.org/wiki/ISO/IEC_8859-1
 // [4]: http://en.wikipedia.org/wiki/Windows-1252
+LatexCmds['\u2070'] = bind(LatexFragment, '^0');
 LatexCmds['\u00b9'] = bind(LatexFragment, '^1');
 LatexCmds['\u00b2'] = bind(LatexFragment, '^2');
 LatexCmds['\u00b3'] = bind(LatexFragment, '^3');
+LatexCmds['\u2074'] = bind(LatexFragment, '^4');
+LatexCmds['\u2075'] = bind(LatexFragment, '^5');
+LatexCmds['\u2076'] = bind(LatexFragment, '^6');
+LatexCmds['\u2077'] = bind(LatexFragment, '^7');
+LatexCmds['\u2078'] = bind(LatexFragment, '^8');
+LatexCmds['\u2079'] = bind(LatexFragment, '^9');
+LatexCmds['\u2080'] = bind(LatexFragment, '_0');
+LatexCmds['\u2081'] = bind(LatexFragment, '_1');
+LatexCmds['\u2082'] = bind(LatexFragment, '_2');
+LatexCmds['\u2083'] = bind(LatexFragment, '_3');
+LatexCmds['\u2084'] = bind(LatexFragment, '_4');
+LatexCmds['\u2085'] = bind(LatexFragment, '_5');
+LatexCmds['\u2086'] = bind(LatexFragment, '_6');
+LatexCmds['\u2087'] = bind(LatexFragment, '_7');
+LatexCmds['\u2088'] = bind(LatexFragment, '_8');
+LatexCmds['\u2089'] = bind(LatexFragment, '_9');
 LatexCmds['\u00bc'] = bind(LatexFragment, '\\frac14');
 LatexCmds['\u00bd'] = bind(LatexFragment, '\\frac12');
 LatexCmds['\u00be'] = bind(LatexFragment, '\\frac34');
@@ -4192,7 +4210,7 @@ var PlusMinus = P(BinaryOperator, function(_) {
 
       return 'mq-binary-operator';
     };
-    
+
     if (dir === R) return; // ignore if sibling only changed on the right
     this.jQ[0].className = determineOpClassType(this);
     return this;
@@ -4433,6 +4451,51 @@ LatexCmds.overleftrightarrow = bind(OverUnderArrow, '\\overleftrightarrow', 'cla
 LatexCmds.underrightarrow = bind(OverUnderArrow, '\\underrightarrow', 'class="mq-non-leaf mq-underarrow mq-arrow-right"');
 LatexCmds.underleftarrow = bind(OverUnderArrow, '\\underleftarrow', 'class="mq-non-leaf mq-underarrow mq-arrow-left"');
 LatexCmds.underleftrightarrow = bind(OverUnderArrow, '\\underleftrightarrow', 'class="mq-non-leaf mq-underarrow mq-arrow-leftright"');
+
+var Harpoons = P(MathCommand, function(_, super_) {
+  _.ctrlSeq = '\\xrightleftharpoons'
+  _.htmlTemplate =
+      '<span class="mq-harpoons mq-harpoons-rightleft mq-non-leaf">'
+        + '<span class="mq-harpoons-numerator">&0</span>'
+        + '<span class="mq-harpoons-harpoons">&#x21cc;</span>'
+    + '</span>';
+});
+
+// Not sure if there is a better way to handle optional arguments. Nthroot and
+// Squareroot handle them in a similar manner (separate classes and templates),
+// so perhaps not?
+var AboveAndBelowHarpoons = LatexCmds.xrightleftharpoons = P(Harpoons, function (_, super_) {
+  _.ctrlSeq = '\\xrightleftharpoons'
+  _.htmlTemplate =
+    '<span class="mq-harpoons mq-harpoons-rightleft mq-non-leaf">'
+    + '<span class="mq-harpoons-numerator">&1</span>'
+    + '<span class="mq-harpoons-harpoons">&#x21cc;</span>'
+    + '<span class="mq-harpoons-denominator">&0</span>'
+    + '</span>';
+  _.parser = function () {
+    // Specify the below content with an optional argument like in chemarr, so
+    // the correct syntax is \xrightleftharpoons[below]{above} instead of
+    // \xrightleftharpoons{below}{above}.
+
+    return latexMathParser.optBlock.then(function (optBlock) {
+      return latexMathParser.block.map(function (block) {
+        var harpoons = AboveAndBelowHarpoons();
+        harpoons.blocks = [optBlock, block];
+        optBlock.adopt(harpoons, 0, 0);
+        block.adopt(harpoons, optBlock, 0);
+        return harpoons;
+      });
+    }).or(latexMathParser.block.map(function (block) {
+      var harpoons = Harpoons()
+      harpoons.blocks = [block]
+      block.adopt(harpoons, 0, 0)
+      return harpoons
+    }));
+  };
+  _.latex = function () {
+    return this.ctrlSeq + '[' + this.ends[L].latex() + ']{' + this.ends[R].latex() + '}';
+  };
+});
 
 LatexCmds.overarc = bind(Style, '\\overarc', 'span', 'class="mq-non-leaf mq-overarc"');
 LatexCmds.dot = P(MathCommand, function(_, super_) {
@@ -5390,18 +5453,22 @@ Environments.matrix = P(Environment, function(_, super_) {
     var optWhitespace = Parser.optWhitespace;
     var string = Parser.string;
     var regex = Parser.regex;
+    // https://en.wikibooks.org/wiki/LaTeX/Tables#Using_array
+    var arrayOptions = regex(/^({[clr](\|?[clr])*})?/)
 
-    return regex(/^({[^}]*})?/)
+    return arrayOptions
     .then(function(options) {
-      if (!self.options) self.options = options.slice(1, -1);
+      if (options && !self.options) self.options = options.slice(1, -1);
       return Parser.succeed(self);
     })
-    .skip(optWhitespace)
-    .then(string(delimiters.column)
-      .or(string(delimiters.row))
-      .or(optWhitespace.then(string('\\hline')).skip(optWhitespace))
-      .or(latexMathParser.block))
-    .many()
+    .then(
+      optWhitespace.then(
+        string(delimiters.column)
+        .or(string(delimiters.row))
+        .or(string('\\hline'))
+        .or(latexMathParser.block))
+      .many()
+    )
     .skip(optWhitespace)
     .then(function(items) {
       var blocks = [];
