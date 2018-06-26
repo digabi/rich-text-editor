@@ -42,7 +42,8 @@ $tools.on('mousedown', '[data-js="expandCollapseCharacters"]', () => {
 $('[data-js="mathToolbar"]').on('mousedown', 'button', e => {
     events.metric4++
     hasEvents = true
-    ga('send', 'event', 'toolbar', 'latex', e.currentTarget.dataset.latexcommand)
+    const dataset = e.currentTarget.dataset
+    ga('send', 'event', 'toolbar', 'latex', dataset.latexcommand || dataset.command)
 })
 $('[data-js="charactersList"]').on('mousedown', 'button', e => {
     events.metric3++

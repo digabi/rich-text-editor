@@ -5,7 +5,7 @@ const fs = require('fs')
 const util = require('util')
 
 Promise.all(latexCommands.map(o => {
-    if (o === '<br>') {
+    if (typeof o === 'string') {
         return Promise.resolve(o)
     }
     return new Promise(resolve => {
