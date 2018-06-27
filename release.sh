@@ -11,6 +11,16 @@ fi
 
 VERSION=$1
 
+node <<EOF
+const bowerJson = require('./bower.json')
+const packageJson = require('./package.json')
+
+if (bowerJson.dependencies.mathquill !== packageJson.devDependencies.mathquill) {
+  console.log('ERROR: mathquill version mismatch between package.json and bower.json!')
+  process.exit(42)
+}
+EOF
+
 npm version ${VERSION} -m "Release %s"
 NEW_VERSION=$(node <<EOF
 var packageJson = require(process.cwd() + '/package.json')
