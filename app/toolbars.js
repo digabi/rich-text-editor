@@ -71,7 +71,7 @@ function initSpecialCharacterToolbar($toolbar, mathEditor, hasAnswerFocus) {
 
             const character = e.currentTarget.innerText
             const command = e.currentTarget.dataset.command
-            const useWrite = Boolean(e.currentTarget.dataset.useWrite)
+            const useWrite = e.currentTarget.dataset.usewrite === 'true'
             if (hasAnswerFocus()) window.document.execCommand('insertText', false, character)
             else mathEditor.insertMath(command || character, undefined, useWrite)
         })
