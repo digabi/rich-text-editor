@@ -13,9 +13,6 @@ const fs = require('fs')
 const studentHtmlFI = studentHtml((Object.assign({startedAt: formatDate(startedAt), locale: 'FI'}, FI.editor)))
 const censorHtmlFI = censorHtml((Object.assign({startedAt: formatDate(startedAt), locale: 'FI'}, FI.editor)))
 const studentHtmlSV = studentHtml((Object.assign({startedAt: formatDate(startedAt), locale: 'SV'}, SV.editor)))
-const teacherHtml = require('./teacher.html')
-const teacherHtmlFI = teacherHtml(Object.assign({startedAt: formatDate(startedAt), locale: 'FI'}, FI.annotating))
-const teacherHtmlSV = teacherHtml(Object.assign({startedAt: formatDate(startedAt), locale: 'SV'}, SV.annotating))
 const app = express()
 const morgan = require('morgan')
 const ncp = require('ncp').ncp
@@ -68,7 +65,6 @@ function defineFile(url, relativePath) {
         app.use(url, babelifyMiddleware(__dirname + relativePath))
     }
 }
-defineFile('/teacher.js', '/teacher.front.js')
 defineFile('/student.js', '/student.front.js')
 defineFile('/censor.js', '/censor.front.js')
 defineFile('/tests.js', '/../test/tests.front.js')
@@ -112,10 +108,8 @@ prodModules.forEach(name => {
 })
 
 const doctype = '<!DOCTYPE html>'
-definePath('/tarkistus', doctype + teacherHtmlFI)
 definePath('/', doctype + studentHtmlFI)
 definePath('/censor', doctype + censorHtmlFI)
-definePath('/sv/bedomning', doctype + teacherHtmlSV)
 definePath('/sv', doctype + studentHtmlSV)
 app.use(bodyParser.urlencoded({extended: false, limit: '5mb'}))
 app.use(bodyParser.json({limit: '5mb', strict: false}))
