@@ -650,7 +650,7 @@ function initSpecialCharacterToolbar($toolbar, mathEditor, hasAnswerFocus) {
 
         var character = e.currentTarget.innerText;
         var command = e.currentTarget.dataset.command;
-        var useWrite = Boolean(e.currentTarget.dataset.useWrite);
+        var useWrite = e.currentTarget.dataset.usewrite === 'true';
         if (hasAnswerFocus()) window.document.execCommand('insertText', false, character);else mathEditor.insertMath(command || character, undefined, useWrite);
     });
 }

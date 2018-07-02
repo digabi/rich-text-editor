@@ -30,7 +30,7 @@
 .rich-text-editor-button[data-command]:before:hover { display: none; }
 .rich-text-editor-button:active { box-shadow: none; }
 .rich-text-editor-button-action { padding: 5px 10px; font-weight: normal; background: none; border: none; font-family: SourceSansPro-Semibold, sans-serif; font-size: 16px; color: #359BB7; letter-spacing: 0; line-height: 22px; }
-.rich-text-editor-new-equation { display: block; vertical-align: top; height: 35px; width: 150px; }
+.rich-text-editor-new-equation { display: block; vertical-align: top; height: 35px; width: 153px; white-space: nowrap; }
 .math-editor-focus .rich-text-editor-new-equation { display: none; }
 .rich-text-editor-tools { display: block !important; z-index: 2; border-bottom: 1px solid #DFDFDF; border-top: 1px solid #DFDFDF; position: fixed; top: -110px; left: 0; right: 0; box-shadow: 0 1px 10px 1px rgba(0, 0, 0, .2); line-height: 0; background: white;transition: top .15s}
 .rich-text-editor-characters-expanded { display: none !important; }
@@ -62,7 +62,7 @@
 .rich-text-editor-characters-expanded .rich-text-editor-characters-expand-collapse:before { content: url('collapse.svg'); }
 
 @media(min-width: 1279px) {
-    .rich-text-editor-new-equation {left: -150px; position: absolute; }
+    .rich-text-editor-new-equation {left: -153px; position: absolute; }
     .rich-text-editor-tools-button-wrapper { position: absolute; top: 0; width: 100%; }
     .rich-text-editor-tools { top: -60px;}
 }
