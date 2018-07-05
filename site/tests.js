@@ -87,7 +87,7 @@ var fileTypes = ['image/png', 'image/jpeg'];
 
 function onPaste(e, saver, onValueChanged, limit) {
     var clipboardData = e.originalEvent.clipboardData;
-    var file = clipboardData.items && clipboardData.items[0].getAsFile();
+    var file = clipboardData.items && clipboardData.items.length > 0 && clipboardData.items[0].getAsFile();
     if (file) {
         onPasteBlob(e, file, saver, $(e.currentTarget), onValueChanged, limit);
     } else {
