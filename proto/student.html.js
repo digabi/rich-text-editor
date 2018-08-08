@@ -43,8 +43,8 @@ module.exports = (obj) => { with(obj) return `
             <a href="https://github.com/digabi/rich-text-editor">GitHub</a>
         </div>
         <div class="paragraph">
-            <a href="mailto:abitti@ylioppilastutkinto.fi?subject=Palaute / Math-editor">${sendFeedback}
-                (abitti@ylioppilastutkinto.fi)</a>
+            <a href="mailto:abitti-palaute@ylioppilastutkinto.fi?subject=Palaute / Math-editor">${sendFeedback}
+                (abitti-palaute@ylioppilastutkinto.fi)</a>
         </div>
         <div class="paragraph">
             <a href="${langLink}">${langLabel}</a>
