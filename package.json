@@ -6,6 +6,9 @@
   "homepage": "https://github.com/digabi/rich-text-editor",
   "main": "server/mathSvg.js",
   "files": [
+    "dist/*.css",
+    "dist/*.js",
+    "dist/*.svg",
     "server/mathSvg.js"
   ],
   "scripts": {
