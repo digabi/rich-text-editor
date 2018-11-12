@@ -1,15 +1,18 @@
-/* global MathQuill */
-const u = require('./util')
+import $ from 'jquery'
+import * as u from './util'
+
+const MathQuill = window.MathQuill
+if (!MathQuill) throw new Error('MathQuill is required but has not been loaded')
+
 const keyCodes = {
     ENTER: 13,
     ESC: 27
 }
 
 let MQ
-module.exports = {init}
 let firstTime = true
 
-function init($outerPlaceholder, focus, baseUrl, updateMathImg) {
+export function init($outerPlaceholder, focus, baseUrl, updateMathImg) {
     function defaultUpdateMathImg($img, latex) {
         $img.prop({
             src: baseUrl + '/math.svg?latex=' + encodeURIComponent(latex),
@@ -22,7 +25,7 @@ function init($outerPlaceholder, focus, baseUrl, updateMathImg) {
 
     let updateMathImgTimeout
 
-    if(firstTime) {
+    if (firstTime) {
         MQ = MathQuill.getInterface(2)
     }
     const $mathEditorContainer = $(`
@@ -56,7 +59,6 @@ function init($outerPlaceholder, focus, baseUrl, updateMathImg) {
         .on('keydown', onClose)
         .on('paste', e => e.stopPropagation())
 
-
     $latexField
         .on('keypress', transformLatexKeydown)
         .on('input paste', onLatexUpdate)
@@ -82,8 +84,7 @@ function init($outerPlaceholder, focus, baseUrl, updateMathImg) {
         e && e.originalEvent && e.originalEvent.stopPropagation()
         clearTimeout(mqEditTimeout)
         mqEditTimeout = setTimeout(() => {
-            if (focus.latexField)
-                return
+            if (focus.latexField) return
             const latex = mqInstance.latex()
             $latexField.val(latex)
             updateMathImgWithDebounce($mathEditorContainer.prev(), latex)
@@ -114,13 +115,17 @@ function init($outerPlaceholder, focus, baseUrl, updateMathImg) {
     function onFocusChanged() {
         clearTimeout(focusChanged)
         focusChanged = setTimeout(() => {
-            $mathEditorContainer.trigger({ type:'mathfocus', hasFocus: focus.latexField || focus.equationField})
+            $mathEditorContainer.trigger({ type: 'mathfocus', hasFocus: focus.latexField || focus.equationField })
             if (!focus.latexField && !focus.equationField) closeMathEditor()
         }, 0)
     }
 
     function insertNewEquation(optionalMarkup = '') {
-        window.document.execCommand('insertHTML', false, optionalMarkup + '<img data-js="new" alt="" src="" style="display: none"/>')
+        window.document.execCommand(
+            'insertHTML',
+            false,
+            optionalMarkup + '<img data-js="new" alt="" src="" style="display: none"/>'
+        )
         showMathEditor($('[data-js="new"]').removeAttr('data-js'))
     }
 
@@ -177,7 +182,7 @@ function init($outerPlaceholder, focus, baseUrl, updateMathImg) {
         visible = false
         focus.latexField = false
         focus.equationField = false
-        $mathEditorContainer.trigger({ type:'mathfocus', hasFocus: focus.latexField || focus.equationField})
+        $mathEditorContainer.trigger({ type: 'mathfocus', hasFocus: focus.latexField || focus.equationField })
         $outerPlaceholder.append($mathEditorContainer)
         if (setFocusAfterClose) $currentEditor.focus()
     }

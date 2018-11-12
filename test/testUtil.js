@@ -1,5 +1,6 @@
 const pasteEventMock = html => ({
-    type: 'paste', originalEvent: {
+    type: 'paste',
+    originalEvent: {
         clipboardData: {
             getData: () => html
         }
@@ -19,7 +20,6 @@ function _waitUntil(condition, done) {
     else setTimeout(() => _waitUntil(condition, done), 200)
 }
 
-
 function delay(done) {
     setTimeout(done, 0)
 }
@@ -31,4 +31,3 @@ function delayFor(ms) {
 function isOutsideViewPort($elem) {
     return $elem.length > 0 && $elem.position().top < 0
 }
-

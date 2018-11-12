@@ -9,6 +9,11 @@
     "server/mathSvg.js"
   ],
   "scripts": {
+    "clean": "rm -rf dist/ dist-amd/",
+    "build:tsc": "tsc -p src",
+    "build:amd": "rollup -c",
+    "build:assets": "bash -c 'mkdir -p dist; cp public/{rich-text-editor.css,*.svg} dist/'",
+    "build": "concurrently --prefix \"[{name}]\" --names \"TSC,AMD,ASSETS\" -c \"bgBlue.bold\" \"npm run build:tsc\" \"npm run build:amd\" \"npm run build:assets\"",
     "start": "killall node monitor.sh || true; proto/bin/monitor.sh",
     "start-node": "HOME=${OPENSHIFT_DATA_DIR:-${HOME}} node proto/index.js",
     "stop": "killall node monitor.sh",
@@ -18,7 +23,7 @@
     "deploy": "git push -f ssh://58db515cfbc736bf24000001@math-editor.local.digabi.fi/~/git/math.git/ master",
     "bowerify": "browserify app/rich-text-editor.js -t babelify --no-bundle-external -d -s I -o dist/rich-text-editor.js && browserify node_modules/sanitize-html/dist/index.js -t babelify -d -s I -o dist/sanitize-html.js && bash -c 'cp public/{rich-text-editor.css,*.svg} dist/'",
     "browserify": "browserify proto/rich-text-editor-bundle.js -o proto/rich-text-editor-bundle-generated.js",
-    "generateMathButtons": "scripts/createMathSvg.js",
+    "generateMathButtons": "scripts/createMathSvg.js && prettier --write src/latexCommandsWithSvg.js",
     "generateSite": "rm -rf site; GENERATE_SITE=true node proto/server.js",
     "lint": "eslint ."
   },
@@ -54,31 +59,34 @@
     "baconjs": "^1.0.1",
     "body-parser": "^1.18.2",
     "browserify": "^16.1.1",
-    "chai": "^4.1.2",
-    "chai-jquery": "^2.0.0",
-    "eslint": "^4.18.2",
-    "eslint-config-standard": "^11.0.0",
-    "eslint-plugin-import": "^2.9.0",
-    "eslint-plugin-node": "^6.0.1",
-    "eslint-plugin-promise": "^3.7.0",
-    "eslint-plugin-standard": "^3.0.1",
-    "express": "^4.16.2",
+    "chai": "^4.2.0",
+    "chai-jquery": "^2.1.0",
+    "concurrently": "^4.0.1",
+    "eslint": "^5.8.0",
+    "eslint-config-prettier": "^3.1.0",
+    "eslint-plugin-prettier": "^3.0.0",
+    "express": "^4.16.4",
     "express-babelify-middleware": "^0.2.1",
-    "jquery": "3.3.1",
-    "jshint": "^2.9.5",
-    "mathjax": "^2.7.2",
+    "jquery": "^3.3.1",
+    "mathjax": "^2.7.5",
     "mathquill": "digabi/mathquill#0.10.1+digabi.24",
     "mocha": "^5.0.4",
     "mocha-chrome": "^1.0.3",
+    "morgan": "^1.9.1",
     "ncp": "^2.0.0",
     "node-sass-middleware": "^0.11.0",
-    "sanitize-html": "^1.18.2",
+    "prettier": "~1.15.1",
+    "rollup": "^0.67.1",
+    "rollup-plugin-typescript": "^1.0.0",
+    "sanitize-html": "~1.18.2",
     "supervisor": "^0.12.0",
+    "ts-node": "^7.0.1",
+    "tslib": "^1.9.3",
+    "typescript": "^3.1.6",
     "web-console-reporter": "^1.0.0"
   },
   "dependencies": {
-    "mathjax-node": "^1.3.0",
-    "morgan": "^1.9.0"
+    "mathjax-node": "^2.1.1"
   },
   "browserify-shim": {
     "mathquill": {
@@ -87,5 +95,10 @@
       ],
       "exports2": "MathQuill"
     }
+  },
+  "peerDependencies": {
+    "baconjs": "1.x",
+    "jquery": "3.x",
+    "sanitize-html": "~1.18.2"
   }
 }

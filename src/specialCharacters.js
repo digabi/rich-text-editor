@@ -1,4 +1,4 @@
-module.exports = [
+export default [
     {
         label: 'Perusmerit ja kreikkalaiset aakkoset',
         characters: [
@@ -12,7 +12,7 @@ module.exports = [
             { character: '⅓', latexCommand: '1/3', popular: true },
             { character: 'π', latexCommand: '\\pi', popular: true },
             { character: 'α', latexCommand: '\\alpha', popular: true },
-            { character: 'β', latexCommand: '\\beta', popular: true  },
+            { character: 'β', latexCommand: '\\beta', popular: true },
             { character: 'Γ', latexCommand: '\\Gamma' },
             { character: 'γ', latexCommand: '\\gamma' },
             { character: 'Δ', latexCommand: '\\Delta' },
@@ -69,9 +69,9 @@ module.exports = [
         label: 'Geometria ja vektorioppi',
         characters: [
             { character: '∢', latexCommand: '\\sphericalangle', popular: true },
-            { character: '|' , latexCommand: '\\mid', popular: true }, // \pipe,
-            { character: '‖', latexCommand: '\\parallel', popular: true},
-            { character: '⇌', latexCommand: '\\xrightleftharpoons', noWrite: true},
+            { character: '|', latexCommand: '\\mid', popular: true }, // \pipe,
+            { character: '‖', latexCommand: '\\parallel', popular: true },
+            { character: '⇌', latexCommand: '\\xrightleftharpoons', noWrite: true },
             { character: '⇅' },
             { character: '∠', latexCommand: '\\angle' },
             { character: '↑', latexCommand: '\\uparrow' },
@@ -79,7 +79,7 @@ module.exports = [
             { character: '↘', latexCommand: '\\searrow' },
             { character: '↓', latexCommand: '\\downarrow' },
             { character: '↔', latexCommand: '\\leftrightarrow' },
-            { character: '⊥', latexCommand: '\\perp'}
+            { character: '⊥', latexCommand: '\\perp' }
         ]
     },
     {

@@ -1,6 +1,6 @@
 const mjAPI = require('mathjax-node')
 
-module.exports = {mathSvgResponse, latexToSvg}
+module.exports = { mathSvgResponse, latexToSvg }
 
 //mjAPI.config({MathJax: { TeX: {extensions: ['mhchem.js']} }})
 mjAPI.config({
@@ -15,16 +15,18 @@ function mathSvgResponse(req, res) {
 }
 
 function latexToSvg(latex, cb) {
-    mjAPI.typeset({
-        math: latex,
-        format: 'TeX', // "inline-TeX", "MathML"
-        mml: false,
-        svg: true,
-        linebreaks: true,
-        width: 100
-    }, function (data) {
-        if (data.errors) {
-            cb(`<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+    mjAPI.typeset(
+        {
+            math: latex,
+            format: 'TeX', // "inline-TeX", "MathML"
+            mml: false,
+            svg: true,
+            linebreaks: true,
+            width: 100
+        },
+        function(data) {
+            if (data.errors) {
+                cb(`<?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <svg width="17px" height="15px" viewBox="0 0 17 15" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
     <title>Group 2</title>
     <defs></defs>
@@ -41,8 +43,9 @@ function latexToSvg(latex, cb) {
         </g>
     </g>
 </svg>`)
-        } else {
-            cb(data.svg)
+            } else {
+                cb(data.svg)
+            }
         }
-    })
+    )
 }
