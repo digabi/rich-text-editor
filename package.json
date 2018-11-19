@@ -1,6 +1,6 @@
 {
   "name": "rich-text-editor",
-  "version": "3.6.0",
+  "version": "4.0.0-dev1",
   "description": "Matematiikkaeditori-spike",
   "author": "",
   "homepage": "https://github.com/digabi/rich-text-editor",
@@ -27,7 +27,8 @@
     "browserify": "browserify proto/rich-text-editor-bundle.js -o proto/rich-text-editor-bundle-generated.js",
     "generateMathButtons": "scripts/createMathSvg.js && prettier --write src/latexCommandsWithSvg.js",
     "generateSite": "rm -rf site; GENERATE_SITE=true node proto/server.js",
-    "lint": "eslint ."
+    "lint": "eslint .",
+    "prepare": "npm run build"
   },
   "repository": {
     "type": "git",
