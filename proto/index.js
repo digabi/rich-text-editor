@@ -1,4 +1,7 @@
 #!/usr/bin/env node
+
+require('ts-node').register()
+
 /* eslint-disable no-console */
 const server = require('./server')
 const interfaceIP = process.env.OPENSHIFT_NODEJS_IP || '0.0.0.0'

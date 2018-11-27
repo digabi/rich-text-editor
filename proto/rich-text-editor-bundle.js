@@ -1,1 +1,1 @@
-window.makeRichText = require('../app/rich-text-editor').makeRichText
+window.makeRichText = require('../src/rich-text-editor').makeRichText

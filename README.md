@@ -3,6 +3,11 @@
 Rich text editor with math support for Finnish Matriculation Examination Board.
 Live demo can be found at [https://math-demo.abitti.fi/](https://math-demo.abitti.fi/)
 
+There are two separate builds:
+
+* `dist`: ES2017 code, ES modules
+* `dist/amd`: ES5 code, AMD bundles (for RequireJS)
+
 ## Dependencies
 
 - MathQuill (https://github.com/digabi/mathquill)

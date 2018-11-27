@@ -11,41 +11,10 @@ fi
 
 VERSION=$1
 
-node <<EOF
-const bowerJson = require('./bower.json')
-const packageJson = require('./package.json')
-
-if (bowerJson.dependencies.mathquill !== packageJson.devDependencies.mathquill) {
-  console.log('ERROR: mathquill version mismatch between package.json and bower.json!')
-  process.exit(42)
-}
-EOF
-
 npm version ${VERSION} -m "Release %s"
-NEW_VERSION=$(node <<EOF
-var packageJson = require(process.cwd() + '/package.json')
-console.log(packageJson.version)
-EOF
-           )
-node <<EOF
-var fs = require('fs')
-var bowerJsonFileName = process.cwd() + '/bower.json'
-var bowerJson = require(bowerJsonFileName)
-bowerJson.version = "${NEW_VERSION}"
-fs.writeFileSync(bowerJsonFileName, JSON.stringify(bowerJson, null, 2))
-EOF
-echo Building distributable files...
-npm run bowerify
-npm run browserify
-echo Done.
-git add dist
-git add proto
-git add bower.json
-git commit --amend --no-edit
-git tag -a -m "Release ${NEW_VERSION}" -f v${NEW_VERSION}
-cat <<EOF
 
-Updated package.json and bower.json with version ${NEW_VERSION} and created the version tag.
+cat <<EOF
+Updated package.json and created the version tag.
 
 Check your version history, if all is fine, push with :
 
@@ -53,5 +22,3 @@ Check your version history, if all is fine, push with :
     npm publish
 
 EOF
-
-
