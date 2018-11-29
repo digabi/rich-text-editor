@@ -26,7 +26,8 @@ module.exports = function(env, argv) {
                         loader: 'ts-loader',
                         options: {
                             onlyCompileBundledFiles: true,
-                            transpileOnly: true
+                            transpileOnly: true,
+                            compilerOptions: { target: 'es5' }
                         }
                     }
                 }
