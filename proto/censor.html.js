@@ -1,5 +1,6 @@
 /* eslint-disable no-undef */
-module.exports = (obj) => { with(obj) return `
+export default function({ mathEditor, locale, updated, startedAt, sendFeedback, langLink, langLabel }) {
+    return `
 <html>
 <head>
     <meta charset='utf-8'>
@@ -63,4 +64,5 @@ module.exports = (obj) => { with(obj) return `
     ga('send', 'pageview');
 </script>
 </body>
-</html>`}
+</html>`
+}

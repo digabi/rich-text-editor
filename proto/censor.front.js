@@ -1,10 +1,11 @@
 /* global makeRichText */
-const updateMath = require('./updateMath')
+import $ from 'jquery'
+import * as updateMath from './updateMath'
 updateMath.init()
 const answer = document.getElementById('answer1')
 makeRichText(answer, {
     screenshot: {
-        saver: ({data}) =>
+        saver: ({ data }) =>
             new Promise(resolve => {
                 const reader = new FileReader()
                 reader.onload = evt => resolve(evt.target.result)
@@ -39,7 +40,10 @@ $('.toggleInstructions').click(e => {
 function copyLatexToClipboard() {
     const latex = $('[data-js="latexField"]').val()
     const escapedLatex = '\\\\(' + latex.replace(/\\/g, '\\\\') + '\\\\)'
-    $('#clipboardContent').removeAttr('disabled').val(escapedLatex).select()
+    $('#clipboardContent')
+        .removeAttr('disabled')
+        .val(escapedLatex)
+        .select()
     document.execCommand('copy')
     $('#clipboardContent').attr('disabled', true)
 }

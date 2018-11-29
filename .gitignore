@@ -31,4 +31,5 @@ $RECYCLE.BIN/
 target
 bower_components
 dist/
-dist-amd/
+*~
+*.swp

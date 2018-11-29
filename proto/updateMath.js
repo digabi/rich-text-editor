@@ -1,34 +1,44 @@
 /* global MathJax */
+import $ from 'jquery'
 let math = null
 let $result
-const init = () => {
+export const init = () => {
     $result = $('<div class="result">\\({}\\)</div>')
     $('body').append($result)
     MathJax.Hub.Config({
         jax: ['input/TeX', 'output/SVG'],
-        extensions: ['toMathML.js', 'tex2jax.js', 'MathMenu.js', 'MathZoom.js', 'fast-preview.js', 'AssistiveMML.js', 'a11y/accessibility-menu.js'],
+        extensions: [
+            'toMathML.js',
+            'tex2jax.js',
+            'MathMenu.js',
+            'MathZoom.js',
+            'fast-preview.js',
+            'AssistiveMML.js',
+            'a11y/accessibility-menu.js'
+        ],
         TeX: {
             extensions: ['AMSmath.js', 'AMSsymbols.js', 'noErrors.js', 'noUndefined.js']
         },
-        SVG: {useFontCache: true, useGlobalCache: false, EqnChunk: 1000000, EqnDelay: 0}
+        SVG: { useFontCache: true, useGlobalCache: false, EqnChunk: 1000000, EqnDelay: 0 }
     })
     MathJax.Hub.queue.Push(() => {
         math = MathJax.Hub.getAllJax('MathOutput')[0]
     })
-    MathJax.Hub.Queue(function () {
+    MathJax.Hub.Queue(function() {
         MathJax.Hub.getAllJax(document.querySelector('.result'))
     })
 }
 
 const asBase64Svg = xml => 'data:image/svg+xml;base64,' + window.btoa(xml)
 
-const updateMath = function (latex, cb) {
+export const updateMath = function(latex, cb) {
     MathJax.Hub.queue.Push(['Text', math, '\\displaystyle{' + latex + '}'])
     MathJax.Hub.Queue(() => {
         const $svg = $result.find('svg')
         if ($svg.length) {
             $svg.attr('xmlns', 'http://www.w3.org/2000/svg')
-                .find('use').each(function () {
+                .find('use')
+                .each(function() {
                     const $use = $(this)
                     if ($use[0].outerHTML.indexOf('xmlns:xlink') === -1) {
                         $use.attr('xmlns:xlink', 'http://www.w3.org/1999/xlink') //add these for safari
@@ -39,7 +49,8 @@ const updateMath = function (latex, cb) {
             svgHtml = svgHtml.replace(/ ns\d+:href/gi, ' xlink:href') // Safari xlink ns issue fix
             cb(asBase64Svg(svgHtml))
         } else {
-            cb(asBase64Svg(`<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+            cb(
+                asBase64Svg(`<?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <svg width="17px" height="15px" viewBox="0 0 17 15" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
     <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
         <g transform="translate(-241.000000, -219.000000)">
@@ -53,9 +64,8 @@ const updateMath = function (latex, cb) {
             </g>
         </g>
     </g>
-</svg>`))
+</svg>`)
+            )
         }
     })
 }
-
-module.exports = {init, updateMath}

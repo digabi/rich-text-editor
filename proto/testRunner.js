@@ -1,4 +1,6 @@
 #!/usr/bin/env node
+require('ts-node').register()
+
 /* eslint-disable no-console */
 const server = require('./server')
 const serverInfo = server.listen(0, () => {

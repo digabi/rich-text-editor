@@ -1,8 +1,10 @@
-/* global expect, WebConsole, chai, $ */
-const u = require('./testUtil')
-const base64png = require('./base64png')
+/* global expect, WebConsole, chai */
+import $ from 'jquery'
+import { makeRichText } from '../src/rich-text-editor'
+import base64png from './base64png'
+import * as u from './testUtil'
+
 const $answer = $('.answer')
-const { makeRichText } = require('../app/rich-text-editor')
 let savedValues = []
 
 const richTextOptions = () => ({
