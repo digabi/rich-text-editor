@@ -1,11 +1,13 @@
-const u = require('./util')
-const toolbars = require('./toolbars')
-const clipboard = require('./clipboard')
-const mathEditor = require('./math-editor')
-const locales = {
-    FI: require('./FI'),
-    SV: require('./SV')
-}
+import $ from 'jquery'
+import * as u from './util'
+import * as toolbars from './toolbars'
+import * as clipboard from './clipboard'
+import * as mathEditor from './math-editor'
+import FI from './FI'
+import SV from './SV'
+
+const locales = { FI, SV }
+
 const l = locales[window.locale || 'FI'].editor
 const keyCodes = {
     E: 69
@@ -22,7 +24,7 @@ let firstCall = true
 let math
 let $toolbar
 
-module.exports.makeRichText = (answer, options, onValueChanged = () => {}) => {
+export const makeRichText = (answer, options, onValueChanged = () => {}) => {
     const saver = options.screenshot.saver
     const limit = options.screenshot.limit
     const baseUrl = options.baseUrl || ''
@@ -44,7 +46,7 @@ module.exports.makeRichText = (answer, options, onValueChanged = () => {}) => {
         })
         .addClass('rich-text-editor')
         .on('click', u.equationImageSelector, e => {
-            if(e.which === 1) {
+            if (e.which === 1) {
                 onRichTextEditorFocus($(e.target).closest('[data-js="answer"]'))
                 math.openMathEditor($(e.target))
             }
@@ -55,11 +57,11 @@ module.exports.makeRichText = (answer, options, onValueChanged = () => {}) => {
             }
         })
         .on('mathfocus', e => {
-            $(e.currentTarget).toggleClass('rich-text-focused', e.hasFocus )
+            $(e.currentTarget).toggleClass('rich-text-focused', e.hasFocus)
             if (richTextAndMathBlur()) onRichTextEditorBlur($currentEditor)
         })
         .on('focus blur', e => {
-            if(e.type === 'focus') math.closeMathEditor()
+            if (e.type === 'focus') math.closeMathEditor()
             onRichTextEditorFocusChanged(e)
         })
         .on('input', e => {
@@ -68,11 +70,11 @@ module.exports.makeRichText = (answer, options, onValueChanged = () => {}) => {
         .on('drop', e => {
             setTimeout(() => {
                 $(e.target).html(u.sanitize(e.target.innerHTML))
-            },0)
+            }, 0)
         })
         .on('paste', e => {
             pasteInProgress = true
-            setTimeout(() => pasteInProgress = false, 0)
+            setTimeout(() => (pasteInProgress = false), 0)
             clipboard.onPaste(e, saver, onValueChanged, limit)
         })
     setTimeout(() => document.execCommand('enableObjectResizing', false, false), 0)
@@ -97,7 +99,7 @@ let richTextEditorBlurTimeout
 
 function onRichTextEditorFocusChanged(e) {
     focus.richText = e.type === 'focus'
-    $(e.currentTarget).toggleClass('rich-text-focused', focus.richText )
+    $(e.currentTarget).toggleClass('rich-text-focused', focus.richText)
 
     clearTimeout(richTextEditorBlurTimeout)
     richTextEditorBlurTimeout = setTimeout(() => {

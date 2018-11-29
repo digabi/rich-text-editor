@@ -1,4 +1,4 @@
-module.exports = {
+export default {
     editor: {
         mathEditor: 'Matikkaeditori',
         title: 'Kaavaeditorin kehitysversio',

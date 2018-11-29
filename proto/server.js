@@ -1,21 +1,23 @@
 /* eslint-disable no-console */
-const express = require('express')
-const bodyParser = require('body-parser')
-const babelifyMiddleware = require('express-babelify-middleware')
-const browserify = require('browserify')
-const studentHtml = require('./student.html')
-const censorHtml = require('./censor.html')
-const mathSvg = require('../server/mathSvg')
+import express from 'express'
+import bodyParser from 'body-parser'
+import studentHtml from './student.html'
+import censorHtml from './censor.html'
+import * as mathSvg from '../server/mathSvg'
+import FI from '../src/FI'
+import SV from '../src/SV'
+import * as fs from 'fs'
+import morgan from 'morgan'
+import { ncp } from 'ncp'
+import webpack from 'webpack'
+import webpackMiddleware from 'webpack-dev-middleware'
+import webpackConfig from '../webpack.config'
+
 const startedAt = new Date()
-const FI = require('../app/FI')
-const SV = require('../app/SV')
-const fs = require('fs')
-const studentHtmlFI = studentHtml((Object.assign({startedAt: formatDate(startedAt), locale: 'FI'}, FI.editor)))
-const censorHtmlFI = censorHtml((Object.assign({startedAt: formatDate(startedAt), locale: 'FI'}, FI.editor)))
-const studentHtmlSV = studentHtml((Object.assign({startedAt: formatDate(startedAt), locale: 'SV'}, SV.editor)))
+const studentHtmlFI = studentHtml(Object.assign({ startedAt: formatDate(startedAt), locale: 'FI' }, FI.editor))
+const censorHtmlFI = censorHtml(Object.assign({ startedAt: formatDate(startedAt), locale: 'FI' }, FI.editor))
+const studentHtmlSV = studentHtml(Object.assign({ startedAt: formatDate(startedAt), locale: 'SV' }, SV.editor))
 const app = express()
-const morgan = require('morgan')
-const ncp = require('ncp').ncp
 
 app.use(morgan('short'))
 
@@ -33,7 +35,7 @@ app.use(function(req, res, next) {
 let generateSite = process.env.GENERATE_SITE
 const siteRoot = __dirname + '/../site'
 
-if(generateSite) {
+if (generateSite) {
     if (!fs.existsSync(siteRoot)) {
         fs.mkdirSync(siteRoot)
     }
@@ -41,13 +43,12 @@ if(generateSite) {
 function createDirsIfNeeded(root, path) {
     path.split('/').forEach(folder => {
         root = root + '/' + folder
-        if(!fs.existsSync(root))
-            fs.mkdirSync(root)
+        if (!fs.existsSync(root)) fs.mkdirSync(root)
     })
 }
 
 function definePath(path, content) {
-    if(generateSite) {
+    if (generateSite) {
         createDirsIfNeeded(siteRoot, path)
         fs.writeFileSync(siteRoot + path + '/index.html', content, 'utf8')
     } else {
@@ -55,20 +56,6 @@ function definePath(path, content) {
     }
 }
 
-function defineFile(url, relativePath) {
-    if(generateSite) {
-        browserify(__dirname + relativePath)
-            .transform('babelify', {presets: ['env']})
-            .bundle()
-            .pipe(fs.createWriteStream(siteRoot + url))
-    } else {
-        app.use(url, babelifyMiddleware(__dirname + relativePath))
-    }
-}
-defineFile('/student.js', '/student.front.js')
-defineFile('/censor.js', '/censor.front.js')
-defineFile('/tests.js', '/../test/tests.front.js')
-defineFile('/rich-text-editor-bundle.js', '/rich-text-editor-bundle.js')
 if (generateSite) {
     ncp(__dirname + '/../public', siteRoot, () => {})
 } else {
@@ -76,17 +63,9 @@ if (generateSite) {
     app.use(express.static(__dirname + '/../test'))
 }
 
-const devModules = [
-    'chai',
-    'chai-jquery',
-    'mocha',
-    'web-console-reporter']
+const devModules = ['chai', 'chai-jquery', 'mocha', 'web-console-reporter']
 
-const prodModules = [
-    'jquery',
-    'baconjs',
-    'mathjax',
-    'mathquill']
+const prodModules = ['jquery', 'baconjs', 'mathjax', 'mathquill']
 
 function sourcePath(name) {
     return __dirname + '/../node_modules/' + name
@@ -100,8 +79,7 @@ devModules.forEach(name => {
 
 prodModules.forEach(name => {
     if (generateSite) {
-        ncp(sourcePath(name), siteRoot + '/' + name, () => {
-        })
+        ncp(sourcePath(name), siteRoot + '/' + name, () => {})
     } else {
         app.use('/' + name, express.static(sourcePath(name)))
     }
@@ -111,9 +89,15 @@ const doctype = '<!DOCTYPE html>'
 definePath('/', doctype + studentHtmlFI)
 definePath('/censor', doctype + censorHtmlFI)
 definePath('/sv', doctype + studentHtmlSV)
-app.use(bodyParser.urlencoded({extended: false, limit: '5mb'}))
-app.use(bodyParser.json({limit: '5mb', strict: false}))
+app.use(bodyParser.urlencoded({ extended: false, limit: '5mb' }))
+app.use(bodyParser.json({ limit: '5mb', strict: false }))
 app.get('/math.svg', mathSvg.mathSvgResponse)
+
+if (generateSite) {
+    webpack(webpackConfig({}, { mode: 'production' })).run()
+} else {
+    app.use(webpackMiddleware(webpack(webpackConfig({}, { mode: 'development' })), { publicPath: '/' }))
+}
 
 // eslint-disable-next-line no-unused-vars
 app.use((error, req, res, next) => {
@@ -124,7 +108,9 @@ app.use((error, req, res, next) => {
 module.exports = app
 
 function formatDate(date) {
-    return `${date.getDate()}.${date.getMonth() + 1}.${date.getFullYear()} ${pad(date.getHours())}:${pad(date.getMinutes())}`
+    return `${date.getDate()}.${date.getMonth() + 1}.${date.getFullYear()} ${pad(date.getHours())}:${pad(
+        date.getMinutes()
+    )}`
 }
 
 function pad(num) {

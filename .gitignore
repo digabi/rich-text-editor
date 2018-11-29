@@ -30,3 +30,6 @@ $RECYCLE.BIN/
 .idea
 target
 bower_components
+dist/
+*~
+*.swp

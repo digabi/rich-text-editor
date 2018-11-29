@@ -1,55 +1,39 @@
 <!DOCTYPE html>
 <html>
-<head>
-    <script>
-        if (typeof Object.assign != 'function') {
-            Object.assign = function(target, varArgs) { // .length of function is 2
-                'use strict';
-                if (target == null) { // TypeError if undefined or null
-                    throw new TypeError('Cannot convert undefined or null to object');
-                }
-
-                var to = Object(target);
-
-                for (var index = 1; index < arguments.length; index++) {
-                    var nextSource = arguments[index];
-
-                    if (nextSource != null) { // Skip over if undefined or null
-                        for (var nextKey in nextSource) {
-                            // Avoid bugs when hasOwnProperty is shadowed
-                            if (Object.prototype.hasOwnProperty.call(nextSource, nextKey)) {
-                                to[nextKey] = nextSource[nextKey];
-                            }
-                        }
-                    }
-                }
-                return to;
-            };
-        }
-    </script>
-    <meta charset='utf-8'>
+  <head>
+    <meta charset="utf-8" />
     <title>Tests</title>
-    <link rel="stylesheet" type="text/css" href="/mathquill/build/mathquill.css">
-    <link rel="stylesheet" type="text/css" href="/rich-text-editor.css"/>
+    <link rel="stylesheet" type="text/css" href="/mathquill/build/mathquill.css" />
+    <link rel="stylesheet" type="text/css" href="/rich-text-editor.css" />
     <script src="/jquery/dist/jquery.js"></script>
     <script src="/baconjs/dist/Bacon.js"></script>
     <script src="/mathquill/build/mathquill.js"></script>
-    <link rel="icon" href="/rich-text-editor-favicon.ico" type="image/x-icon"/>
-    <link rel="shortcut icon" href="/rich-text-editor-favicon.ico" type="image/x-icon"/>
+    <link rel="icon" href="/rich-text-editor-favicon.ico" type="image/x-icon" />
+    <link rel="shortcut icon" href="/rich-text-editor-favicon.ico" type="image/x-icon" />
     <link href="/mocha/mocha.css" rel="stylesheet" />
     <script src="/mocha/mocha.js"></script>
     <script src="/chai/chai.js"></script>
     <script src="/chai-jquery/chai-jquery.js"></script>
     <script src="/web-console-reporter/WebConsole.js"></script>
     <style>
-        body {margin: 0 10px;}
-        .answer { border: 1px solid #aaa; padding: 5px; box-sizing: content-box; min-height: 100px; font: 17px "Times New Roman";}
-        #mocha-stats { z-index: 3;}
+      body {
+        margin: 0 10px;
+      }
+      .answer {
+        border: 1px solid #aaa;
+        padding: 5px;
+        box-sizing: content-box;
+        min-height: 100px;
+        font: 17px 'Times New Roman';
+      }
+      #mocha-stats {
+        z-index: 3;
+      }
     </style>
-</head>
-<body>
-<article>
-    <section>
+  </head>
+  <body>
+    <article>
+      <section>
         <p>&nbsp;</p>
         <p>&nbsp;</p>
         <h2>Kysymys 1</h2>
@@ -57,25 +41,22 @@
         <h2>Kysymys 2</h2>
         <div class="answer answer2"></div>
         <button class="save actionButton" style="display: none">Tallenna</button>
-    </section>
-    <section>
-        <div id="mocha"></div>
-    </section>
-
-</article>
-</body>
+      </section>
+      <section><div id="mocha"></div></section>
+    </article>
+  </body>
 </html>
 <html>
-<head>
-    <meta charset="utf-8">
+  <head>
+    <meta charset="utf-8" />
     <title>Mocha Tests</title>
-</head>
-<body>
-<script src="tests.js"></script>
-<script>
-  //mocha.checkLeaks();
-  //mocha.globals(['jQuery']);
-  mocha.run()
-</script>
-</body>
+  </head>
+  <body>
+    <script src="tests.js"></script>
+    <script>
+      //mocha.checkLeaks();
+      //mocha.globals(['jQuery']);
+      mocha.run()
+    </script>
+  </body>
 </html>

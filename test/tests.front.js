@@ -1,8 +1,10 @@
 /* global expect, WebConsole, chai */
-const u = require('./testUtil')
-const base64png = require('./base64png')
+import $ from 'jquery'
+import { makeRichText } from '../src/rich-text-editor'
+import base64png from './base64png'
+import * as u from './testUtil'
+
 const $answer = $('.answer')
-const {makeRichText} = require('../app/rich-text-editor')
 let savedValues = []
 
 const richTextOptions = () => ({
@@ -23,7 +25,7 @@ const reporter = window.URL && new URL(document.location.href).searchParams.get(
 const mochaOpts = {
     ui: 'bdd'
 }
-if(reporter === 'console') {
+if (reporter === 'console') {
     mochaOpts.reporter = WebConsole
 }
 mocha.setup(mochaOpts)
@@ -61,7 +63,9 @@ describe('rich text editor', () => {
                 $el.answer1.trigger(u.pasteEventMock())
             })
             it('saves pasted image', () => {
-                expect($el.answer1.find('img:last')).to.have.attr('src').match(/\/screenshot/)
+                expect($el.answer1.find('img:last'))
+                    .to.have.attr('src')
+                    .match(/\/screenshot/)
             })
             it('saves markup', () => {
                 const lastData = savedValues.pop()
@@ -74,8 +78,7 @@ describe('rich text editor', () => {
             let currentImgAmout
             before('#3', done => {
                 currentImgAmout = $el.answer1.find('img').length
-                $el.answer1
-                    .append('<img src="data:image/gif;base64,R0lGODlhAQABAIAAAAUEBAAAACwAAAAAAQABAAACAkQBADs=">')
+                $el.answer1.append('<img src="data:image/gif;base64,R0lGODlhAQABAIAAAAUEBAAAACwAAAAAAQABAAACAkQBADs=">')
                 $('.answer1 img:last').get(0).onload = () => {
                     done()
                 }
@@ -95,9 +98,13 @@ describe('rich text editor', () => {
         it('shows math editor', () => expect($el.mathEditor).to.be.visible)
         it('answer still has focus style', () => expect($el.answer1).to.have.class('rich-text-focused'))
 
-
         describe('when focus in latex field', () => {
-            before('type', () => $el.latexField.focus().val('xy').trigger('input'))
+            before('type', () =>
+                $el.latexField
+                    .focus()
+                    .val('xy')
+                    .trigger('input')
+            )
             before(u.delay)
             before(() => $('.rich-text-editor-toolbar-characters-group button:eq(2)').mousedown())
             before(u.delay)
@@ -112,7 +119,7 @@ describe('rich text editor', () => {
         describe('when focus in equation field, pasting content and adding char', () => {
             before(() => $el.answer1.blur())
             before(u.delay)
-            before(() => $('img:first').trigger({type: 'click', which: 1}))
+            before(() => $('img:first').trigger({ type: 'click', which: 1 }))
             before(() => $el.latexField.val('').trigger('input'))
             before(() => $el.equationFieldTextArea.val('a+b').trigger('paste'))
             before(u.delay)
@@ -126,7 +133,9 @@ describe('rich text editor', () => {
             it('shows math in img', () => expect($('img:first')).to.have.attr('src', '/math.svg?latex=a%2Bb%5Cinfty'))
             it('stores latest data', () => {
                 const lastData = savedValues.pop()
-                expect(lastData.answerHTML).to.equal('<img alt="a+b\\infty" src="/math.svg?latex=a%2Bb%5Cinfty" /><img src="/screenshot/screenshot.png" alt />')
+                expect(lastData.answerHTML).to.equal(
+                    '<img alt="a+b\\infty" src="/math.svg?latex=a%2Bb%5Cinfty" /><img src="/screenshot/screenshot.png" alt />'
+                )
                 expect(lastData.answerText).to.equal('')
                 expect(lastData.imageCount).to.equal(1)
             })
@@ -136,10 +145,10 @@ describe('rich text editor', () => {
             before(() => $el.answer1.blur())
             it('editor is visible and then hidden', () => {
                 expect($el.answer1).to.not.have.class('rich-text-focused')
-                $('img:first').trigger({type: 'click', which: 1})
+                $('img:first').trigger({ type: 'click', which: 1 })
                 expect($el.answer1).to.have.class('rich-text-focused')
                 expect($el.mathEditor).to.be.visible
-                $el.equationFieldTextArea.trigger({type: 'keydown', keyCode: 27})
+                $el.equationFieldTextArea.trigger({ type: 'keydown', keyCode: 27 })
                 expect($el.mathEditor).to.be.hidden
             })
         })
@@ -152,11 +161,12 @@ describe('rich text editor', () => {
             })
             it('stores latest data', () => {
                 const lastData = savedValues.pop()
-                expect(lastData.answerHTML).to.equal('<img alt="a+b\\infty" src="/math.svg?latex=a%2Bb%5Cinfty" />°<img src="/screenshot/screenshot.png" alt />')
+                expect(lastData.answerHTML).to.equal(
+                    '<img alt="a+b\\infty" src="/math.svg?latex=a%2Bb%5Cinfty" />°<img src="/screenshot/screenshot.png" alt />'
+                )
                 expect(lastData.answerText).to.equal('°')
                 expect(lastData.imageCount).to.equal(1)
             })
-
         })
     })
 
@@ -166,7 +176,6 @@ describe('rich text editor', () => {
 
         it('removes focus style from answer', () => expect($el.answer1).to.not.have.class('rich-text-focused'))
         it('hides toolbaar', () => expect($el.tools.position().top).to.be.below(-10))
-
     })
 
     describe('when moving to next answer while math is open', () => {
@@ -184,7 +193,9 @@ describe('rich text editor', () => {
 
     describe('when trying to insert unsanitized content', () => {
         before('pasting banned tags', () => {
-            $el.answer1.trigger(u.pasteEventMock('<div class="forbidden"><b>paste</b></div><div>bar</div><a href="/">link text</a> '))
+            $el.answer1.trigger(
+                u.pasteEventMock('<div class="forbidden"><b>paste</b></div><div>bar</div><a href="/">link text</a> ')
+            )
         })
         it('inserts sanitized content', () => {
             const lastData = savedValues.pop()

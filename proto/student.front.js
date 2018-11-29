@@ -1,8 +1,11 @@
+import $ from 'jquery'
+import { makeRichText } from '../src/rich-text-editor'
+
 /* global ga, makeRichText */
 const answer = document.getElementById('answer1')
 makeRichText(answer, {
     screenshot: {
-        saver: ({data}) =>
+        saver: ({ data }) =>
             new Promise(resolve => {
                 const reader = new FileReader()
                 reader.onload = evt => resolve(evt.target.result)
@@ -37,7 +40,13 @@ const events = {
 }
 let hasEvents = false
 $tools.on('mousedown', '[data-js="expandCollapseCharacters"]', () => {
-    ga('send', 'event', 'toolbar', 'toggle', ($tools.hasClass('rich-text-editor-characters-expanded') ? 'expand' : 'collapse'))
+    ga(
+        'send',
+        'event',
+        'toolbar',
+        'toggle',
+        $tools.hasClass('rich-text-editor-characters-expanded') ? 'expand' : 'collapse'
+    )
 })
 $('[data-js="mathToolbar"]').on('mousedown', 'button', e => {
     events.metric4++
@@ -59,18 +68,20 @@ $('[data-js="equationField"]').on('input', '.mq-textarea textarea', () => {
     hasEvents = true
 })
 $('[data-js="newEquation"]').on('mousedown', () => ga('send', 'event', 'mathEditor', 'open', 'button'))
-$(answer).on('mathfocus', e => {
-    if (!e.hasFocus && hasEvents) {
-        events.dimension1 = $('[data-js="latexField"]').val()
-        ga('send', 'event', 'mathEditor', 'close', events)
-        hasEvents = false
-        events.metric1 = 0
-        events.metric2 = 0
-        events.metric3 = 0
-        events.metric4 = 0
-    }
-}).on('keyup', e => {
-    if(!e.altKey && !e.shiftKey && e.ctrlKey && e.keyCode === 69) {
-        ga('send', 'event', 'mathEditor', 'open', 'shortcut')
-    }
-})
+$(answer)
+    .on('mathfocus', e => {
+        if (!e.hasFocus && hasEvents) {
+            events.dimension1 = $('[data-js="latexField"]').val()
+            ga('send', 'event', 'mathEditor', 'close', events)
+            hasEvents = false
+            events.metric1 = 0
+            events.metric2 = 0
+            events.metric3 = 0
+            events.metric4 = 0
+        }
+    })
+    .on('keyup', e => {
+        if (!e.altKey && !e.shiftKey && e.ctrlKey && e.keyCode === 69) {
+            ga('send', 'event', 'mathEditor', 'open', 'shortcut')
+        }
+    })

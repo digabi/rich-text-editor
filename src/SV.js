@@ -1,4 +1,4 @@
-module.exports = {
+export default {
     editor: {
         mathEditor: 'Matematikeditor',
         title: 'Formeleditorns utvecklingsversion',
