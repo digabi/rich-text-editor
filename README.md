@@ -3,10 +3,9 @@
 Rich text editor with math support for Finnish Matriculation Examination Board.
 Live demo can be found at [https://math-demo.abitti.fi/](https://math-demo.abitti.fi/)
 
-There are two separate builds:
-
-* `dist`: ES2017 code, ES modules
-* `dist/amd`: ES5 code, AMD bundles (for RequireJS)
+Since v4.0.0, only ES2017 code with ES modules is provided (in the `dist`
+directory). If you want to use this library, a bundler such as Webpack or
+Rollup is probably needed.
 
 ## Dependencies
 
