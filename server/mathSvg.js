@@ -1,32 +1,8 @@
 const mjAPI = require('mathjax-node')
 
-module.exports = { mathSvgResponse, latexToSvg }
+const MAX_NESTING_LEVEL = 20
 
-//mjAPI.config({MathJax: { TeX: {extensions: ['mhchem.js']} }})
-mjAPI.config({
-    extensions: 'TeX/mhchem.js'
-})
-mjAPI.start()
-
-function mathSvgResponse(req, res) {
-    res.type('svg')
-    const latex = req.query.latex
-    latexToSvg(latex, svg => res.send(svg))
-}
-
-function latexToSvg(latex, cb) {
-    mjAPI.typeset(
-        {
-            math: latex,
-            format: 'TeX', // "inline-TeX", "MathML"
-            mml: false,
-            svg: true,
-            linebreaks: true,
-            width: 100
-        },
-        function(data) {
-            if (data.errors) {
-                cb(`<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+const errorResponse = `<?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <svg width="17px" height="15px" viewBox="0 0 17 15" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
     <title>Group 2</title>
     <defs></defs>
@@ -42,7 +18,50 @@ function latexToSvg(latex, cb) {
             </g>
         </g>
     </g>
-</svg>`)
+</svg>`
+
+module.exports = { mathSvgResponse, latexToSvg }
+
+//mjAPI.config({MathJax: { TeX: {extensions: ['mhchem.js']} }})
+mjAPI.config({
+    extensions: 'TeX/mhchem.js'
+})
+mjAPI.start()
+
+function mathSvgResponse(req, res) {
+    res.type('svg')
+    const latex = req.query.latex
+    latexToSvg(latex, svg => res.send(svg))
+}
+
+function nestingIsTooDeep(latex) {
+    let nestingLevel = 0
+    for (const c of latex) {
+        if (c === '{') nestingLevel++
+        else if (c === '}') nestingLevel--
+        if (nestingLevel > MAX_NESTING_LEVEL) return true
+    }
+    return false
+}
+
+function latexToSvg(latex, cb) {
+    if (nestingIsTooDeep(latex)) {
+        cb(errorResponse)
+        return
+    }
+
+    mjAPI.typeset(
+        {
+            math: latex,
+            format: 'TeX', // "inline-TeX", "MathML"
+            mml: false,
+            svg: true,
+            linebreaks: true,
+            width: 100
+        },
+        function(data) {
+            if (data.errors) {
+                cb(errorResponse)
             } else {
                 cb(data.svg)
             }
