@@ -3,6 +3,8 @@ import $ from 'jquery'
 import { makeRichText } from '../src/rich-text-editor'
 import base64png from './base64png'
 import * as u from './testUtil'
+import latexCommands from '../src/latexCommands'
+import specialCharacters from '../src/specialCharacters'
 
 const $answer = $('.answer')
 let savedValues = []
@@ -15,6 +17,7 @@ const richTextOptions = () => ({
 })
 
 $answer.each((i, answer) => makeRichText(answer, richTextOptions(answer.id), onValueChange))
+
 function onValueChange(data) {
     savedValues.push(data)
 }
@@ -219,6 +222,35 @@ describe('rich text editor', () => {
             expect(lastData.answerHTML).to.equal('<div>drop</div><div>bar</div>link text ')
             expect(lastData.answerText).to.equal('drop\nbar\nlink text')
             expect(lastData.imageCount).to.equal(0)
+        })
+    })
+
+    describe('when rendering all supported characters and latex commands', () => {
+        before('insert symbols and commands', done => {
+            const $customMq = $('<div class="customMq">')
+            $('body').prepend($customMq)
+            const mqInstance = window.MathQuill.getInterface(2).MathField($('.mathQuillTests').get(0))
+            const chars = specialCharacters.map(charGroup =>
+                charGroup.characters.map(y => y.latexCommand || y.character)
+            )
+            const latexes = latexCommands.map(latexCommand => latexCommand.label || latexCommand.action).filter(x => x)
+            const scandicChars = 'åöäÅÖÄ'
+            mqInstance.latex(`${chars.map(x => x.join(' ')).join(' ')} ${latexes.join(' ')} ${scandicChars}`)
+            $('.mathJaxTests').append(`<img src="/math.svg?latex=${encodeURIComponent(mqInstance.latex())}" />`)
+            $('.mathJaxTests img').get(0).onload = () => {
+                done()
+            }
+        })
+
+        it('renders mathquill correctly', () => {
+            expect($('.mathQuillTests').text()).to.equal(
+                '°·±∞231/21/3παβΓγΔδεζηθϑικΛλμνΞξΠρΣστϒυΦϕχΨψΩω∂φ≠≈≤≥<>~≡≢∘…∝∢∣∥⇅⇌∠↑↗↘↓↔⊥→⇒∈ZℤRℝ⇔∃∀NℕQℚ∩∪∖⊂⊄∉∅∧∨¬' +
+                    '√XxXXX​∫XX​limX​XXsincostan|X|[X]]X]{XXXXXXXX​(X(XX)X√XxX​X∑X/XX​limx→∞​XXijk(X)]X[[X[XX​XXXXXX)XX​TåöäÅÖÄ'
+            )
+        })
+
+        it('renders mathjax correctly', () => {
+            expect($('.mathJaxTests img').width()).to.be.greaterThan(50)
         })
     })
 })

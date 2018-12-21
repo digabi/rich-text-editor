@@ -29,6 +29,15 @@
       #mocha-stats {
         z-index: 3;
       }
+      .mathJaxTests,
+      .mathQuillTests {
+            border: 1px solid #aaa;
+            padding: 1em;
+
+        }
+        .mathQuillTests .mq-root-block {
+            white-space: normal;
+        }
     </style>
   </head>
   <body>
@@ -40,6 +49,14 @@
         <div class="answer answer1"></div>
         <h2>Kysymys 2</h2>
         <div class="answer answer2"></div>
+          <h2>Visual tests</h2>
+
+          <div class="visualTests">
+              <h3>MathQuill</h3>
+              <div class="mathQuillTests"></div>
+              <h3>MathJax</h3>
+              <div class="mathJaxTests"></div>
+          </div>
         <button class="save actionButton" style="display: none">Tallenna</button>
       </section>
       <section><div id="mocha"></div></section>
