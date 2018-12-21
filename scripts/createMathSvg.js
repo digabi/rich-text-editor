@@ -21,7 +21,7 @@ Promise.all(
 ).then(data => {
     fs.writeFileSync(
         __dirname + '/../src/latexCommandsWithSvg.js',
-        '/* eslint-disable indent */\nmodule.exports = ' + util.inspect(data, { depth: null }),
+        'export default ' + util.inspect(data, { depth: null }),
         'utf8'
     )
 })
