@@ -22,9 +22,13 @@ const errorResponse = `<?xml version="1.0" encoding="UTF-8" standalone="no"?>
 
 module.exports = { mathSvgResponse, latexToSvg }
 
-//mjAPI.config({MathJax: { TeX: {extensions: ['mhchem.js']} }})
 mjAPI.config({
-    extensions: 'TeX/mhchem.js'
+    extensions: 'TeX/mhchem.js',
+    MathJax: {
+        SVG: {
+            font: 'Latin-Modern'
+        }
+    }
 })
 mjAPI.start()
 
