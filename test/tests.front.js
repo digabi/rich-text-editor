@@ -244,7 +244,7 @@ describe('rich text editor', () => {
 
         it('renders mathquill correctly', () => {
             expect($('.mathQuillTests').text()).to.equal(
-                '°·±∞231/21/3παβΓγΔδεζηθϑικΛλμνΞξΠρΣστϒυΦϕχΨψΩω∂φ≠≈≤≥<>~≡≢∘…∝∢∣∥⇅⇌∠↑↗↘↓↔⊥→⇒∈ZℤRℝ⇔∃∀NℕQℚ∩∪∖⊂⊄∉∅∧∨¬' +
+                '°·±∞2312​13​παβΓγΔδεζηθϑικΛλμνΞξΠρΣστϒυΦϕχΨψΩω∂φ≠≈≤≥<>~≡≢∘…∝∢∣∥⇅⇌∠↑↗↘↓↔⊥→⇒∈ZℤRℝ⇔∃∀NℕQℚ∩∪∖⊂⊄∉∅∧∨¬' +
                     '√XxXXX​∫XX​limX​XXsincostan|X|[X]]X]{XXXXXXXX​(X(XX)X√XxX​X∑X/XX​limx→∞​XXijk(X)]X[[X[XX​XXXXXX)XX​TåöäÅÖÄ'
             )
         })
