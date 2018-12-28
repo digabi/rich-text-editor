@@ -235,11 +235,20 @@ describe('rich text editor', () => {
             )
             const latexes = latexCommands.map(latexCommand => latexCommand.label || latexCommand.action).filter(x => x)
             const scandicChars = 'åöäÅÖÄ'
+            $('.unicodeTests').html(
+                specialCharacters.map(x => x.characters.map(x => x.character).join('')).join('<br>')
+            )
             mqInstance.latex(`${chars.map(x => x.join(' ')).join(' ')} ${latexes.join(' ')} ${scandicChars}`)
             $('.mathJaxTests').append(`<img src="/math.svg?latex=${encodeURIComponent(mqInstance.latex())}" />`)
             $('.mathJaxTests img').get(0).onload = () => {
                 done()
             }
+        })
+
+        it('renders unicode characters correctly', () => {
+            expect($('.unicodeTests').text()).to.equal(
+                '°·±∞²³½⅓παβΓγΔδεζηθϑικΛλµνΞξ∏ρ∑στΥυΦФχΨψΩω∂φ≠≈≤≥<>∼≡≢∘…∝∢|‖⇌⇅∠↑↗↘↓↔⊥→⇒∈ℤℝ⇔∃∀ℕℚ∩∪∖⊂⊄∉∅∧∨¬'
+            )
         })
 
         it('renders mathquill correctly', () => {

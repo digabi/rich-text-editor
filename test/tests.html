@@ -29,8 +29,7 @@
       #mocha-stats {
         z-index: 3;
       }
-      .mathJaxTests,
-      .mathQuillTests {
+      .testBox {
             border: 1px solid #aaa;
             padding: 1em;
 
@@ -52,10 +51,12 @@
           <h2>Visual tests</h2>
 
           <div class="visualTests">
+              <h3>Plain Unicode</h3>
+              <div class="unicodeTests testBox"></div>
               <h3>MathQuill</h3>
-              <div class="mathQuillTests"></div>
+              <div class="mathQuillTests testBox"></div>
               <h3>MathJax</h3>
-              <div class="mathJaxTests"></div>
+              <div class="mathJaxTests testBox"></div>
           </div>
         <button class="save actionButton" style="display: none">Tallenna</button>
       </section>
