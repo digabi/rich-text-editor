@@ -39,9 +39,11 @@ function preventIfTrue(e, val) {
 export function sanitizeContent(answerElement) {
     const $answerElement = $(answerElement)
     const $mathEditor = $answerElement.find('[data-js="mathEditor"]')
+    const scrollPos = $(window).scrollTop()
     $mathEditor.hide()
     const text = $answerElement.get(0).innerText
     $mathEditor.show()
+    $(window).scrollTop(scrollPos)
 
     const html = sanitize($answerElement.html())
 

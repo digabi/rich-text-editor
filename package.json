@@ -43,7 +43,7 @@
     "express": "^4.16.4",
     "jquery": "^3.3.1",
     "mathjax": "^2.7.5",
-    "mathquill": "digabi/mathquill#0.10.1+digabi.24",
+    "mathquill": "digabi/mathquill#0.10.1+digabi.25",
     "mocha": "^5.0.4",
     "mocha-chrome": "^1.0.3",
     "morgan": "^1.9.1",
