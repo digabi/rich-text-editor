@@ -2,7 +2,8 @@ import $ from 'jquery'
 import sanitizeHtml from 'sanitize-html'
 import * as sanitizeOpts from './sanitizeOpts'
 
-export const equationImageSelector = 'img[src^="/math.svg"], img[src^="data:image/svg+xml"]'
+export const equationImageSelector =
+    'img[src^="/math.svg?latex="]:not(img[src="/math.svg?latex="]), img[src^="data:image/svg+xml"]'
 const screenshotImageSelector = 'img[src^="/screenshot/"], img[src^="data:image/png"]'
 
 function convertLinksToRelative(html) {
