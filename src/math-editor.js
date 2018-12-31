@@ -12,14 +12,18 @@ const keyCodes = {
 let MQ
 let firstTime = true
 
+const trimLatex = function(latex) {
+    return latex.replace(/(\\|\s)*/g, '') === '' ? '' : latex
+}
 export function init(
     $outerPlaceholder,
     focus,
     baseUrl,
     updateMathImg = ($img, latex) => {
+        const trimmed = trimLatex(latex)
         $img.prop({
-            src: baseUrl + '/math.svg?latex=' + encodeURIComponent(latex),
-            alt: latex
+            src: baseUrl + '/math.svg?latex=' + encodeURIComponent(trimmed),
+            alt: trimmed
         })
         $img.closest('[data-js="answer"]').trigger('input')
     }
