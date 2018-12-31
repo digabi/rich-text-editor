@@ -12,17 +12,18 @@ const keyCodes = {
 let MQ
 let firstTime = true
 
-export function init($outerPlaceholder, focus, baseUrl, updateMathImg) {
-    function defaultUpdateMathImg($img, latex) {
+export function init(
+    $outerPlaceholder,
+    focus,
+    baseUrl,
+    updateMathImg = ($img, latex) => {
         $img.prop({
             src: baseUrl + '/math.svg?latex=' + encodeURIComponent(latex),
             alt: latex
         })
         $img.closest('[data-js="answer"]').trigger('input')
     }
-
-    updateMathImg = updateMathImg || defaultUpdateMathImg
-
+) {
     let updateMathImgTimeout
 
     if (firstTime) {
