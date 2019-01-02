@@ -33,7 +33,7 @@ if (reporter === 'console') {
 }
 mocha.setup(mochaOpts)
 window.expect = chai.expect
-
+chai.config.truncateThreshold = 0
 const $el = {}
 
 describe('rich text editor', () => {
