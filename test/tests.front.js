@@ -7,7 +7,7 @@ import latexCommands from '../src/latexCommands'
 import specialCharacters from '../src/specialCharacters'
 
 const $answer = $('.answer')
-let savedValues = []
+let savedValues = [[], []]
 
 const richTextOptions = () => ({
     screenshot: {
@@ -16,11 +16,14 @@ const richTextOptions = () => ({
     }
 })
 
-$answer.each((i, answer) => makeRichText(answer, richTextOptions(answer.id), onValueChange))
+const answer = $answer.toArray()
 
-function onValueChange(data) {
-    savedValues.push(data)
-}
+makeRichText(answer[0], richTextOptions(answer[0].id), data => {
+    savedValues[0].push(data)
+})
+makeRichText(answer[1], richTextOptions(answer[1].id), data => {
+    savedValues[1].push(data)
+})
 
 window.locale = 'FI'
 window.IS_TEST = true
@@ -71,7 +74,7 @@ describe('rich text editor', () => {
                     .match(/\/screenshot/)
             })
             it('saves markup', () => {
-                const lastData = savedValues.pop()
+                const lastData = savedValues[0].pop()
                 expect(lastData.answerHTML).to.equal('<img src="/screenshot/screenshot.png" alt />')
                 expect(lastData.answerText).to.equal('')
                 expect(lastData.imageCount).to.equal(1)
@@ -94,12 +97,24 @@ describe('rich text editor', () => {
     })
 
     describe('start math', () => {
+        before(() => $el.answer1.html(''))
+        before(() => {
+            savedValues[0] = []
+        })
         before('wait for tools visible', u.waitUntil(() => $el.tools.is(':visible')))
         before(() => $('[data-js="newEquation"]').mousedown())
+        before(() => $el.equationFieldTextArea.trigger('keyup'))
+        before(u.delayFor(600))
 
         it('shows math tools', () => expect($el.mathToolbar).to.be.visible)
         it('shows math editor', () => expect($el.mathEditor).to.be.visible)
         it('answer still has focus style', () => expect($el.answer1).to.have.class('rich-text-focused'))
+        it('trims empty equations', () => {
+            expect(savedValues[0]).to.eql([
+                { answerHTML: '', answerText: '', imageCount: 0 },
+                { answerHTML: '', answerText: '', imageCount: 0 }
+            ])
+        })
 
         describe('when focus in latex field', () => {
             before('type', () =>
@@ -135,12 +150,9 @@ describe('rich text editor', () => {
             it('shows math in latex field', () => expect($el.latexField).to.have.value('a+b\\infty'))
             it('shows math in img', () => expect($('img:first')).to.have.attr('src', '/math.svg?latex=a%2Bb%5Cinfty'))
             it('stores latest data', () => {
-                const lastData = savedValues.pop()
-                expect(lastData.answerHTML).to.equal(
-                    '<img alt="a+b\\infty" src="/math.svg?latex=a%2Bb%5Cinfty" /><img src="/screenshot/screenshot.png" alt />'
-                )
+                const lastData = savedValues[0].pop()
+                expect(lastData.answerHTML).to.equal('<img alt="a+b\\infty" src="/math.svg?latex=a%2Bb%5Cinfty" />')
                 expect(lastData.answerText).to.equal('')
-                expect(lastData.imageCount).to.equal(1)
             })
         })
 
@@ -163,12 +175,9 @@ describe('rich text editor', () => {
                 expect($el.answer1).to.have.text('°')
             })
             it('stores latest data', () => {
-                const lastData = savedValues.pop()
-                expect(lastData.answerHTML).to.equal(
-                    '<img alt="a+b\\infty" src="/math.svg?latex=a%2Bb%5Cinfty" />°<img src="/screenshot/screenshot.png" alt />'
-                )
+                const lastData = savedValues[0].pop()
+                expect(lastData.answerHTML).to.equal('<img alt="a+b\\infty" src="/math.svg?latex=a%2Bb%5Cinfty" />°')
                 expect(lastData.answerText).to.equal('°')
-                expect(lastData.imageCount).to.equal(1)
             })
         })
     })
@@ -201,7 +210,7 @@ describe('rich text editor', () => {
             )
         })
         it('inserts sanitized content', () => {
-            const lastData = savedValues.pop()
+            const lastData = savedValues[1].pop()
             expect(lastData.answerHTML.trim()).to.equal('<div>paste</div><div>bar</div>link text')
             expect(lastData.answerText.trim()).to.equal('paste\nbar\nlink text')
             expect(lastData.imageCount).to.equal(0)
@@ -218,10 +227,62 @@ describe('rich text editor', () => {
 
         it('drops sanitized content', () => {
             expect($el.answer1).to.have.html('<div>drop</div><div>bar</div>link text ')
-            const lastData = savedValues.pop()
+            const lastData = savedValues[0].pop()
             expect(lastData.answerHTML).to.equal('<div>drop</div><div>bar</div>link text ')
             expect(lastData.answerText).to.equal('drop\nbar\nlink text')
             expect(lastData.imageCount).to.equal(0)
+        })
+    })
+
+    describe('when entering only white space', () => {
+        before('clear answer and open equation', () => {
+            $el.answer1.html('').focus()
+        })
+        before(() => {
+            savedValues[0] = []
+        })
+        before(() => $('[data-js="newEquation"]').mousedown())
+        before('type', () =>
+            $el.latexField
+                .focus()
+                .val('\\\\')
+                .trigger('input')
+        )
+        before(u.delayFor(600))
+        it('trims equations containing only spaces', () => {
+            expect(savedValues[0]).to.eql([
+                { answerHTML: '', answerText: '', imageCount: 0 },
+                { answerHTML: '', answerText: '', imageCount: 0 },
+                { answerHTML: '', answerText: '', imageCount: 0 }
+            ])
+        })
+    })
+
+    describe('when typing white space answers', () => {
+        before(() => {
+            savedValues[0] = []
+        })
+        before('clear answer', () => {
+            $el.answer1.html('')
+        })
+
+        it('sanitizes different answers', () => {
+            $el.answer1.html('<img alt src="/math.svg?latex=" /><br />').trigger('input')
+            $el.answer1.html('<img alt src="/math.svg?latex=" /><br /><br />').trigger('input')
+            $el.answer1.html('<img alt src="/math.svg?latex=" /><br /><br /><br />').trigger('input')
+            $el.answer1
+                .html('<img alt src="/math.svg?latex=" /><img alt src="/math.svg?latex=" /><br />')
+                .trigger('input')
+            $el.answer1.html('<br /><img alt src="/math.svg?latex=" /><br />').trigger('input')
+            $el.answer1.html('<img alt />').trigger('input')
+            expect(savedValues[0]).to.eql([
+                { answerHTML: '', answerText: '\n', imageCount: 0 },
+                { answerHTML: '', answerText: '\n\n', imageCount: 0 },
+                { answerHTML: '', answerText: '\n\n\n', imageCount: 0 },
+                { answerHTML: '', answerText: '\n', imageCount: 0 },
+                { answerHTML: '', answerText: '\n\n', imageCount: 0 },
+                { answerHTML: '', answerText: '', imageCount: 0 }
+            ])
         })
     })
 
