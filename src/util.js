@@ -2,8 +2,8 @@ import $ from 'jquery'
 import sanitizeHtml from 'sanitize-html'
 import * as sanitizeOpts from './sanitizeOpts'
 
-export const equationImageSelector =
-    'img[src^="/math.svg?latex="]:not(img[src="/math.svg?latex="]), img[src^="data:image/svg+xml"]'
+const emptyEquationSelector = 'img[src="/math.svg?latex="]'
+export const equationImageSelector = `img[src^="/math.svg?latex="]:not(${emptyEquationSelector}), img[src^="data:image/svg+xml"]`
 const screenshotImageSelector = 'img[src^="/screenshot/"], img[src^="data:image/png"]'
 
 function convertLinksToRelative(html) {
@@ -71,10 +71,7 @@ export function setCursorAfter($img) {
 }
 
 export function existingScreenshotCount($editor) {
-    const imageCount = $editor.find('img').length
-    const emptyImageCount = $editor.find('img[src=""]').length
-    const equationCount = $editor.find(equationImageSelector).length
-    return imageCount - equationCount - emptyImageCount
+    return $editor.find(screenshotImageSelector).length
 }
 
 export function scrollIntoView($element) {
