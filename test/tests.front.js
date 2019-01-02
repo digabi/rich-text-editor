@@ -228,7 +228,7 @@ describe('rich text editor', () => {
         it('drops sanitized content', () => {
             expect($el.answer1).to.have.html('<div>drop</div><div>bar</div>link text ')
             const lastData = savedValues[0].pop()
-            expect(lastData.answerHTML).to.equal('<div>drop</div><div>bar</div>link text ')
+            expect(lastData.answerHTML).to.equal('<div>drop</div><div>bar</div>link text')
             expect(lastData.answerText).to.equal('drop\nbar\nlink text')
             expect(lastData.imageCount).to.equal(0)
         })

@@ -55,10 +55,14 @@ export function sanitizeContent(answerElement) {
         0
 
     return {
-        answerHTML: answerConsideredEmpty ? '' : html,
+        answerHTML: answerConsideredEmpty ? '' : stripBrsAndTrim(html),
         answerText: text,
         imageCount: existingScreenshotCount($(`<div>${html}</div>`))
     }
+}
+
+function stripBrsAndTrim(answerHtml) {
+    return answerHtml.replace(/(\s|<br ?\/?>)*$/g, '')
 }
 
 export function setCursorAfter($img) {
