@@ -4,7 +4,8 @@ import * as sanitizeOpts from './sanitizeOpts'
 
 const emptyEquationSelector = 'img[src="/math.svg?latex="]'
 export const equationImageSelector = `img[src^="/math.svg?latex="]:not(${emptyEquationSelector}), img[src^="data:image/svg+xml"]`
-const screenshotImageSelector = 'img[src^="/screenshot/"], img[src^="data:image/png"]'
+const screenshotImageSelector =
+    'img[src^="/screenshot/"], img[src^="data:image/png"], img[src^="data:image/gif"], img[src^="data:image/jpeg"]'
 
 function convertLinksToRelative(html) {
     return html.replace(new RegExp(document.location.origin, 'g'), '')
