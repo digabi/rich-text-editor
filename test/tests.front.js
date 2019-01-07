@@ -310,11 +310,11 @@ describe('rich text editor', () => {
             $el.answer1.html('<br /><img alt src="/math.svg?latex=" /><br />').trigger('input')
             $el.answer1.html('<img alt />').trigger('input')
             expect(savedValues[0]).to.eql([
-                { answerHTML: '', answerText: '\n', imageCount: 0 },
-                { answerHTML: '', answerText: '\n\n', imageCount: 0 },
-                { answerHTML: '', answerText: '\n\n\n', imageCount: 0 },
-                { answerHTML: '', answerText: '\n', imageCount: 0 },
-                { answerHTML: '', answerText: '\n\n', imageCount: 0 },
+                { answerHTML: '', answerText: '', imageCount: 0 },
+                { answerHTML: '', answerText: '', imageCount: 0 },
+                { answerHTML: '', answerText: '', imageCount: 0 },
+                { answerHTML: '', answerText: '', imageCount: 0 },
+                { answerHTML: '', answerText: '', imageCount: 0 },
                 { answerHTML: '', answerText: '', imageCount: 0 }
             ])
         })

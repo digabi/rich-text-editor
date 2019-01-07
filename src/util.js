@@ -56,14 +56,18 @@ export function sanitizeContent(answerElement) {
         0
 
     return {
-        answerHTML: answerConsideredEmpty ? '' : stripBrsAndTrim(html),
-        answerText: text,
+        answerHTML: answerConsideredEmpty ? '' : stripBrsAndTrimFromEnd(html),
+        answerText: stripWitespaceFromEnd(text),
         imageCount: existingScreenshotCount($(`<div>${html}</div>`))
     }
 }
 
-function stripBrsAndTrim(answerHtml) {
+function stripBrsAndTrimFromEnd(answerHtml) {
     return answerHtml.replace(/(\s|<br ?\/?>)*$/g, '')
+}
+
+function stripWitespaceFromEnd(answerHtml) {
+    return answerHtml.replace(/(\s)*$/g, '')
 }
 
 export function setCursorAfter($img) {
