@@ -38,6 +38,21 @@ mocha.setup(mochaOpts)
 window.expect = chai.expect
 chai.config.truncateThreshold = 0
 const $el = {}
+const clearSaveData = () => {
+    savedValues[0] = []
+    savedValues[1] = []
+}
+const defaults = () => {
+    $el.answer1.html('<img alt="c+d" src="/math.svg?latex=c%2Bd" />')
+    $el.answer2.html('<img alt="c+d" src="/math.svg?latex=e%2Bf" />')
+    clearSaveData()
+}
+const clear = () => {
+    $el.answer1.empty()
+    $el.answer2.empty()
+    clearSaveData()
+}
+const $firstAnswerMath = () => $('.answer1 img:first')
 
 describe('rich text editor', () => {
     before('wait for tools to hide', u.waitUntil(() => u.isOutsideViewPort($('[data-js="tools"]'))))
@@ -54,6 +69,7 @@ describe('rich text editor', () => {
     })
     before('focus', () => $el.answer1.focus())
     before('wait for tools visible', u.waitUntil(() => $el.tools.is(':visible')))
+    after(defaults)
 
     it('shows character list', () => expect($('[data-js="charactersList"]')).to.be.visible)
     it('hide math tools', () => expect($el.mathToolbar).to.be.hidden)
@@ -61,6 +77,7 @@ describe('rich text editor', () => {
 
     describe('when pasting images', () => {
         describe('png', () => {
+            before(clear)
             before('paste image', done => {
                 $el.answer1.append(base64png)
                 $el.answer1.find('img:last').get(0).onload = e => {
@@ -68,19 +85,20 @@ describe('rich text editor', () => {
                 }
                 $el.answer1.trigger(u.pasteEventMock())
             })
+
             it('saves pasted image', () => {
                 expect($el.answer1.find('img:last'))
                     .to.have.attr('src')
                     .match(/\/screenshot/)
             })
             it('saves markup', () => {
-                const lastData = savedValues[0].pop()
-                expect(lastData.answerHTML).to.equal('<img src="/screenshot/screenshot.png" alt />')
-                expect(lastData.answerText).to.equal('')
-                expect(lastData.imageCount).to.equal(1)
+                expect(savedValues[0]).to.eql([
+                    { answerHTML: '<img src="/screenshot/screenshot.png" alt />', answerText: '', imageCount: 1 }
+                ])
             })
         })
         describe('not png', () => {
+            before(clear)
             let currentImgAmout
             before('#3', done => {
                 currentImgAmout = $el.answer1.find('img').length
@@ -90,6 +108,7 @@ describe('rich text editor', () => {
                 }
                 $el.answer1.trigger(u.pasteEventMock())
             })
+
             it('ignores other than png images', () => {
                 expect($el.answer1.find('img').length).to.equal(currentImgAmout)
             })
@@ -97,10 +116,8 @@ describe('rich text editor', () => {
     })
 
     describe('start math', () => {
-        before(() => $el.answer1.html(''))
-        before(() => {
-            savedValues[0] = []
-        })
+        before(clear)
+        before(() => $el.answer1.focus())
         before('wait for tools visible', u.waitUntil(() => $el.tools.is(':visible')))
         before(() => $('[data-js="newEquation"]').mousedown())
         before(() => $el.equationFieldTextArea.trigger('keyup'))
@@ -131,13 +148,14 @@ describe('rich text editor', () => {
             it('answer still has focus style', () => expect($el.answer1).to.have.class('rich-text-focused'))
             it('shows math in equation field', () => expect($el.equationField).to.have.text('xy±'))
             it('shows math in latex field', () => expect($el.latexField).to.have.value('xy\\pm'))
-            it('shows math in img', () => expect($('img:first')).to.have.attr('src', '/math.svg?latex=xy%5Cpm'))
+            it('shows math in img', () => expect($firstAnswerMath()).to.have.attr('src', '/math.svg?latex=xy%5Cpm'))
         })
 
         describe('when focus in equation field, pasting content and adding char', () => {
+            before(defaults)
             before(() => $el.answer1.blur())
             before(u.delay)
-            before(() => $('img:first').trigger({ type: 'click', which: 1 }))
+            before(() => $firstAnswerMath().trigger({ type: 'click', which: 1 }))
             before(() => $el.latexField.val('').trigger('input'))
             before(() => $el.equationFieldTextArea.val('a+b').trigger('paste'))
             before(u.delay)
@@ -148,16 +166,24 @@ describe('rich text editor', () => {
             it('answer still has focus style', () => expect($el.answer1).to.have.class('rich-text-focused'))
             it('shows math in equation field', () => expect($el.equationField).to.have.text('a+b∞'))
             it('shows math in latex field', () => expect($el.latexField).to.have.value('a+b\\infty'))
-            it('shows math in img', () => expect($('img:first')).to.have.attr('src', '/math.svg?latex=a%2Bb%5Cinfty'))
+            it('shows math in img', () =>
+                expect($firstAnswerMath()).to.have.attr('src', '/math.svg?latex=a%2Bb%5Cinfty'))
             it('stores latest data', () => {
-                const lastData = savedValues[0].pop()
-                expect(lastData.answerHTML).to.equal('<img alt="a+b\\infty" src="/math.svg?latex=a%2Bb%5Cinfty" />')
-                expect(lastData.answerText).to.equal('')
+                expect(savedValues[0]).to.eql([
+                    { answerHTML: '<img alt="c+d" src="/math.svg?latex=c%2Bd" />', answerText: '', imageCount: 0 },
+                    {
+                        answerHTML: '<img alt="a+b\\infty" src="/math.svg?latex=a%2Bb%5Cinfty" />',
+                        answerText: '',
+                        imageCount: 0
+                    }
+                ])
             })
         })
 
         describe('equation click opens and esc closes math editor', () => {
             before(() => $el.answer1.blur())
+            after(defaults)
+
             it('editor is visible and then hidden', () => {
                 expect($el.answer1).to.not.have.class('rich-text-focused')
                 $('img:first').trigger({ type: 'click', which: 1 })
@@ -169,6 +195,9 @@ describe('rich text editor', () => {
         })
 
         describe('when clicking special character from toolbar', () => {
+            before(clear)
+            before(() => $el.answer1.focus())
+
             before(() => $('.rich-text-editor-toolbar-characters-group button:first').mousedown())
 
             it('inserts special character to answer body', () => {
@@ -176,7 +205,7 @@ describe('rich text editor', () => {
             })
             it('stores latest data', () => {
                 const lastData = savedValues[0].pop()
-                expect(lastData.answerHTML).to.equal('<img alt="a+b\\infty" src="/math.svg?latex=a%2Bb%5Cinfty" />°')
+                expect(lastData.answerHTML).to.equal('°')
                 expect(lastData.answerText).to.equal('°')
             })
         })
@@ -196,7 +225,7 @@ describe('rich text editor', () => {
         before(() => $el.answer1.blur())
         before(u.delay)
         before(() => $el.answer2.focus())
-        before(u.delayFor(300))
+        before(u.delayFor(200))
 
         it('removes focus style from previous answer', () => expect($el.answer1).to.not.have.class('rich-text-focused'))
         it('adds focus tyle to current answer', () => expect($el.answer2).to.have.class('rich-text-focused'))
@@ -204,16 +233,21 @@ describe('rich text editor', () => {
     })
 
     describe('when trying to insert unsanitized content', () => {
+        before(clear)
         before('pasting banned tags', () => {
             $el.answer1.trigger(
                 u.pasteEventMock('<div class="forbidden"><b>paste</b></div><div>bar</div><a href="/">link text</a> ')
             )
         })
+
         it('inserts sanitized content', () => {
-            const lastData = savedValues[1].pop()
-            expect(lastData.answerHTML.trim()).to.equal('<div>paste</div><div>bar</div>link text')
-            expect(lastData.answerText.trim()).to.equal('paste\nbar\nlink text')
-            expect(lastData.imageCount).to.equal(0)
+            expect(savedValues[1]).to.eql([
+                {
+                    answerHTML: '<div>paste</div><div>bar</div>link text',
+                    answerText: 'paste\nbar\nlink text',
+                    imageCount: 0
+                }
+            ])
         })
     })
 
@@ -227,19 +261,20 @@ describe('rich text editor', () => {
 
         it('drops sanitized content', () => {
             expect($el.answer1).to.have.html('<div>drop</div><div>bar</div>link text ')
-            const lastData = savedValues[0].pop()
-            expect(lastData.answerHTML).to.equal('<div>drop</div><div>bar</div>link text')
-            expect(lastData.answerText).to.equal('drop\nbar\nlink text')
-            expect(lastData.imageCount).to.equal(0)
+            expect(savedValues[1]).to.eql([
+                {
+                    answerHTML: '<div>paste</div><div>bar</div>link text',
+                    answerText: 'paste\nbar\nlink text',
+                    imageCount: 0
+                }
+            ])
         })
     })
 
     describe('when entering only white space', () => {
+        before(clear)
         before('clear answer and open equation', () => {
-            $el.answer1.html('').focus()
-        })
-        before(() => {
-            savedValues[0] = []
+            $el.answer1.focus()
         })
         before(() => $('[data-js="newEquation"]').mousedown())
         before('type', () =>
@@ -259,12 +294,7 @@ describe('rich text editor', () => {
     })
 
     describe('when typing white space answers', () => {
-        before(() => {
-            savedValues[0] = []
-        })
-        before('clear answer', () => {
-            $el.answer1.html('')
-        })
+        before(clear)
 
         it('sanitizes different answers', () => {
             $el.answer1.html('<img alt src="/math.svg?latex=" /><br />').trigger('input')
