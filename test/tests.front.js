@@ -120,13 +120,15 @@ describe('rich text editor', () => {
         before(() => $el.answer1.focus())
         before('wait for tools visible', u.waitUntil(() => $el.tools.is(':visible')))
         before(() => $('[data-js="newEquation"]').mousedown())
-        before(() => $el.equationFieldTextArea.trigger('keyup'))
+        before(() => $el.latexField.val('\\ \\'))
         before(u.delayFor(600))
 
         it('shows math tools', () => expect($el.mathToolbar).to.be.visible)
         it('shows math editor', () => expect($el.mathEditor).to.be.visible)
         it('answer still has focus style', () => expect($el.answer1).to.have.class('rich-text-focused'))
         it('trims empty equations', () => {
+            $el.equationFieldTextArea.trigger({ type: 'keydown', keyCode: 27 })
+            expect($el.answer1).to.have.html('')
             expect(savedValues[0]).to.eql([
                 { answerHTML: '', answerText: '', imageCount: 0 },
                 { answerHTML: '', answerText: '', imageCount: 0 }
@@ -134,6 +136,8 @@ describe('rich text editor', () => {
         })
 
         describe('when focus in latex field', () => {
+            before(defaults)
+            before(() => $firstAnswerMath().trigger({ type: 'click', which: 1 }))
             before('type', () =>
                 $el.latexField
                     .focus()

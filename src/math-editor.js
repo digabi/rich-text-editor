@@ -176,7 +176,7 @@ export function init(
     function closeMathEditor(setFocusAfterClose = false) {
         const $currentEditor = $mathEditorContainer.closest('[data-js="answer"]')
         const $img = $mathEditorContainer.prev()
-        if ($latexField.val().trim() === '') {
+        if (trimLatex($latexField.val()) === '') {
             $img.remove()
         } else {
             $img.show()
