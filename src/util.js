@@ -11,8 +11,35 @@ function convertLinksToRelative(html) {
     return html.replace(new RegExp(document.location.origin, 'g'), '')
 }
 
+function stripDivsFromRichTextAnswer(answerContentValue) {
+    const parent = document.createElement('div')
+    parent.innerHTML = answerContentValue
+
+    do {
+        let lastNodeType
+        for (let i = 0; i < parent.childNodes.length; i++) {
+            const node = parent.childNodes[i]
+            if (node.nodeName === 'DIV') {
+                if (lastNodeType === Node.TEXT_NODE) parent.insertBefore(document.createElement('br'), node)
+                if (node.lastChild && node.lastChild.nodeName !== 'BR')
+                    node.insertBefore(document.createElement('br'), null)
+                while (node.childNodes.length) parent.insertBefore(node.firstChild, node)
+                parent.removeChild(node)
+            }
+            lastNodeType = node.nodeType
+        }
+    } while (Array.prototype.some.call(parent.childNodes, node => node.nodeName === 'DIV'))
+
+    return parent.innerHTML
+}
+
 export function sanitize(html) {
-    return sanitizeHtml(convertLinksToRelative(html), sanitizeOpts)
+    return sanitizeHtml(
+        stripDivsFromRichTextAnswer(
+            sanitizeHtml(convertLinksToRelative(html), { ...sanitizeOpts, allowedTags: ['div', 'img', 'br'] })
+        ),
+        sanitizeOpts
+    )
 }
 export function insertToTextAreaAtCursor(field, value) {
     const startPos = field.selectionStart

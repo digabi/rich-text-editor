@@ -1,4 +1,4 @@
-export const allowedTags = ['div', 'img', 'br']
+export const allowedTags = ['img', 'br']
 export const allowedAttributes = {
     img: ['src', 'alt']
 }

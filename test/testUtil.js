@@ -5,7 +5,8 @@ export const pasteEventMock = html => ({
             getData: () => html
         }
     },
-    preventDefault: () => {}
+    preventDefault: () => {},
+    stopPropagation: () => {}
 })
 
 export const waitUntil = condition => done => _waitUntil(condition, done)

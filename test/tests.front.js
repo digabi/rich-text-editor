@@ -83,7 +83,7 @@ describe('rich text editor', () => {
                 $el.answer1.find('img:last').get(0).onload = e => {
                     if (~e.target.src.indexOf('http')) done()
                 }
-                $el.answer1.trigger(u.pasteEventMock())
+                $el.answer1.trigger(u.pasteEventMock()).trigger('input')
             })
 
             it('saves pasted image', () => {
@@ -106,7 +106,7 @@ describe('rich text editor', () => {
                 $('.answer1 img:last').get(0).onload = () => {
                     done()
                 }
-                $el.answer1.trigger(u.pasteEventMock())
+                $el.answer1.trigger(u.pasteEventMock()).trigger('input')
             })
 
             it('ignores other than png images', () => {
@@ -239,15 +239,19 @@ describe('rich text editor', () => {
     describe('when trying to insert unsanitized content', () => {
         before(clear)
         before('pasting banned tags', () => {
-            $el.answer1.trigger(
-                u.pasteEventMock('<div class="forbidden"><b>paste</b></div><div>bar</div><a href="/">link text</a> ')
-            )
+            $el.answer1
+                .trigger(
+                    u.pasteEventMock(
+                        '<div class="forbidden"><b>paste</b></div><div>bar</div><a href="/">link text</a> '
+                    )
+                )
+                .trigger('input')
         })
 
         it('inserts sanitized content', () => {
             expect(savedValues[1]).to.eql([
                 {
-                    answerHTML: '<div>paste</div><div>bar</div>link text',
+                    answerHTML: 'paste<br />bar<br />link text',
                     answerText: 'paste\nbar\nlink text',
                     imageCount: 0
                 }
@@ -264,11 +268,11 @@ describe('rich text editor', () => {
         before(u.delay)
 
         it('drops sanitized content', () => {
-            expect($el.answer1).to.have.html('<div>drop</div><div>bar</div>link text ')
-            expect(savedValues[1]).to.eql([
+            expect($el.answer1).to.have.html('drop<br>bar<br>link text ')
+            expect(savedValues[0]).to.eql([
                 {
-                    answerHTML: '<div>paste</div><div>bar</div>link text',
-                    answerText: 'paste\nbar\nlink text',
+                    answerHTML: 'drop<br />bar<br />link text',
+                    answerText: 'drop\nbar\nlink text',
                     imageCount: 0
                 }
             ])

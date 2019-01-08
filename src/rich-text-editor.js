@@ -64,6 +64,7 @@ export const makeRichText = (answer, options, onValueChanged = () => {}) => {
             if (e.type === 'focus') math.closeMathEditor()
             onRichTextEditorFocusChanged(e)
         })
+        // Triggered after both drop and paste
         .on('input', e => {
             if (!pasteInProgress) onValueChanged(u.sanitizeContent(e.currentTarget))
         })
