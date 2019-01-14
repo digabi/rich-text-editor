@@ -11,24 +11,29 @@ function convertLinksToRelative(html) {
     return html.replace(new RegExp(document.location.origin, 'g'), '')
 }
 
+function isBlockElement(node) {
+    return node.nodeName === 'DIV' || node.nodeName === 'P'
+}
+
 function stripDivsFromRichTextAnswer(answerContentValue) {
     const parent = document.createElement('div')
     parent.innerHTML = answerContentValue
 
     do {
-        let lastNodeType
+        let lastNode
         for (let i = 0; i < parent.childNodes.length; i++) {
             const node = parent.childNodes[i]
-            if (node.nodeName === 'DIV') {
-                if (lastNodeType === Node.TEXT_NODE) parent.insertBefore(document.createElement('br'), node)
+            if (isBlockElement(node)) {
+                if (lastNode && lastNode.nodeType === Node.TEXT_NODE && /\S/.test(lastNode.textContent))
+                    parent.insertBefore(document.createElement('br'), node)
                 if (node.lastChild && node.lastChild.nodeName !== 'BR')
                     node.insertBefore(document.createElement('br'), null)
                 while (node.childNodes.length) parent.insertBefore(node.firstChild, node)
                 parent.removeChild(node)
             }
-            lastNodeType = node.nodeType
+            lastNode = node
         }
-    } while (Array.prototype.some.call(parent.childNodes, node => node.nodeName === 'DIV'))
+    } while (Array.prototype.some.call(parent.childNodes, node => isBlockElement(node)))
 
     return parent.innerHTML
 }
@@ -36,7 +41,7 @@ function stripDivsFromRichTextAnswer(answerContentValue) {
 export function sanitize(html) {
     return sanitizeHtml(
         stripDivsFromRichTextAnswer(
-            sanitizeHtml(convertLinksToRelative(html), { ...sanitizeOpts, allowedTags: ['div', 'img', 'br'] })
+            sanitizeHtml(convertLinksToRelative(html), { ...sanitizeOpts, allowedTags: ['div', 'p', 'img', 'br'] })
         ),
         sanitizeOpts
     )
@@ -84,17 +89,17 @@ export function sanitizeContent(answerElement) {
 
     return {
         answerHTML: answerConsideredEmpty ? '' : stripBrsAndTrimFromEnd(html),
-        answerText: stripWitespaceFromEnd(text),
+        answerText: stripNewLinesFromStartAndWiteSpacesFromEnd(text),
         imageCount: existingScreenshotCount($(`<div>${html}</div>`))
     }
 }
 
 function stripBrsAndTrimFromEnd(answerHtml) {
-    return answerHtml.replace(/(\s|<br ?\/?>)*$/g, '')
+    return answerHtml.replace(/^(\n|<br ?\/?>)*/g, '').replace(/(\s|<br ?\/?>)*$/g, '')
 }
 
-function stripWitespaceFromEnd(answerHtml) {
-    return answerHtml.replace(/(\s)*$/g, '')
+function stripNewLinesFromStartAndWiteSpacesFromEnd(answerHtml) {
+    return answerHtml.replace(/^(\n)*/g, '').replace(/(\s)*$/g, '')
 }
 
 export function setCursorAfter($img) {
