@@ -10,7 +10,7 @@ export default [
     { action: '\\cos' },
     { action: '\\tan' },
     { action: '|', label: '\\left|X\\right|' },
-    { action: '[x]', label: '[X]', useWrite: true },
+    { action: '[', label: '\\left[X\\right]' },
     { action: ']x]', label: ']X]', useWrite: true },
     { action: '\\cases', label: '\\begin{cases}\nX\\\\\nX\n\\end{cases}' },
     { action: '\\matrix', label: '\\begin{matrix}\nX&X\\\\\nX&X\n\\end{matrix}' },
