@@ -50,7 +50,7 @@ function checkForImageLimit($editor, imageData, limit) {
     return Bacon.once(u.existingScreenshotCount($editor) > limit ? new Bacon.Error() : imageData)
 }
 
-function persistInlineImages($editor, screenshotSaver, screenshotCountLimit, onValueChanged) {
+export function persistInlineImages($editor, screenshotSaver, screenshotCountLimit, onValueChanged) {
     setTimeout(
         () =>
             Bacon.combineAsArray(

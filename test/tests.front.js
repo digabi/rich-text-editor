@@ -274,6 +274,11 @@ describe('rich text editor', () => {
                     answerHTML: 'drop<br />bar<br />link text',
                     answerText: 'drop\nbar\nlink text',
                     imageCount: 0
+                },
+                {
+                    answerHTML: 'drop<br />bar<br />link text',
+                    answerText: 'drop\nbar\nlink text',
+                    imageCount: 0
                 }
             ])
         })

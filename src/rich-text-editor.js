@@ -69,8 +69,11 @@ export const makeRichText = (answer, options, onValueChanged = () => {}) => {
             if (!pasteInProgress) onValueChanged(u.sanitizeContent(e.currentTarget))
         })
         .on('drop', e => {
+            pasteInProgress = true
             setTimeout(() => {
                 $(e.target).html(u.sanitize(e.target.innerHTML))
+                clipboard.persistInlineImages($(e.currentTarget), saver, limit, onValueChanged)
+                pasteInProgress = false
             }, 0)
         })
         .on('paste', e => {
