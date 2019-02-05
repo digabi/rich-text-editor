@@ -2,6 +2,7 @@ import $ from 'jquery'
 import loadingImg from './loadingImg'
 import * as u from './util'
 import * as Bacon from 'baconjs'
+import { invalidImageSelector } from './util'
 
 const SCREENSHOT_LIMIT_ERROR = () => new Bacon.Error('Screenshot limit reached!')
 const fileTypes = ['image/png', 'image/jpeg']
@@ -54,7 +55,7 @@ export function persistInlineImages($editor, screenshotSaver, screenshotCountLim
     setTimeout(
         () =>
             Bacon.combineAsArray(
-                markAndGetInlineImages($editor).map(data =>
+                markAndGetInlineImagesAndRemoveForbiddenOnes($editor).map(data =>
                     checkForImageLimit($editor, data, screenshotCountLimit)
                         .doError(() => onValueChanged(SCREENSHOT_LIMIT_ERROR()))
                         .flatMapLatest(() => Bacon.fromPromise(screenshotSaver(data)))
@@ -70,7 +71,8 @@ function totalImageCount($answer, clipboardDataAsHtml) {
     return u.existingScreenshotCount($answer) + u.existingScreenshotCount($(`<div>${clipboardDataAsHtml}</div>`))
 }
 
-function markAndGetInlineImages($editor) {
+function markAndGetInlineImagesAndRemoveForbiddenOnes($editor) {
+    $editor.find(invalidImageSelector).remove()
     const images = $editor
         .find('img[src^="data"]')
         .toArray()

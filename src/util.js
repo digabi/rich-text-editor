@@ -6,7 +6,7 @@ const emptyEquationSelector = 'img[src="/math.svg?latex="]'
 export const equationImageSelector = `img[src^="/math.svg?latex="]:not(${emptyEquationSelector}), img[src^="data:image/svg+xml"]`
 const screenshotImageSelector =
     'img[src^="/screenshot/"], img[src^="data:image/png"], img[src^="data:image/gif"], img[src^="data:image/jpeg"]'
-
+export const invalidImageSelector = 'img:not(img[src^="data"], img[src^="/math.svg?latex="], img[src^="/screenshot/"])'
 function convertLinksToRelative(html) {
     return html.replace(new RegExp(document.location.origin, 'g'), '')
 }
