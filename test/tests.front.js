@@ -265,7 +265,7 @@ describe('rich text editor', () => {
             $el.answer1.trigger('drop')
             $el.answer1.trigger('input')
         })
-        before(u.delay)
+        before(u.delayFor(150))
 
         it('drops sanitized content', () => {
             expect($el.answer1).to.have.html('drop<br>bar<br>link text ')

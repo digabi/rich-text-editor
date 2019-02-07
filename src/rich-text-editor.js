@@ -74,7 +74,7 @@ export const makeRichText = (answer, options, onValueChanged = () => {}) => {
                 $(e.target).html(u.sanitize(e.target.innerHTML))
                 clipboard.persistInlineImages($(e.currentTarget), saver, limit, onValueChanged)
                 pasteInProgress = false
-            }, 0)
+            }, 100)
         })
         .on('paste', e => {
             pasteInProgress = true
