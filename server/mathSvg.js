@@ -1,6 +1,8 @@
 const mjAPI = require('mathjax-node')
-
 const MAX_NESTING_LEVEL = 20
+const MAX_LENGTH = 5000
+const nestedContextStartedRegexes = ['\\left', '{', '\\begin']
+const nestedContextEndingRegexes = ['\\right', '}', '\\end']
 
 const errorResponse = `<?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <svg width="17px" height="15px" viewBox="0 0 17 15" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
@@ -38,18 +40,26 @@ function mathSvgResponse(req, res) {
     latexToSvg(latex, svg => res.send(svg))
 }
 
+function latexIsTooLong(latex) {
+    return latex && latex.length > MAX_LENGTH
+}
+
 function nestingIsTooDeep(latex) {
     let nestingLevel = 0
-    for (const c of latex) {
-        if (c === '{') nestingLevel++
-        else if (c === '}') nestingLevel--
+    const matches = latex.match(/\\right|\\left|\\begin|\\end|\{|\}/g)
+    if (!matches) {
+        return false
+    }
+    for (var matchedString of matches) {
+        if (nestedContextStartedRegexes.some(startingRegex => startingRegex === matchedString)) nestingLevel++
+        else if (nestedContextEndingRegexes.some(endingRegex => endingRegex === matchedString)) nestingLevel--
         if (nestingLevel > MAX_NESTING_LEVEL) return true
     }
     return false
 }
 
 function latexToSvg(latex, cb) {
-    if (nestingIsTooDeep(latex)) {
+    if (latexIsTooLong(latex) || nestingIsTooDeep(latex)) {
         cb(errorResponse)
         return
     }
