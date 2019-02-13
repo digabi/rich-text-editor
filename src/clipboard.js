@@ -9,7 +9,10 @@ const fileTypes = ['image/png', 'image/jpeg']
 
 export function onPaste(e, saver, onValueChanged, limit) {
     const clipboardData = e.originalEvent.clipboardData
-    const file = clipboardData.items && clipboardData.items.length > 0 && clipboardData.items[0].getAsFile()
+    const file =
+        clipboardData.items &&
+        clipboardData.items.length > 0 &&
+        clipboardData.items[clipboardData.items.length - 1].getAsFile()
     if (file) {
         onPasteBlob(e, file, saver, $(e.currentTarget), onValueChanged, limit)
     } else {
