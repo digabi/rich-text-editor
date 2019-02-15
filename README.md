@@ -28,14 +28,9 @@ Demo: http://digabi.github.io/rich-text-editor/
 
 Source: https://github.com/digabi/rich-text-editor/blob/master/index.html
 
-## Deploy
+## Deploy to https://math-demo.abitti.fi/
 
-    git remote add production ssh://58db515cfbc736bf24000001@math-editor.local.digabi.fi/~/git/math.git/
-    git push production master 
-
-Or
-
-    npm run deploy
+Update `rich-text-editor` dependency in [https://github.com/digabi/math-demo/](https://github.com/digabi/math-demo/), build and deploy it according to its documentation.
 
 # License
 
