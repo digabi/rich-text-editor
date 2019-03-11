@@ -8,7 +8,7 @@ makeRichText(answer, {
         saver: ({ data }) =>
             new Promise(resolve => {
                 const reader = new FileReader()
-                reader.onload = evt => resolve(evt.target.result)
+                reader.onload = evt => resolve(evt.target.result.replace(/^(data:image)(\/[^;]+)(;.*)/,'$1$3'))
                 reader.readAsDataURL(data)
             }),
         limit: 10

@@ -77,7 +77,7 @@ function totalImageCount($answer, clipboardDataAsHtml) {
 function markAndGetInlineImagesAndRemoveForbiddenOnes($editor) {
     $editor.find(invalidImageSelector).remove()
     const images = $editor
-        .find('img[src^="data"]')
+        .find('img[src^="data:image/"]')
         .toArray()
         .map(el =>
             Object.assign(decodeBase64Image(el.getAttribute('src')), {
