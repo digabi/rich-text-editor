@@ -51,8 +51,9 @@ export const makeRichText = (answer, options, onValueChanged = () => {}) => {
                 math.openMathEditor($(e.target))
             }
         })
-        .on('keyup', e => {
+        .on('keydown', e => {
             if (u.isCtrlKey(e, keyCodes.E) && !$(e.target).hasClass('math-editor-latex-field')) {
+                e.preventDefault()
                 math.insertNewEquation()
             }
         })
