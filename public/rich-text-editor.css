@@ -57,9 +57,8 @@
 .rich-text-editor-toolbar-characters .rich-text-editor-button.rich-text-editor-characters-popular { display: inline-block; }
 
 .rich-text-editor-characters-expand-collapse { display: inline-block; font-family: 'SansSerif', serif; height: 35px; background: none; border: none; cursor: pointer; padding-top: 4px; }
-.rich-text-editor-characters-expand-collapse { position: absolute; right: 0px; top: 0px }
-.rich-text-editor-characters-expand-collapse:before { content: url('expand.svg'); }
-.rich-text-editor-characters-expanded .rich-text-editor-characters-expand-collapse:before { content: url('collapse.svg'); }
+.rich-text-editor-characters-expand-collapse { position: absolute; right: 0; top: 0; bottom: 0; width: 20px; background: url('expand.svg') 50% 50% no-repeat; }
+.rich-text-editor-characters-expanded .rich-text-editor-characters-expand-collapse { background-image: url('collapse.svg'); }
 
 @media(min-width: 1279px) {
     .rich-text-editor-new-equation {left: -153px; position: absolute; }
