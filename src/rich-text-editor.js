@@ -58,6 +58,9 @@ export const makeRichText = (answer, options, onValueChanged = () => {}) => {
         })
         .on('mathfocus', e => {
             $(e.currentTarget).toggleClass('rich-text-focused', e.hasFocus)
+            if (!e.hasFocus) {
+                math.closeMathEditor()
+            }
             if (richTextAndMathBlur()) onRichTextEditorBlur($currentEditor)
         })
         .on('focus blur', e => {
@@ -95,6 +98,7 @@ function onRichTextEditorFocus($element) {
 }
 
 function onRichTextEditorBlur($element) {
+    math.closeMathEditor()
     toggleRichTextToolbar(false, $element)
     focus.richText = false
 }

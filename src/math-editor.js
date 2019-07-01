@@ -44,13 +44,11 @@ export function init(
     const $equationField = $mathEditorContainer.find('[data-js="equationField"]')
     let mqEditTimeout
     let visible = false
-    let focusChanged = null
     //noinspection JSUnusedGlobalSymbols,JSUnusedLocalSymbols
     const mqInstance = MQ.MathField($equationField.get(0), {
         handlers: {
             edit: onMqEdit,
             enter: () => {
-                closeMathEditor(true)
                 setTimeout(() => insertNewEquation('<br>'), 2)
             }
         }
@@ -75,7 +73,11 @@ export function init(
         .on('paste', e => e.stopPropagation())
 
     function onClose(e) {
-        if (u.isCtrlKey(e, keyCodes.ENTER) || u.isKey(e, keyCodes.ESC)) closeMathEditor(true)
+        if (u.isCtrlKey(e, keyCodes.ENTER) || u.isKey(e, keyCodes.ESC)) {
+            focus.equationField = false
+            focus.latexField = false
+            onFocusChanged()
+        }
     }
 
     return {
@@ -118,11 +120,7 @@ export function init(
     }
 
     function onFocusChanged() {
-        clearTimeout(focusChanged)
-        focusChanged = setTimeout(() => {
-            $mathEditorContainer.trigger({ type: 'mathfocus', hasFocus: focus.latexField || focus.equationField })
-            if (!focus.latexField && !focus.equationField) closeMathEditor()
-        }, 0)
+        $mathEditorContainer.trigger({ type: 'mathfocus', hasFocus: focus.latexField || focus.equationField })
     }
 
     function insertNewEquation(optionalMarkup = '') {
@@ -187,7 +185,6 @@ export function init(
         visible = false
         focus.latexField = false
         focus.equationField = false
-        $mathEditorContainer.trigger({ type: 'mathfocus', hasFocus: focus.latexField || focus.equationField })
         $outerPlaceholder.append($mathEditorContainer)
         if (setFocusAfterClose) $currentEditor.focus()
     }
