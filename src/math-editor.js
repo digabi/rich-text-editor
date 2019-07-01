@@ -190,6 +190,9 @@ export function init(
     }
 
     function toggleMathToolbar(isVisible) {
+        if (!$('body').hasClass('rich-text-editor-focus')) {
+            $('body').toggleClass('rich-text-editor-focus', true)
+        }
         $('body').toggleClass('math-editor-focus', isVisible)
     }
 }
