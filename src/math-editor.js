@@ -144,6 +144,7 @@ export function init(
         $img.hide()
         $img.after($mathEditorContainer)
         visible = true
+        focus.equationField = true
         toggleMathToolbar(true)
         setTimeout(() => mqInstance.focus(), 0)
         $latexField.val($img.prop('alt'))
