@@ -230,7 +230,7 @@
 }
 .rich-text-editor-characters-expand-collapse {
   position: absolute;
-  right: 0;
+  right: -20px;
   top: 0;
   bottom: 0;
   width: 20px;
@@ -240,6 +240,106 @@
   background-image: url('collapse.svg');
 }
 
+
+.rich-text-editor-overlay {
+  display: flex;
+  position: absolute;
+  left: 0;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  z-index: 101;
+}
+
+.rich-text-editor-overlay-modal {
+  position: relative;
+  margin: auto;
+  max-width: 860px;
+  height: 40%;
+  background: #FFF;
+  padding: 2rem;
+}
+
+.rich-text-editor-close-overlay-button {
+  position: absolute;
+  width: 25px;
+  height: 25px;
+  top: 20px;
+  right: 20px;
+  cursor: pointer;
+  background: url('closeButton.svg') no-repeat 50% 50%;
+  border: 0;
+}
+
+.rich-text-editor-close-overlay-button:hover {
+  opacity: 0.5;
+}
+
+.rich-text-editor-hidden {
+  display: none;
+}
+
+.rich-text-editor-help {
+  position: absolute;
+  right: 0px;
+  top: 0;
+  bottom: 0;
+  width: 20px;
+  height: 20px;
+  margin: 7px 4px;
+  display: inline-flex;
+  font-family: sans-serif;
+  font-size: 16px;
+  font-weight: 700;
+  background: #359BB7;
+  color: #FFF;
+  border: none;
+  cursor: pointer;
+  border-radius: 20px;
+  justify-content: center;
+}
+
+.rich-text-editor-modal-columns {
+  display: flex;
+}
+.rich-text-editor-modal-column {
+  margin: 0 1rem;
+}
+.rich-text-editor-modal-column h3 {
+  font-size: 18px;
+  font-weight: bold;
+  margin-top: 0;
+}
+.rich-text-editor-help-shortcuts {
+  border-spacing: 0 4px;
+}
+
+.rich-text-editor-help-shortcuts th {
+  width: 370px;
+  text-align: left;
+  font-weight: normal;
+}
+
+.rich-text-editor-help-button {
+  background: #fff;
+  box-shadow: 0 1px 1px 1px rgba(0,0,0,.3);
+  border-radius: 4px;
+  line-height: 1.3;
+  font-family: monospace;
+  display: inline-block;
+  padding: 1px 3px;
+  margin: 0 4px;
+  color: #000;
+  text-align: center;
+  min-width: 15px;
+  text-transform: uppercase;
+
+}
+.rich-text-editor-help-shortcuts td .rich-text-editor-help-button {
+  width: 100%;
+  padding: 1px;
+}
 @media (min-width: 1279px) {
   .rich-text-editor-new-equation {
     left: -153px;

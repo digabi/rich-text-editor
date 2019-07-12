@@ -32,8 +32,10 @@ export const makeRichText = (answer, options, onValueChanged = () => {}) => {
 
     if (firstCall) {
         math = mathEditor.init($outerPlaceholder, focus, baseUrl, options.updateMathImg)
-        $toolbar = toolbars.init(math, () => focus.richText, l, baseUrl)
-        $('body').append($outerPlaceholder, $toolbar)
+        const containers = toolbars.init(math, () => focus.richText, l, baseUrl)
+        $toolbar = containers.toolbar
+        const $helpOverlay = containers.helpOverlay
+        $('body').append($outerPlaceholder, $toolbar, $helpOverlay)
         firstCall = false
     }
     onValueChanged(u.sanitizeContent(answer))

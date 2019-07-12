@@ -3,11 +3,70 @@ import specialCharacterGroups from './specialCharacters'
 import latexCommandsWithSvg from './latexCommandsWithSvg'
 
 export function init(mathEditor, hasRichTextFocus, l, baseUrl) {
+    const $helpOverlay = $(`<div class="rich-text-editor-overlay rich-text-editor-hidden">
+    <div class="rich-text-editor-overlay-modal">
+        <div data-i18n="[html]screenshot_info_text" class="rich-text-editor-modal-columns">
+            <div class="rich-text-editor-modal-column">
+                <h3>Kuvakaappaukset</h3>
+                <p>Tee kuva haluamallasi ohjelmalla. Klikkaa yläpalkista kuvakaappauskuvaketta <span
+                        class="screen-shot-image"></span> ja rajaa haluamasi kuva-alue näytöltä. <span class="rich-text-editor-help-button">CTRL</span>-<span class="rich-text-editor-help-button">V</span> liittää
+                    kuvan vastausikkunaan kursorin kohdalle. Voit vaihtaa kuvan paikkaa raahaamalla tai leikkaamalla kuvan
+                    komennolla <span class="rich-text-editor-help-button">CTRL</span>-<span class="rich-text-editor-help-button">X</span> ja liittämällä sen komennolla <span class="rich-text-editor-help-button">CTRL</span>-<span class="rich-text-editor-help-button">V</span> haluamaasi paikkaan.
+                </p>
+            </div>
+            <div class="rich-text-editor-modal-column">
+                <h3>Kaavat</h3>
+                <p>Kaava lisätään komennolla <span class="rich-text-editor-help-button">CTRL</span>-<span class="rich-text-editor-help-button">E</span><br>Pikakomennot
+                    kaavassa:</p>
+                <table class="rich-text-editor-help-shortcuts">
+                    <tbody>
+                    <tr>
+                        <th>Jakoviiva</th>
+                        <td><span class="rich-text-editor-help-button">/</span></td>
+                    </tr>
+                    <tr>
+                        <th>Kertomerkki</th>
+                        <td><span class="rich-text-editor-help-button">*</span></td>
+                    </tr>
+                    <tr>
+                        <th>Yläindeksi</th>
+                        <td><span class="rich-text-editor-help-button">^</span></td>
+                    </tr>
+                    <tr>
+                        <th>Alaindeksi</th>
+                        <td><span class="rich-text-editor-help-button">_</span></td>
+                    </tr>
+                    <tr>
+                        <th>Lisää kaava seuraavalle riville</th>
+                        <td><span class="rich-text-editor-help-button">↵</span></td>
+                    </tr>
+                    <tr>
+                        <th>Sulje kaava</th>
+                        <td><span class="rich-text-editor-help-button">esc</span></td>
+                    </tr>
+                    </tbody>
+                </table>        
+            </div>
+        </div>
+        <button data-js="closeOverlayButton" class="rich-text-editor-close-overlay-button"></button>
+    </div>
+</div>
+    
+    `).on('mousedown', '[data-js="closeOverlayButton"]', e => {
+        e.preventDefault()
+        $helpOverlay.addClass('rich-text-editor-hidden')
+    })
+
     const $toolbar = $(`
         <div class="rich-text-editor-tools" data-js="tools" style="display: none">
             <div class="rich-text-editor-tools-button-wrapper">
                 <div class="rich-text-editor-toolbar-wrapper">
                     <button class="rich-text-editor-characters-expand-collapse" data-js="expandCollapseCharacters" style="z-index: 100"></button>
+                </div>
+            </div>
+            <div class="rich-text-editor-tools-button-wrapper">
+                <div class="rich-text-editor-toolbar-wrapper">           
+                    <button class="rich-text-editor-help" data-js="richTextEditorHelp" style="z-index: 100">?</button>
                 </div>
             </div>
             <div class="rich-text-editor-tools-row">
@@ -36,6 +95,10 @@ export function init(mathEditor, hasRichTextFocus, l, baseUrl) {
             e.preventDefault()
             $toolbar.toggleClass('rich-text-editor-characters-expanded')
         })
+        .on('mousedown', '[data-js="richTextEditorHelp"]', e => {
+            e.preventDefault()
+            $helpOverlay.removeClass('rich-text-editor-hidden')
+        })
 
     const $newEquation = $toolbar.find('[data-js="newEquation"]')
     const $mathToolbar = $toolbar.find('[data-js="mathToolbar"]')
@@ -49,7 +112,7 @@ export function init(mathEditor, hasRichTextFocus, l, baseUrl) {
         $toolbar.localize()
     }
 
-    return $toolbar
+    return { toolbar: $toolbar, helpOverlay: $helpOverlay }
 }
 
 const specialCharacterToButton = char =>
