@@ -52,10 +52,18 @@ export function init(mathEditor, hasRichTextFocus, l, baseUrl) {
     </div>
 </div>
     
-    `).on('mousedown', '[data-js="closeOverlayButton"]', e => {
-        e.preventDefault()
-        $helpOverlay.addClass('rich-text-editor-hidden')
-    })
+    `)
+        .on('mousedown', '[data-js="closeOverlayButton"]', e => {
+            e.preventDefault()
+            $helpOverlay.addClass('rich-text-editor-hidden')
+        })
+        .on('mousedown', e => {
+            e.preventDefault()
+            if (e.target.classList.contains('rich-text-editor-overlay')) {
+                e.stopPropagation()
+                $helpOverlay.addClass('rich-text-editor-hidden')
+            }
+        })
 
     const $toolbar = $(`
         <div class="rich-text-editor-tools" data-js="tools" style="display: none">
