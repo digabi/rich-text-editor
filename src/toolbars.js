@@ -104,6 +104,15 @@ export function init(mathEditor, hasRichTextFocus, l, baseUrl) {
         .on('mousedown', '[data-js="richTextEditorHelp"]', e => {
             e.preventDefault()
             $helpOverlay.removeClass('rich-text-editor-hidden')
+            $(window).on('keydown.help', e => {
+                const isEsc = e.keyCode === 27
+                if (isEsc) {
+                    e.stopPropagation()
+                    e.preventDefault()
+                    $helpOverlay.addClass('rich-text-editor-hidden')
+                    $(window).off('keydown.help')
+                }
+            })
         })
 
     const $newEquation = $toolbar.find('[data-js="newEquation"]')
