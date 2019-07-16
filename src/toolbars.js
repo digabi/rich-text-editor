@@ -6,43 +6,43 @@ export function init(mathEditor, hasRichTextFocus, l, baseUrl) {
     const $helpOverlay = $(`<div class="rich-text-editor-overlay rich-text-editor-hidden">
     <div class="rich-text-editor-overlay-modal">
         <div data-i18n="[html]screenshot_info_text" class="rich-text-editor-modal-columns">
-            <div class="rich-text-editor-modal-column">
+            <div class="rich-text-editor-modal-column rich-text-editor-modal-column-2">
                 <h3>Kuvakaappaukset</h3>
                 <p>Tee kuva haluamallasi ohjelmalla. Klikkaa yläpalkista kuvakaappauskuvaketta <span
-                        class="screen-shot-image"></span> ja rajaa haluamasi kuva-alue näytöltä. <span class="rich-text-editor-help-button">CTRL</span>-<span class="rich-text-editor-help-button">V</span> liittää
+                        class="screen-shot-image"></span> ja rajaa haluamasi kuva-alue näytöltä. <span class="rich-text-editor-help-key">CTRL</span>-<span class="rich-text-editor-help-key">V</span> liittää
                     kuvan vastausikkunaan kursorin kohdalle. Voit vaihtaa kuvan paikkaa raahaamalla tai leikkaamalla kuvan
-                    komennolla <span class="rich-text-editor-help-button">CTRL</span>-<span class="rich-text-editor-help-button">X</span> ja liittämällä sen komennolla <span class="rich-text-editor-help-button">CTRL</span>-<span class="rich-text-editor-help-button">V</span> haluamaasi paikkaan.
+                    komennolla <span class="rich-text-editor-help-key">CTRL</span>-<span class="rich-text-editor-help-key">X</span> ja liittämällä sen komennolla <span class="rich-text-editor-help-key">CTRL</span>-<span class="rich-text-editor-help-key">V</span> haluamaasi paikkaan.
                 </p>
             </div>
-            <div class="rich-text-editor-modal-column">
+            <div class="rich-text-editor-modal-column rich-text-editor-modal-column-1">
                 <h3>Kaavat</h3>
-                <p>Kaava lisätään komennolla <span class="rich-text-editor-help-button">CTRL</span>-<span class="rich-text-editor-help-button">E</span><br>Pikakomennot
+                <p>Kaava lisätään komennolla <span class="rich-text-editor-help-key">CTRL</span>-<span class="rich-text-editor-help-key">E</span><br>Pikakomennot
                     kaavassa:</p>
                 <table class="rich-text-editor-help-shortcuts">
                     <tbody>
                     <tr>
                         <th>Jakoviiva</th>
-                        <td><span class="rich-text-editor-help-button">/</span></td>
+                        <td><span class="rich-text-editor-help-key">/</span></td>
                     </tr>
                     <tr>
                         <th>Kertomerkki</th>
-                        <td><span class="rich-text-editor-help-button">*</span></td>
+                        <td><span class="rich-text-editor-help-key">*</span></td>
                     </tr>
                     <tr>
                         <th>Yläindeksi</th>
-                        <td><span class="rich-text-editor-help-button">^</span></td>
+                        <td><span class="rich-text-editor-help-key">^</span></td>
                     </tr>
                     <tr>
                         <th>Alaindeksi</th>
-                        <td><span class="rich-text-editor-help-button">_</span></td>
+                        <td><span class="rich-text-editor-help-key">_</span></td>
                     </tr>
                     <tr>
                         <th>Lisää kaava seuraavalle riville</th>
-                        <td><span class="rich-text-editor-help-button">↵</span></td>
+                        <td><span class="rich-text-editor-help-key">↵</span></td>
                     </tr>
                     <tr>
                         <th>Sulje kaava</th>
-                        <td><span class="rich-text-editor-help-button">esc</span></td>
+                        <td><span class="rich-text-editor-help-key">esc</span></td>
                     </tr>
                     </tbody>
                 </table>        
@@ -72,11 +72,6 @@ export function init(mathEditor, hasRichTextFocus, l, baseUrl) {
                     <button class="rich-text-editor-characters-expand-collapse" data-js="expandCollapseCharacters" style="z-index: 100"></button>
                 </div>
             </div>
-            <div class="rich-text-editor-tools-button-wrapper">
-                <div class="rich-text-editor-toolbar-wrapper">           
-                    <button class="rich-text-editor-help" data-js="richTextEditorHelp" style="z-index: 100">?</button>
-                </div>
-            </div>
             <div class="rich-text-editor-tools-row">
                 <div class="rich-text-editor-toolbar-wrapper">
                     <div class="rich-text-editor-toolbar-characters rich-text-editor-toolbar rich-text-editor-toolbar-button-list" data-js="charactersList"></div>
@@ -88,6 +83,9 @@ export function init(mathEditor, hasRichTextFocus, l, baseUrl) {
                 </div>
             </div>
             <div class="rich-text-editor-tools-button-wrapper">
+                <div class="rich-text-editor-toolbar-wrapper">           
+                    <button class="rich-text-editor-help-button" data-js="richTextEditorHelp" style="z-index: 100"></button>
+                </div>
                 <div class="rich-text-editor-toolbar-wrapper">
                     <button class="rich-text-editor-new-equation rich-text-editor-button rich-text-editor-button-action" data-js="newEquation" data-command="Ctrl-E" data-i18n="rich_text_editor.insert_equation">Σ ${
                         l.insertEquation
