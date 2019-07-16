@@ -58,8 +58,8 @@ export function init(mathEditor, hasRichTextFocus, l, baseUrl) {
             $helpOverlay.addClass('rich-text-editor-hidden')
         })
         .on('mousedown', e => {
-            e.preventDefault()
             if (e.target.classList.contains('rich-text-editor-overlay')) {
+                e.preventDefault()
                 e.stopPropagation()
                 $helpOverlay.addClass('rich-text-editor-hidden')
             }
