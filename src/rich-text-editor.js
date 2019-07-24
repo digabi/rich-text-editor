@@ -8,7 +8,6 @@ import SV from './SV'
 
 const locales = { FI, SV }
 
-const l = locales[window.locale || 'FI'].editor
 const keyCodes = {
     E: 69
 }
@@ -25,6 +24,8 @@ let math
 let $toolbar
 
 export const makeRichText = (answer, options, onValueChanged = () => {}) => {
+    const l = locales[options.locale || window.locale || 'FI'].editor
+
     const saver = options.screenshot.saver
     const limit = options.screenshot.limit
     const baseUrl = options.baseUrl || ''
