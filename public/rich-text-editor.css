@@ -280,6 +280,9 @@
   background-image: url('collapse.svg');
 }
 
+.rich-text-editor-overlay-open {
+  overflow-y: hidden;
+}
 
 .rich-text-editor-overlay {
   display: flex;

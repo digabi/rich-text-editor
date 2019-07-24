@@ -45,22 +45,24 @@ export function init(mathEditor, hasRichTextFocus, l, baseUrl) {
                         <td><span class="rich-text-editor-help-key">esc</span></td>
                     </tr>
                     </tbody>
-                </table>        
+                </table>
             </div>
         </div>
         <button data-js="closeOverlayButton" class="rich-text-editor-close-overlay-button"></button>
     </div>
 </div>
-    
+
     `)
         .on('mousedown', '[data-js="closeOverlayButton"]', e => {
             e.preventDefault()
+            $('body').removeClass('rich-text-editor-overlay-open')
             $helpOverlay.addClass('rich-text-editor-hidden')
         })
         .on('mousedown', e => {
             if (e.target.classList.contains('rich-text-editor-overlay')) {
                 e.preventDefault()
                 e.stopPropagation()
+                $('body').removeClass('rich-text-editor-overlay-open')
                 $helpOverlay.addClass('rich-text-editor-hidden')
             }
         })
@@ -83,7 +85,7 @@ export function init(mathEditor, hasRichTextFocus, l, baseUrl) {
                 </div>
             </div>
             <div class="rich-text-editor-tools-button-wrapper">
-                <div class="rich-text-editor-toolbar-wrapper">           
+                <div class="rich-text-editor-toolbar-wrapper">
                     <button class="rich-text-editor-help-button" data-js="richTextEditorHelp" style="z-index: 100"></button>
                 </div>
                 <div class="rich-text-editor-toolbar-wrapper">
@@ -103,12 +105,14 @@ export function init(mathEditor, hasRichTextFocus, l, baseUrl) {
         })
         .on('mousedown', '[data-js="richTextEditorHelp"]', e => {
             e.preventDefault()
+            $('body').addClass('rich-text-editor-overlay-open')
             $helpOverlay.removeClass('rich-text-editor-hidden')
             $(window).on('keydown.help', e => {
                 const isEsc = e.keyCode === 27
                 if (isEsc) {
                     e.stopPropagation()
                     e.preventDefault()
+                    $('body').removeClass('rich-text-editor-overlay-open')
                     $helpOverlay.addClass('rich-text-editor-hidden')
                     $(window).off('keydown.help')
                 }
