@@ -27,7 +27,13 @@ export default {
         langLink: '/',
         langLabel: 'Suomeksi',
         answerTitle: 'Svar',
-        toggleInstructions: 'Visa intruktioner'
+        toggleInstructions: 'Visa intruktioner',
+        help_overlay: {
+            screenshot:
+                '<h3>Skärmdumpar</h3><p>Skapa bilden med valbart program. Klicka på skärmdumpsikonen i övre balken<span class="screen-shot-image"></span> och avgränsa den delen av skärmen du villanvända.<span class="rich-text-editor-help-key">CTRL</span>-<span class="rich-text-editor-help-key">V</span>bifogar bilden i svarsfältet där kursorn ligger.Du kan ändra på bildens position genom att släpa bilden eller genom att klippaden med kommandot<span class="rich-text-editor-help-key">CTRL</span>-<span class="rich-text-editor-help-key">X</span>och klistra in den med kommandot<span class="rich-text-editor-help-key">CTRL</span>-<span class="rich-text-editor-help-key">V</span>på valbart ställe.</p>',
+            equation:
+                '<h3>Formler</h3><p>Formeln läggs till med kommandot<span class="rich-text-editor-help-key">CTRL</span>-<spanclass="rich-text-editor-help-key">E</span><br />Snabbkommandon med formler:</p><table class="rich-text-editor-help-shortcuts"><tbody><tr><th>Divisionsstreck</th><td><span class="rich-text-editor-help-key">/</span></td></tr><tr><th>Multiplikationstecken</th><td><span class="rich-text-editor-help-key">*</span></td></tr><tr><th>Upphöjt index</th><td><span class="rich-text-editor-help-key">^</span></td></tr><tr><th>Nedsänkt index</th><td><span class="rich-text-editor-help-key">_</span></td></tr><tr><th>Lägg till formel på nästa rad</th><td><span class="rich-text-editor-help-key">↵</span></td></tr><tr><th>Stäng formeln</th><td><span class="rich-text-editor-help-key">esc</span></td></tr></tbody></table>'
+        }
     },
     annotating: {
         sendFeedback: 'Skicka respons',
