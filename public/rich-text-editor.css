@@ -233,6 +233,10 @@
   display: none;
 }
 
+.rich-text-editor-toolbar-equation .rich-text-editor-button:last-child {
+  margin-right:35px;
+}
+
 .math-editor-focus .rich-text-editor-toolbar-equation {
   display: inline-block;
 }
@@ -326,14 +330,18 @@
 
 .rich-text-editor-help-button {
   position: absolute;
-  right: 0px;
-  top: 0;
-  bottom: 0;
+  right: 0;
+  top: 0; 
   width: 35px;
   height: 35px;
   background: url('helpButton.svg') no-repeat 50% 50%;
   border: none;
   cursor: pointer;
+  display:block;
+}
+
+.math-editor-focus .rich-text-editor-help-button {
+  margin-top: -40px;
 }
 
 .rich-text-editor-modal-columns {
@@ -406,5 +414,11 @@
 
   .rich-text-editor-help-button {
     right: 35px;
+    display:block;
   }
+
+  .math-editor-focus .rich-text-editor-help-button {
+    margin-top:0;
+  }
+
 }
