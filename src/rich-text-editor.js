@@ -111,9 +111,13 @@ function onRichTextEditorFocusChanged(e) {
 
     clearTimeout(richTextEditorBlurTimeout)
     richTextEditorBlurTimeout = setTimeout(() => {
-        if (richTextAndMathBlur()) onRichTextEditorBlur($(e.target))
+        if (!helpOverlayOpen() && richTextAndMathBlur()) onRichTextEditorBlur($(e.target))
         else onRichTextEditorFocus($(e.target))
     }, 0)
+}
+
+function helpOverlayOpen() {
+    return $('body').hasClass('rich-text-editor-overlay-open')
 }
 
 function richTextAndMathBlur() {
