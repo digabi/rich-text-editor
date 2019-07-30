@@ -17,9 +17,7 @@ export function init(mathEditor, hasRichTextFocus, l, baseUrl) {
         </div>
         <button data-js="closeOverlayButton" class="rich-text-editor-close-overlay-button"></button>
     </div>
-</div>
-
-    `)
+</div>`)
         .on('mousedown', '[data-js="closeOverlayButton"]', e => {
             e.preventDefault()
             $('body').removeClass('rich-text-editor-overlay-open')
