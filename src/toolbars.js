@@ -3,8 +3,10 @@ import specialCharacterGroups from './specialCharacters'
 import latexCommandsWithSvg from './latexCommandsWithSvg'
 
 export function init(mathEditor, hasRichTextFocus, l, baseUrl) {
+    let helpOverlayActiveElement
+
     const $helpOverlay = $(`<div class="rich-text-editor-overlay rich-text-editor-hidden">
-    <div class="rich-text-editor-overlay-modal">
+    <div class="rich-text-editor-overlay-modal" aria-modal="true" tabindex="0" data-js="overlayModal" >
         <div class="rich-text-editor-modal-columns">
             <div class="rich-text-editor-modal-column rich-text-editor-modal-column-2" data-i18n="[html]rich_text_editor.help_overlay.screenshot">
                 ${l.help_overlay.screenshot}
@@ -22,6 +24,7 @@ export function init(mathEditor, hasRichTextFocus, l, baseUrl) {
             e.preventDefault()
             $('body').removeClass('rich-text-editor-overlay-open')
             $helpOverlay.addClass('rich-text-editor-hidden')
+            helpOverlayActiveElement.focus()
         })
         .on('mousedown', e => {
             if (e.target.classList.contains('rich-text-editor-overlay')) {
@@ -29,6 +32,7 @@ export function init(mathEditor, hasRichTextFocus, l, baseUrl) {
                 e.stopPropagation()
                 $('body').removeClass('rich-text-editor-overlay-open')
                 $helpOverlay.addClass('rich-text-editor-hidden')
+                helpOverlayActiveElement.focus()
             }
         })
 
@@ -70,8 +74,11 @@ export function init(mathEditor, hasRichTextFocus, l, baseUrl) {
         })
         .on('mousedown', '[data-js="richTextEditorHelp"]', e => {
             e.preventDefault()
+            helpOverlayActiveElement = document.activeElement
             $('body').addClass('rich-text-editor-overlay-open')
             $helpOverlay.removeClass('rich-text-editor-hidden')
+            $helpOverlay.find('[data-js="overlayModal"]').focus()
+
             $(window).on('keydown.help', e => {
                 const isEsc = e.keyCode === 27
                 if (isEsc) {
