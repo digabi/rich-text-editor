@@ -5,11 +5,11 @@ import latexCommandsWithSvg from './latexCommandsWithSvg'
 export function init(mathEditor, hasRichTextFocus, l, baseUrl) {
     const $helpOverlay = $(`<div class="rich-text-editor-overlay rich-text-editor-hidden">
     <div class="rich-text-editor-overlay-modal">
-        <div data-i18n="[html]screenshot_info_text" class="rich-text-editor-modal-columns">
-            <div class="rich-text-editor-modal-column rich-text-editor-modal-column-2">
+        <div class="rich-text-editor-modal-columns">
+            <div class="rich-text-editor-modal-column rich-text-editor-modal-column-2" data-i18n="[html]rich_text_editor.help_overlay.screenshot">
                 ${l.help_overlay.screenshot}
             </div>
-            <div class="rich-text-editor-modal-column rich-text-editor-modal-column-1">
+            <div class="rich-text-editor-modal-column rich-text-editor-modal-column-1" data-i18n="[html]rich_text_editor.help_overlay.equation">
                 ${l.help_overlay.equation}
             </div>
         </div>
