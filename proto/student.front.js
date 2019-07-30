@@ -13,6 +13,7 @@ makeRichText(answer, {
             }),
         limit: 10
     },
+    locale: window.locale,
     baseUrl: ''
 })
 answer.focus()

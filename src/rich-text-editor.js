@@ -24,7 +24,7 @@ let math
 let $toolbar
 
 export const makeRichText = (answer, options, onValueChanged = () => {}) => {
-    const l = locales[options.locale || window.locale || 'FI'].editor
+    const l = locales[options.locale || 'FI'].editor
 
     const saver = options.screenshot.saver
     const limit = options.screenshot.limit
