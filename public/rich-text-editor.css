@@ -48,7 +48,8 @@
   max-height: 1000px;
 }
 
-.rich-text-editor {}
+.rich-text-editor {
+}
 
 .math-editor {
   z-index: 1;
@@ -224,6 +225,10 @@
   background: #ececec;
 }
 
+.rich-text-editor-toolbar-characters {
+  margin-right: 30px;
+}
+
 .rich-text-editor-toolbar-characters.rich-text-editor-toolbar-button-list .rich-text-editor-button {
   font-family: Symbola, monospace;
   color: #555;
@@ -234,7 +239,7 @@
 }
 
 .rich-text-editor-toolbar-equation .rich-text-editor-button:last-child {
-  margin-right:35px;
+  margin-right: 35px;
 }
 
 .math-editor-focus .rich-text-editor-toolbar-equation {
@@ -245,10 +250,6 @@
   margin-right: 35px;
   display: inline-block;
   vertical-align: top;
-}
-
-.rich-text-editor-toolbar-characters-group:last-child {
-  margin-right: 50px;
 }
 
 .rich-text-editor-toolbar-characters .rich-text-editor-button {
@@ -268,11 +269,8 @@
   border: none;
   cursor: pointer;
   padding-top: 4px;
-}
-
-.rich-text-editor-characters-expand-collapse {
   position: absolute;
-  right: 0;
+  right: 35px;
   top: 0;
   bottom: 0;
   width: 20px;
@@ -304,7 +302,7 @@
   margin: auto;
   max-width: 860px;
   min-height: 40%;
-  background: #FFF;
+  background: #fff;
   padding: 2rem;
   line-height: 1.5rem;
 }
@@ -330,18 +328,14 @@
 
 .rich-text-editor-help-button {
   position: absolute;
+  top: 0;
   right: 0;
-  top: 0; 
   width: 35px;
   height: 35px;
   background: url('helpButton.svg') no-repeat 50% 50%;
   border: none;
   cursor: pointer;
-  display:block;
-}
-
-.math-editor-focus .rich-text-editor-help-button {
-  margin-top: -40px;
+  display: block;
 }
 
 .rich-text-editor-modal-columns {
@@ -377,7 +371,7 @@
 
 .rich-text-editor-help-key {
   background: #fff;
-  box-shadow: 0 0px 0px 1px rgba(0, 0, 0, .3);
+  box-shadow: 0 0px 0px 1px rgba(0, 0, 0, 0.3);
   border-radius: 4px;
   line-height: 1.3;
   font-family: monospace;
@@ -411,14 +405,4 @@
   .rich-text-editor-tools {
     top: -60px;
   }
-
-  .rich-text-editor-help-button {
-    right: 35px;
-    display:block;
-  }
-
-  .math-editor-focus .rich-text-editor-help-button {
-    margin-top:0;
-  }
-
 }

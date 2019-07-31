@@ -36,9 +36,13 @@ export function init(mathEditor, hasRichTextFocus, l, baseUrl) {
 
     const $toolbar = $(`
         <div class="rich-text-editor-tools" data-js="tools" style="display: none">
+
             <div class="rich-text-editor-tools-button-wrapper">
                 <div class="rich-text-editor-toolbar-wrapper">
                     <button class="rich-text-editor-characters-expand-collapse" data-js="expandCollapseCharacters" style="z-index: 100"></button>
+                </div>
+                <div class="rich-text-editor-toolbar-wrapper">
+                   <button class="rich-text-editor-help-button" data-js="richTextEditorHelp" style="z-index: 100"></button>
                 </div>
             </div>
             <div class="rich-text-editor-tools-row">
@@ -52,9 +56,6 @@ export function init(mathEditor, hasRichTextFocus, l, baseUrl) {
                 </div>
             </div>
             <div class="rich-text-editor-tools-button-wrapper">
-                <div class="rich-text-editor-toolbar-wrapper">
-                    <button class="rich-text-editor-help-button" data-js="richTextEditorHelp" style="z-index: 100"></button>
-                </div>
                 <div class="rich-text-editor-toolbar-wrapper">
                     <button class="rich-text-editor-new-equation rich-text-editor-button rich-text-editor-button-action" data-js="newEquation" data-command="Ctrl-E" data-i18n="rich_text_editor.insert_equation">Σ ${
                         l.insertEquation
