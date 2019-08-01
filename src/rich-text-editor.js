@@ -32,8 +32,10 @@ export const makeRichText = (answer, options, onValueChanged = () => {}) => {
 
     if (firstCall) {
         math = mathEditor.init($outerPlaceholder, focus, baseUrl, options.updateMathImg)
-        $toolbar = toolbars.init(math, () => focus.richText, l, baseUrl)
-        $('body').append($outerPlaceholder, $toolbar)
+        const containers = toolbars.init(math, () => focus.richText, l, baseUrl)
+        $toolbar = containers.toolbar
+        const $helpOverlay = containers.helpOverlay
+        $('body').append($outerPlaceholder, $toolbar, $helpOverlay)
         firstCall = false
     }
     onValueChanged(u.sanitizeContent(answer))
@@ -109,9 +111,13 @@ function onRichTextEditorFocusChanged(e) {
 
     clearTimeout(richTextEditorBlurTimeout)
     richTextEditorBlurTimeout = setTimeout(() => {
-        if (richTextAndMathBlur()) onRichTextEditorBlur($(e.target))
+        if (!helpOverlayOpen() && richTextAndMathBlur()) onRichTextEditorBlur($(e.target))
         else onRichTextEditorFocus($(e.target))
     }, 0)
+}
+
+function helpOverlayOpen() {
+    return $('body').hasClass('rich-text-editor-overlay-open')
 }
 
 function richTextAndMathBlur() {

@@ -3,11 +3,46 @@ import specialCharacterGroups from './specialCharacters'
 import latexCommandsWithSvg from './latexCommandsWithSvg'
 
 export function init(mathEditor, hasRichTextFocus, l, baseUrl) {
+    let helpOverlayActiveElement
+
+    const $helpOverlay = $(`<div class="rich-text-editor-overlay rich-text-editor-hidden">
+    <div class="rich-text-editor-overlay-modal" aria-modal="true" tabindex="0" data-js="overlayModal" >
+        <div class="rich-text-editor-modal-columns">
+            <div class="rich-text-editor-modal-column rich-text-editor-modal-column-2" data-i18n="[html]rich_text_editor.help_overlay.screenshot">
+                ${l.help_overlay.screenshot}
+            </div>
+            <div class="rich-text-editor-modal-column rich-text-editor-modal-column-1" data-i18n="[html]rich_text_editor.help_overlay.equation">
+                ${l.help_overlay.equation}
+            </div>
+        </div>
+        <button data-js="closeOverlayButton" class="rich-text-editor-close-overlay-button"></button>
+    </div>
+</div>`)
+        .on('mousedown', '[data-js="closeOverlayButton"]', e => {
+            e.preventDefault()
+            $('body').removeClass('rich-text-editor-overlay-open')
+            $helpOverlay.addClass('rich-text-editor-hidden')
+            helpOverlayActiveElement.focus()
+        })
+        .on('mousedown', e => {
+            if (e.target.classList.contains('rich-text-editor-overlay')) {
+                e.preventDefault()
+                e.stopPropagation()
+                $('body').removeClass('rich-text-editor-overlay-open')
+                $helpOverlay.addClass('rich-text-editor-hidden')
+                helpOverlayActiveElement.focus()
+            }
+        })
+
     const $toolbar = $(`
         <div class="rich-text-editor-tools" data-js="tools" style="display: none">
+
             <div class="rich-text-editor-tools-button-wrapper">
                 <div class="rich-text-editor-toolbar-wrapper">
                     <button class="rich-text-editor-characters-expand-collapse" data-js="expandCollapseCharacters" style="z-index: 100"></button>
+                </div>
+                <div class="rich-text-editor-toolbar-wrapper">
+                   <button class="rich-text-editor-help-button" data-js="richTextEditorHelp" style="z-index: 100"></button>
                 </div>
             </div>
             <div class="rich-text-editor-tools-row">
@@ -36,6 +71,24 @@ export function init(mathEditor, hasRichTextFocus, l, baseUrl) {
             e.preventDefault()
             $toolbar.toggleClass('rich-text-editor-characters-expanded')
         })
+        .on('mousedown', '[data-js="richTextEditorHelp"]', e => {
+            e.preventDefault()
+            helpOverlayActiveElement = document.activeElement
+            $('body').addClass('rich-text-editor-overlay-open')
+            $helpOverlay.removeClass('rich-text-editor-hidden')
+            $helpOverlay.find('[data-js="overlayModal"]').focus()
+
+            $(window).on('keydown.help', e => {
+                const isEsc = e.keyCode === 27
+                if (isEsc) {
+                    e.stopPropagation()
+                    e.preventDefault()
+                    $('body').removeClass('rich-text-editor-overlay-open')
+                    $helpOverlay.addClass('rich-text-editor-hidden')
+                    $(window).off('keydown.help')
+                }
+            })
+        })
 
     const $newEquation = $toolbar.find('[data-js="newEquation"]')
     const $mathToolbar = $toolbar.find('[data-js="mathToolbar"]')
@@ -49,7 +102,7 @@ export function init(mathEditor, hasRichTextFocus, l, baseUrl) {
         $toolbar.localize()
     }
 
-    return $toolbar
+    return { toolbar: $toolbar, helpOverlay: $helpOverlay }
 }
 
 const specialCharacterToButton = char =>

@@ -75,6 +75,7 @@ export function init(
         .on('paste', e => e.stopPropagation())
 
     function onClose(e) {
+        if ($('.rich-text-editor-overlay').is(':visible')) return
         if (u.isCtrlKey(e, keyCodes.ENTER) || u.isKey(e, keyCodes.ESC)) closeMathEditor(true)
     }
 
