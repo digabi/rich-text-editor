@@ -1,25 +1,40 @@
 {
-  "name": "baconjs",
-  "description": "A small functional reactive programming lib for JavaScript.",
-  "version": "1.0.1",
-  "keywords": [
-    "bacon.js",
-    "bacon",
-    "frp",
-    "functional",
-    "reactive",
-    "programming",
-    "stream",
-    "streams",
-    "EventStream",
-    "Rx",
-    "RxJs",
-    "Observable"
+  "_args": [
+    [
+      "baconjs@1.0.1",
+      "/home/auramo/src/ytl/rich-text-editor"
+    ]
   ],
+  "_development": true,
+  "_from": "baconjs@1.0.1",
+  "_id": "baconjs@1.0.1",
+  "_inBundle": false,
+  "_integrity": "sha512-f4YHGKrxagnsgzrd5E33VIcfTJaFBgBwvwINP0vi0mJW9Rddjda6sG/ICBeT5a5foZmqwWDhRbWpbSH+TLVKxw==",
+  "_location": "/baconjs",
+  "_phantomChildren": {},
+  "_requested": {
+    "type": "version",
+    "registry": true,
+    "raw": "baconjs@1.0.1",
+    "name": "baconjs",
+    "escapedName": "baconjs",
+    "rawSpec": "1.0.1",
+    "saveSpec": null,
+    "fetchSpec": "1.0.1"
+  },
+  "_requiredBy": [
+    "#DEV:/"
+  ],
+  "_resolved": "https://registry.npmjs.org/baconjs/-/baconjs-1.0.1.tgz",
+  "_spec": "1.0.1",
+  "_where": "/home/auramo/src/ytl/rich-text-editor",
   "author": {
     "name": "Juha Paananen",
     "email": "juha.paananen@gmail.com",
     "url": "https://twitter.com/raimohanska"
+  },
+  "bugs": {
+    "url": "https://github.com/baconjs/bacon.js/issues"
   },
   "contributors": [
     {
@@ -28,11 +43,10 @@
       "url": "https://twitter.com/xflowwolf"
     }
   ],
-  "license": "MIT",
   "dependencies": {},
+  "description": "A small functional reactive programming lib for JavaScript.",
   "devDependencies": {
     "babel": "^5.8.23",
-    "rxjs": "^5.2.0",
     "benchmark": "1.0.0",
     "bluebird": "^2",
     "bower-json": "^0.6.0",
@@ -60,20 +74,38 @@
     "jsstana": "^0.1.5",
     "lodash": "^4.0.0",
     "mocha": "^2.1.0",
+    "rxjs": "^5.2.0",
     "shelljs": "^0.5.3",
     "sinon": "^1.12.2",
     "uglify-js": "^2.4.16",
     "when": "^3.6.4",
     "zen-observable": "^0.4.0"
   },
+  "homepage": "https://github.com/baconjs/bacon.js",
+  "keywords": [
+    "bacon.js",
+    "bacon",
+    "frp",
+    "functional",
+    "reactive",
+    "programming",
+    "stream",
+    "streams",
+    "EventStream",
+    "Rx",
+    "RxJs",
+    "Observable"
+  ],
+  "license": "MIT",
+  "main": "dist/Bacon.js",
+  "name": "baconjs",
   "repository": {
     "type": "git",
-    "url": "https://github.com/baconjs/bacon.js.git"
+    "url": "git+https://github.com/baconjs/bacon.js.git"
   },
-  "homepage": "https://github.com/baconjs/bacon.js",
   "scripts": {
-    "test": "./runtests",
-    "pre-publish": "grunt"
+    "pre-publish": "grunt",
+    "test": "./runtests"
   },
-  "main": "dist/Bacon.js"
+  "version": "1.0.1"
 }
