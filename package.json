@@ -40,7 +40,6 @@
     "eslint-config-prettier": "^3.1.0",
     "eslint-plugin-prettier": "^3.0.0",
     "express": "^4.16.4",
-    "jquery": "^3.3.1",
     "mathjax": "^2.7.5",
     "mathquill": "digabi/mathquill#0.10.1+digabi.26",
     "mocha": "^5.0.4",
@@ -60,6 +59,7 @@
     "webpack-dev-middleware": "^3.4.0"
   },
   "dependencies": {
+    "jquery": "^3.3.1",
     "mathjax-node": "^2.1.1"
   },
   "peerDependencies": {

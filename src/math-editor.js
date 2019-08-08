@@ -1,7 +1,7 @@
 import $ from 'jquery'
 import * as u from './util'
+import * as MathQuill from 'mathquill'
 
-const MathQuill = window.MathQuill
 if (!MathQuill) throw new Error('MathQuill is required but has not been loaded')
 
 const keyCodes = {

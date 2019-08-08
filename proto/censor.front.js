@@ -1,5 +1,6 @@
 /* global makeRichText */
 import $ from 'jquery'
+import { makeRichText } from '../src/rich-text-editor'
 import * as updateMath from './updateMath'
 updateMath.init()
 const answer = document.getElementById('answer1')

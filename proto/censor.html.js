@@ -8,9 +8,7 @@ export default function({ mathEditor, locale, updated, startedAt, sendFeedback, 
     <link rel="stylesheet" type="text/css" href="../mathquill/build/mathquill.css">
     <link rel="stylesheet" type="text/css" href="../rich-text-editor.css"/>
     <link rel="stylesheet" type="text/css" href="../student.css"/>
-    <script src="../jquery/dist/jquery.js"></script>
     <script src="../baconjs/dist/Bacon.js"></script>
-    <script src="../mathquill/build/mathquill.js"></script>
     <script type="text/javascript" src="../mathjax/MathJax.js"></script>
     <link rel="icon" href="../rich-text-editor-favicon.ico" type="image/x-icon"/>
     <link rel="shortcut icon" href="../rich-text-editor-favicon.ico" type="image/x-icon"/>
@@ -45,7 +43,6 @@ export default function({ mathEditor, locale, updated, startedAt, sendFeedback, 
         </div>
     </section>
 </footer>
-<script src="../rich-text-editor-bundle.js"></script>
 <script src="../censor.js"></script>
 <script>
     (function (i, s, o, g, r, a, m) {
