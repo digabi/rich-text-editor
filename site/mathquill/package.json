@@ -3,6 +3,7 @@
   "description": "Easily type math in your webapp",
   "version": "0.10.1",
   "license": "MPL-2.0",
+  "main": "build/mathquill.js",
   "repository": {
     "type": "git",
     "url": "https://github.com/mathquill/mathquill.git"
@@ -12,6 +13,9 @@
     "build/fonts/Symbola.*",
     "quickstart.html"
   ],
+  "dependencies": {
+    "jquery": "^3.3.1"
+  },
   "devDependencies": {
     "pjs": ">=3.1.0 <5.0.0",
     "mocha": ">=2.4.1",

@@ -1,6 +1,6 @@
 {
   "name": "rich-text-editor",
-  "version": "4.4.0",
+  "version": "4.4.1-0",
   "description": "Matematiikkaeditori-spike",
   "author": "",
   "homepage": "https://github.com/digabi/rich-text-editor",
@@ -40,9 +40,7 @@
     "eslint-config-prettier": "^3.1.0",
     "eslint-plugin-prettier": "^3.0.0",
     "express": "^4.16.4",
-    "jquery": "^3.3.1",
     "mathjax": "^2.7.5",
-    "mathquill": "digabi/mathquill#0.10.1+digabi.26",
     "mocha": "^5.0.4",
     "mocha-chrome": "^1.0.3",
     "morgan": "^1.9.1",
@@ -60,7 +58,9 @@
     "webpack-dev-middleware": "^3.4.0"
   },
   "dependencies": {
-    "mathjax-node": "^2.1.1"
+    "jquery": "^3.3.1",
+    "mathjax-node": "^2.1.1",
+    "mathquill": "digabi/mathquill#0.10.1+digabi.27"
   },
   "peerDependencies": {
     "baconjs": "1.x",

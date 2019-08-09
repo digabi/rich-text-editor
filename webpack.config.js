@@ -14,7 +14,6 @@ module.exports = function(env, argv) {
             extensions: ['.js', '.jsx', '.ts', '.tsx', '.json']
         },
         externals: {
-            jquery: 'jQuery',
             baconjs: 'Bacon'
         },
         module: {
