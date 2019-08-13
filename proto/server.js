@@ -2,7 +2,6 @@
 import express from 'express'
 import bodyParser from 'body-parser'
 import studentHtml from './student.html'
-import censorHtml from './censor.html'
 import * as mathSvg from '../server/mathSvg'
 import FI from '../src/FI'
 import SV from '../src/SV'
@@ -15,7 +14,6 @@ import webpackConfig from '../webpack.config'
 
 const startedAt = new Date()
 const studentHtmlFI = studentHtml(Object.assign({ startedAt: formatDate(startedAt), locale: 'FI' }, FI.editor))
-const censorHtmlFI = censorHtml(Object.assign({ startedAt: formatDate(startedAt), locale: 'FI' }, FI.editor))
 const studentHtmlSV = studentHtml(Object.assign({ startedAt: formatDate(startedAt), locale: 'SV' }, SV.editor))
 const app = express()
 
@@ -87,7 +85,6 @@ prodModules.forEach(name => {
 
 const doctype = '<!DOCTYPE html>'
 definePath('/', doctype + studentHtmlFI)
-definePath('/censor', doctype + censorHtmlFI)
 definePath('/sv', doctype + studentHtmlSV)
 app.use(bodyParser.urlencoded({ extended: false, limit: '5mb' }))
 app.use(bodyParser.json({ limit: '5mb', strict: false }))
