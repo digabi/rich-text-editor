@@ -349,6 +349,7 @@
 
 .rich-text-editor-modal-column-1 {
   flex: 1;
+  white-space: nowrap;
 }
 
 .rich-text-editor-modal-column-2 {
@@ -362,12 +363,17 @@
 }
 
 .rich-text-editor-help-shortcuts {
+  width: 100%;
   border-spacing: 0 4px;
 }
 
 .rich-text-editor-help-shortcuts th {
   text-align: left;
   font-weight: normal;
+}
+
+.rich-text-editor-help-shortcuts td {
+  text-align: right;
 }
 
 .rich-text-editor-help-key {
