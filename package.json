@@ -60,7 +60,7 @@
   "dependencies": {
     "jquery": "^3.3.1",
     "mathjax-node": "^2.1.1",
-    "mathquill": "digabi/mathquill#0.10.1+digabi.27"
+    "mathquill": "digabi/mathquill#v0.10.1"
   },
   "peerDependencies": {
     "baconjs": "1.x",
