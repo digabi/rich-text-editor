@@ -63,7 +63,7 @@ if (generateSite) {
 
 const devModules = ['chai', 'chai-jquery', 'mocha', 'web-console-reporter']
 
-const prodModules = ['jquery', 'baconjs', 'mathjax', 'mathquill']
+const prodModules = ['jquery', 'baconjs', 'mathjax', '@digabi/mathquill']
 
 function sourcePath(name) {
     return __dirname + '/../node_modules/' + name

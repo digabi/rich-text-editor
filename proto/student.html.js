@@ -17,7 +17,7 @@ export default function({
 <head>
     <meta charset='utf-8'>
     <title>${mathEditor}</title>
-    <link rel="stylesheet" type="text/css" href="mathquill/build/mathquill.css">
+    <link rel="stylesheet" type="text/css" href="@digabi/mathquill/build/mathquill.css">
     <link rel="stylesheet" type="text/css" href="rich-text-editor.css"/>
     <link rel="stylesheet" type="text/css" href="student.css"/>
     <script src="baconjs/dist/Bacon.js"></script>

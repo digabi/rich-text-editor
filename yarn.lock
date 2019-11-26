@@ -26,6 +26,13 @@
     core-js "^2.5.7"
     regenerator-runtime "^0.11.1"
 
+"@digabi/mathquill@^0.10.3":
+  version "0.10.3"
+  resolved "https://registry.yarnpkg.com/@digabi/mathquill/-/mathquill-0.10.3.tgz#1f54d89e9f7c62c0a594ec39a0a0983fb5bebb54"
+  integrity sha512-q+tMjwAJtof9cpQLD83OeIBIZNKD2qq3QMOtFYfYp68ZhI7w+mqg4EEzA6YQR2W0W89dkeuoWpayXpxiQ4KvKQ==
+  dependencies:
+    jquery "^3.3.1"
+
 "@types/core-js@^0.9.41":
   version "0.9.46"
   resolved "https://registry.yarnpkg.com/@types/core-js/-/core-js-0.9.46.tgz#ea701ee34cbb6dfe6d100f1530319547c93c8d79"
@@ -3403,12 +3410,6 @@ mathjax@^2.7.5:
   resolved "https://registry.yarnpkg.com/mathjax/-/mathjax-2.7.5.tgz#c9c5947f86f9be31651f5f3667d3c9a8bb01efe4"
   integrity sha512-OzsJNitEHAJB3y4IIlPCAvS0yoXwYjlo2Y4kmm9KQzyIBZt2d8yKRalby3uTRNN4fZQiGL2iMXjpdP1u2Rq2DQ==
 
-mathquill@digabi/mathquill#v0.10.1:
-  version "0.10.1"
-  resolved "https://codeload.github.com/digabi/mathquill/tar.gz/442079571c8574495eb9a636bc7af3b20a8c034f"
-  dependencies:
-    pjs "3.x"
-
 md5.js@^1.3.4:
   version "1.3.4"
   resolved "https://registry.yarnpkg.com/md5.js/-/md5.js-1.3.4.tgz#e9bdbde94a20a5ac18b04340fc5764d5b09d901d"
@@ -4159,11 +4160,6 @@ pify@^3.0.0:
   version "3.0.0"
   resolved "https://registry.yarnpkg.com/pify/-/pify-3.0.0.tgz#e5a4acd2c101fdf3d9a4d07f0dbc4db49dd28176"
   integrity sha1-5aSs0sEB/fPZpNB/DbxNtJ3SgXY=
-
-pjs@3.x:
-  version "3.1.0"
-  resolved "https://registry.yarnpkg.com/pjs/-/pjs-3.1.0.tgz#c65f505e34e386ef0e3b5ea8d42049c4173b599a"
-  integrity sha1-xl9QXjTjhu8OO16o1CBJxBc7WZo=
 
 pkg-dir@^2.0.0:
   version "2.0.0"

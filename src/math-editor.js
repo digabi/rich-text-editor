@@ -1,6 +1,6 @@
 import $ from 'jquery'
 import * as u from './util'
-import * as MathQuill from 'mathquill'
+import * as MathQuill from '@digabi/mathquill'
 
 if (!MathQuill) throw new Error('MathQuill is required but has not been loaded')
 
