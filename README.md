@@ -1,7 +1,9 @@
 [![Build Status](https://travis-ci.org/digabi/rich-text-editor.svg?branch=master)](https://travis-ci.org/digabi/rich-text-editor)
 
 [![Abitti.dev](https://abitti.dev/images/abittidev_logo.svg)](https://abitti.dev/)
+
 [Abitti.dev](https://abitti.dev)
+
 [Use of Abitti Trademark policy](https://abitti.dev/abitti-trademark.html)
 
 Rich text editor with math support for Finnish Matriculation Examination Board.
