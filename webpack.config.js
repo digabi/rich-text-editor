@@ -41,7 +41,7 @@ module.exports = function(env, argv) {
     return [
         bundle('rich-text-editor-bundle.js', [
             '@babel/polyfill',
-            path.resolve(__dirname, 'proto/rich-text-editor-bundle.js')
+            path.resolve(__dirname, 'src/rich-text-editor-bundle.js')
         ]),
         bundle('tests.js', ['@babel/polyfill', path.resolve(__dirname, 'test/tests.front.js')]),
         bundle('student.js', path.resolve(__dirname, 'proto/student.front.js'))
