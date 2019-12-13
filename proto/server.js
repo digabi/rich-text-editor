@@ -1,10 +1,7 @@
 /* eslint-disable no-console */
 import express from 'express'
 import bodyParser from 'body-parser'
-import studentHtml from './student.html'
 import * as mathSvg from '../server/mathSvg'
-import FI from '../src/FI'
-import SV from '../src/SV'
 import * as fs from 'fs'
 import morgan from 'morgan'
 import { ncp } from 'ncp'
@@ -12,9 +9,6 @@ import webpack from 'webpack'
 import webpackMiddleware from 'webpack-dev-middleware'
 import webpackConfig from '../webpack.config'
 
-const startedAt = new Date()
-const studentHtmlFI = studentHtml(Object.assign({ startedAt: formatDate(startedAt), locale: 'FI' }, FI.editor))
-const studentHtmlSV = studentHtml(Object.assign({ startedAt: formatDate(startedAt), locale: 'SV' }, SV.editor))
 const app = express()
 
 app.use(morgan('short'))
@@ -43,15 +37,6 @@ function createDirsIfNeeded(root, path) {
         root = root + '/' + folder
         if (!fs.existsSync(root)) fs.mkdirSync(root)
     })
-}
-
-function definePath(path, content) {
-    if (generateSite) {
-        createDirsIfNeeded(siteRoot, path)
-        fs.writeFileSync(siteRoot + path + '/index.html', content, 'utf8')
-    } else {
-        app.get(path, (req, res) => res.send(content))
-    }
 }
 
 if (generateSite) {
@@ -83,9 +68,6 @@ prodModules.forEach(name => {
     }
 })
 
-const doctype = '<!DOCTYPE html>'
-definePath('/', doctype + studentHtmlFI)
-definePath('/sv', doctype + studentHtmlSV)
 app.use(bodyParser.urlencoded({ extended: false, limit: '5mb' }))
 app.use(bodyParser.json({ limit: '5mb', strict: false }))
 app.get('/math.svg', mathSvg.mathSvgResponse)
