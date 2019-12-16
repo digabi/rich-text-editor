@@ -9,9 +9,6 @@ package-lock.json
 ## Sass
 .sass-cache
 
-## Bower
-app/assets/components
-
 ## OS X
 .DS_Store
 .AppleDouble
@@ -29,7 +26,6 @@ $RECYCLE.BIN/
 
 .idea
 target
-bower_components
 dist/
 *~
 *.swp
