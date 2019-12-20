@@ -87,10 +87,10 @@ export default [
         characters: [
             { character: '→', latexCommand: '\\rightarrow', popular: true },
             { character: '⇒', latexCommand: '\\Rightarrow', popular: true },
+            { character: '⇔', latexCommand: '\\Leftrightarrow', popular: true },
             { character: '∈', latexCommand: '\\in', popular: true },
             { character: 'ℤ', latexCommand: '\\mathbb{Z}', popular: true },
             { character: 'ℝ', latexCommand: '\\mathbb{R}', popular: true },
-            { character: '⇔', latexCommand: '\\Leftrightarrow' },
             { character: '∃', latexCommand: '\\exists' },
             { character: '∀', latexCommand: '\\forall' },
             { character: 'ℕ', latexCommand: '\\mathbb{N}' },
@@ -104,7 +104,8 @@ export default [
             { character: '∅', latexCommand: '\\empty' },
             { character: '∧', latexCommand: '\\and' },
             { character: '∨', latexCommand: '\\or' },
-            { character: '¬' }
+            { character: '¬' },
+            { character: '∇', latexCommand: '\\nabla' }
         ]
     }
 ]
