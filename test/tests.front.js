@@ -351,13 +351,13 @@ describe('rich text editor', () => {
 
         it('renders unicode characters correctly', () => {
             expect($('.unicodeTests').text()).to.equal(
-                '°·±∞²³½⅓παβΓγΔδεζηθϑικΛλµνΞξ∏ρ∑στΥυΦФχΨψΩω∂φ≠≈≤≥<>∼≡≢∘…∝∢|‖⇌⇅∠↑↗↘↓↔⊥→⇒∈ℤℝ⇔∃∀ℕℚ∩∪∖⊂⊄∉∅∧∨¬∇'
+                '°·±∞²³½⅓παβΓγΔδεζηθϑικΛλµνΞξ∏ρ∑στΥυΦФχΨψΩω∂φ≠≈≤≥<>∼≡≢∘…∝∢|‖⇌⇅∠↑↗↘↓↔⊥→⇒⇔∈ℤℝ∃∀ℕℚ∩∪∖⊂⊄∉∅∧∨¬∇'
             )
         })
 
         it('renders mathquill correctly', () => {
             expect($('.mathQuillTests').text()).to.equal(
-                '°·±∞2312​13​παβΓγΔδεζηθϑικΛλμνΞξΠρΣστϒυΦϕχΨψΩω∂φ≠≈≤≥<>~≡≢∘…∝∢∣∥⇅⇌∠↑↗↘↓↔⊥→⇒∈ZℤRℝ⇔∃∀NℕQℚ∩∪∖⊂⊄∉∅∧∨¬∇' +
+                '°·±∞2312​13​παβΓγΔδεζηθϑικΛλμνΞξΠρΣστϒυΦϕχΨψΩω∂φ≠≈≤≥<>~≡≢∘…∝∢∣∥⇅⇌∠↑↗↘↓↔⊥→⇒⇔∈ZℤRℝ∃∀NℕQℚ∩∪∖⊂⊄∉∅∧∨¬∇' +
                     '√XxXXX​∫XX​limX​XXsincostan|X|[X]]X]{XXXXXXXX​(X(XX)X√XxX​X∑X/XX​limx→∞​XXijk(X)]X[[X[XX​XXXXXX)XX​TåöäÅÖÄ'
             )
         })
