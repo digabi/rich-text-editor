@@ -412,3 +412,8 @@
     top: -60px;
   }
 }
+@media print {
+  .rich-text-editor-focus .rich-text-editor-tools {
+    display: none;
+  }
+}
