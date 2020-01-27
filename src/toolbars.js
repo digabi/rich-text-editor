@@ -35,7 +35,7 @@ export function init(mathEditor, hasRichTextFocus, l, baseUrl) {
         })
 
     const $toolbar = $(`
-        <div class="rich-text-editor-tools" data-js="tools" style="display: none">
+        <div class="rich-text-editor-tools" data-js="tools">
 
             <div class="rich-text-editor-tools-button-wrapper">
                 <div class="rich-text-editor-toolbar-wrapper">
