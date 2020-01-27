@@ -290,16 +290,13 @@ describe('rich text editor', () => {
             $el.answer1.focus()
         })
         before(() => $('[data-js="newEquation"]').mousedown())
-        before('type', () =>
-            $el.latexField
-                .focus()
-                .val('\\\\')
-                .trigger('input')
-        )
+        before('type', () => $el.latexField.val('\\\\'))
         before(u.delayFor(600))
+        before(() => {
+            $el.equationFieldTextArea.trigger({ type: 'keydown', keyCode: 27 })
+        })
         it('trims equations containing only spaces', () => {
             expect(savedValues[0]).to.eql([
-                { answerHTML: '', answerText: '', imageCount: 0 },
                 { answerHTML: '', answerText: '', imageCount: 0 },
                 { answerHTML: '', answerText: '', imageCount: 0 }
             ])
