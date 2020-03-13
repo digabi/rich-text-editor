@@ -34,10 +34,6 @@ Demo: http://digabi.github.io/rich-text-editor/
 
 Source: https://github.com/digabi/rich-text-editor/blob/master/index.html
 
-## Deploy to https://math-demo.abitti.fi/
-
-Update `rich-text-editor` dependency in [https://github.com/digabi/math-demo/](https://github.com/digabi/math-demo/), build and deploy it according to its documentation.
-
 # License
 
 https://opensource.org/licenses/MIT
