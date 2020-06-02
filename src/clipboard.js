@@ -1,10 +1,9 @@
 import $ from 'jquery'
 import loadingImg from './loadingImg'
 import * as u from './util'
-import * as Bacon from 'baconjs'
 import { invalidImageSelector } from './util'
 
-const SCREENSHOT_LIMIT_ERROR = () => new Bacon.Error('Screenshot limit reached!')
+const SCREENSHOT_LIMIT_ERROR = () => ({ error: 'Screenshot limit reached!' })
 const fileTypes = ['image/png', 'image/jpeg']
 
 export function onPaste(e, saver, onValueChanged, limit) {
@@ -50,22 +49,23 @@ function onLegacyPasteImage($editor, saver, limit, onValueChanged) {
     persistInlineImages($editor, saver, limit, onValueChanged)
 }
 
-function checkForImageLimit($editor, imageData, limit) {
-    return Bacon.once(u.existingScreenshotCount($editor) > limit ? new Bacon.Error() : imageData)
-}
-
 export function persistInlineImages($editor, screenshotSaver, screenshotCountLimit, onValueChanged) {
     setTimeout(
         () =>
-            Bacon.combineAsArray(
-                markAndGetInlineImagesAndRemoveForbiddenOnes($editor).map(data =>
-                    checkForImageLimit($editor, data, screenshotCountLimit)
-                        .doError(() => onValueChanged(SCREENSHOT_LIMIT_ERROR()))
-                        .flatMapLatest(() => Bacon.fromPromise(screenshotSaver(data)))
-                        .doAction(screenShotUrl => data.$el.attr('src', screenShotUrl))
-                        .doError(() => data.$el.remove())
-                )
-            ).onValue(() => $editor.trigger('input')),
+            Promise.all(
+                markAndGetInlineImagesAndRemoveForbiddenOnes($editor).map(data => {
+                    if (u.existingScreenshotCount($editor) > screenshotCountLimit) {
+                        onValueChanged(SCREENSHOT_LIMIT_ERROR())
+                    }
+
+                    return screenshotSaver(data)
+                        .then(screenShotUrl => data.$el.attr('src', screenShotUrl))
+                        .catch(err => {
+                            data.$el.remove()
+                            throw err
+                        })
+                })
+            ).then(() => $editor.trigger('input')),
         0
     )
 }

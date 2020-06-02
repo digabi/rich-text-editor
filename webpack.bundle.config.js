@@ -12,7 +12,6 @@ module.exports = () => [
             extensions: ['.js', '.jsx', '.ts', '.tsx', '.json']
         },
         externals: {
-            baconjs: 'Bacon',
             jquery: '$'
         },
         module: {
