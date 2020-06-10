@@ -11,8 +11,7 @@ let savedValues = [[], []]
 
 const richTextOptions = () => ({
     screenshot: {
-        saver: () => Promise.resolve('/screenshot/screenshot.png'),
-        limit: 10
+        saver: () => Promise.resolve('/screenshot/screenshot.png')
     }
 })
 
