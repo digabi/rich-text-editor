@@ -27,7 +27,6 @@ export const makeRichText = (answer, options, onValueChanged = () => {}) => {
     const l = locales[options.locale || 'FI'].editor
 
     const saver = options.screenshot.saver
-    const limit = options.screenshot.limit
     const baseUrl = options.baseUrl || ''
 
     if (firstCall) {
@@ -76,14 +75,14 @@ export const makeRichText = (answer, options, onValueChanged = () => {}) => {
             pasteInProgress = true
             setTimeout(() => {
                 $(e.target).html(u.sanitize(e.target.innerHTML))
-                clipboard.persistInlineImages($(e.currentTarget), saver, limit, onValueChanged)
+                clipboard.persistInlineImages($(e.currentTarget), saver)
                 pasteInProgress = false
             }, 100)
         })
         .on('paste', e => {
             pasteInProgress = true
             setTimeout(() => (pasteInProgress = false), 0)
-            clipboard.onPaste(e, saver, onValueChanged, limit)
+            clipboard.onPaste(e, saver)
         })
     setTimeout(() => document.execCommand('enableObjectResizing', false, false), 0)
 }
