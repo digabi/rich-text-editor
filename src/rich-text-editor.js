@@ -94,12 +94,19 @@ function toggleRichTextToolbar(isVisible, $editor) {
 
 function onRichTextEditorFocus($element) {
     $currentEditor = $element
+    toggleRichTextToolbarAnimation()
     toggleRichTextToolbar(true, $currentEditor)
 }
 
 function onRichTextEditorBlur($element) {
     toggleRichTextToolbar(false, $element)
+    toggleRichTextToolbarAnimation()
     focus.richText = false
+}
+
+function toggleRichTextToolbarAnimation() {
+    const animatingClass = 'rich-text-editor-tools--animating'
+    $toolbar.addClass(animatingClass).one('transitionend transitioncancel', () => $toolbar.removeClass(animatingClass))
 }
 
 let richTextEditorBlurTimeout
