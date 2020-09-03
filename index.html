@@ -87,6 +87,10 @@
   MathJax.Hub.queue.Push(() => {
     math = MathJax.Hub.getAllJax('MathOutput')[0]
   })
+
+  const encodeMultibyteUnicodeCharactersWithEntities = (str) =>
+    str.replace(/[^\x00-\xFF]/g, c => `&#${c.charCodeAt(0).toString(10)};`)
+
   const updateMath = function (latex, cb) {
     MathJax.Hub.queue.Push(['Text', math, '\\displaystyle{' + latex + '}'])
     MathJax.Hub.Queue(() => {
@@ -103,7 +107,7 @@
         svgHtml = svgHtml.replace(' xlink=', ' xmlns:xlink=')
         // Safari xlink ns issue fix
         svgHtml = svgHtml.replace(/ ns\d+:href/gi, ' xlink:href')
-        cb('data:image/svg+xml;base64,' + window.btoa(svgHtml))
+        cb('data:image/svg+xml;base64,' + window.btoa(encodeMultibyteUnicodeCharactersWithEntities(svgHtml)))
       } else {
         cb('data:image/svg+xml;base64,' + window.btoa(`<?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <svg width="17px" height="15px" viewBox="0 0 17 15" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
