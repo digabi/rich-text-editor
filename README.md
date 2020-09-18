@@ -23,9 +23,10 @@ Rollup is probably needed.
 ## Getting started
 
 1. Install [Node.js](https://nodejs.org/en/)
-2. Run `npm install`.
-3. Run `npm run dev`.
-4. Go to [http://localhost:5000](http://localhost:5000)
+2. Install [yarn](https://yarnpkg.com/)
+3. Run `yarn install`.
+4. Run `yarn dev`.
+5. Go to [http://localhost:5000](http://localhost:5000)
 
 ## Example of direct usage
 
