@@ -11,16 +11,16 @@ let savedValues = [[], []]
 
 const richTextOptions = () => ({
     screenshot: {
-        saver: () => Promise.resolve('/screenshot/screenshot.png')
-    }
+        saver: () => Promise.resolve('/screenshot/screenshot.png'),
+    },
 })
 
 const answer = $answer.toArray()
 
-makeRichText(answer[0], richTextOptions(answer[0].id), data => {
+makeRichText(answer[0], richTextOptions(answer[0].id), (data) => {
     savedValues[0].push(data)
 })
-makeRichText(answer[1], richTextOptions(answer[1].id), data => {
+makeRichText(answer[1], richTextOptions(answer[1].id), (data) => {
     savedValues[1].push(data)
 })
 
@@ -28,7 +28,7 @@ window.locale = 'FI'
 window.IS_TEST = true
 const reporter = window.URL && new URL(document.location.href).searchParams.get('test')
 const mochaOpts = {
-    ui: 'bdd'
+    ui: 'bdd',
 }
 if (reporter === 'console') {
     mochaOpts.reporter = WebConsole
@@ -54,8 +54,14 @@ const clear = () => {
 const $firstAnswerMath = () => $('.answer1 img:first')
 
 describe('rich text editor', () => {
-    before('wait for tools to hide', u.waitUntil(() => u.isOutsideViewPort($('[data-js="tools"]'))))
-    before('wait answer field to initialize', u.waitUntil(() => $('.answer1').attr('contenteditable')))
+    before(
+        'wait for tools to hide',
+        u.waitUntil(() => u.isOutsideViewPort($('[data-js="tools"]')))
+    )
+    before(
+        'wait answer field to initialize',
+        u.waitUntil(() => $('.answer1').attr('contenteditable'))
+    )
     before(() => {
         $el.answer1 = $('.answer1')
         $el.answer2 = $('.answer2')
@@ -67,7 +73,10 @@ describe('rich text editor', () => {
         $el.mathEditor = $('[data-js="mathEditor"]')
     })
     before('focus', () => $el.answer1.focus())
-    before('wait for tools visible', u.waitUntil(() => $el.tools.is(':visible')))
+    before(
+        'wait for tools visible',
+        u.waitUntil(() => $el.tools.is(':visible'))
+    )
     after(defaults)
 
     it('shows character list', () => expect($('[data-js="charactersList"]')).to.be.visible)
@@ -77,9 +86,9 @@ describe('rich text editor', () => {
     describe('when pasting images', () => {
         describe('png', () => {
             before(clear)
-            before('paste image', done => {
+            before('paste image', (done) => {
                 $el.answer1.append(base64png)
-                $el.answer1.find('img:last').get(0).onload = e => {
+                $el.answer1.find('img:last').get(0).onload = (e) => {
                     if (~e.target.src.indexOf('http')) done()
                 }
                 $el.answer1.trigger(u.pasteEventMock()).trigger('input')
@@ -92,14 +101,14 @@ describe('rich text editor', () => {
             })
             it('saves markup', () => {
                 expect(savedValues[0]).to.eql([
-                    { answerHTML: '<img src="/screenshot/screenshot.png" alt />', answerText: '', imageCount: 1 }
+                    { answerHTML: '<img src="/screenshot/screenshot.png" alt />', answerText: '', imageCount: 1 },
                 ])
             })
         })
         describe('not png', () => {
             before(clear)
             let currentImgAmout
-            before('#3', done => {
+            before('#3', (done) => {
                 currentImgAmout = $el.answer1.find('img').length
                 $el.answer1.append('<img src="data:image/gif;base64,R0lGODlhAQABAIAAAAUEBAAAACwAAAAAAQABAAACAkQBADs=">')
                 $('.answer1 img:last').get(0).onload = () => {
@@ -117,7 +126,10 @@ describe('rich text editor', () => {
     describe('start math', () => {
         before(clear)
         before(() => $el.answer1.focus())
-        before('wait for tools visible', u.waitUntil(() => $el.tools.is(':visible')))
+        before(
+            'wait for tools visible',
+            u.waitUntil(() => $el.tools.is(':visible'))
+        )
         before(() => $('[data-js="newEquation"]').mousedown())
         before(() => $el.latexField.val('\\ \\'))
         before(u.delayFor(600))
@@ -130,19 +142,14 @@ describe('rich text editor', () => {
             expect($el.answer1).to.have.html('')
             expect(savedValues[0]).to.eql([
                 { answerHTML: '', answerText: '', imageCount: 0 },
-                { answerHTML: '', answerText: '', imageCount: 0 }
+                { answerHTML: '', answerText: '', imageCount: 0 },
             ])
         })
 
         describe('when focus in latex field', () => {
             before(defaults)
             before(() => $firstAnswerMath().trigger({ type: 'click', which: 1 }))
-            before('type', () =>
-                $el.latexField
-                    .focus()
-                    .val('xy')
-                    .trigger('input')
-            )
+            before('type', () => $el.latexField.focus().val('xy').trigger('input'))
             before(u.delay)
             before(() => $('.rich-text-editor-toolbar-characters-group button:eq(2)').mousedown())
             before(u.delay)
@@ -177,8 +184,8 @@ describe('rich text editor', () => {
                     {
                         answerHTML: '<img alt="a+b\\infty" src="/math.svg?latex=a%2Bb%5Cinfty" />',
                         answerText: '',
-                        imageCount: 0
-                    }
+                        imageCount: 0,
+                    },
                 ])
             })
         })
@@ -252,8 +259,8 @@ describe('rich text editor', () => {
                 {
                     answerHTML: 'paste<br />bar<br />link text',
                     answerText: 'paste\nbar\nlink text',
-                    imageCount: 0
-                }
+                    imageCount: 0,
+                },
             ])
         })
     })
@@ -272,13 +279,13 @@ describe('rich text editor', () => {
                 {
                     answerHTML: 'drop<br />bar<br />link text',
                     answerText: 'drop\nbar\nlink text',
-                    imageCount: 0
+                    imageCount: 0,
                 },
                 {
                     answerHTML: 'drop<br />bar<br />link text',
                     answerText: 'drop\nbar\nlink text',
-                    imageCount: 0
-                }
+                    imageCount: 0,
+                },
             ])
         })
     })
@@ -297,7 +304,7 @@ describe('rich text editor', () => {
         it('trims equations containing only spaces', () => {
             expect(savedValues[0]).to.eql([
                 { answerHTML: '', answerText: '', imageCount: 0 },
-                { answerHTML: '', answerText: '', imageCount: 0 }
+                { answerHTML: '', answerText: '', imageCount: 0 },
             ])
         })
     })
@@ -320,25 +327,27 @@ describe('rich text editor', () => {
                 { answerHTML: '', answerText: '', imageCount: 0 },
                 { answerHTML: '', answerText: '', imageCount: 0 },
                 { answerHTML: '', answerText: '', imageCount: 0 },
-                { answerHTML: '', answerText: '', imageCount: 0 }
+                { answerHTML: '', answerText: '', imageCount: 0 },
             ])
         })
     })
 
     describe('when rendering all supported characters and latex commands', () => {
-        before('insert symbols and commands', done => {
+        before('insert symbols and commands', (done) => {
             const $customMq = $('<div class="customMq">')
             $('body').prepend($customMq)
             const mqInstance = window.MathQuill.getInterface(2).MathField($('.mathQuillTests').get(0))
-            const chars = specialCharacters.map(charGroup =>
-                charGroup.characters.map(y => y.latexCommand || y.character)
+            const chars = specialCharacters.map((charGroup) =>
+                charGroup.characters.map((y) => y.latexCommand || y.character)
             )
-            const latexes = latexCommands.map(latexCommand => latexCommand.label || latexCommand.action).filter(x => x)
+            const latexes = latexCommands
+                .map((latexCommand) => latexCommand.label || latexCommand.action)
+                .filter((x) => x)
             const scandicChars = 'åöäÅÖÄ'
             $('.unicodeTests').html(
-                specialCharacters.map(x => x.characters.map(x => x.character).join('')).join('<br>')
+                specialCharacters.map((x) => x.characters.map((x) => x.character).join('')).join('<br>')
             )
-            mqInstance.latex(`${chars.map(x => x.join(' ')).join(' ')} ${latexes.join(' ')} ${scandicChars}`)
+            mqInstance.latex(`${chars.map((x) => x.join(' ')).join(' ')} ${latexes.join(' ')} ${scandicChars}`)
             $('.mathJaxTests').append(`<img src="/math.svg?latex=${encodeURIComponent(mqInstance.latex())}" />`)
             $('.mathJaxTests img').get(0).onload = () => {
                 done()

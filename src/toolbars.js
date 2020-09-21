@@ -18,13 +18,13 @@ export function init(mathEditor, hasRichTextFocus, l, baseUrl) {
         <button data-js="closeOverlayButton" class="rich-text-editor-close-overlay-button"></button>
     </div>
 </div>`)
-        .on('mousedown', '[data-js="closeOverlayButton"]', e => {
+        .on('mousedown', '[data-js="closeOverlayButton"]', (e) => {
             e.preventDefault()
             $('body').removeClass('rich-text-editor-overlay-open')
             $helpOverlay.addClass('rich-text-editor-hidden')
             helpOverlayActiveElement.focus()
         })
-        .on('mousedown', e => {
+        .on('mousedown', (e) => {
             if (e.target.classList.contains('rich-text-editor-overlay')) {
                 e.preventDefault()
                 e.stopPropagation()
@@ -57,28 +57,26 @@ export function init(mathEditor, hasRichTextFocus, l, baseUrl) {
             </div>
             <div class="rich-text-editor-tools-button-wrapper">
                 <div class="rich-text-editor-toolbar-wrapper">
-                    <button class="rich-text-editor-new-equation rich-text-editor-button rich-text-editor-button-action" data-js="newEquation" data-command="Ctrl-E" data-i18n="rich_text_editor.insert_equation">Σ ${
-                        l.insertEquation
-                    }</button>
+                    <button class="rich-text-editor-new-equation rich-text-editor-button rich-text-editor-button-action" data-js="newEquation" data-command="Ctrl-E" data-i18n="rich_text_editor.insert_equation">Σ ${l.insertEquation}</button>
                 </div>
             </div>
         </div>
         `)
-        .on('mousedown', e => {
+        .on('mousedown', (e) => {
             e.preventDefault()
         })
-        .on('mousedown', '[data-js="expandCollapseCharacters"]', e => {
+        .on('mousedown', '[data-js="expandCollapseCharacters"]', (e) => {
             e.preventDefault()
             $toolbar.toggleClass('rich-text-editor-characters-expanded')
         })
-        .on('mousedown', '[data-js="richTextEditorHelp"]', e => {
+        .on('mousedown', '[data-js="richTextEditorHelp"]', (e) => {
             e.preventDefault()
             helpOverlayActiveElement = document.activeElement
             $('body').addClass('rich-text-editor-overlay-open')
             $helpOverlay.removeClass('rich-text-editor-hidden')
             $helpOverlay.find('[data-js="overlayModal"]').focus()
 
-            $(window).on('keydown.help', e => {
+            $(window).on('keydown.help', (e) => {
                 const isEsc = e.keyCode === 27
                 if (isEsc) {
                     e.stopPropagation()
@@ -105,14 +103,14 @@ export function init(mathEditor, hasRichTextFocus, l, baseUrl) {
     return { toolbar: $toolbar, helpOverlay: $helpOverlay }
 }
 
-const specialCharacterToButton = char =>
+const specialCharacterToButton = (char) =>
     `<button class="rich-text-editor-button rich-text-editor-button-grid${
         char.popular ? ' rich-text-editor-characters-popular' : ''
     }" ${char.latexCommand ? `data-command="${char.latexCommand}"` : ''} data-usewrite="${!char.noWrite}">${
         char.character
     }</button>`
 
-const popularInGroup = group => group.characters.filter(character => character.popular).length
+const popularInGroup = (group) => group.characters.filter((character) => character.popular).length
 
 function initSpecialCharacterToolbar($toolbar, mathEditor, hasAnswerFocus) {
     const gridButtonWidthPx = 35
@@ -121,14 +119,14 @@ function initSpecialCharacterToolbar($toolbar, mathEditor, hasAnswerFocus) {
         .find('[data-js="charactersList"]')
         .append(
             specialCharacterGroups.map(
-                group =>
+                (group) =>
                     `<div class="rich-text-editor-toolbar-characters-group"
                   style="width: ${popularInGroup(group) * gridButtonWidthPx}px">
                   ${group.characters.map(specialCharacterToButton).join('')}
              </div>`
             )
         )
-        .on('mousedown', 'button', e => {
+        .on('mousedown', 'button', (e) => {
             e.preventDefault()
 
             const character = e.currentTarget.innerText
@@ -143,7 +141,7 @@ function initMathToolbar($mathToolbar, mathEditor) {
     $mathToolbar
         .append(
             latexCommandsWithSvg
-                .map(o =>
+                .map((o) =>
                     typeof o === 'string'
                         ? o
                         : `<button class="rich-text-editor-button rich-text-editor-button-grid" data-command="${
@@ -154,7 +152,7 @@ function initMathToolbar($mathToolbar, mathEditor) {
                 )
                 .join('')
         )
-        .on('mousedown', 'button', e => {
+        .on('mousedown', 'button', (e) => {
             e.preventDefault()
             const dataset = e.currentTarget.dataset
             mathEditor.insertMath(dataset.command, dataset.latexcommand, dataset.usewrite === 'true')
@@ -163,7 +161,7 @@ function initMathToolbar($mathToolbar, mathEditor) {
 
 function initNewEquation($newEquation, mathEditor, hasAnswerFocus) {
     $newEquation.mousedown(
-        (e => {
+        ((e) => {
             e.preventDefault()
             if (!hasAnswerFocus()) return // TODO: remove when button is only visible when textarea has focus
             mathEditor.insertNewEquation()

@@ -45,8 +45,8 @@ export default [
             { character: 'Ω', latexCommand: '\\Omega' },
             { character: 'ω', latexCommand: '\\omega' },
             { character: '∂', latexCommand: '\\partial' },
-            { character: 'φ', latexCommand: '\\varphi' }
-        ]
+            { character: 'φ', latexCommand: '\\varphi' },
+        ],
     },
     {
         label: 'Algebra',
@@ -62,8 +62,8 @@ export default [
             { character: '≢', latexCommand: '\\not\\equiv' },
             { character: '∘', latexCommand: '\\circ' },
             { character: '…', latexCommand: '\\ldots' },
-            { character: '∝', latexCommand: '\\propto' }
-        ]
+            { character: '∝', latexCommand: '\\propto' },
+        ],
     },
     {
         label: 'Geometria ja vektorioppi',
@@ -79,8 +79,8 @@ export default [
             { character: '↘', latexCommand: '\\searrow' },
             { character: '↓', latexCommand: '\\downarrow' },
             { character: '↔', latexCommand: '\\leftrightarrow' },
-            { character: '⊥', latexCommand: '\\perp' }
-        ]
+            { character: '⊥', latexCommand: '\\perp' },
+        ],
     },
     {
         label: 'Logiikka ja joukko-oppi',
@@ -105,7 +105,7 @@ export default [
             { character: '∧', latexCommand: '\\and' },
             { character: '∨', latexCommand: '\\or' },
             { character: '¬' },
-            { character: '∇', latexCommand: '\\nabla' }
-        ]
-    }
+            { character: '∇', latexCommand: '\\nabla' },
+        ],
+    },
 ]

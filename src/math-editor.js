@@ -6,13 +6,13 @@ if (!MathQuill) throw new Error('MathQuill is required but has not been loaded')
 
 const keyCodes = {
     ENTER: 13,
-    ESC: 27
+    ESC: 27,
 }
 
 let MQ
 let firstTime = true
 
-const trimLatex = function(latex) {
+const trimLatex = function (latex) {
     return latex.replace(/(\\|\s)*/g, '') === '' ? '' : latex
 }
 export function init(
@@ -23,7 +23,7 @@ export function init(
         const trimmed = trimLatex(latex)
         $img.prop({
             src: baseUrl + '/math.svg?latex=' + encodeURIComponent(trimmed),
-            alt: trimmed
+            alt: trimmed,
         })
         $img.closest('[data-js="answer"]').trigger('input')
     }
@@ -52,27 +52,27 @@ export function init(
             enter: () => {
                 closeMathEditor(true)
                 setTimeout(() => insertNewEquation('<br>'), 2)
-            }
-        }
+            },
+        },
     })
     $equationField
         .on('input', '.mq-textarea textarea', onMqEdit)
-        .on('focus blur', '.mq-textarea textarea', e => {
+        .on('focus blur', '.mq-textarea textarea', (e) => {
             focus.equationField = e.type !== 'blur' && e.type !== 'focusout'
             onFocusChanged()
         })
         .on('keydown', onClose)
-        .on('paste', e => e.stopPropagation())
+        .on('paste', (e) => e.stopPropagation())
 
     $latexField
         .on('keypress', transformLatexKeydown)
         .on('input paste', onLatexUpdate)
-        .on('focus blur', e => {
+        .on('focus blur', (e) => {
             focus.latexField = e.type !== 'blur'
             onFocusChanged()
         })
         .on('keydown', onClose)
-        .on('paste', e => e.stopPropagation())
+        .on('paste', (e) => e.stopPropagation())
 
     function onClose(e) {
         if ($('.rich-text-editor-overlay').is(':visible')) return
@@ -83,7 +83,7 @@ export function init(
         insertNewEquation,
         insertMath,
         openMathEditor,
-        closeMathEditor
+        closeMathEditor,
     }
 
     function onMqEdit(e) {

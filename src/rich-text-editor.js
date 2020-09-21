@@ -9,13 +9,13 @@ import SV from './SV'
 const locales = { FI, SV }
 
 const keyCodes = {
-    E: 69
+    E: 69,
 }
 const $outerPlaceholder = $('<div class="rich-text-editor-hidden" style="display: none;" data-js="outerPlaceholder">')
 const focus = {
     richText: false,
     latexField: false,
-    equationField: false
+    equationField: false,
 }
 let $currentEditor
 
@@ -44,34 +44,34 @@ export const makeRichText = (answer, options, onValueChanged = () => {}) => {
         .attr({
             contenteditable: true,
             spellcheck: false,
-            'data-js': 'answer'
+            'data-js': 'answer',
         })
         .addClass('rich-text-editor')
-        .on('click', u.equationImageSelector, e => {
+        .on('click', u.equationImageSelector, (e) => {
             if (e.which === 1) {
                 onRichTextEditorFocus($(e.target).closest('[data-js="answer"]'))
                 math.openMathEditor($(e.target))
             }
         })
-        .on('keydown', e => {
+        .on('keydown', (e) => {
             if (u.isCtrlKey(e, keyCodes.E) && !focus.equationField && !focus.latexField) {
                 e.preventDefault()
                 math.insertNewEquation()
             }
         })
-        .on('mathfocus', e => {
+        .on('mathfocus', (e) => {
             $(e.currentTarget).toggleClass('rich-text-focused', e.hasFocus)
             if (richTextAndMathBlur()) onRichTextEditorBlur($currentEditor)
         })
-        .on('focus blur', e => {
+        .on('focus blur', (e) => {
             if (e.type === 'focus') math.closeMathEditor()
             onRichTextEditorFocusChanged(e)
         })
         // Triggered after both drop and paste
-        .on('input', e => {
+        .on('input', (e) => {
             if (!pasteInProgress) onValueChanged(u.sanitizeContent(e.currentTarget))
         })
-        .on('drop', e => {
+        .on('drop', (e) => {
             pasteInProgress = true
             setTimeout(() => {
                 $(e.target).html(u.sanitize(e.target.innerHTML))
@@ -79,7 +79,7 @@ export const makeRichText = (answer, options, onValueChanged = () => {}) => {
                 pasteInProgress = false
             }, 100)
         })
-        .on('paste', e => {
+        .on('paste', (e) => {
             pasteInProgress = true
             setTimeout(() => (pasteInProgress = false), 0)
             clipboard.onPaste(e, saver)

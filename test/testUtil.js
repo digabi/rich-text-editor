@@ -1,15 +1,15 @@
-export const pasteEventMock = html => ({
+export const pasteEventMock = (html) => ({
     type: 'paste',
     originalEvent: {
         clipboardData: {
-            getData: () => html
-        }
+            getData: () => html,
+        },
     },
     preventDefault: () => {},
-    stopPropagation: () => {}
+    stopPropagation: () => {},
 })
 
-export const waitUntil = condition => done => _waitUntil(condition, done)
+export const waitUntil = (condition) => (done) => _waitUntil(condition, done)
 
 function _waitUntil(condition, done) {
     if (condition()) done()
@@ -21,7 +21,7 @@ export function delay(done) {
 }
 
 export function delayFor(ms) {
-    return done => setTimeout(done, ms)
+    return (done) => setTimeout(done, ms)
 }
 
 export function isOutsideViewPort($elem) {

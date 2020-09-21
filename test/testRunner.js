@@ -10,10 +10,10 @@ const serverInfo = server.listen(0, () => {
         const mochaChrome = spawn('mocha-chrome', [`http://localhost:${serverInfo.address().port}/test/tests.html`])
         mochaChrome.stdout.pipe(process.stdout)
         mochaChrome.stderr.pipe(process.stderr)
-        mochaChrome.on('close', code => {
+        mochaChrome.on('close', (code) => {
             process.exit(code)
         })
-        mochaChrome.on('error', err => {
+        mochaChrome.on('error', (err) => {
             console.log(err)
             process.exit(1)
         })
