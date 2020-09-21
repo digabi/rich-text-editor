@@ -23,7 +23,7 @@ export function onPaste(e, saver) {
 function onPasteBlob(event, file, saver) {
     event.preventDefault()
     if (fileTypes.indexOf(file.type) >= 0) {
-        saver({ data: file, type: file.type, id: String(new Date().getTime()) }).then(screenshotUrl => {
+        saver({ data: file, type: file.type, id: String(new Date().getTime()) }).then((screenshotUrl) => {
             const img = `<img src="${screenshotUrl}"/>`
             window.document.execCommand('insertHTML', false, img)
         })
@@ -44,10 +44,10 @@ export function persistInlineImages($editor, screenshotSaver) {
     setTimeout(
         () =>
             Promise.all(
-                markAndGetInlineImagesAndRemoveForbiddenOnes($editor).map(data =>
+                markAndGetInlineImagesAndRemoveForbiddenOnes($editor).map((data) =>
                     screenshotSaver(data)
-                        .then(screenShotUrl => data.$el.attr('src', screenShotUrl))
-                        .catch(err => {
+                        .then((screenShotUrl) => data.$el.attr('src', screenShotUrl))
+                        .catch((err) => {
                             data.$el.remove()
                             throw err
                         })
@@ -62,9 +62,9 @@ function markAndGetInlineImagesAndRemoveForbiddenOnes($editor) {
     const images = $editor
         .find('img[src^="data:image/"]')
         .toArray()
-        .map(el =>
+        .map((el) =>
             Object.assign(decodeBase64Image(el.getAttribute('src')), {
-                $el: $(el)
+                $el: $(el),
             })
         )
     images
@@ -83,6 +83,6 @@ function decodeBase64Image(dataString) {
     }
     return {
         type: matches[1],
-        data: new Buffer(matches[2], 'base64')
+        data: new Buffer(matches[2], 'base64'),
     }
 }

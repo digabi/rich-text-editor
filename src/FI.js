@@ -37,8 +37,8 @@ lisätä kuvia.</li></ul>`,
             screenshot:
                 '<h3>Kuvakaappaukset</h3><p>Tee kuva haluamallasi ohjelmalla. Napsauta yläpalkista kuvakaappauskuvaketta <span class="screen-shot-image"></span> ja rajaa haluamasi kuva-alue näytöltä. <span class="rich-text-editor-help-key">CTRL</span>-<span class="rich-text-editor-help-key">V</span> liittää kuvan vastauskenttään kursorin kohdalle. Voit vaihtaa kuvan paikkaa raahaamalla tai leikkaamalla kuvan komennolla <span class="rich-text-editor-help-key">CTRL</span>-<span class="rich-text-editor-help-key">X</span> ja liittämällä sen komennolla <span class="rich-text-editor-help-key">CTRL</span>-<span class="rich-text-editor-help-key">V</span> haluamaasi paikkaan.</p>',
             equation:
-                '<h3>Kaavat</h3><p>Kaava lisätään komennolla <span class="rich-text-editor-help-key">CTRL</span>-<span class="rich-text-editor-help-key">E</span><br>Pikakomennot kaavassa:</p><table class="rich-text-editor-help-shortcuts"><tbody><tr><th>Jakoviiva</th><td><span class="rich-text-editor-help-key">/</span></td></tr><tr><th>Kertomerkki</th><td><span class="rich-text-editor-help-key">*</span></td></tr><tr><th>Yläindeksi</th><td><span class="rich-text-editor-help-key">^</span></td></tr><tr><th>Alaindeksi</th><td><span class="rich-text-editor-help-key">_</span></td></tr><tr><th>Lisää kaava seuraavalle riville</th><td><span class="rich-text-editor-help-key">↵</span></td></tr><tr><th>Sulje kaava</th><td><span class="rich-text-editor-help-key">esc</span></td></tr></tbody></table>'
-        }
+                '<h3>Kaavat</h3><p>Kaava lisätään komennolla <span class="rich-text-editor-help-key">CTRL</span>-<span class="rich-text-editor-help-key">E</span><br>Pikakomennot kaavassa:</p><table class="rich-text-editor-help-shortcuts"><tbody><tr><th>Jakoviiva</th><td><span class="rich-text-editor-help-key">/</span></td></tr><tr><th>Kertomerkki</th><td><span class="rich-text-editor-help-key">*</span></td></tr><tr><th>Yläindeksi</th><td><span class="rich-text-editor-help-key">^</span></td></tr><tr><th>Alaindeksi</th><td><span class="rich-text-editor-help-key">_</span></td></tr><tr><th>Lisää kaava seuraavalle riville</th><td><span class="rich-text-editor-help-key">↵</span></td></tr><tr><th>Sulje kaava</th><td><span class="rich-text-editor-help-key">esc</span></td></tr></tbody></table>',
+        },
     },
     annotating: {
         sendFeedback: 'Lähetä palautetta',
@@ -49,6 +49,6 @@ lisätä kuvia.</li></ul>`,
         backLinkLabel: 'Palaa kaavaeditoriin',
         save: 'Tallenna merkinnät',
         langLink: '/sv/bedomning',
-        langLabel: 'På svenska'
-    }
+        langLabel: 'På svenska',
+    },
 }

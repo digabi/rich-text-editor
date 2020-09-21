@@ -6,13 +6,13 @@ module.exports = () => [
         entry: ['@babel/polyfill', path.resolve(__dirname, 'src/rich-text-editor-bundle.js')],
         output: {
             path: path.resolve(__dirname, 'dist'),
-            filename: 'rich-text-editor-bundle.js'
+            filename: 'rich-text-editor-bundle.js',
         },
         resolve: {
-            extensions: ['.js', '.jsx', '.ts', '.tsx', '.json']
+            extensions: ['.js', '.jsx', '.ts', '.tsx', '.json'],
         },
         externals: {
-            jquery: '$'
+            jquery: '$',
         },
         module: {
             rules: [
@@ -24,15 +24,15 @@ module.exports = () => [
                         options: {
                             onlyCompileBundledFiles: true,
                             transpileOnly: true,
-                            compilerOptions: { target: 'es5' }
-                        }
-                    }
-                }
-            ]
+                            compilerOptions: { target: 'es5' },
+                        },
+                    },
+                },
+            ],
         },
         stats: 'errors-only',
         performance: {
-            hints: false
-        }
-    }
+            hints: false,
+        },
+    },
 ]

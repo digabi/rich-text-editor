@@ -33,5 +33,5 @@ export default [
     { action: '_{ }^{ } ', label: '_{X}^{X}X', useWrite: true },
     { action: '\\array', label: '\\begin{array}{l|l}\nX&X\\\\\n\\hline\nX&X\n\\end{array}' },
     { action: '^{x\\text{)}}\\frac{a}{b}', label: '^{X\\text{)}}\\frac{X}{X}', useWrite: true },
-    { action: '\\mathrm', label: '\\mathrm{T}' }
+    { action: '\\mathrm', label: '\\mathrm{T}' },
 ]

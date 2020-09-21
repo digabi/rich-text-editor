@@ -28,16 +28,16 @@ mjAPI.config({
     extensions: 'TeX/mhchem.js',
     MathJax: {
         SVG: {
-            font: 'Latin-Modern'
-        }
-    }
+            font: 'Latin-Modern',
+        },
+    },
 })
 mjAPI.start()
 
 function mathSvgResponse(req, res) {
     res.type('svg')
     const latex = req.query.latex
-    latexToSvg(latex, svg => res.send(svg))
+    latexToSvg(latex, (svg) => res.send(svg))
 }
 
 function latexIsTooLong(latex) {
@@ -51,8 +51,8 @@ function nestingIsTooDeep(latex) {
         return false
     }
     for (var matchedString of matches) {
-        if (nestedContextStartedRegexes.some(startingRegex => startingRegex === matchedString)) nestingLevel++
-        else if (nestedContextEndingRegexes.some(endingRegex => endingRegex === matchedString)) nestingLevel--
+        if (nestedContextStartedRegexes.some((startingRegex) => startingRegex === matchedString)) nestingLevel++
+        else if (nestedContextEndingRegexes.some((endingRegex) => endingRegex === matchedString)) nestingLevel--
         if (nestingLevel > MAX_NESTING_LEVEL) return true
     }
     return false
@@ -71,9 +71,9 @@ function latexToSvg(latex, cb) {
             mml: false,
             svg: true,
             linebreaks: true,
-            width: 100
+            width: 100,
         },
-        function(data) {
+        function (data) {
             if (data.errors) {
                 cb(errorResponse)
             } else {

@@ -1,6 +1,6 @@
 export const allowedTags = ['img', 'br']
 export const allowedAttributes = {
-    img: ['src', 'alt']
+    img: ['src', 'alt'],
 }
 export const allowedSchemes = ['data']
-export const exclusiveFilter = frame => frame.attribs['data-js'] === 'mathEditor'
+export const exclusiveFilter = (frame) => frame.attribs['data-js'] === 'mathEditor'

@@ -5,10 +5,10 @@ module.exports = () => [
         mode: 'development',
         entry: ['@babel/polyfill', path.resolve(__dirname, 'test/tests.front.js')],
         output: {
-            filename: 'tests-bundle.js'
+            filename: 'tests-bundle.js',
         },
         resolve: {
-            extensions: ['.js', '.jsx', '.ts', '.tsx', '.json']
+            extensions: ['.js', '.jsx', '.ts', '.tsx', '.json'],
         },
         module: {
             rules: [
@@ -20,15 +20,15 @@ module.exports = () => [
                         options: {
                             onlyCompileBundledFiles: true,
                             transpileOnly: true,
-                            compilerOptions: { target: 'es5' }
-                        }
-                    }
-                }
-            ]
+                            compilerOptions: { target: 'es5' },
+                        },
+                    },
+                },
+            ],
         },
         stats: 'errors-only',
         performance: {
-            hints: false
-        }
-    }
+            hints: false,
+        },
+    },
 ]

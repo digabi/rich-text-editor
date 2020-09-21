@@ -33,7 +33,7 @@ function stripDivsFromRichTextAnswer(answerContentValue) {
             }
             lastNode = node
         }
-    } while (Array.prototype.some.call(parent.childNodes, node => isBlockElement(node)))
+    } while (Array.prototype.some.call(parent.childNodes, (node) => isBlockElement(node)))
 
     return parent.innerHTML
 }
@@ -90,7 +90,7 @@ export function sanitizeContent(answerElement) {
     return {
         answerHTML: answerConsideredEmpty ? '' : stripBrsAndTrimFromEnd(html),
         answerText: stripNewLinesFromStartAndWiteSpacesFromEnd(text),
-        imageCount: existingScreenshotCount($(`<div>${html}</div>`))
+        imageCount: existingScreenshotCount($(`<div>${html}</div>`)),
     }
 }
 
