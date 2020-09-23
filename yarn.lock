@@ -26,10 +26,10 @@
     core-js "^2.6.5"
     regenerator-runtime "^0.13.4"
 
-"@digabi/mathquill@^0.10.3":
-  version "0.10.3"
-  resolved "https://registry.yarnpkg.com/@digabi/mathquill/-/mathquill-0.10.3.tgz#1f54d89e9f7c62c0a594ec39a0a0983fb5bebb54"
-  integrity sha512-q+tMjwAJtof9cpQLD83OeIBIZNKD2qq3QMOtFYfYp68ZhI7w+mqg4EEzA6YQR2W0W89dkeuoWpayXpxiQ4KvKQ==
+"@digabi/mathquill@^0.10.5":
+  version "0.10.5"
+  resolved "https://registry.yarnpkg.com/@digabi/mathquill/-/mathquill-0.10.5.tgz#79e65b75715ff95d3774d8f8776d40d0482b8fe1"
+  integrity sha512-i2KOMfCyHPAYbsFwnT5RNc9BVEqaGAjTsf/s7vz5RCA/js2ooE6R/Rl4oI/nC9oRKeOfTDLzRRSa7n3YOauXpw==
   dependencies:
     jquery "^3.3.1"
 

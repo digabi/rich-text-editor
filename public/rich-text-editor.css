@@ -167,10 +167,6 @@
   transition: top 0.15s;
 }
 
-.rich-text-editor-characters-expanded {
-  display: none;
-}
-
 .rich-text-editor-focus .rich-text-editor-characters-expanded {
   top: 0;
 }
