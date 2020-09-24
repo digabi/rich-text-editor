@@ -167,7 +167,7 @@
   transition: top 0.15s;
 }
 
-.rich-text-editor-focus .rich-text-editor-characters-expanded {
+.rich-text-editor-focus .rich-text-editor-show-all-characters {
   top: 0;
 }
 
@@ -255,7 +255,7 @@
   display: none;
 }
 
-.rich-text-editor-characters-expanded .rich-text-editor-toolbar-characters .rich-text-editor-button,
+.rich-text-editor-show-all-characters .rich-text-editor-toolbar-characters .rich-text-editor-button,
 .rich-text-editor-toolbar-characters .rich-text-editor-button.rich-text-editor-characters-popular {
   display: inline-block;
 }
@@ -276,7 +276,7 @@
   background: url('expand.svg') 50% 50% no-repeat;
 }
 
-.rich-text-editor-characters-expanded .rich-text-editor-characters-expand-collapse {
+.rich-text-editor-show-all-characters .rich-text-editor-characters-expand-collapse {
   background-image: url('collapse.svg');
 }
 

@@ -67,7 +67,7 @@ export function init(mathEditor, hasRichTextFocus, l, baseUrl) {
         })
         .on('mousedown', '[data-js="expandCollapseCharacters"]', (e) => {
             e.preventDefault()
-            $toolbar.toggleClass('rich-text-editor-characters-expanded')
+            $toolbar.toggleClass('rich-text-editor-show-all-characters')
         })
         .on('mousedown', '[data-js="richTextEditorHelp"]', (e) => {
             e.preventDefault()
