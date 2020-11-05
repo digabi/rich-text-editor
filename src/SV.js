@@ -14,7 +14,9 @@ export default {
 <tr><th colspan="2">I formeln </th></tr>
 <tr><th>Bråkstreck</th><td>/</td></tr>
 <tr><th>Multiplikationstecken</th><td>*</td></tr>
+<tr><th>Exponent</th><td>^</td></tr>
 <tr><th>Stäng formeln</th><td>Esc</td></tr>
+<tr><th>Lägg till en formel på följande rad</th><td>Enter</td></tr>
 </tbody>
 </table>`,
         formatting: 'Formatering',
