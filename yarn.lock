@@ -4947,9 +4947,9 @@ webpack-cli@^4.0.0:
     webpack-merge "^4.2.2"
 
 webpack-dev-middleware@^4.0.0:
-  version "4.0.0"
-  resolved "https://registry.yarnpkg.com/webpack-dev-middleware/-/webpack-dev-middleware-4.0.0.tgz#1725b2ebc78b66333672499d9dc7b1c244aebb1c"
-  integrity sha512-n6X6CxYQyYWGBfLzcNYya0oz1N8iTG5atGxrEacrMGc9pPjg3GHyHul6Z+hfs5x5voYtqr7mz1pbK/M4ZeMl1w==
+  version "4.0.1"
+  resolved "https://registry.yarnpkg.com/webpack-dev-middleware/-/webpack-dev-middleware-4.0.1.tgz#e0201fe48a976cac24b548a398b1022e2ab73ff7"
+  integrity sha512-wg6IPwK8D/dwIiy1ZJpQAiDo+ZRgBsE+sne1fLLhyoQH4EY9jU7QQ67lwj4xhf/sJc0QBgatXXinVJ/dVwaZGg==
   dependencies:
     mem "^8.0.0"
     memfs "^3.2.0"
