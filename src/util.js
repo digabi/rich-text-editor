@@ -1,6 +1,6 @@
 import $ from 'jquery'
 import sanitizeHtml from 'sanitize-html'
-import * as sanitizeOpts from './sanitizeOpts'
+import { sanitizeOpts } from './sanitizeOpts'
 
 const emptyEquationSelector = 'img[src="/math.svg?latex="]'
 export const equationImageSelector = `img[src^="/math.svg?latex="]:not(${emptyEquationSelector}), img[src^="data:image/svg+xml"]`
