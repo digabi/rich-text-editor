@@ -17,7 +17,7 @@ function _waitUntil(condition, done) {
 }
 
 export function delay(done) {
-    setTimeout(done, 0)
+    setTimeout(done, 16)
 }
 
 export function delayFor(ms) {
