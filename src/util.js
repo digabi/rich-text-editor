@@ -8,7 +8,21 @@ const screenshotImageSelector =
     'img[src^="/screenshot/"], img[src^="data:image/png"], img[src^="data:image/gif"], img[src^="data:image/jpeg"]'
 export const invalidImageSelector = 'img:not(img[src^="data"], img[src^="/math.svg?latex="], img[src^="/screenshot/"])'
 function convertLinksToRelative(html) {
-    return html.replace(new RegExp(document.location.origin, 'g'), '')
+    const domParser = new DOMParser().parseFromString(html, 'text/html')
+    const elementList = domParser.getElementsByTagName('img')
+
+    for (let i = 0; i < elementList.length; i++) {
+        const element = elementList[i]
+        const src = element.getAttribute('src')
+        if (!src.startsWith('http')) continue
+        try {
+            let url = new URL(src)
+            element.setAttribute('src', url.href.replace(url.origin, ''))
+        } catch (e) {
+            continue
+        }
+    }
+    return domParser.body.innerHTML
 }
 
 function isBlockElement(node) {
