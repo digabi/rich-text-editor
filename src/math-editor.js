@@ -9,8 +9,8 @@ const keyCodes = {
     ESC: 27,
 }
 
-let MQ
-let firstTime = true
+window.mathEditorState = window.mathEditorState || { firstTime: true, MQ: undefined }
+const state = window.mathEditorState
 
 const trimLatex = function (latex) {
     return latex.replace(/(\\|\s)*/g, '') === '' ? '' : latex
@@ -30,8 +30,9 @@ export function init(
 ) {
     let updateMathImgTimeout
 
-    if (firstTime) {
-        MQ = MathQuill.getInterface(2)
+    if (state.firstTime) {
+        state.MQ = MathQuill.getInterface(2)
+        state.firstTime = false
     }
     const $mathEditorContainer = $(`
         <div class="math-editor" data-js="mathEditor">
@@ -46,7 +47,7 @@ export function init(
     let visible = false
     let focusChanged = null
     //noinspection JSUnusedGlobalSymbols,JSUnusedLocalSymbols
-    const mqInstance = MQ.MathField($equationField.get(0), {
+    const mqInstance = state.MQ.MathField($equationField.get(0), {
         handlers: {
             edit: onMqEdit,
             enter: () => {

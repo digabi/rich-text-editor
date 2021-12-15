@@ -12,30 +12,33 @@ const keyCodes = {
     E: 69,
 }
 const $outerPlaceholder = $('<div class="rich-text-editor-hidden" style="display: none;" data-js="outerPlaceholder">')
-const focus = {
-    richText: false,
-    latexField: false,
-    equationField: false,
+
+window.richTextEditorState = window.richTextEditorState || {
+    focus: {
+        richText: false,
+        latexField: false,
+        equationField: false,
+    },
+    $currentEditor: undefined,
+    firstCall: true,
+    math: undefined,
+    $toolbar: undefined,
 }
-let $currentEditor
-
-let firstCall = true
-let math
-let $toolbar
-
+const state = window.richTextEditorState
+const focus = state.focus
 export const makeRichText = (answer, options, onValueChanged = () => {}) => {
     const l = locales[options.locale || 'FI'].editor
 
     const saver = options.screenshot.saver
     const baseUrl = options.baseUrl || ''
 
-    if (firstCall) {
-        math = mathEditor.init($outerPlaceholder, focus, baseUrl, options.updateMathImg)
-        const containers = toolbars.init(math, () => focus.richText, l, baseUrl)
-        $toolbar = containers.toolbar
+    if (state.firstCall) {
+        state.firstCall = false
+        state.math = mathEditor.init($outerPlaceholder, focus, baseUrl, options.updateMathImg)
+        const containers = toolbars.init(state.math, () => focus.richText, l, baseUrl)
+        state.$toolbar = containers.toolbar
         const $helpOverlay = containers.helpOverlay
-        $('body').append($outerPlaceholder, $toolbar, $helpOverlay)
-        firstCall = false
+        $('body').append($outerPlaceholder, state.$toolbar, $helpOverlay)
     }
     onValueChanged(u.sanitizeContent(answer))
     let pasteInProgress = false
@@ -50,21 +53,21 @@ export const makeRichText = (answer, options, onValueChanged = () => {}) => {
         .on('click', u.equationImageSelector, (e) => {
             if (e.which === 1) {
                 onRichTextEditorFocus($(e.target).closest('[data-js="answer"]'))
-                math.openMathEditor($(e.target))
+                state.math.openMathEditor($(e.target))
             }
         })
         .on('keydown', (e) => {
             if (u.isCtrlKey(e, keyCodes.E) && !focus.equationField && !focus.latexField) {
                 e.preventDefault()
-                math.insertNewEquation()
+                state.math.insertNewEquation()
             }
         })
         .on('mathfocus', (e) => {
             $(e.currentTarget).toggleClass('rich-text-focused', e.hasFocus)
-            if (richTextAndMathBlur()) onRichTextEditorBlur($currentEditor)
+            if (richTextAndMathBlur()) onRichTextEditorBlur(state.$currentEditor)
         })
         .on('focus blur', (e) => {
-            if (e.type === 'focus') math.closeMathEditor()
+            if (e.type === 'focus') state.math.closeMathEditor()
             onRichTextEditorFocusChanged(e)
         })
         // Triggered after both drop and paste
@@ -93,9 +96,9 @@ function toggleRichTextToolbar(isVisible, $editor) {
 }
 
 function onRichTextEditorFocus($element) {
-    $currentEditor = $element
+    state.$currentEditor = $element
     toggleRichTextToolbarAnimation()
-    toggleRichTextToolbar(true, $currentEditor)
+    toggleRichTextToolbar(true, state.$currentEditor)
 }
 
 function onRichTextEditorBlur($element) {
@@ -106,7 +109,9 @@ function onRichTextEditorBlur($element) {
 
 function toggleRichTextToolbarAnimation() {
     const animatingClass = 'rich-text-editor-tools--animating'
-    $toolbar.addClass(animatingClass).one('transitionend transitioncancel', () => $toolbar.removeClass(animatingClass))
+    state.$toolbar
+        .addClass(animatingClass)
+        .one('transitionend transitioncancel', () => state.$toolbar.removeClass(animatingClass))
 }
 
 let richTextEditorBlurTimeout
