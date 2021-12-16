@@ -33,12 +33,12 @@ export const makeRichText = (answer, options, onValueChanged = () => {}) => {
     const baseUrl = options.baseUrl || ''
 
     if (state.firstCall) {
+        state.firstCall = false
         state.math = mathEditor.init($outerPlaceholder, focus, baseUrl, options.updateMathImg)
         const containers = toolbars.init(state.math, () => focus.richText, l, baseUrl)
         state.$toolbar = containers.toolbar
         const $helpOverlay = containers.helpOverlay
         $('body').append($outerPlaceholder, state.$toolbar, $helpOverlay)
-        state.firstCall = false
     }
     onValueChanged(u.sanitizeContent(answer))
     let pasteInProgress = false
