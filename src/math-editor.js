@@ -13,7 +13,8 @@ let MQ
 let firstTime = true
 
 const trimLatex = function (latex) {
-    return latex.replace(/(\\|\s)*/g, '') === '' ? '' : latex
+    const trimmed = latex.trim()
+    return trimmed.replace(/(\\|\s)*/g, '') === '' ? '' : trimmed
 }
 export function init(
     $outerPlaceholder,
@@ -21,9 +22,10 @@ export function init(
     baseUrl,
     updateMathImg = ($img, latex) => {
         const trimmed = trimLatex(latex)
+        const trimmedAlt = trimmed.replace(/</g, '\\lt ').replace(/>/g, '\\gt ')
         $img.prop({
             src: baseUrl + '/math.svg?latex=' + encodeURIComponent(trimmed),
-            alt: trimmed,
+            alt: trimmedAlt,
         })
         $img.closest('[data-js="answer"]').trigger('input')
     }
