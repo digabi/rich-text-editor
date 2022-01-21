@@ -1,6 +1,6 @@
 {
   "name": "rich-text-editor",
-  "version": "6.0.4",
+  "version": "6.0.6",
   "description": "Rich text editor",
   "author": "",
   "homepage": "https://github.com/digabi/rich-text-editor",
@@ -30,7 +30,7 @@
     "@babel/polyfill": "^7.0.0",
     "chai": "^4.2.0",
     "chai-jquery": "^2.1.0",
-    "concurrently": "^6.0.0",
+    "concurrently": "^7.0.0",
     "eslint": "^7.9.0",
     "eslint-config-prettier": "^8.0.0",
     "eslint-plugin-prettier": "^3.0.0",
