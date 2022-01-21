@@ -14,6 +14,7 @@ function convertLinksToRelative(html) {
     for (let i = 0; i < elementList.length; i++) {
         const element = elementList[i]
         const src = element.getAttribute('src')
+        if (!src) continue
         if (!src.startsWith('http')) continue
         try {
             let url = new URL(src)
