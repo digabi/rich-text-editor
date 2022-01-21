@@ -4,5 +4,6 @@ export const sanitizeOpts = {
         img: ['src', 'alt'],
     },
     allowedSchemes: ['data'],
+    allowedSchemesAppliedToAttributes: ['src'],
     exclusiveFilter: (frame) => frame.attribs['data-js'] === 'mathEditor',
 }
