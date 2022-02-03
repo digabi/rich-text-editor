@@ -31,6 +31,7 @@ export const makeRichText = (answer, options, onValueChanged = () => {}) => {
 
     const saver = options.screenshot.saver
     const baseUrl = options.baseUrl || ''
+    const ignoreSaveObject = options.ignoreSaveObject || false
 
     if (state.firstCall) {
         state.firstCall = false
@@ -40,7 +41,7 @@ export const makeRichText = (answer, options, onValueChanged = () => {}) => {
         const $helpOverlay = containers.helpOverlay
         $('body').append($outerPlaceholder, state.$toolbar, $helpOverlay)
     }
-    onValueChanged(u.sanitizeContent(answer))
+    onValueChanged(ignoreSaveObject || u.sanitizeContent(answer))
     let pasteInProgress = false
 
     $(answer)
@@ -72,7 +73,7 @@ export const makeRichText = (answer, options, onValueChanged = () => {}) => {
         })
         // Triggered after both drop and paste
         .on('input', (e) => {
-            if (!pasteInProgress) onValueChanged(u.sanitizeContent(e.currentTarget))
+            if (!pasteInProgress) onValueChanged(ignoreSaveObject || u.sanitizeContent(e.currentTarget))
         })
         .on('drop', (e) => {
             pasteInProgress = true
