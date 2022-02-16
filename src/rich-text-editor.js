@@ -27,21 +27,28 @@ window.richTextEditorState = window.richTextEditorState || {
 const state = window.richTextEditorState
 const focus = state.focus
 export const makeRichText = (answer, options, onValueChanged = () => {}) => {
-    const l = locales[options.locale || 'FI'].editor
-
-    const saver = options.screenshot.saver
-    const baseUrl = options.baseUrl || ''
-    const ignoreSaveObject = options.ignoreSaveObject || false
-
+    const {
+        baseUrl,
+        fileTypes,
+        sanitize,
+        screenshot,
+        ignoreSaveObject,
+        screenshotImageSelector,
+        invalidImageSelector,
+        locale,
+        updateMathImg,
+    } = { ...u.defaults, ...options }
+    const l = locales[locale].editor
+    const saver = screenshot.saver
     if (state.firstCall) {
         state.firstCall = false
-        state.math = mathEditor.init($outerPlaceholder, focus, baseUrl, options.updateMathImg)
+        state.math = mathEditor.init($outerPlaceholder, focus, baseUrl, updateMathImg)
         const containers = toolbars.init(state.math, () => focus.richText, l, baseUrl)
         state.$toolbar = containers.toolbar
         const $helpOverlay = containers.helpOverlay
         $('body').append($outerPlaceholder, state.$toolbar, $helpOverlay)
     }
-    onValueChanged(ignoreSaveObject || u.sanitizeContent(answer))
+    onValueChanged(ignoreSaveObject || u.sanitizeContent(answer, screenshotImageSelector, sanitize))
     let pasteInProgress = false
 
     $(answer)
@@ -73,20 +80,23 @@ export const makeRichText = (answer, options, onValueChanged = () => {}) => {
         })
         // Triggered after both drop and paste
         .on('input', (e) => {
-            if (!pasteInProgress) onValueChanged(ignoreSaveObject || u.sanitizeContent(e.currentTarget))
+            if (!pasteInProgress)
+                onValueChanged(
+                    ignoreSaveObject || u.sanitizeContent(e.currentTarget, screenshotImageSelector, sanitize)
+                )
         })
         .on('drop', (e) => {
             pasteInProgress = true
             setTimeout(() => {
-                $(e.target).html(u.sanitize(e.target.innerHTML))
-                clipboard.persistInlineImages($(e.currentTarget), saver)
+                $(e.target).html(sanitize(e.target.innerHTML))
+                clipboard.persistInlineImages($(e.currentTarget), saver, invalidImageSelector)
                 pasteInProgress = false
             }, 100)
         })
         .on('paste', (e) => {
             pasteInProgress = true
             setTimeout(() => (pasteInProgress = false), 0)
-            clipboard.onPaste(e, saver)
+            clipboard.onPaste(e, saver, invalidImageSelector, fileTypes, sanitize)
         })
     setTimeout(() => document.execCommand('enableObjectResizing', false, false), 0)
 }
