@@ -33,7 +33,7 @@
     "concurrently": "^7.0.0",
     "eslint": "^7.9.0",
     "eslint-config-prettier": "^8.0.0",
-    "eslint-plugin-prettier": "^3.0.0",
+    "eslint-plugin-prettier": "^4.0.0",
     "express": "^4.16.4",
     "mathjax": "^2.7.5",
     "mocha": "^7.2.0",
