@@ -1,26 +1,23 @@
 import $ from 'jquery'
 import loadingImg from './loadingImg'
-import * as u from './util'
-import { invalidImageSelector } from './util'
 
-const fileTypes = ['image/png', 'image/jpeg']
-
-export function onPaste(e, saver) {
+export function onPaste(e, saver, invalidImageSelector, fileTypes, sanitize) {
     const clipboardData = e.originalEvent.clipboardData
     const file =
         clipboardData.items &&
         clipboardData.items.length > 0 &&
         clipboardData.items[clipboardData.items.length - 1].getAsFile()
     if (file) {
-        onPasteBlob(e, file, saver)
+        onPasteBlob(e, file, saver, fileTypes)
     } else {
         const clipboardDataAsHtml = clipboardData.getData('text/html')
-        if (clipboardDataAsHtml) onPasteHtml(e, $(e.currentTarget), clipboardDataAsHtml, saver)
-        else onLegacyPasteImage($(e.currentTarget), saver)
+        if (clipboardDataAsHtml)
+            onPasteHtml(e, $(e.currentTarget), clipboardDataAsHtml, saver, invalidImageSelector, fileTypes, sanitize)
+        else onLegacyPasteImage($(e.currentTarget), saver, invalidImageSelector, fileTypes)
     }
 }
 
-function onPasteBlob(event, file, saver) {
+function onPasteBlob(event, file, saver, fileTypes) {
     event.preventDefault()
     if (fileTypes.indexOf(file.type) >= 0) {
         saver({ data: file, type: file.type, id: String(new Date().getTime()) }).then((screenshotUrl) => {
@@ -30,21 +27,21 @@ function onPasteBlob(event, file, saver) {
     }
 }
 
-function onPasteHtml(event, $answer, clipboardDataAsHtml, saver) {
+function onPasteHtml(event, $answer, clipboardDataAsHtml, saver, invalidImageSelector, fileTypes, sanitize) {
     event.preventDefault()
-    window.document.execCommand('insertHTML', false, u.sanitize(clipboardDataAsHtml))
-    persistInlineImages($answer, saver)
+    window.document.execCommand('insertHTML', false, sanitize(clipboardDataAsHtml))
+    persistInlineImages($answer, saver, invalidImageSelector, fileTypes)
 }
 
-function onLegacyPasteImage($editor, saver) {
-    persistInlineImages($editor, saver)
+function onLegacyPasteImage($editor, saver, invalidImageSelector, fileTypes) {
+    persistInlineImages($editor, saver, invalidImageSelector, fileTypes)
 }
 
-export function persistInlineImages($editor, screenshotSaver) {
+export function persistInlineImages($editor, screenshotSaver, invalidImageSelector, fileTypes) {
     setTimeout(
         () =>
             Promise.all(
-                markAndGetInlineImagesAndRemoveForbiddenOnes($editor).map((data) =>
+                markAndGetInlineImagesAndRemoveForbiddenOnes($editor, invalidImageSelector, fileTypes).map((data) =>
                     screenshotSaver(data)
                         .then((screenShotUrl) => data.$el.attr('src', screenShotUrl))
                         .catch((err) => {
@@ -57,7 +54,7 @@ export function persistInlineImages($editor, screenshotSaver) {
     )
 }
 
-function markAndGetInlineImagesAndRemoveForbiddenOnes($editor) {
+function markAndGetInlineImagesAndRemoveForbiddenOnes($editor, invalidImageSelector, fileTypes) {
     $editor.find(invalidImageSelector).remove()
     const images = $editor
         .find('img[src^="data:image/"]')
