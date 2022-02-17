@@ -104,6 +104,11 @@ describe('rich text editor', () => {
     )
     after(defaults)
 
+    it('save handler is never called', () => {
+        expect(savedValues[0]).to.have.length(0)
+        expect(savedValues[1]).to.have.length(0)
+        expect(savedValues[2]).to.have.length(0)
+    })
     it('shows character list', () => expect($('[data-js="charactersList"]')).to.be.visible)
     it('hide math tools', () => expect($el.mathToolbar).to.be.hidden)
     it('answer has focus style', () => expect($el.answer1).to.have.class('rich-text-focused'))
