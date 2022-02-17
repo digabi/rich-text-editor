@@ -48,7 +48,6 @@ export const makeRichText = (answer, options, onValueChanged = () => {}) => {
         const $helpOverlay = containers.helpOverlay
         $('body').append($outerPlaceholder, state.$toolbar, $helpOverlay)
     }
-    onValueChanged(ignoreSaveObject || u.sanitizeContent(answer, screenshotImageSelector, sanitize))
     let pasteInProgress = false
 
     $(answer)
