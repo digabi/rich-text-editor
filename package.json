@@ -8,7 +8,8 @@
   "types": "index.d.ts",
   "files": [
     "dist/*",
-    "server/mathSvg.js"
+    "server/mathSvg.js",
+    "index.d.ts"
   ],
   "scripts": {
     "clean": "rm -rf dist/",
