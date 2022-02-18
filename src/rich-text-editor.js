@@ -43,7 +43,7 @@ export const makeRichText = (answer, options, onValueChanged = () => {}) => {
     if (state.firstCall) {
         state.firstCall = false
         state.math = mathEditor.init($outerPlaceholder, focus, baseUrl, updateMathImg)
-        const containers = toolbars.init(state.math, () => focus.richText, l, baseUrl)
+        const containers = toolbars.init(state.math, () => focus.richText, l)
         state.$toolbar = containers.toolbar
         const $helpOverlay = containers.helpOverlay
         $('body').append($outerPlaceholder, state.$toolbar, $helpOverlay)
