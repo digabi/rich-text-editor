@@ -2,7 +2,7 @@ import $ from 'jquery'
 import specialCharacterGroups from './specialCharacters'
 import latexCommandsWithSvg from './latexCommandsWithSvg'
 
-export function init(mathEditor, hasRichTextFocus, l, baseUrl) {
+export function init(mathEditor, hasRichTextFocus, l) {
     let helpOverlayActiveElement
 
     const $helpOverlay = $(`<div class="rich-text-editor-overlay rich-text-editor-hidden">
@@ -91,7 +91,7 @@ export function init(mathEditor, hasRichTextFocus, l, baseUrl) {
     const $newEquation = $toolbar.find('[data-js="newEquation"]')
     const $mathToolbar = $toolbar.find('[data-js="mathToolbar"]')
     initSpecialCharacterToolbar($toolbar, mathEditor, hasRichTextFocus)
-    initMathToolbar($mathToolbar, mathEditor, baseUrl)
+    initMathToolbar($mathToolbar, mathEditor)
     initNewEquation($newEquation, mathEditor, hasRichTextFocus)
 
     if ($.fn.i18n) {
