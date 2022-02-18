@@ -20,7 +20,7 @@ export function onPaste(e, saver, invalidImageSelector, fileTypes, sanitize) {
 function onPasteBlob(event, file, saver, fileTypes) {
     event.preventDefault()
     if (fileTypes.indexOf(file.type) >= 0) {
-        saver({ data: file, type: file.type, id: String(new Date().getTime()) }).then((screenshotUrl) => {
+        saver({ data: file, type: file.type }).then((screenshotUrl) => {
             const img = `<img src="${screenshotUrl}"/>`
             window.document.execCommand('insertHTML', false, img)
         })
@@ -59,11 +59,7 @@ function markAndGetInlineImagesAndRemoveForbiddenOnes($editor, invalidImageSelec
     const images = $editor
         .find('img[src^="data:image/"]')
         .toArray()
-        .map((el) =>
-            Object.assign(decodeBase64Image(el.getAttribute('src')), {
-                el: el,
-            })
-        )
+        .map((el) => ({ ...decodeBase64Image(el.getAttribute('src')), el }))
     images
         .filter(({ type }) => fileTypes.indexOf(type) === -1 && type !== 'image/svg+xml')
         .forEach(({ el }) => el.remove())
