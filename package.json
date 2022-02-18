@@ -4,7 +4,7 @@
   "description": "Rich text editor",
   "author": "",
   "homepage": "https://github.com/digabi/rich-text-editor",
-  "main": "server/mathSvg.js",
+  "main": "dist/rich-text-editor.js",
   "files": [
     "dist/*",
     "server/mathSvg.js"
