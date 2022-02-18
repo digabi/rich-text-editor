@@ -11,9 +11,7 @@ const $answer = $('.answer')
 let savedValues = [[], [], []]
 
 const richTextOptions = () => ({
-    screenshot: {
-        saver: () => Promise.resolve('/screenshot/screenshot.png'),
-    },
+    screenshotSaver: () => Promise.resolve('/screenshot/screenshot.png'),
 })
 
 const answer = $answer.toArray()
@@ -28,9 +26,7 @@ makeRichText(answer[1], richTextOptions(answer[1].id), (data) => {
 makeRichText(
     answer[2],
     {
-        screenshot: {
-            saver: () => Promise.resolve('/exam-api/screenshot.png'),
-        },
+        screenshotSaver: () => Promise.resolve('/exam-api/screenshot.png'),
         screenshotImageSelector:
             'img[src*="/exam-api/"], img[src^="data:image/png"], img[src^="data:image/gif"], img[src^="data:image/jpeg"]',
         invalidImageSelector: 'img:not(img[src^="data"], img[src^="/math.svg?latex="], img[src*="/exam-api/"])',

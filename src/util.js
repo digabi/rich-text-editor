@@ -4,9 +4,7 @@ import { sanitizeOpts } from './sanitizeOpts'
 
 export const defaults = {
     locale: 'FI',
-    screenshot: {
-        saver: () => Promise.resolve(''),
-    },
+    screenshotSaver: () => Promise.resolve(''),
     baseUrl: '',
     ignoreSaveObject: false,
     screenshotImageSelector:
