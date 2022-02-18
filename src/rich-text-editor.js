@@ -31,7 +31,7 @@ export const makeRichText = (answer, options, onValueChanged = () => {}) => {
         baseUrl,
         fileTypes,
         sanitize,
-        screenshot,
+        screenshotSaver,
         ignoreSaveObject,
         screenshotImageSelector,
         invalidImageSelector,
@@ -39,7 +39,6 @@ export const makeRichText = (answer, options, onValueChanged = () => {}) => {
         updateMathImg,
     } = { ...u.defaults, ...options }
     const l = locales[locale].editor
-    const saver = screenshot.saver
     if (state.firstCall) {
         state.firstCall = false
         state.math = mathEditor.init($outerPlaceholder, focus, baseUrl, updateMathImg)
@@ -88,14 +87,14 @@ export const makeRichText = (answer, options, onValueChanged = () => {}) => {
             pasteInProgress = true
             setTimeout(() => {
                 $(e.target).html(sanitize(e.target.innerHTML))
-                clipboard.persistInlineImages($(e.currentTarget), saver, invalidImageSelector)
+                clipboard.persistInlineImages($(e.currentTarget), screenshotSaver, invalidImageSelector)
                 pasteInProgress = false
             }, 100)
         })
         .on('paste', (e) => {
             pasteInProgress = true
             setTimeout(() => (pasteInProgress = false), 0)
-            clipboard.onPaste(e, saver, invalidImageSelector, fileTypes, sanitize)
+            clipboard.onPaste(e, screenshotSaver, invalidImageSelector, fileTypes, sanitize)
         })
     setTimeout(() => document.execCommand('enableObjectResizing', false, false), 0)
 }
