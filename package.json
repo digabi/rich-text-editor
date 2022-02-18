@@ -55,6 +55,7 @@
   },
   "dependencies": {
     "@digabi/mathquill": "^0.10.5",
+    "@types/express": "*",
     "jquery": "^3.3.1",
     "mathjax-node": "^2.1.1"
   },
