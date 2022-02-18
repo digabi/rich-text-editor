@@ -43,9 +43,9 @@ export function persistInlineImages($editor, screenshotSaver, invalidImageSelect
             Promise.all(
                 markAndGetInlineImagesAndRemoveForbiddenOnes($editor, invalidImageSelector, fileTypes).map((data) =>
                     screenshotSaver(data)
-                        .then((screenShotUrl) => data.$el.attr('src', screenShotUrl))
+                        .then((screenShotUrl) => data.el.setAttribute('src', screenShotUrl))
                         .catch((err) => {
-                            data.$el.remove()
+                            data.el.remove()
                             throw err
                         })
                 )
@@ -61,14 +61,14 @@ function markAndGetInlineImagesAndRemoveForbiddenOnes($editor, invalidImageSelec
         .toArray()
         .map((el) =>
             Object.assign(decodeBase64Image(el.getAttribute('src')), {
-                $el: $(el),
+                el: el,
             })
         )
     images
         .filter(({ type }) => fileTypes.indexOf(type) === -1 && type !== 'image/svg+xml')
-        .forEach(({ $el }) => $el.remove())
+        .forEach(({ el }) => el.remove())
     const pngImages = images.filter(({ type }) => fileTypes.indexOf(type) >= 0)
-    pngImages.forEach(({ $el }) => $el.attr('src', loadingImg))
+    pngImages.forEach(({ el }) => el.setAttribute('src', loadingImg))
     return pngImages
 }
 
