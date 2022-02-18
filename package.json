@@ -5,6 +5,7 @@
   "author": "",
   "homepage": "https://github.com/digabi/rich-text-editor",
   "main": "dist/rich-text-editor.js",
+  "types":"index.d.ts",
   "files": [
     "dist/*",
     "server/mathSvg.js"

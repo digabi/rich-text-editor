@@ -7,6 +7,7 @@ node_modules
 site
 dist
 *generated.js
+index.d.ts
 
 ## Sass
 .sass-cache
