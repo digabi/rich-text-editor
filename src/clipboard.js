@@ -5,7 +5,8 @@ import { invalidImageSelector } from './util'
 
 const fileTypes = ['image/png', 'image/jpeg']
 
-export function onPaste(e, saver) {
+export function onPaste(e, options) {
+    const saver = options.screenshot.saver
     const clipboardData = e.originalEvent.clipboardData
     const file =
         clipboardData.items &&
@@ -15,8 +16,8 @@ export function onPaste(e, saver) {
         onPasteBlob(e, file, saver)
     } else {
         const clipboardDataAsHtml = clipboardData.getData('text/html')
-        if (clipboardDataAsHtml) onPasteHtml(e, $(e.currentTarget), clipboardDataAsHtml, saver)
-        else onLegacyPasteImage($(e.currentTarget), saver)
+        if (clipboardDataAsHtml) onPasteHtml(e, $(e.currentTarget), clipboardDataAsHtml, options)
+        else onLegacyPasteImage($(e.currentTarget), options)
     }
 }
 
@@ -30,21 +31,22 @@ function onPasteBlob(event, file, saver) {
     }
 }
 
-function onPasteHtml(event, $answer, clipboardDataAsHtml, saver) {
+function onPasteHtml(event, $answer, clipboardDataAsHtml, options) {
     event.preventDefault()
     window.document.execCommand('insertHTML', false, u.sanitize(clipboardDataAsHtml))
-    persistInlineImages($answer, saver)
+    persistInlineImages($answer, options)
 }
 
-function onLegacyPasteImage($editor, saver) {
-    persistInlineImages($editor, saver)
+function onLegacyPasteImage($editor, options) {
+    persistInlineImages($editor, options)
 }
 
-export function persistInlineImages($editor, screenshotSaver) {
+export function persistInlineImages($editor, options) {
+    const screenshotSaver = options.screenshot.saver;
     setTimeout(
         () =>
             Promise.all(
-                markAndGetInlineImagesAndRemoveForbiddenOnes($editor).map((data) =>
+                markAndGetInlineImagesAndRemoveForbiddenOnes($editor, options).map((data) =>
                     screenshotSaver(data)
                         .then((screenShotUrl) => data.$el.attr('src', screenShotUrl))
                         .catch((err) => {
@@ -57,8 +59,9 @@ export function persistInlineImages($editor, screenshotSaver) {
     )
 }
 
-function markAndGetInlineImagesAndRemoveForbiddenOnes($editor) {
-    $editor.find(invalidImageSelector).remove()
+function markAndGetInlineImagesAndRemoveForbiddenOnes($editor, options) {
+    const imagesToRemove = invalidImageSelector(options.imagesToPreserve);
+    $editor.find(imagesToRemove).remove()
     const images = $editor
         .find('img[src^="data:image/"]')
         .toArray()

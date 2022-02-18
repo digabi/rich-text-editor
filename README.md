@@ -28,6 +28,10 @@ Rollup is probably needed.
 4. Run `yarn dev`.
 5. Go to [http://localhost:5000](http://localhost:5000)
 
+### Tests
+
+Go to [http://localhost:5000/test/tests.html](http://localhost:5000/test/tests.html)
+
 ## Example of direct usage
 
 Demo: http://digabi.github.io/rich-text-editor/
