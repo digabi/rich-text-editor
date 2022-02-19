@@ -5,14 +5,13 @@ import base64png from './base64png'
 import * as u from './testUtil'
 import latexCommands from '../src/latexCommands'
 import specialCharacters from '../src/specialCharacters'
+import sanitizeHtml from 'sanitize-html'
 
 const $answer = $('.answer')
-let savedValues = [[], []]
+let savedValues = [[], [], []]
 
 const richTextOptions = () => ({
-    screenshot: {
-        saver: () => Promise.resolve('/screenshot/screenshot.png'),
-    },
+    screenshotSaver: () => Promise.resolve('/screenshot/screenshot.png'),
 })
 
 const answer = $answer.toArray()
@@ -23,6 +22,28 @@ makeRichText(answer[0], richTextOptions(answer[0].id), (data) => {
 makeRichText(answer[1], richTextOptions(answer[1].id), (data) => {
     savedValues[1].push(data)
 })
+
+makeRichText(
+    answer[2],
+    {
+        screenshotSaver: () => Promise.resolve('/exam-api/screenshot.png'),
+        screenshotImageSelector:
+            'img[src*="/exam-api/"], img[src^="data:image/png"], img[src^="data:image/gif"], img[src^="data:image/jpeg"]',
+        invalidImageSelector: 'img:not(img[src^="data"], img[src^="/math.svg?latex="], img[src*="/exam-api/"])',
+        fileTypes: ['image/png', 'image/jpeg', 'image/gif'],
+        sanitize: (markup) =>
+            sanitizeHtml(markup, {
+                allowedTags: ['img', 'br', 'div', 'b'],
+                allowedAttributes: {
+                    img: ['src', 'alt'],
+                },
+                allowedSchemes: ['data'],
+            }),
+    },
+    (data) => {
+        savedValues[2].push(data)
+    }
+)
 
 window.locale = 'FI'
 window.IS_TEST = true
@@ -40,15 +61,18 @@ const $el = {}
 const clearSaveData = () => {
     savedValues[0] = []
     savedValues[1] = []
+    savedValues[2] = []
 }
 const defaults = () => {
     $el.answer1.html('<img alt="c+d" src="/math.svg?latex=c%2Bd" />')
     $el.answer2.html('<img alt="c+d" src="/math.svg?latex=e%2Bf" />')
+    $el.answer3.html('<img alt="c+d" src="/math.svg?latex=e%2Bf" />')
     clearSaveData()
 }
 const clear = () => {
     $el.answer1.empty()
     $el.answer2.empty()
+    $el.answer3.empty()
     clearSaveData()
 }
 const $firstAnswerMath = () => $('.answer1 img:first')
@@ -65,6 +89,7 @@ describe('rich text editor', () => {
     before(() => {
         $el.answer1 = $('.answer1')
         $el.answer2 = $('.answer2')
+        $el.answer3 = $('.answer3')
         $el.latexField = $('[data-js="latexField"]')
         $el.equationField = $('[data-js="equationField"]')
         $el.equationFieldTextArea = $el.equationField.find('textarea')
@@ -79,6 +104,11 @@ describe('rich text editor', () => {
     )
     after(defaults)
 
+    it('save handler is never called', () => {
+        expect(savedValues[0]).to.have.length(0)
+        expect(savedValues[1]).to.have.length(0)
+        expect(savedValues[2]).to.have.length(0)
+    })
     it('shows character list', () => expect($('[data-js="charactersList"]')).to.be.visible)
     it('hide math tools', () => expect($el.mathToolbar).to.be.hidden)
     it('answer has focus style', () => expect($el.answer1).to.have.class('rich-text-focused'))
@@ -119,6 +149,73 @@ describe('rich text editor', () => {
 
             it('ignores other than png images', () => {
                 expect($el.answer1.find('img').length).to.equal(currentImgAmout)
+            })
+        })
+    })
+
+    describe('when pasting images and content in other environments', () => {
+        before(clear)
+        before('focus', () => $el.answer3.focus())
+
+        describe('dropping markup', () => {
+            before('drop banned tags', () => {
+                $el.answer3.html(
+                    '<div class="forbidden"><b>drop</b></div><div>bar</div><a href="/">link text</a> <img src="/exam-api/screenshot.png" alt />'
+                )
+                $el.answer3.trigger('drop')
+            })
+            before(u.delayFor(150))
+
+            it('drops sanitized content', () => {
+                expect($el.answer3).to.have.html(
+                    '<div><b>drop</b></div><div>bar</div>link text <img src="/exam-api/screenshot.png" alt="">'
+                )
+                expect(savedValues[2]).to.eql([
+                    {
+                        answerHTML:
+                            '<div><b>drop</b></div><div>bar</div>link text <img src="/exam-api/screenshot.png" alt />',
+                        answerText: 'drop\nbar\nlink text',
+                        imageCount: 1,
+                    },
+                ])
+            })
+        })
+        describe('png', () => {
+            before(clear)
+            before('paste image', (done) => {
+                $el.answer3.append(base64png)
+                $el.answer3.find('img:last').get(0).onload = () => {
+                    done()
+                }
+                $el.answer3.trigger(u.pasteEventMock()).trigger('input')
+            })
+
+            it('saves pasted image', () => {
+                expect($el.answer3.find('img:last'))
+                    .to.have.attr('src')
+                    .match(/\/exam-api/)
+            })
+            it('saves markup', () => {
+                expect(savedValues[2]).to.eql([
+                    { answerHTML: '<img src="/exam-api/screenshot.png" alt />', answerText: '', imageCount: 1 },
+                ])
+            })
+        })
+
+        describe('gif is allowed with custom configuration', () => {
+            before(clear)
+            let currentImgAmout
+            before('#3', (done) => {
+                currentImgAmout = $el.answer3.find('img').length
+                $el.answer3.append('<img src="data:image/gif;base64,R0lGODlhAQABAIAAAAUEBAAAACwAAAAAAQABAAACAkQBADs=">')
+                $('.answer3 img:last').get(0).onload = () => {
+                    done()
+                }
+                $el.answer3.trigger(u.pasteEventMock()).trigger('input')
+            })
+
+            it('ignores other than png images', () => {
+                expect($el.answer3.find('img').length).to.equal(currentImgAmout + 1)
             })
         })
     })

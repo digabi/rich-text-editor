@@ -2,11 +2,21 @@ import $ from 'jquery'
 import sanitizeHtml from 'sanitize-html'
 import { sanitizeOpts } from './sanitizeOpts'
 
+export const defaults = {
+    locale: 'FI',
+    screenshotSaver: () => Promise.resolve(''),
+    baseUrl: '',
+    ignoreSaveObject: false,
+    screenshotImageSelector:
+        'img[src^="/screenshot/"], img[src^="data:image/png"], img[src^="data:image/gif"], img[src^="data:image/jpeg"]',
+    invalidImageSelector: 'img:not(img[src^="data"], img[src^="/math.svg?latex="], img[src^="/screenshot/"])',
+    fileTypes: ['image/png', 'image/jpeg'],
+    sanitize: defaultSanitize,
+    updateMathImg: undefined,
+}
+
 const emptyEquationSelector = 'img[src="/math.svg?latex="]'
 export const equationImageSelector = `img[src^="/math.svg?latex="]:not(${emptyEquationSelector}), img[src^="data:image/svg+xml"]`
-const screenshotImageSelector =
-    'img[src^="/screenshot/"], img[src^="data:image/png"], img[src^="data:image/gif"], img[src^="data:image/jpeg"]'
-export const invalidImageSelector = 'img:not(img[src^="data"], img[src^="/math.svg?latex="], img[src^="/screenshot/"])'
 function convertLinksToRelative(html) {
     return html.replace(new RegExp(document.location.origin, 'g'), '')
 }
@@ -38,7 +48,7 @@ function stripDivsFromRichTextAnswer(answerContentValue) {
     return parent.innerHTML
 }
 
-export function sanitize(html) {
+function defaultSanitize(html) {
     return sanitizeHtml(
         stripDivsFromRichTextAnswer(
             sanitizeHtml(convertLinksToRelative(html), { ...sanitizeOpts, allowedTags: ['div', 'p', 'img', 'br'] })
@@ -70,7 +80,7 @@ function preventIfTrue(e, val) {
     return val
 }
 
-export function sanitizeContent(answerElement) {
+export function sanitizeContent(answerElement, screenshotImageSelector, sanitize) {
     const $answerElement = $(answerElement)
     const $mathEditor = $answerElement.find('[data-js="mathEditor"]')
     $mathEditor.hide()
@@ -88,7 +98,7 @@ export function sanitizeContent(answerElement) {
     return {
         answerHTML: answerConsideredEmpty ? '' : stripBrsAndTrimFromEnd(html),
         answerText: stripNewLinesFromStartAndWiteSpacesFromEnd(text),
-        imageCount: existingScreenshotCount($(`<div>${html}</div>`)),
+        imageCount: $(`<div>${html}</div>`).find(screenshotImageSelector).length,
     }
 }
 
@@ -107,10 +117,6 @@ export function setCursorAfter($img) {
     const sel = window.getSelection()
     sel.removeAllRanges()
     sel.addRange(range)
-}
-
-export function existingScreenshotCount($editor) {
-    return $editor.find(screenshotImageSelector).length
 }
 
 export function scrollIntoView($element) {

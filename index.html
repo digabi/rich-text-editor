@@ -47,14 +47,12 @@
 
   const answer = document.querySelector('#answer1')
   makeRichText(answer, {
-    screenshot: {
-      saver: ({data}) =>
-        new Promise(resolve => {
-          const reader = new FileReader()
-          reader.onload = evt => resolve(evt.target.result.replace(/^(data:image)(\/[^;]+)(;.*)/,'$1$3'))
-          reader.readAsDataURL(data)
-        })
-    },
+    screenshotSaver: ({data}) =>
+      new Promise(resolve => {
+        const reader = new FileReader()
+        reader.onload = evt => resolve(evt.target.result.replace(/^(data:image)(\/[^;]+)(;.*)/,'$1$3'))
+        reader.readAsDataURL(data)
+      }),
     baseUrl: 'https://math-demo.abitti.fi',
     updateMathImg: ($img, latex) => {
       updateMath(latex, svg => {
