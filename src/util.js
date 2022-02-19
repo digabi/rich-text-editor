@@ -128,3 +128,8 @@ export function scrollIntoView($element) {
         $window.scrollTop(pos - windowHeight)
     }
 }
+
+Array.prototype.last = function() {
+    return this[this.length - 1];
+}
+

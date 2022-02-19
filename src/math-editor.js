@@ -7,6 +7,8 @@ if (!MathQuill) throw new Error('MathQuill is required but has not been loaded')
 const keyCodes = {
     ENTER: 13,
     ESC: 27,
+    Z: 90,
+    Y: 89,
 }
 
 window.mathEditorState = window.mathEditorState || { firstTime: true, MQ: undefined }
@@ -48,6 +50,10 @@ export function init(
     let mqEditTimeout
     let visible = false
     let focusChanged = null
+    let undoablesStack = []
+    let redoablesStack = []
+    let undoing = false
+    let redoing = false
     //noinspection JSUnusedGlobalSymbols,JSUnusedLocalSymbols
     const mqInstance = state.MQ.MathField($equationField.get(0), {
         handlers: {
@@ -64,7 +70,7 @@ export function init(
             focus.equationField = e.type !== 'blur' && e.type !== 'focusout'
             onFocusChanged()
         })
-        .on('keydown', onClose)
+        .on('keydown', onEditorKeydown)
         .on('paste', (e) => e.stopPropagation())
 
     $latexField
@@ -74,10 +80,13 @@ export function init(
             focus.latexField = e.type !== 'blur'
             onFocusChanged()
         })
-        .on('keydown', onClose)
+        .on('keydown', onEditorKeydown)
         .on('paste', (e) => e.stopPropagation())
 
-    function onClose(e) {
+    function onEditorKeydown(e) {
+        if (u.isCtrlKey(e, keyCodes.Z)) undoMath()
+        if (u.isCtrlKey(e, keyCodes.Y)) redoMath()
+
         if ($('.rich-text-editor-overlay').is(':visible')) return
         if (u.isCtrlKey(e, keyCodes.ENTER) || u.isKey(e, keyCodes.ESC)) closeMathEditor(true)
     }
@@ -98,6 +107,12 @@ export function init(
             $latexField.val(latex)
             updateMathImgWithDebounce($mathEditorContainer.prev(), latex)
             updateLatexFieldHeight()
+            if (!undoing && undoablesStack.last() !== latex) {
+                if (!redoing) redoablesStack = []
+                undoablesStack.push(latex)
+            }
+            undoing = false
+            redoing = false
         }, 0)
     }
 
@@ -149,6 +164,8 @@ export function init(
         $img.after($mathEditorContainer)
         visible = true
         focus.equationField = true
+        undoablesStack = []
+        redoablesStack = []
         toggleMathToolbar(true)
         setTimeout(() => mqInstance.focus(), 0)
         $latexField.val($img.prop('alt'))
@@ -199,5 +216,26 @@ export function init(
 
     function toggleMathToolbar(isVisible) {
         $('body').toggleClass('math-editor-focus', isVisible)
+    }
+
+    function undoMath() {
+        if (undoablesStack.length == 1) return;
+        undoing = true
+        clearMathEditor();
+        redoablesStack.push(undoablesStack.pop())
+        mqInstance.write(undoablesStack.last())
+    }
+
+    function redoMath() {
+        if (redoablesStack.length == 0) return;
+        redoing = true
+        clearMathEditor();
+        mqInstance.write(redoablesStack.pop())
+    }
+
+    function clearMathEditor() {
+        mqInstance.select()
+        mqInstance.keystroke('Backspace')
+        mqInstance.clearSelection()
     }
 }
