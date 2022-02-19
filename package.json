@@ -37,7 +37,6 @@
     "eslint-config-prettier": "^8.0.0",
     "eslint-plugin-prettier": "^4.0.0",
     "express": "^4.16.4",
-    "mathjax": "^2.7.5",
     "mocha": "^7.2.0",
     "mocha-chrome": "^2.2.0",
     "morgan": "^1.9.1",
