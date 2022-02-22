@@ -16,7 +16,7 @@
     "build:tsc": "tsc -p src",
     "build:assets": "bash -c 'mkdir -p dist; cp public/{rich-text-editor.css,*.svg} dist/'",
     "build": "concurrently --prefix \"[{name}]\" --names \"TSC,ASSETS\" \"npm run build:tsc\" \"npm run build:assets\"",
-    "build:bundle": "TYPECHECK=1 webpack --mode production --config webpack.bundle.config.js",
+    "build:bundle": "webpack --mode development --config webpack.bundle.config.js",
     "start": "node test/index.js",
     "test": "eslint . && test/testRunner.js",
     "dev": "supervisor -i public,test test/index.js",
