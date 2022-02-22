@@ -129,7 +129,6 @@ export function scrollIntoView($element) {
     }
 }
 
-Array.prototype.last = function() {
-    return this[this.length - 1];
+export function last(array) {
+    return array[array.length - 1]
 }
-

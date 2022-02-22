@@ -84,9 +84,6 @@ export function init(
         .on('paste', (e) => e.stopPropagation())
 
     function onEditorKeydown(e) {
-        if (u.isCtrlKey(e, keyCodes.Z)) undoMath()
-        if (u.isCtrlKey(e, keyCodes.Y)) redoMath()
-
         if ($('.rich-text-editor-overlay').is(':visible')) return
         if (u.isCtrlKey(e, keyCodes.ENTER) || u.isKey(e, keyCodes.ESC)) closeMathEditor(true)
     }
@@ -99,7 +96,16 @@ export function init(
     }
 
     function onMqEdit(e) {
-        e && e.originalEvent && e.originalEvent.stopPropagation()
+        if (e && e.originalEvent) {
+            if (e.originalEvent.inputType === 'historyUndo') {
+                undoMath()
+                return
+            } else if (e.originalEvent.inputType === 'historyRedo') {
+                redoMath()
+                return
+            }
+            e.originalEvent.stopPropagation()
+        }
         clearTimeout(mqEditTimeout)
         mqEditTimeout = setTimeout(() => {
             if (focus.latexField) return
@@ -107,7 +113,7 @@ export function init(
             $latexField.val(latex)
             updateMathImgWithDebounce($mathEditorContainer.prev(), latex)
             updateLatexFieldHeight()
-            if (!undoing && undoablesStack.last() !== latex) {
+            if (!undoing && u.last(undoablesStack) !== latex) {
                 if (!redoing) redoablesStack = []
                 undoablesStack.push(latex)
             }
@@ -219,17 +225,17 @@ export function init(
     }
 
     function undoMath() {
-        if (undoablesStack.length == 1) return;
+        if (undoablesStack.length === 1) return
         undoing = true
-        clearMathEditor();
+        clearMathEditor()
         redoablesStack.push(undoablesStack.pop())
-        mqInstance.write(undoablesStack.last())
+        mqInstance.write(u.last(undoablesStack))
     }
 
     function redoMath() {
-        if (redoablesStack.length == 0) return;
+        if (redoablesStack.length === 0) return
         redoing = true
-        clearMathEditor();
+        clearMathEditor()
         mqInstance.write(redoablesStack.pop())
     }
 
