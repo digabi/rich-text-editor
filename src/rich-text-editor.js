@@ -86,7 +86,7 @@ export const makeRichText = (answer, options, onValueChanged = () => {}) => {
         .on('drop', (e) => {
             pasteInProgress = true
             setTimeout(() => {
-                $(e.target).html(sanitize(e.target.innerHTML))
+                $(e.currentTarget).html(sanitize(e.currentTarget.innerHTML))
                 clipboard.persistInlineImages($(e.currentTarget), screenshotSaver, invalidImageSelector)
                 pasteInProgress = false
             }, 100)
