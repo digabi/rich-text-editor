@@ -7,6 +7,21 @@
     <link rel="stylesheet" type="text/css" href="/public/rich-text-editor.css" />
     <script src="/node_modules/jquery/dist/jquery.js"></script>
     <script src="/node_modules/@digabi/mathquill/build/mathquill.js"></script>
+    <script>
+      window.MathJax = {
+        options: {
+          ignoreHtmlClass: 'tex2jax_ignore',
+          processHtmlClass: 'tex2jax_process'
+        },
+        tex: {
+          packages: ['base', 'ams', 'noerrors', 'noundefined', 'mhchem']
+        },
+        loader: {
+          load: ['[tex]/noerrors', '[tex]/mhchem']
+        }
+      };
+    </script>
+    <script src="//cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js" id="MathJax-script"></script>
     <link rel="icon" href="/public/rich-text-editor-favicon.ico" type="image/x-icon" />
     <link rel="shortcut icon" href="/public/rich-text-editor-favicon.ico" type="image/x-icon" />
     <link href="/node_modules/mocha/mocha.css" rel="stylesheet" />
@@ -58,6 +73,10 @@
               <div class="mathQuillTests testBox"></div>
               <h3>MathJax</h3>
               <div class="mathJaxTests testBox"></div>
+              <h3>MathJax clientside</h3>
+              <div class="mathJaxClientSideTests testBox">
+                <img />
+              </div>
           </div>
         <button class="save actionButton" style="display: none">Tallenna</button>
       </section>

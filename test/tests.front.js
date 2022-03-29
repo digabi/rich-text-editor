@@ -44,7 +44,17 @@ makeRichText(
         savedValues[2].push(data)
     }
 )
-
+const getSvg = function (latex) {
+    const node = MathJax.tex2svg(latex)
+    return (
+        'data:image/svg+xml;base64,' +
+        btoa(
+            encodeURIComponent(node.firstChild.outerHTML).replace(/%([0-9A-F]{2})/g, (match, p1) =>
+                String.fromCharCode('0x' + p1)
+            )
+        )
+    )
+}
 window.locale = 'FI'
 window.IS_TEST = true
 const reporter = window.URL && new URL(document.location.href).searchParams.get('test')
@@ -445,6 +455,9 @@ describe('rich text editor', () => {
                 specialCharacters.map((x) => x.characters.map((x) => x.character).join('')).join('<br>')
             )
             mqInstance.latex(`${chars.map((x) => x.join(' ')).join(' ')} ${latexes.join(' ')} ${scandicChars}`)
+            $('.mathJaxClientSideTests img').prop({
+                src: getSvg(mqInstance.latex()),
+            })
             $('.mathJaxTests').append(`<img src="/math.svg?latex=${encodeURIComponent(mqInstance.latex())}" />`)
             $('.mathJaxTests img').get(0).onload = () => {
                 done()
@@ -466,6 +479,9 @@ describe('rich text editor', () => {
 
         it('renders mathjax correctly', () => {
             expect($('.mathJaxTests img').width()).to.be.greaterThan(50)
+        })
+        it('renders clientside mathjax correctly', () => {
+            expect($('.mathJaxClientSideTests img').width()).to.be.greaterThan(50)
         })
     })
 })
