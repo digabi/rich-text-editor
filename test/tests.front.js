@@ -1,4 +1,4 @@
-/* global expect, WebConsole, chai */
+/* global expect, WebConsole, chai, MathJax */
 import $ from 'jquery'
 import { makeRichText } from '../src/rich-text-editor'
 import base64png from './base64png'
