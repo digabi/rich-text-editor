@@ -1,4 +1,4 @@
-/* global expect, WebConsole, chai, MathJax */
+/* global expect, chai, MathJax */
 import $ from 'jquery'
 import { makeRichText } from '../src/rich-text-editor'
 import base64png from './base64png'
@@ -57,14 +57,7 @@ const getSvg = function (latex) {
 }
 window.locale = 'FI'
 window.IS_TEST = true
-const reporter = window.URL && new URL(document.location.href).searchParams.get('test')
-const mochaOpts = {
-    ui: 'bdd',
-}
-if (reporter === 'console') {
-    mochaOpts.reporter = WebConsole
-}
-mocha.setup(mochaOpts)
+mocha.setup('bdd')
 window.expect = chai.expect
 chai.config.truncateThreshold = 0
 const $el = {}
