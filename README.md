@@ -1,4 +1,4 @@
-[![Build Status](https://travis-ci.org/digabi/rich-text-editor.svg?branch=master)](https://travis-ci.org/digabi/rich-text-editor)
+[![Node.js CI](https://github.com/digabi/rich-text-editor/actions/workflows/ci.yml/badge.svg)](https://github.com/digabi/rich-text-editor/actions/workflows/ci.yml)
 
 [![Abitti.dev](https://abitti.dev/images/abittidev_logo.svg)](https://abitti.dev/)
 
