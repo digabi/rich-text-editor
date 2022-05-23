@@ -31,7 +31,7 @@
   "devDependencies": {
     "@babel/polyfill": "^7.0.0",
     "buffer": "^6.0.3",
-    "blueimp-mocha-chrome": "blueimp/mocha-chrome-npm",
+    "blueimp-mocha-chrome": "2.3.0",
     "chai": "^4.2.0",
     "chai-jquery": "^2.1.0",
     "concurrently": "^7.0.0",

@@ -523,9 +523,10 @@ binary-extensions@^2.0.0:
   version "2.1.0"
   resolved "https://registry.yarnpkg.com/binary-extensions/-/binary-extensions-2.1.0.tgz#30fa40c9e7fe07dbc895678cd287024dea241dd9"
 
-blueimp-mocha-chrome@blueimp/mocha-chrome-npm:
+blueimp-mocha-chrome@2.3.0:
   version "2.3.0"
-  resolved "https://codeload.github.com/blueimp/mocha-chrome-npm/tar.gz/ae99b677823ea06a9b5b248f3f524841d427e01b"
+  resolved "https://registry.yarnpkg.com/blueimp-mocha-chrome/-/blueimp-mocha-chrome-2.3.0.tgz#a6392d6830ba1936022a30ed0cf995ff0603badc"
+  integrity sha512-Mo7SEUw3bzHI893cUYH974ou4UgVWywHjhjDVVaXr1TDw+Azo5S99F6BbvJUrFmfYzM52Aw74olkvjnwS3XuOg==
   dependencies:
     chalk "^2.0.1"
     chrome-launcher "^0.13.4"
