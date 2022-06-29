@@ -326,6 +326,61 @@ describe('rich text editor', () => {
                 expect(lastData.answerText).to.equal('°')
             })
         })
+
+        describe('when writing equations', () => {
+            before(clear)
+            before(() => $el.latexField.focus())
+            before(() => $el.latexField.val('test').trigger('input'))
+            before(u.delayFor(100))
+            before(() => $el.latexField.val('test1').trigger('input'))
+            before(u.delayFor(100))
+
+            it('CTRL + Z restores previous answer', () => {
+                $el.latexField.trigger({ type: 'keydown', keyCode: 90, ctrlKey: true })
+                u.delayFor(100)
+                expect($el.latexField.val()).to.eql('test')
+            })
+
+            it('CTRL + Y restores next answer', () => {
+                $el.latexField.trigger({ type: 'keydown', keyCode: 89, ctrlKey: true })
+                u.delayFor(100)
+                expect($el.latexField.val()).to.eql('test1')
+            })
+
+            it('LaTeX undo and redo change MQ', () => {
+                $el.latexField.trigger({ type: 'keydown', keyCode: 90, ctrlKey: true })
+                u.delayFor(100)
+                expect($el.equationField).to.have.text('test')
+            })
+            it('MQ undo and redo change LaTeX', () => {
+                $el.equationFieldTextArea.trigger({ type: 'keydown', keyCode: 89, ctrlKey: true })
+                u.delayFor(100)
+                expect($el.latexField.val()).to.eql('test1')
+            })
+        })
+
+        describe('when writing LaTeX', () => {
+            before(clear)
+            before(() => $el.latexField.focus())
+            before(() => $el.latexField.val('\\alph').trigger('input'))
+            before(u.delayFor(100))
+            before(() => $el.latexField.val('\\alpha').trigger('input'))
+            before(u.delayFor(100))
+
+            after(defaults)
+            after(() => $el.answer1.focus())
+
+            it('Undo and redo work correctly on incorrect LaTeX', () => {
+                $el.equationFieldTextArea.trigger({ type: 'keydown', keyCode: 90, ctrlKey: true })
+                u.delayFor(100)
+                expect($el.latexField.val()).to.eql('\\alph')
+                expect($el.equationField).to.have.text('')
+                $el.equationFieldTextArea.trigger({ type: 'keydown', keyCode: 89, ctrlKey: true })
+                u.delayFor(100)
+                expect($el.latexField.val()).to.eql('\\alpha')
+                expect($el.equationField).to.have.text('α')
+            })
+        })
     })
 
     describe('when leaving answer box', () => {
