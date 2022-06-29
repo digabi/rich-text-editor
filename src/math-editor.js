@@ -7,6 +7,14 @@ if (!MathQuill) throw new Error('MathQuill is required but has not been loaded')
 const keyCodes = {
     ENTER: 13,
     ESC: 27,
+    Z: 90,
+    Y: 89,
+}
+
+const undoRedoCodes = {
+    UNDO: -1,
+    REDO: 1,
+    NOCHANGE: 0,
 }
 
 window.mathEditorState = window.mathEditorState || { firstTime: true, MQ: undefined }
@@ -48,6 +56,11 @@ export function init(
     let mqEditTimeout
     let visible = false
     let focusChanged = null
+    let undoStack = []
+    let redoStack = []
+
+    // undo=-1, redo=1, noChange=0
+    let undoRedo = 0
     //noinspection JSUnusedGlobalSymbols,JSUnusedLocalSymbols
     const mqInstance = state.MQ.MathField($equationField.get(0), {
         handlers: {
@@ -64,7 +77,7 @@ export function init(
             focus.equationField = e.type !== 'blur' && e.type !== 'focusout'
             onFocusChanged()
         })
-        .on('keydown', onClose)
+        .on('keydown', onKeyDown)
         .on('paste', (e) => e.stopPropagation())
 
     $latexField
@@ -74,12 +87,14 @@ export function init(
             focus.latexField = e.type !== 'blur'
             onFocusChanged()
         })
-        .on('keydown', onClose)
+        .on('keydown', onKeyDown)
         .on('paste', (e) => e.stopPropagation())
 
-    function onClose(e) {
+    function onKeyDown(e) {
         if ($('.rich-text-editor-overlay').is(':visible')) return
-        if (u.isCtrlKey(e, keyCodes.ENTER) || u.isKey(e, keyCodes.ESC)) closeMathEditor(true)
+        else if (u.isUndo(e)) undoMath()
+        else if (u.isRedo(e)) redoMath()
+        else if (u.isCtrlKey(e, keyCodes.ENTER) || u.isKey(e, keyCodes.ESC)) closeMathEditor(true)
     }
 
     return {
@@ -87,6 +102,18 @@ export function init(
         insertMath,
         openMathEditor,
         closeMathEditor,
+    }
+
+    function updateUndoRedoStacks() {
+        const latex = $latexField.val().trim()
+        if (undoRedo >= undoRedoCodes.NOCHANGE && u.last(undoStack) !== latex) {
+            if (undoRedo === undoRedoCodes.NOCHANGE) redoStack = []
+            undoStack.push(latex)
+        }
+        if (undoRedo !== 0 && mqInstance.latex().length === 0 && latex.length > 0) {
+            $latexField.focus()
+        }
+        undoRedo = undoRedoCodes.NOCHANGE
     }
 
     function onMqEdit(e) {
@@ -98,6 +125,7 @@ export function init(
             $latexField.val(latex)
             updateMathImgWithDebounce($mathEditorContainer.prev(), latex)
             updateLatexFieldHeight()
+            updateUndoRedoStacks()
         }, 0)
     }
 
@@ -105,14 +133,17 @@ export function init(
         if (e.originalEvent.key === ',') {
             e.preventDefault()
             u.insertToTextAreaAtCursor($latexField.get(0), '{,}')
+            onLatexUpdate(e)
         }
-        onLatexUpdate(e)
     }
 
     function onLatexUpdate(e) {
         e && e.originalEvent && e.originalEvent.stopPropagation()
         updateMathImgWithDebounce($mathEditorContainer.prev(), $latexField.val())
-        setTimeout(() => mqInstance.latex($latexField.val()), 1)
+        setTimeout(() => {
+            mqInstance.latex($latexField.val())
+            updateUndoRedoStacks()
+        }, 1)
         updateLatexFieldHeight()
     }
 
@@ -149,6 +180,8 @@ export function init(
         $img.after($mathEditorContainer)
         visible = true
         focus.equationField = true
+        redoStack = []
+        undoStack = []
         toggleMathToolbar(true)
         setTimeout(() => mqInstance.focus(), 0)
         $latexField.val($img.prop('alt'))
@@ -199,5 +232,24 @@ export function init(
 
     function toggleMathToolbar(isVisible) {
         $('body').toggleClass('math-editor-focus', isVisible)
+    }
+
+    function undoMath() {
+        if (undoStack.length === 1) return
+        undoRedo = undoRedoCodes.UNDO
+        redoStack.push(undoStack.pop())
+        mqInstance.latex(u.last(undoStack))
+        $latexField.val(u.last(undoStack))
+        updateUndoRedoStacks()
+        updateLatexFieldHeight()
+    }
+
+    function redoMath() {
+        if (redoStack.length === 0) return
+        undoRedo = undoRedoCodes.REDO
+        mqInstance.latex(u.last(redoStack))
+        $latexField.val(redoStack.pop())
+        updateUndoRedoStacks()
+        updateLatexFieldHeight()
     }
 }

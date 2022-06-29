@@ -128,3 +128,24 @@ export function scrollIntoView($element) {
         $window.scrollTop(pos - windowHeight)
     }
 }
+
+export function last(array) {
+    if (array.length === 0) return null
+    return array[array.length - 1]
+}
+
+export function isUndo(e) {
+    return preventIfTrue(
+        e,
+        (!e.altKey && !e.shiftKey && e.ctrlKey && keyOrKeyCode(e, 90)) ||
+            (!e.altKey && !e.shiftKey && e.metaKey && keyOrKeyCode(e, 90))
+    )
+}
+
+export function isRedo(e) {
+    return preventIfTrue(
+        e,
+        (!e.altKey && !e.shiftKey && e.ctrlKey && keyOrKeyCode(e, 89)) ||
+            (!e.altKey && e.shiftKey && e.metaKey && keyOrKeyCode(e, 90))
+    )
+}
