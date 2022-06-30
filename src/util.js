@@ -83,9 +83,12 @@ function preventIfTrue(e, val) {
 export function sanitizeContent(answerElement, screenshotImageSelector, sanitize) {
     const $answerElement = $(answerElement)
     const $mathEditor = $answerElement.find('[data-js="mathEditor"]')
+    const $renderError = $answerElement.find('.render-error')
     $mathEditor.hide()
+    $renderError.hide()
     const text = $answerElement.get(0).innerText
     $mathEditor.show()
+    $renderError.show()
 
     const html = sanitize($answerElement.html())
 
