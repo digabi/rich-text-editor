@@ -36,6 +36,8 @@ export default {
             equation:
                 '<h3>Formler</h3><p>Formeln läggs till med kommandot<span class="rich-text-editor-help-key">CTRL</span>-<spanclass="rich-text-editor-help-key">E</span><br />Snabbkommandon med formler:</p><table class="rich-text-editor-help-shortcuts"><tbody><tr><th>Divisionsstreck</th><td><span class="rich-text-editor-help-key">/</span></td></tr><tr><th>Multiplikationstecken</th><td><span class="rich-text-editor-help-key">*</span></td></tr><tr><th>Upphöjt index</th><td><span class="rich-text-editor-help-key">^</span></td></tr><tr><th>Nedsänkt index</th><td><span class="rich-text-editor-help-key">_</span></td></tr><tr><th>Lägg till formel på nästa rad</th><td><span class="rich-text-editor-help-key">↵</span></td></tr><tr><th>Stäng formeln</th><td><span class="rich-text-editor-help-key">esc</span></td></tr></tbody></table>',
         },
+        mq_render_error: 'Ingen förhandsvisning',
+        mj_render_error: 'Fel i LaTeX-koden',
     },
     annotating: {
         sendFeedback: 'Skicka respons',

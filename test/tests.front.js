@@ -23,6 +23,8 @@ makeRichText(answer[1], richTextOptions(answer[1].id), (data) => {
     savedValues[1].push(data)
 })
 
+makeRichText(answer[3], richTextOptions(answer[3].id))
+
 makeRichText(
     answer[2],
     {
@@ -77,6 +79,7 @@ const defaults = () => {
     $el.answer1.html('<img alt="c+d" src="/math.svg?latex=c%2Bd" />')
     $el.answer2.html('<img alt="c+d" src="/math.svg?latex=e%2Bf" />')
     $el.answer3.html('<img alt="c+d" src="/math.svg?latex=e%2Bf" />')
+    $el.renderError.text('')
     clearSaveData()
 }
 const clear = () => {
@@ -106,6 +109,7 @@ describe('rich text editor', () => {
         $el.mathToolbar = $('[data-js="mathToolbar"]')
         $el.tools = $('[data-js="tools"]')
         $el.mathEditor = $('[data-js="mathEditor"]')
+        $el.renderError = $('.render-error')
     })
     before('focus', () => $el.answer1.focus())
     before(
@@ -266,6 +270,24 @@ describe('rich text editor', () => {
             it('shows math in equation field', () => expect($el.equationField).to.have.text('xy±'))
             it('shows math in latex field', () => expect($el.latexField).to.have.value('xy\\pm'))
             it('shows math in img', () => expect($firstAnswerMath()).to.have.attr('src', '/math.svg?latex=xy%5Cpm'))
+
+            describe('and typing invalid formula for MathQuill', () => {
+                before(defaults)
+                before(() => $firstAnswerMath().trigger({ type: 'click', which: 3 }))
+                before('type', () => $el.latexField.focus().val('1\\').trigger('paste'))
+                before(u.waitUntil(() => $el.renderError.text().length > 0))
+
+                it('shows error message', () => expect($el.renderError.text()).to.equal('Ei esikatselua'))
+            })
+
+            describe('and typing invalid formula for MathJax', () => {
+                before(defaults)
+                before(() => $firstAnswerMath().trigger({ type: 'click', which: 3 }))
+                before('type', () => $el.latexField.focus().val('1}{').trigger('paste'))
+                before(u.waitUntil(() => $el.renderError.text().length > 0))
+
+                it('shows error message', () => expect($el.renderError.text()).to.equal('LaTeX-koodissa virhe'))
+            })
         })
 
         describe('when focus in equation field, pasting content and adding char', () => {

@@ -36,7 +36,8 @@ export function init(
             alt: trimmedAlt,
         })
         $img.closest('[data-js="answer"]').trigger('input')
-    }
+    },
+    l
 ) {
     let updateMathImgTimeout
 
@@ -45,9 +46,12 @@ export function init(
         state.firstTime = false
     }
     const $mathEditorContainer = $(`
-        <div class="math-editor" data-js="mathEditor">
-            <div class="math-editor-equation-field" data-js="equationField"></div>
-            <textarea rows="1" class="math-editor-latex-field" data-js="latexField" placeholder="LaTeΧ"></textarea>
+        <div>
+            <div class="math-editor" data-js="mathEditor">
+                <div class="math-editor-equation-field" data-js="equationField"></div>
+                <textarea rows="1" class="math-editor-latex-field" data-js="latexField" placeholder="LaTeΧ"></textarea>
+            </div>
+            <span class="render-error"></span>
         </div>`)
 
     $outerPlaceholder.append($mathEditorContainer)
@@ -121,6 +125,7 @@ export function init(
             if (focus.latexField) return
             const latex = mqInstance.latex()
             $latexField.val(latex)
+            renderPossibleError(latex)
             updateMathImgWithDebounce($mathEditorContainer.prev(), latex)
             updateLatexFieldHeight()
             updateUndoRedoStacks()
@@ -135,12 +140,23 @@ export function init(
         }
     }
 
+    function renderPossibleError(latex) {
+        const $renderError = $('.render-error')
+        $renderError.text('')
+        if (latex.length > 0 && mqInstance.latex().length === 0) {
+            const node = window.MathJax.tex2svg(latex)
+            $renderError.text(node.querySelector('merror') ? l.mj_render_error : l.mq_render_error)
+        }
+    }
+
     function onLatexUpdate(e) {
         e && e.originalEvent && e.originalEvent.stopPropagation()
         updateMathImgWithDebounce($mathEditorContainer.prev(), $latexField.val())
         setTimeout(() => {
-            mqInstance.latex($latexField.val())
+            const latex = $latexField.val()
+            mqInstance.latex(latex)
             updateUndoRedoStacks()
+            renderPossibleError(latex)
         }, 1)
         updateLatexFieldHeight()
     }
@@ -240,6 +256,7 @@ export function init(
         $latexField.val(u.last(undoStack))
         updateUndoRedoStacks()
         updateLatexFieldHeight()
+        renderPossibleError($latexField.val())
     }
 
     function redoMath() {
@@ -249,5 +266,6 @@ export function init(
         $latexField.val(redoStack.pop())
         updateUndoRedoStacks()
         updateLatexFieldHeight()
+        renderPossibleError($latexField.val())
     }
 }

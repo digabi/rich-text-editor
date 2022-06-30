@@ -2,6 +2,17 @@
   display: none;
 }
 
+.render-error {
+  position: relative;
+  z-index: 1000;
+  left: 20px;
+  top: -38px;
+  font-family: sans-serif;
+  font-size: 12px;
+  padding: 5px;
+  color: red;
+}
+
 .rich-text-editor img[src*='/math.svg'] {
   vertical-align: middle;
   margin: 4px;

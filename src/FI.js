@@ -39,6 +39,8 @@ lisätä kuvia.</li></ul>`,
             equation:
                 '<h3>Kaavat</h3><p>Kaava lisätään komennolla <span class="rich-text-editor-help-key">CTRL</span>-<span class="rich-text-editor-help-key">E</span><br>Pikakomennot kaavassa:</p><table class="rich-text-editor-help-shortcuts"><tbody><tr><th>Jakoviiva</th><td><span class="rich-text-editor-help-key">/</span></td></tr><tr><th>Kertomerkki</th><td><span class="rich-text-editor-help-key">*</span></td></tr><tr><th>Yläindeksi</th><td><span class="rich-text-editor-help-key">^</span></td></tr><tr><th>Alaindeksi</th><td><span class="rich-text-editor-help-key">_</span></td></tr><tr><th>Lisää kaava seuraavalle riville</th><td><span class="rich-text-editor-help-key">↵</span></td></tr><tr><th>Sulje kaava</th><td><span class="rich-text-editor-help-key">esc</span></td></tr></tbody></table>',
         },
+        mq_render_error: 'Ei esikatselua',
+        mj_render_error: 'LaTeX-koodissa virhe',
     },
     annotating: {
         sendFeedback: 'Lähetä palautetta',
