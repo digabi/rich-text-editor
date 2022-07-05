@@ -108,9 +108,11 @@
   border-radius: 5px;
   color: #fff;
   content: attr(data-command);
+  letter-spacing: 1.5px;
+  font-size: 16px;
   left: 50%;
   top: 100%;
-  padding: 5px 15px;
+  padding: 7px 15px;
   position: absolute;
   z-index: 32;
   transform: translate(-50%, 0);
@@ -147,6 +149,7 @@
   border: none;
   font-family: SourceSansPro-Semibold, sans-serif;
   font-size: 16px;
+  letter-spacing: 1.5px;
   color: #359bb7;
   letter-spacing: 0;
   line-height: 22px;
@@ -347,6 +350,39 @@
   border: none;
   cursor: pointer;
   display: block;
+}
+
+.rich-text-editor-undo-redo-wrapper {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  display: inline-flex;
+}
+
+.rich-text-editor-toolbar .rich-text-editor-undo-redo,
+.rich-text-editor-toolbar .rich-text-editor-undo-redo:hover {
+  width: 35px;
+  height: 35px;
+  background-repeat: no-repeat;
+  background-position: 50% 50%;
+  border: none;
+  cursor: pointer;
+}
+
+.rich-text-editor-toolbar .rich-text-editor-undo-button,
+.rich-text-editor-toolbar .rich-text-editor-undo-button:hover {
+  background-image: url('undoButton.svg');
+  margin-right: 5px;
+}
+
+.rich-text-editor-toolbar .rich-text-editor-redo-button,
+.rich-text-editor-toolbar .rich-text-editor-redo-button:hover {
+  background-image: url('redoButton.svg');
+}
+
+.rich-text-editor-undo-redo:disabled {
+  filter: grayscale(100%);
+  pointer-events: none;
 }
 
 .rich-text-editor-modal-columns {

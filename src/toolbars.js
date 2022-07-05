@@ -57,7 +57,7 @@ export function init(mathEditor, hasRichTextFocus, l) {
             </div>
             <div class="rich-text-editor-tools-button-wrapper">
                 <div class="rich-text-editor-toolbar-wrapper">
-                    <button class="rich-text-editor-new-equation rich-text-editor-button rich-text-editor-button-action" data-js="newEquation" data-command="Ctrl-E" data-i18n="rich_text_editor.insert_equation">Σ ${l.insertEquation}</button>
+                    <button class="rich-text-editor-new-equation rich-text-editor-button rich-text-editor-button-action" data-js="newEquation" data-command="Ctrl + E" data-i18n="rich_text_editor.insert_equation">Σ ${l.insertEquation}</button>
                 </div>
             </div>
         </div>
@@ -156,6 +156,22 @@ function initMathToolbar($mathToolbar, mathEditor) {
             e.preventDefault()
             const dataset = e.currentTarget.dataset
             mathEditor.insertMath(dataset.command, dataset.latexcommand, dataset.usewrite === 'true')
+        })
+
+    $mathToolbar
+        .append(
+            `<div class="rich-text-editor-undo-redo-wrapper">
+                <button class="rich-text-editor-button rich-text-editor-undo-redo rich-text-editor-undo-button" disabled="true" data-command="Ctrl + Z" data-js="mathUndo"></button>
+                <button class="rich-text-editor-button rich-text-editor-undo-redo rich-text-editor-redo-button" disabled="true" data-command="Ctrl + Y" data-js="mathRedo"></button>
+            </div>`
+        )
+        .on('mousedown', '[data-js="mathUndo"]', (e) => {
+            e.preventDefault()
+            mathEditor.undoMath()
+        })
+        .on('mousedown', '[data-js="mathRedo"]', (e) => {
+            e.preventDefault()
+            mathEditor.redoMath()
         })
 }
 
