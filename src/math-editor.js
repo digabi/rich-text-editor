@@ -106,6 +106,8 @@ export function init(
         insertMath,
         openMathEditor,
         closeMathEditor,
+        undoMath,
+        redoMath,
     }
 
     function updateUndoRedoStacks() {
@@ -114,6 +116,8 @@ export function init(
             if (undoRedo === undoRedoCodes.NOCHANGE) redoStack = []
             undoStack.push(latex)
         }
+        $('[data-js="mathUndo"]').prop('disabled', undoStack.length <= 1)
+        $('[data-js="mathRedo"]').prop('disabled', redoStack.length === 0)
         if (undoRedo !== 0 && mqInstance.latex().length === 0 && latex.length > 0) {
             $latexField.focus()
         }
@@ -127,7 +131,7 @@ export function init(
             if (focus.latexField) return
             const latex = mqInstance.latex()
             $latexField.val(latex)
-            renderPossibleError(latex)
+            renderPossibleError()
             updateMathImgWithDebounce($mathEditorContainer.prev(), latex)
             updateLatexFieldHeight()
             updateUndoRedoStacks()
@@ -142,22 +146,22 @@ export function init(
         }
     }
 
-    function renderPossibleError(latex) {
+    function renderPossibleError() {
         const $renderError = $('.render-error')
-        $renderError.text('')
-        if (latex.length > 0 && mqInstance.latex().length === 0) {
+        $renderError.empty()
+        if (isLatexInvalid()) {
             $renderError.text(l.render_error)
         }
     }
 
     function onLatexUpdate(e) {
         e && e.originalEvent && e.originalEvent.stopPropagation()
-        updateMathImgWithDebounce($mathEditorContainer.prev(), $latexField.val())
+        const latex = $latexField.val()
+        updateMathImgWithDebounce($mathEditorContainer.prev(), latex)
         setTimeout(() => {
-            const latex = $latexField.val()
             mqInstance.latex(latex)
             updateUndoRedoStacks()
-            renderPossibleError(latex)
+            renderPossibleError()
         }, 1)
         updateLatexFieldHeight()
     }
@@ -200,6 +204,9 @@ export function init(
         toggleMathToolbar(true)
         setTimeout(() => mqInstance.focus(), 0)
         $latexField.val($img.prop('alt'))
+        setTimeout(() => {
+            if (isLatexInvalid()) $latexField.focus()
+        }, 2)
         onLatexUpdate()
         u.scrollIntoView($mathEditorContainer)
     }
@@ -257,7 +264,7 @@ export function init(
         $latexField.val(u.last(undoStack))
         updateUndoRedoStacks()
         updateLatexFieldHeight()
-        renderPossibleError($latexField.val())
+        renderPossibleError()
     }
 
     function redoMath() {
@@ -267,6 +274,10 @@ export function init(
         $latexField.val(redoStack.pop())
         updateUndoRedoStacks()
         updateLatexFieldHeight()
-        renderPossibleError($latexField.val())
+        renderPossibleError()
+    }
+
+    function isLatexInvalid() {
+        return mqInstance.latex().length === 0 && $latexField.val().length > 0
     }
 }
