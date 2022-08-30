@@ -152,7 +152,7 @@ function initMathToolbar($mathToolbar, mathEditor) {
                 )
                 .join('')
         )
-        .on('mousedown', 'button', (e) => {
+        .on('mousedown', '.rich-text-editor-button-grid', (e) => {
             e.preventDefault()
             const dataset = e.currentTarget.dataset
             mathEditor.insertMath(dataset.command, dataset.latexcommand, dataset.usewrite === 'true')
