@@ -121,14 +121,14 @@ export function init(
         if (undoRedo !== 0 && mqInstance.latex().length === 0 && latex.length > 0) {
             $latexField.focus()
         }
-        undoRedo = undoRedoCodes.NOCHANGE
+        setTimeout(() => (undoRedo = undoRedoCodes.NOCHANGE), 2)
     }
 
     function onMqEdit(e) {
         e && e.originalEvent && e.originalEvent.stopPropagation()
         clearTimeout(mqEditTimeout)
         mqEditTimeout = setTimeout(() => {
-            if (focus.latexField) return
+            if (focus.latexField || undoRedo !== undoRedoCodes.NOCHANGE) return
             const latex = mqInstance.latex()
             $latexField.val(latex)
             renderPossibleError()
