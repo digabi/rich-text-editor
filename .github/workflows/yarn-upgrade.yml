@@ -1,0 +1,20 @@
+name: Run yarn upgrade
+on:
+  schedule:
+    - cron: '0 0 * * *'
+  workflow_dispatch:
+jobs:
+  build:
+    name: Run yarn upgrade
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+      - run: |
+          yarn upgrade
+          git config user.name yarn-upgrade
+          git config user.email yarn-upgrade@ylioppilastutkinto.fi
+          git add yarn.lock
+          git commit -m "Upgrade yarn dependencies" || echo "No changes to commit"
+          git push

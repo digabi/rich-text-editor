@@ -1,7 +1,8 @@
 name: Merge Dependabot pull requests
 on:
   schedule:
-    - cron: '0 3-6 * * *'
+    - cron: '0 2-4 * * *'
+  workflow_dispatch:
 jobs:
   test:
     name: Merge Dependabot pull requests
@@ -11,3 +12,4 @@ jobs:
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
           merge-method: rebase
+          auto-merge: major

@@ -9,9 +9,12 @@ updates:
     directory: '/'
     schedule:
       interval: 'daily'
-      time: '02:00'
-      timezone: 'Europe/Helsinki'
-    open-pull-requests-limit: 99
+      time: '01:00'
+    labels: [ ]
+    open-pull-requests-limit: 1
+    ignore:
+      - dependency-name: "*"
+        update-types: [ "version-update:semver-patch", "version-update:semver-minor" ]
   - package-ecosystem: 'github-actions'
     directory: '/'
     schedule:
