@@ -529,11 +529,28 @@ describe('rich text editor', () => {
                 { answerHTML: '', answerText: '', imageCount: +0 },
                 { answerHTML: '', answerText: '', imageCount: +0 },
                 {
-                    answerHTML: '<img alt="x\\" src="/math.svg?latex=x%5C" />',
+                    answerHTML: '<img alt="x\\ " src="/math.svg?latex=x%5C%20" />',
                     answerText: '',
                     imageCount: +0,
                 },
             ])
+        })
+    })
+
+    describe('when typing math ending to backslash and space', () => {
+        before(defaults)
+        before('focus', () => $el.answer1.focus())
+        before(() => $('[data-js="newEquation"]').mousedown())
+        before('type', () => $el.latexField.val('x\\ '))
+        before(u.delayFor(600))
+        before(() => {
+            $el.equationFieldTextArea.trigger({ type: 'keydown', keyCode: 27 })
+        })
+        before(() => $firstAnswerMath().trigger({ type: 'click', which: 1 }))
+
+        it("won't trim tailing space", () => {
+            expect($el.latexField.val()).to.equal('x\\ ')
+            expect($el.renderError).to.have.text('')
         })
     })
 

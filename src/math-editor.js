@@ -21,8 +21,9 @@ window.mathEditorState = window.mathEditorState || { firstTime: true, MQ: undefi
 const state = window.mathEditorState
 
 const trimLatex = function (latex) {
-    const trimmed = latex.trim()
-    return trimmed.replace(/(\\|\s)*/g, '') === '' ? '' : trimmed
+    const trimmedFromSides = latex.trim()
+    const trimmed = trimmedFromSides.replace(/(\\|\s)*/g, '') === '' ? '' : trimmedFromSides
+    return trimmed + (trimmed.endsWith('\\') ? ' ' : '')
 }
 export function init(
     $outerPlaceholder,
