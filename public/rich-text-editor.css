@@ -3,13 +3,13 @@
 }
 
 .render-error {
-  position: relative;
+  position: absolute;
   z-index: 2;
-  top: -32px;
-  left: 20px;
+  top: 0;
+  left: 0;
   font-family: sans-serif;
   font-size: 16px;
-  padding: 5px;
+  padding: 5px 10px;
   color: red;
   pointer-events: none;
 }

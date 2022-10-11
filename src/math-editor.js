@@ -50,8 +50,8 @@ export function init(
             <div class="math-editor" data-js="mathEditor">
                 <div class="math-editor-equation-field" data-js="equationField"></div>
                 <textarea rows="1" class="math-editor-latex-field" data-js="latexField" placeholder="LaTeΧ"></textarea>
+                <span class="render-error"></span>
             </div>
-            <span class="render-error"></span>
         </div>`)
 
     $outerPlaceholder.append($mathEditorContainer)

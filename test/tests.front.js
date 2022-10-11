@@ -516,6 +516,27 @@ describe('rich text editor', () => {
         })
     })
 
+    describe('when typing invalid formula to latex field', () => {
+        before(clear)
+        before(() => $('[data-js="newEquation"]').mousedown())
+        before('type', () => $el.latexField.val('x\\'))
+        before(u.delayFor(600))
+        before(() => {
+            $el.equationFieldTextArea.trigger({ type: 'keydown', keyCode: 27 })
+        })
+        it('will not save error text', () => {
+            expect(savedValues[0]).to.eql([
+                { answerHTML: '', answerText: '', imageCount: +0 },
+                { answerHTML: '', answerText: '', imageCount: +0 },
+                {
+                    answerHTML: '<img alt="x\\" src="/math.svg?latex=x%5C" />',
+                    answerText: '',
+                    imageCount: +0,
+                },
+            ])
+        })
+    })
+
     describe('when rendering all supported characters and latex commands', () => {
         before('insert symbols and commands', (done) => {
             const $customMq = $('<div class="customMq">')
