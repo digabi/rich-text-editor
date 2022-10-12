@@ -21,8 +21,9 @@ window.mathEditorState = window.mathEditorState || { firstTime: true, MQ: undefi
 const state = window.mathEditorState
 
 const trimLatex = function (latex) {
-    const trimmed = latex.trim()
-    return trimmed.replace(/(\\|\s)*/g, '') === '' ? '' : trimmed
+    const trimmedFromSides = latex.trim()
+    const trimmed = trimmedFromSides.replace(/(\\|\s)*/g, '') === '' ? '' : trimmedFromSides
+    return trimmed + (trimmed.endsWith('\\') ? ' ' : '')
 }
 export function init(
     $outerPlaceholder,
@@ -50,8 +51,8 @@ export function init(
             <div class="math-editor" data-js="mathEditor">
                 <div class="math-editor-equation-field" data-js="equationField"></div>
                 <textarea rows="1" class="math-editor-latex-field" data-js="latexField" placeholder="LaTeΧ"></textarea>
+                <span class="render-error"></span>
             </div>
-            <span class="render-error"></span>
         </div>`)
 
     $outerPlaceholder.append($mathEditorContainer)
