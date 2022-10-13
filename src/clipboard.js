@@ -74,8 +74,13 @@ function decodeBase64Image(dataString) {
     if (matches.length !== 3) {
         return null
     }
+    const byteCharacters = atob(matches[2])
+    const byteNumbers = new Array(byteCharacters.length)
+    for (let i = 0; i < byteCharacters.length; i++) {
+        byteNumbers[i] = byteCharacters.charCodeAt(i)
+    }
     return {
         type: matches[1],
-        data: Buffer.from(matches[2], 'base64'),
+        data: new Uint8Array(byteNumbers),
     }
 }

@@ -1,5 +1,4 @@
 const path = require('path')
-const { ProvidePlugin } = require('webpack')
 
 module.exports = () => [
     {
@@ -10,15 +9,7 @@ module.exports = () => [
         },
         resolve: {
             extensions: ['.js', '.jsx', '.ts', '.tsx', '.json'],
-            alias: {
-                buffer: 'buffer',
-            },
         },
-        plugins: [
-            new ProvidePlugin({
-                Buffer: ['buffer', 'Buffer'],
-            }),
-        ],
         module: {
             rules: [
                 {
