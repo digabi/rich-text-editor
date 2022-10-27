@@ -61,7 +61,7 @@ function markAndGetInlineImagesAndRemoveForbiddenOnes($editor, invalidImageSelec
         .toArray()
         .map((el) => ({ ...decodeBase64Image(el.getAttribute('src')), el }))
     images
-        .filter(({ type }) => fileTypes.indexOf(type) === -1 && type !== 'image/svg+xml')
+        .filter(({ type, el }) => !fileTypes.includes(type) || (el.alt === '' && type === 'image/svg+xml'))
         .forEach(({ el }) => el.remove())
     const pngImages = images.filter(({ type }) => fileTypes.indexOf(type) >= 0)
     pngImages.forEach(({ el }) => el.setAttribute('src', loadingImg))
