@@ -60,12 +60,18 @@ function markAndGetInlineImagesAndRemoveForbiddenOnes($editor, invalidImageSelec
         .find('img[src^="data:image/"]')
         .toArray()
         .map((el) => ({ ...decodeBase64Image(el.getAttribute('src')), el }))
-    images
-        .filter(({ type }) => fileTypes.indexOf(type) === -1 && type !== 'image/svg+xml')
-        .forEach(({ el }) => el.remove())
-    const pngImages = images.filter(({ type }) => fileTypes.indexOf(type) >= 0)
+    images.filter(isForbiddenInlineImage).forEach(({ el }) => el.remove())
+    const pngImages = images.filter(({ type }) => fileTypes.includes(type))
     pngImages.forEach(({ el }) => el.setAttribute('src', loadingImg))
     return pngImages
+
+    function isForbiddenInlineImage({ type, el }) {
+        const isInlineMathSvg = type === 'image/svg+xml' && el.alt
+        if (isInlineMathSvg) {
+            return false
+        }
+        return !fileTypes.includes(type)
+    }
 }
 
 function decodeBase64Image(dataString) {
