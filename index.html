@@ -49,11 +49,11 @@
 <script>
   const answer = document.querySelector('#answer1')
   makeRichText(answer, {
-    screenshotSaver: ({data}) =>
+    screenshotSaver: ({data, type}) =>
       new Promise(resolve => {
         const reader = new FileReader()
         reader.onload = evt => resolve(evt.target.result.replace(/^(data:image)(\/[^;]+)(;.*)/,'$1$3'))
-        reader.readAsDataURL(data)
+        reader.readAsDataURL(new Blob([data], { type }))
       }),
     baseUrl: 'https://math-demo.abitti.fi',
     updateMathImg: ($img, latex) => {
