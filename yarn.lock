@@ -2163,9 +2163,9 @@ loud-rejection@^1.0.0:
     signal-exit "^3.0.0"
 
 loupe@^2.3.1:
-  version "2.3.4"
-  resolved "https://registry.yarnpkg.com/loupe/-/loupe-2.3.4.tgz#7e0b9bffc76f148f9be769cb1321d3dcf3cb25f3"
-  integrity sha512-OvKfgCC2Ndby6aSTREl5aCCPTNIzlDfQZvZxNUrBrihDhL3xcrYegTblhmEiCrg2kKQz4XsFIaemE5BF4ybSaQ==
+  version "2.3.5"
+  resolved "https://registry.yarnpkg.com/loupe/-/loupe-2.3.5.tgz#b660be4f26b2be00834cf43bae4477aab160fd86"
+  integrity sha512-KNGVjhsXDxvY/cYE8GNi7SBaJSfJIT+/+/8GlprqBXpoU6cSR7/RT7OBJOsoYtyxq0L3q6oIcO8tX7dbEEXr3A==
   dependencies:
     get-func-name "^2.0.0"
 
