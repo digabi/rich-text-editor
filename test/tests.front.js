@@ -262,7 +262,7 @@ describe('rich text editor', () => {
             before(() => $firstAnswerMath().trigger({ type: 'click', which: 1 }))
             before('type', () => $el.latexField.focus().val('xy').trigger('input'))
             before(u.delay)
-            before(() => $('.rich-text-editor-toolbar-characters-group button:eq(2)').mousedown())
+            before(() => $('.rich-text-editor-toolbar-characters-group button:eq(3)').mousedown())
             before(u.delay)
             before('focus', () => $el.answer1.focus())
 
@@ -298,7 +298,7 @@ describe('rich text editor', () => {
             before(() => $el.latexField.val('').trigger('input'))
             before(() => $el.equationFieldTextArea.val('a+b').trigger('paste'))
             before(u.delay)
-            before(() => $('.rich-text-editor-toolbar-characters-group button:eq(3)').mousedown())
+            before(() => $('.rich-text-editor-toolbar-characters-group button:eq(4)').mousedown())
             before(u.delay)
             before(() => $el.answer1.focus())
 
@@ -581,13 +581,13 @@ describe('rich text editor', () => {
 
         it('renders unicode characters correctly', () => {
             expect($('.unicodeTests').text()).to.equal(
-                '°·±∞²³½⅓παβΓγΔδεζηθϑικΛλµνΞξ∏ρ∑στΥυΦФχΨψΩω∂φ≠≈≤≥<>∼≡≢∘…∝∢|‖⇌⇅∠↑↗↘↓↔⊥→⇒⇔∈ℤℝ∃∀ℕℚ∩∪∖⊂⊄∉∅∧∨¬∇'
+                '°·×±∞²³½⅓π‰αβΓγΔδεζηθϑικΛλµνΞξ∏ρ∑στΥυΦФχΨψΩω∂φ≠≈≤≥<>∼≡≢∘…∝∢|‖⇌⇅∠↑↗↘↓↔⊥→⇒⇔∈ℤℝ∃∀ℕℚ∩∪∖⊂⊄∉∅∧∨¬∇'
             )
         })
 
         it('renders mathquill correctly', () => {
             expect($('.mathQuillTests').text()).to.equal(
-                '°·±∞2312​13​παβΓγΔδεζηθϑικΛλμνΞξΠρΣστϒυΦϕχΨψΩω∂φ≠≈≤≥<>~≡≢∘…∝∢∣∥⇅⇌∠↑↗↘↓↔⊥→⇒⇔∈ZℤRℝ∃∀NℕQℚ∩∪∖⊂⊄∉∅∧∨¬∇' +
+                '°·×±∞2312​13​π‰αβΓγΔδεζηθϑικΛλμνΞξΠρΣστϒυΦϕχΨψΩω∂φ≠≈≤≥<>~≡≢∘…∝∢∣∥⇅⇌∠↑↗↘↓↔⊥→⇒⇔∈ZℤRℝ∃∀NℕQℚ∩∪∖⊂⊄∉∅∧∨¬∇' +
                     '√XxXXX​∫XX​limX​XXsincostan|X|[X]]X]{XXXXXXXX​(X(XX)X√XxX​X∑X/XX​limx→∞​XXijk(X)]X[[X[XX​XXXXXX)XX​TåöäÅÖÄ'
             )
         })
