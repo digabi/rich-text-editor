@@ -23,7 +23,7 @@ export default [
     { action: '\\intsub', label: '\\bigg/_{\\!\\!\\!\\!X}^{X}' },
     { action: '\\lim_{x\\rightarrow\\infty}', label: '\\lim_{x\\rightarrow\\infty}', useWrite: true },
     { action: '\\underrightarrow', label: '\\underrightarrow{X}' },
-    { action: '\\bar', label: '\\bar{X}' },
+    { action: '\\overline', label: '\\overline{X}' },
     { action: '\\bar{\\text{i}}', useWrite: true },
     { action: '\\bar{\\text{j}}', useWrite: true },
     { action: '\\bar{\\text{k}}', useWrite: true },
