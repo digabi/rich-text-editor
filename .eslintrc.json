@@ -1,16 +1,9 @@
 {
-  "parserOptions": {
-    "ecmaVersion": 2018,
-    "sourceType": "module"
-  },
-  "env": {
-    "browser": true,
-    "es6": true,
-    "mocha": true,
-    "node": true
-  },
-  "extends": ["eslint:recommended", "plugin:prettier/recommended"],
+  "extends": "@digabi/eslint-config",
   "rules": {
-    "prefer-object-spread": "error"
+    "comma-dangle": ["error", "never"]
+  },
+  "parserOptions": {
+    "project": ["./public/js/tsconfig.json", "./tsconfig.json"]
   }
 }

@@ -30,14 +30,20 @@
   },
   "devDependencies": {
     "@babel/polyfill": "^7.0.0",
-    "buffer": "^6.0.3",
+    "@digabi/eslint-config": "^2.0.1",
+    "@typescript-eslint/eslint-plugin": "^5.48.1",
+    "@typescript-eslint/parser": "^5.48.1",
     "blueimp-mocha-chrome": "2.3.0",
+    "buffer": "^6.0.3",
     "chai": "^4.2.0",
     "chai-jquery": "^2.1.0",
     "concurrently": "^7.0.0",
-    "eslint": "^8.9.0",
-    "eslint-config-prettier": "^8.0.0",
-    "eslint-plugin-prettier": "^4.0.0",
+    "eslint": "^8.31.0",
+    "eslint-config-prettier": "^8.6.0",
+    "eslint-plugin-import": "^2.26.0",
+    "eslint-plugin-mocha": "^10.1.0",
+    "eslint-plugin-prettier": "^4.2.1",
+    "eslint-plugin-promise": "^6.1.1",
     "express": "^4.16.4",
     "mocha": "^10.0.0",
     "morgan": "^1.9.1",
@@ -54,7 +60,7 @@
     "webpack-dev-middleware": "^6.0.0"
   },
   "dependencies": {
-    "@digabi/mathquill": "^0.10.6",
+    "@digabi/mathquill": "^0.10.12",
     "@types/express": "*",
     "jquery": "^3.3.1",
     "mathjax-node": "^2.1.1"
