@@ -18,9 +18,9 @@
     "@jridgewell/trace-mapping" "0.3.9"
 
 "@digabi/mathquill@^0.10.6":
-  version "0.10.6"
-  resolved "https://registry.yarnpkg.com/@digabi/mathquill/-/mathquill-0.10.6.tgz#8fc632ec2d14b5e5c7fdd21f97e032a264d889fb"
-  integrity sha512-dsGLZxWLgJ0xj4lfUrl8Vs31+Qu79TrOqxkZnC3nZcZzKvTFVCZ+peRkxTfvpjJp5U1JDEl+7RdIsQKLQSFwOw==
+  version "0.10.11"
+  resolved "https://registry.yarnpkg.com/@digabi/mathquill/-/mathquill-0.10.11.tgz#cd7c0d3fab1a3f018c0e7f844287de098523faa8"
+  integrity sha512-vueJ74/gkm7wdsilvsjZ44IQChtHUnJIx7yyoAmSzALJcuzfCamvDyfL2R+rarO9Dbg3dEZaSOqMXNe5NVovnw==
   dependencies:
     jquery "^3.3.1"
 
