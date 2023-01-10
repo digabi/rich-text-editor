@@ -16,7 +16,7 @@ export default [
     { action: '\\matrix', label: '\\begin{matrix}\nX&X\\\\\nX&X\n\\end{matrix}' },
     { action: '\\frac{a}{b}^{\\text{(}x}', label: '\\frac{X}{X}^{\\text{(}X}', useWrite: true },
     { action: '\\binom', label: '\\binom{X}{X}' },
-    '<br>',
+    '<br />',
     { action: '\\nthroot', label: '\\sqrt[X]{X}' },
     { action: '_', label: 'x_X' },
     { action: '\\sum', label: '\\sum_{X}^{X}' },

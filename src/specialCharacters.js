@@ -4,7 +4,7 @@ export default [
         characters: [
             { character: '°', popular: true },
             { character: '·', latexCommand: '\\cdot', popular: true },
-            { character: '×', latexCommand: '\\times', popular: false },
+            { character: '×', latexCommand: '\\times', popular: true },
             { character: '±', latexCommand: '\\pm', popular: true },
             { character: '∞', latexCommand: '\\infty', popular: true },
             { character: '²', latexCommand: '^2', popular: true },
@@ -12,7 +12,7 @@ export default [
             { character: '½', latexCommand: '\\frac{1}{2}', popular: true },
             { character: '⅓', latexCommand: '\\frac{1}{3}', popular: true },
             { character: 'π', latexCommand: '\\pi', popular: true },
-            { character: '‰', latexCommand: '‰', popular: false },
+            { character: '‰', latexCommand: '‰', popular: true },
             { character: 'α', latexCommand: '\\alpha', popular: true },
             { character: 'β', latexCommand: '\\beta', popular: true },
             { character: 'Γ', latexCommand: '\\Gamma' },
