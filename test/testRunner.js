@@ -5,7 +5,7 @@ require('ts-node').register()
 const server = require('./testServer')
 const serverInfo = server.listen(0, () => {
     setTimeout(() => {
-        console.log('Server started at localhost:' + serverInfo.address().port)
+        console.log(`Server started at localhost:${serverInfo.address().port}`)
         const spawn = require('child_process').spawn
         const mochaChrome = spawn('mocha-chrome', [`http://localhost:${serverInfo.address().port}/test/tests.html`])
         mochaChrome.stdout.pipe(process.stdout)

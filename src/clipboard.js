@@ -20,10 +20,15 @@ export function onPaste(e, saver, invalidImageSelector, fileTypes, sanitize) {
 function onPasteBlob(event, file, saver, fileTypes) {
     event.preventDefault()
     if (fileTypes.indexOf(file.type) >= 0) {
-        saver({ data: file, type: file.type }).then((screenshotUrl) => {
-            const img = `<img src="${screenshotUrl}"/>`
-            window.document.execCommand('insertHTML', false, img)
-        })
+        saver({ data: file, type: file.type })
+            .then((screenshotUrl) => {
+                const img = `<img src="${screenshotUrl}"/>`
+                window.document.execCommand('insertHTML', false, img)
+                return
+            })
+            .catch((error) => {
+                console.error(error)
+            })
     }
 }
 

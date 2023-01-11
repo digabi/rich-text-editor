@@ -48,14 +48,11 @@ makeRichText(
 )
 const getSvg = function (latex) {
     const node = MathJax.tex2svg(latex)
-    return (
-        'data:image/svg+xml;base64,' +
-        btoa(
-            encodeURIComponent(node.firstChild.outerHTML).replace(/%([0-9A-F]{2})/g, (match, p1) =>
-                String.fromCharCode('0x' + p1)
-            )
+    return `data:image/svg+xml;base64,${btoa(
+        encodeURIComponent(node.firstChild.outerHTML).replace(/%([0-9A-F]{2})/g, (match, p1) =>
+            String.fromCharCode(`0x${p1}`)
         )
-    )
+    )}`
 }
 window.locale = 'FI'
 window.IS_TEST = true

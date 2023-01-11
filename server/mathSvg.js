@@ -74,7 +74,7 @@ function latexToSvg(latex, cb) {
             linebreaks: true,
             width: 100,
         },
-        function (data) {
+        (data) => {
             if (data.errors) {
                 cb(errorResponse)
             } else {

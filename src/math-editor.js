@@ -33,7 +33,7 @@ export function init(
         const trimmed = trimLatex(latex)
         const trimmedAlt = trimmed.replace(/</g, '\\lt ').replace(/>/g, '\\gt ')
         $img.prop({
-            src: baseUrl + '/math.svg?latex=' + encodeURIComponent(trimmed),
+            src: `${baseUrl}/math.svg?latex=${encodeURIComponent(trimmed)}`,
             alt: trimmedAlt,
         })
         $img.closest('[data-js="answer"]').trigger('input')
@@ -169,7 +169,7 @@ export function init(
 
     function updateLatexFieldHeight() {
         $latexField.get(0).style.height = 'auto'
-        $latexField.get(0).style.height = $latexField.get(0).scrollHeight + 'px'
+        $latexField.get(0).style.height = `${$latexField.get(0).scrollHeight}px`
     }
 
     function onFocusChanged() {
@@ -184,7 +184,7 @@ export function init(
         window.document.execCommand(
             'insertHTML',
             false,
-            optionalMarkup + '<img data-js="new" alt="" src="" style="display: none"/>'
+            `${optionalMarkup}<img data-js="new" alt="" src="" style="display: none"/>`
         )
         showMathEditor($('[data-js="new"]').removeAttr('data-js'))
     }
