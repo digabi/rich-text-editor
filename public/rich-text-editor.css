@@ -43,7 +43,7 @@
 }
 
 .rich-text-editor .mq-math-mode .mq-root-block {
-  white-space: normal;
+  white-space: nowrap;
 }
 
 .rich-text-editor:focus,
