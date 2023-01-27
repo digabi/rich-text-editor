@@ -262,6 +262,7 @@ export function init(
         undoRedo = undoRedoCodes.UNDO
         redoStack.push(undoStack.pop())
         mqInstance.latex(u.last(undoStack))
+        updateMathImgWithDebounce($mathEditorContainer.prev(), mqInstance.latex())
         $latexField.val(u.last(undoStack))
         updateUndoRedoStacks()
         updateLatexFieldHeight()
@@ -273,6 +274,7 @@ export function init(
         undoRedo = undoRedoCodes.REDO
         mqInstance.latex(u.last(redoStack))
         $latexField.val(redoStack.pop())
+        updateMathImgWithDebounce($mathEditorContainer.prev(), mqInstance.latex())
         updateUndoRedoStacks()
         updateLatexFieldHeight()
         renderPossibleError()
