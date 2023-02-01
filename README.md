@@ -45,7 +45,8 @@ We hope you understand our desire to focus on our goal specified by law.
 2. Install [yarn](https://yarnpkg.com/)
 3. Run `yarn install`.
 4. Run `yarn dev`.
-5. Go to [http://localhost:5000](http://localhost:5000)
+5. Browser tests: [http://localhost:5111/test/tests.html](http://localhost:5111/test/tests.html)
+6. Manual testing: [http://localhost:5111/test/tests.html?grep=manual](http://localhost:5111/test/tests.html?grep=manual)
 
 ## Example of direct usage
 
