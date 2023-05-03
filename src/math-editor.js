@@ -93,7 +93,7 @@ export function init(
             onFocusChanged()
         })
         .on('keydown', onKeyDown)
-        .on('paste', (e) => e.stopPropagation())
+        .on('paste drop', (e) => e.stopPropagation())
 
     function onKeyDown(e) {
         if ($('.rich-text-editor-overlay').is(':visible')) return
