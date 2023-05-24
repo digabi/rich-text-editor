@@ -319,6 +319,9 @@ describe('rich text editor', () => {
         describe('equation click opens and esc closes math editor', () => {
             before(() => $el.answer1.blur())
             after(defaults)
+            after(u.delayFor(100))
+            after(() => $el.equationFieldTextArea.blur())
+            after(u.delayFor(100))
 
             it('editor is visible and then hidden', () => {
                 expect($el.answer1).to.not.have.class('rich-text-focused')
