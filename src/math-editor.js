@@ -38,7 +38,7 @@ export function init(
         })
         $img.closest('[data-js="answer"]').trigger('input')
     },
-    l
+    l,
 ) {
     let updateMathImgTimeout
 
@@ -184,7 +184,7 @@ export function init(
         window.document.execCommand(
             'insertHTML',
             false,
-            `${optionalMarkup}<img data-js="new" alt="" src="" style="display: none"/>`
+            `${optionalMarkup}<img data-js="new" alt="" src="" style="display: none"/>`,
         )
         showMathEditor($('[data-js="new"]').removeAttr('data-js'))
     }

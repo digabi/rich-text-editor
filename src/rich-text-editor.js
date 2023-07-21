@@ -80,7 +80,7 @@ export const makeRichText = (answer, options, onValueChanged = () => {}) => {
         .on('input', (e) => {
             if (!pasteInProgress)
                 onValueChanged(
-                    ignoreSaveObject || u.sanitizeContent(e.currentTarget, screenshotImageSelector, sanitize)
+                    ignoreSaveObject || u.sanitizeContent(e.currentTarget, screenshotImageSelector, sanitize),
                 )
         })
         .on('drop', (e) => {

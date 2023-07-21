@@ -44,14 +44,14 @@ makeRichText(
     },
     (data) => {
         savedValues[2].push(data)
-    }
+    },
 )
 const getSvg = function (latex) {
     const node = MathJax.tex2svg(latex)
     return `data:image/svg+xml;base64,${btoa(
         encodeURIComponent(node.firstChild.outerHTML).replace(/%([0-9A-F]{2})/g, (match, p1) =>
-            String.fromCharCode(`0x${p1}`)
-        )
+            String.fromCharCode(`0x${p1}`),
+        ),
     )}`
 }
 window.locale = 'FI'
@@ -90,11 +90,11 @@ const $firstAnswerMath = () => $('.answer1 img:first')
 describe('rich text editor', () => {
     before(
         'wait for tools to hide',
-        u.waitUntil(() => u.isOutsideViewPort($('[data-js="tools"]')))
+        u.waitUntil(() => u.isOutsideViewPort($('[data-js="tools"]'))),
     )
     before(
         'wait answer field to initialize',
-        u.waitUntil(() => $('.answer1').attr('contenteditable'))
+        u.waitUntil(() => $('.answer1').attr('contenteditable')),
     )
     before(() => {
         $el.answer1 = $('.answer1')
@@ -111,7 +111,7 @@ describe('rich text editor', () => {
     before('focus', () => $el.answer1.focus())
     before(
         'wait for tools visible',
-        u.waitUntil(() => $el.tools.is(':visible'))
+        u.waitUntil(() => $el.tools.is(':visible')),
     )
     after(defaults)
 
@@ -171,7 +171,7 @@ describe('rich text editor', () => {
         describe('dropping markup', () => {
             before('drop banned tags', () => {
                 $el.answer3.html(
-                    '<div class="forbidden"><b>drop</b></div><div>bar</div><a href="/">link text</a> <img src="/exam-api/screenshot.png" alt />'
+                    '<div class="forbidden"><b>drop</b></div><div>bar</div><a href="/">link text</a> <img src="/exam-api/screenshot.png" alt />',
                 )
                 $el.answer3.trigger('drop')
             })
@@ -179,7 +179,7 @@ describe('rich text editor', () => {
 
             it('drops sanitized content', () => {
                 expect($el.answer3).to.have.html(
-                    '<div><b>drop</b></div><div>bar</div>link text <img src="/exam-api/screenshot.png" alt="">'
+                    '<div><b>drop</b></div><div>bar</div>link text <img src="/exam-api/screenshot.png" alt="">',
                 )
                 expect(savedValues[2]).to.eql([
                     {
@@ -236,7 +236,7 @@ describe('rich text editor', () => {
         before(() => $el.answer1.focus())
         before(
             'wait for tools visible',
-            u.waitUntil(() => $el.tools.is(':visible'))
+            u.waitUntil(() => $el.tools.is(':visible')),
         )
         before(() => $('[data-js="newEquation"]').mousedown())
         before(() => $el.latexField.val('\\ \\'))
@@ -432,8 +432,8 @@ describe('rich text editor', () => {
             $el.answer1
                 .trigger(
                     u.pasteEventMock(
-                        '<div class="forbidden"><b>paste</b></div><div>bar</div><a href="/">link text</a> '
-                    )
+                        '<div class="forbidden"><b>paste</b></div><div>bar</div><a href="/">link text</a> ',
+                    ),
                 )
                 .trigger('input')
         })
@@ -560,14 +560,14 @@ describe('rich text editor', () => {
             $('body').prepend($customMq)
             const mqInstance = window.MathQuill.getInterface(2).MathField($('.mathQuillTests').get(0))
             const chars = specialCharacters.map((charGroup) =>
-                charGroup.characters.map((y) => y.latexCommand || y.character)
+                charGroup.characters.map((y) => y.latexCommand || y.character),
             )
             const latexes = latexCommands
                 .map((latexCommand) => latexCommand.label || latexCommand.action)
                 .filter((x) => x)
             const scandicChars = 'åöäÅÖÄ'
             $('.unicodeTests').html(
-                specialCharacters.map((x) => x.characters.map((x) => x.character).join('')).join('<br>')
+                specialCharacters.map((x) => x.characters.map((x) => x.character).join('')).join('<br>'),
             )
             mqInstance.latex(`${chars.map((x) => x.join(' ')).join(' ')} ${latexes.join(' ')} ${scandicChars}`)
             $('.mathJaxClientSideTests img').prop({
@@ -581,14 +581,14 @@ describe('rich text editor', () => {
 
         it('renders unicode characters correctly', () => {
             expect($('.unicodeTests').text()).to.equal(
-                '°·×±∞²³½⅓π‰αβΓγΔδεζηθϑικΛλµνΞξ∏ρ∑στΥυΦФχΨψΩω∂φ≠≈≤≥<>∼≡≢∘…∝∢|‖⇌⇅∠↑↗↘↓↔⊥→⇒⇔∈ℤℝ∃∀ℕℚ∩∪∖⊂⊄∉∅∧∨¬∇'
+                '°·×±∞²³½⅓π‰αβΓγΔδεζηθϑικΛλµνΞξ∏ρ∑στΥυΦФχΨψΩω∂φ≠≈≤≥<>∼≡≢∘…∝∢|‖⇌⇅∠↑↗↘↓↔⊥→⇒⇔∈ℤℝ∃∀ℕℚ∩∪∖⊂⊄∉∅∧∨¬∇',
             )
         })
 
         it('renders mathquill correctly', () => {
             expect($('.mathQuillTests').text()).to.equal(
                 '°·×±∞2312​13​π‰αβΓγΔδεζηθϑικΛλμνΞξΠρΣστϒυΦϕχΨψΩω∂φ≠≈≤≥<>~≡≢∘…∝∢∣∥⇅⇌∠↑↗↘↓↔⊥→⇒⇔∈ZℤRℝ∃∀NℕQℚ∩∪∖⊂⊄∉∅∧∨¬∇' +
-                    '√XxXXX​∫XX​limX​XXsincostan|X|[X]]X]{XXXXXXXX​(X(XX)X√XxX​X∑X/XX​limx→∞​XXijk(X)]X[[X[XX​XXXXXX)XX​TåöäÅÖÄ'
+                    '√XxXXX​∫XX​limX​XXsincostan|X|[X]]X]{XXXXXXXX​(X(XX)X√XxX​X∑X/XX​limx→∞​XXijk(X)]X[[X[XX​XXXXXX)XX​TåöäÅÖÄ',
             )
         })
 

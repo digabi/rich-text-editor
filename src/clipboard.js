@@ -52,10 +52,10 @@ export function persistInlineImages($editor, screenshotSaver, invalidImageSelect
                         .catch((err) => {
                             data.el.remove()
                             throw err
-                        })
-                )
+                        }),
+                ),
             ).then(() => $editor.trigger('input')),
-        0
+        0,
     )
 }
 
