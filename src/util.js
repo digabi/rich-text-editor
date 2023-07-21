@@ -51,9 +51,9 @@ function stripDivsFromRichTextAnswer(answerContentValue) {
 function defaultSanitize(html) {
     return sanitizeHtml(
         stripDivsFromRichTextAnswer(
-            sanitizeHtml(convertLinksToRelative(html), { ...sanitizeOpts, allowedTags: ['div', 'p', 'img', 'br'] })
+            sanitizeHtml(convertLinksToRelative(html), { ...sanitizeOpts, allowedTags: ['div', 'p', 'img', 'br'] }),
         ),
-        sanitizeOpts
+        sanitizeOpts,
     )
 }
 export function insertToTextAreaAtCursor(field, value) {
@@ -141,7 +141,7 @@ export function isUndo(e) {
     return preventIfTrue(
         e,
         (!e.altKey && !e.shiftKey && e.ctrlKey && keyOrKeyCode(e, 90)) ||
-            (!e.altKey && !e.shiftKey && e.metaKey && keyOrKeyCode(e, 90))
+            (!e.altKey && !e.shiftKey && e.metaKey && keyOrKeyCode(e, 90)),
     )
 }
 
@@ -149,6 +149,6 @@ export function isRedo(e) {
     return preventIfTrue(
         e,
         (!e.altKey && !e.shiftKey && e.ctrlKey && keyOrKeyCode(e, 89)) ||
-            (!e.altKey && e.shiftKey && e.metaKey && keyOrKeyCode(e, 90))
+            (!e.altKey && e.shiftKey && e.metaKey && keyOrKeyCode(e, 90)),
     )
 }

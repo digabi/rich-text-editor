@@ -80,6 +80,6 @@ function latexToSvg(latex, cb) {
             } else {
                 cb(data.svg)
             }
-        }
+        },
     )
 }

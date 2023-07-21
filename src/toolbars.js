@@ -123,8 +123,8 @@ function initSpecialCharacterToolbar($toolbar, mathEditor, hasAnswerFocus) {
                     `<div class="rich-text-editor-toolbar-characters-group"
                   style="width: ${popularInGroup(group) * gridButtonWidthPx}px">
                   ${group.characters.map(specialCharacterToButton).join('')}
-             </div>`
-            )
+             </div>`,
+            ),
         )
         .on('mousedown', 'button', (e) => {
             e.preventDefault()
@@ -148,9 +148,9 @@ function initMathToolbar($mathToolbar, mathEditor) {
                               o.action
                           }" data-latexcommand="${o.label || ''}" data-usewrite="${o.useWrite || false}">
 <img src="${o.svg}"/>
-</button>`
+</button>`,
                 )
-                .join('')
+                .join(''),
         )
         .on('mousedown', '.rich-text-editor-button-grid', (e) => {
             e.preventDefault()
@@ -163,7 +163,7 @@ function initMathToolbar($mathToolbar, mathEditor) {
             `<div class="rich-text-editor-undo-redo-wrapper">
                 <button class="rich-text-editor-button rich-text-editor-undo-redo rich-text-editor-undo-button" disabled="true" data-command="Ctrl + Z" data-js="mathUndo"></button>
                 <button class="rich-text-editor-button rich-text-editor-undo-redo rich-text-editor-redo-button" disabled="true" data-command="Ctrl + Y" data-js="mathRedo"></button>
-            </div>`
+            </div>`,
         )
         .on('mousedown', '[data-js="mathUndo"]', (e) => {
             e.preventDefault()
@@ -181,6 +181,6 @@ function initNewEquation($newEquation, mathEditor, hasAnswerFocus) {
             e.preventDefault()
             if (!hasAnswerFocus()) return // TODO: remove when button is only visible when textarea has focus
             mathEditor.insertNewEquation()
-        }).bind(this)
+        }).bind(this),
     )
 }
