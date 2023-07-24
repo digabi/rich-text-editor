@@ -142,7 +142,7 @@ describe('rich text editor', () => {
             })
             it('saves markup', () => {
                 expect(savedValues[0]).to.eql([
-                    { answerHTML: '<img src="/screenshot/screenshot.png" alt />', answerText: '', imageCount: 1 },
+                    { answerHTML: '<img src="/screenshot/screenshot.png" />', answerText: '', imageCount: 1 },
                 ])
             })
         })
@@ -179,12 +179,12 @@ describe('rich text editor', () => {
 
             it('drops sanitized content', () => {
                 expect($el.answer3).to.have.html(
-                    '<div><b>drop</b></div><div>bar</div>link text <img src="/exam-api/screenshot.png" alt="">',
+                    '<div><b>drop</b></div><div>bar</div>link text <img src="/exam-api/screenshot.png">',
                 )
                 expect(savedValues[2]).to.eql([
                     {
                         answerHTML:
-                            '<div><b>drop</b></div><div>bar</div>link text <img src="/exam-api/screenshot.png" alt />',
+                            '<div><b>drop</b></div><div>bar</div>link text <img src="/exam-api/screenshot.png" />',
                         answerText: 'drop\nbar\nlink text',
                         imageCount: 1,
                     },
@@ -208,7 +208,7 @@ describe('rich text editor', () => {
             })
             it('saves markup', () => {
                 expect(savedValues[2]).to.eql([
-                    { answerHTML: '<img src="/exam-api/screenshot.png" alt />', answerText: '', imageCount: 1 },
+                    { answerHTML: '<img src="/exam-api/screenshot.png" />', answerText: '', imageCount: 1 },
                 ])
             })
         })
