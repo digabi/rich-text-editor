@@ -28,7 +28,7 @@ jobs:
         uses: actions/cache@v3
         with:
           path: node_modules
-          key: yarn-${{ matrix.node-version }}-${{ hashFiles('**/yarn.lock') }}
-      - run: yarn --frozen-lockfile
-      - run: yarn test
-      - run: yarn lint
+          key: npm-${{ matrix.node-version }}-${{ hashFiles('**/package-lock.json') }}
+      - run: npm ci
+      - run: npm run test
+      - run: npm run lint

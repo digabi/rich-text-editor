@@ -42,9 +42,8 @@ We hope you understand our desire to focus on our goal specified by law.
 ## Getting started
 
 1. Install [Node.js](https://nodejs.org/en/)
-2. Install [yarn](https://yarnpkg.com/)
-3. Run `yarn install`.
-4. Run `yarn dev`.
+3. Run `npm install`.
+4. Run `npm run dev`.
 5. Browser tests: [http://localhost:5111/test/tests.html](http://localhost:5111/test/tests.html)
 6. Manual testing: [http://localhost:5111/test/tests.html?grep=manual](http://localhost:5111/test/tests.html?grep=manual)
 
