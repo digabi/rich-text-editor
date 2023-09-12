@@ -1,0 +1,22 @@
+name: Run npm update
+on:
+  schedule:
+    - cron: '0 0 * * 4'
+  workflow_dispatch:
+jobs:
+  build:
+    name: Run npm update
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+      - name: Authenticate with private NPM package
+        run: echo "//registry.npmjs.org/:_authToken=${{ secrets.NPM_TOKEN }}" > ~/.npmrc
+      - run: |
+          npm update
+          git config user.name npm-update
+          git config user.email npm-update@ylioppilastutkinto.fi
+          git add package-lock.json
+          git commit -m "Update npm dependencies" || echo "No changes to commit"
+          git push

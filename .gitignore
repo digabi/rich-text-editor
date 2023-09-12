@@ -4,7 +4,6 @@ logs
 results
 npm-debug.log
 node_modules
-package-lock.json
 
 ## Sass
 .sass-cache
