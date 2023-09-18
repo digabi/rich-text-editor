@@ -32,7 +32,7 @@
     "@babel/polyfill": "^7.0.0",
     "@digabi/eslint-config": "^2.0.1",
     "@typescript-eslint/eslint-plugin": "^6.7.0",
-    "@typescript-eslint/parser": "^5.48.1",
+    "@typescript-eslint/parser": "^6.7.0",
     "blueimp-mocha-chrome": "2.3.0",
     "buffer": "^6.0.3",
     "chai": "^4.2.0",
