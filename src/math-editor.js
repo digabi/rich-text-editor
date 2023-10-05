@@ -26,6 +26,7 @@ const trimLatex = function (latex) {
     return trimmed + (trimmed.endsWith('\\') ? ' ' : '')
 }
 export function init(
+    onMathFocusChanged,
     onInput,
     $outerPlaceholder,
     focus,
@@ -179,7 +180,10 @@ export function init(
     function onFocusChanged() {
         clearTimeout(focusChanged)
         focusChanged = setTimeout(() => {
-            $mathEditorContainer.trigger({ type: 'mathfocus', hasFocus: focus.latexField || focus.equationField })
+            const $currentEditor = $mathEditorContainer.closest('[data-js="answer"]')
+            if ($currentEditor.length > 0) {
+                onMathFocusChanged($currentEditor, focus.latexField || focus.equationField)
+            }
             if (!focus.latexField && !focus.equationField) closeMathEditor()
         }, 0)
     }
@@ -252,7 +256,9 @@ export function init(
         visible = false
         focus.latexField = false
         focus.equationField = false
-        $mathEditorContainer.trigger({ type: 'mathfocus', hasFocus: focus.latexField || focus.equationField })
+        if ($currentEditor.length > 0) {
+            onMathFocusChanged($currentEditor, focus.latexField || focus.equationField)
+        }
         $outerPlaceholder.append($mathEditorContainer)
         if (setFocusAfterClose) $currentEditor.focus()
     }

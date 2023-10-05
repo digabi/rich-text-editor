@@ -43,9 +43,13 @@ export const makeRichText = (answer, options, onValueChanged = () => {}) => {
         if (!pasteInProgress)
             onValueChanged(ignoreSaveObject || u.sanitizeContent(element, screenshotImageSelector, sanitize))
     }
+    function onMathFocusChanged($container, hasFocus) {
+        $container.toggleClass('rich-text-focused', hasFocus)
+        if (richTextAndMathBlur()) onRichTextEditorBlur(state.$currentEditor)
+    }
     if (state.firstCall) {
         state.firstCall = false
-        state.math = mathEditor.init(onInput, $outerPlaceholder, focus, baseUrl, updateMathImg, l)
+        state.math = mathEditor.init(onMathFocusChanged, onInput, $outerPlaceholder, focus, baseUrl, updateMathImg, l)
         const containers = toolbars.init(state.math, () => focus.richText, l)
         state.$toolbar = containers.toolbar
         const $helpOverlay = containers.helpOverlay
@@ -71,10 +75,6 @@ export const makeRichText = (answer, options, onValueChanged = () => {}) => {
                 e.preventDefault()
                 state.math.insertNewEquation()
             }
-        })
-        .on('mathfocus', (e) => {
-            $(e.currentTarget).toggleClass('rich-text-focused', e.hasFocus)
-            if (richTextAndMathBlur()) onRichTextEditorBlur(state.$currentEditor)
         })
         .on('focus blur', (e) => {
             if (e.type === 'focus') state.math.closeMathEditor()
