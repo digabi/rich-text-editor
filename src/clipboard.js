@@ -1,7 +1,7 @@
 import $ from 'jquery'
 import loadingImg from './loadingImg'
 
-export function onPaste(e, saver, invalidImageSelector, fileTypes, sanitize) {
+export function onPaste(onInput, e, saver, invalidImageSelector, fileTypes, sanitize) {
     const clipboardData = e.originalEvent.clipboardData
     const file =
         clipboardData.items &&
@@ -12,8 +12,17 @@ export function onPaste(e, saver, invalidImageSelector, fileTypes, sanitize) {
     } else {
         const clipboardDataAsHtml = clipboardData.getData('text/html')
         if (clipboardDataAsHtml)
-            onPasteHtml(e, $(e.currentTarget), clipboardDataAsHtml, saver, invalidImageSelector, fileTypes, sanitize)
-        else onLegacyPasteImage($(e.currentTarget), saver, invalidImageSelector, fileTypes)
+            onPasteHtml(
+                onInput,
+                e,
+                $(e.currentTarget),
+                clipboardDataAsHtml,
+                saver,
+                invalidImageSelector,
+                fileTypes,
+                sanitize,
+            )
+        else onLegacyPasteImage(onInput, $(e.currentTarget), saver, invalidImageSelector, fileTypes)
     }
 }
 
@@ -32,17 +41,17 @@ function onPasteBlob(event, file, saver, fileTypes) {
     }
 }
 
-function onPasteHtml(event, $answer, clipboardDataAsHtml, saver, invalidImageSelector, fileTypes, sanitize) {
+function onPasteHtml(onInput, event, $answer, clipboardDataAsHtml, saver, invalidImageSelector, fileTypes, sanitize) {
     event.preventDefault()
     window.document.execCommand('insertHTML', false, sanitize(clipboardDataAsHtml))
-    persistInlineImages($answer, saver, invalidImageSelector, fileTypes)
+    persistInlineImages(onInput, $answer, saver, invalidImageSelector, fileTypes)
 }
 
-function onLegacyPasteImage($editor, saver, invalidImageSelector, fileTypes) {
-    persistInlineImages($editor, saver, invalidImageSelector, fileTypes)
+function onLegacyPasteImage(onInput, $editor, saver, invalidImageSelector, fileTypes) {
+    persistInlineImages(onInput, $editor, saver, invalidImageSelector, fileTypes)
 }
 
-export function persistInlineImages($editor, screenshotSaver, invalidImageSelector, fileTypes) {
+export function persistInlineImages(onInput, $editor, screenshotSaver, invalidImageSelector, fileTypes) {
     setTimeout(
         () =>
             Promise.all(
@@ -54,7 +63,7 @@ export function persistInlineImages($editor, screenshotSaver, invalidImageSelect
                             throw err
                         }),
                 ),
-            ).then(() => $editor.trigger('input')),
+            ).then(() => onInput($editor.get(0))),
         0,
     )
 }
