@@ -39,6 +39,7 @@ export function init(
         $img.closest('[data-js="answer"]').trigger('input')
     },
     l,
+    ignoreEventHandling,
 ) {
     let updateMathImgTimeout
 
@@ -76,24 +77,26 @@ export function init(
             },
         },
     })
-    $equationField
-        .on('input', '.mq-textarea textarea', onMqEdit)
-        .on('focus blur', '.mq-textarea textarea', (e) => {
-            focus.equationField = e.type !== 'blur' && e.type !== 'focusout'
-            onFocusChanged()
-        })
-        .on('keydown', onKeyDown)
-        .on('paste', (e) => e.stopPropagation())
+    if (!ignoreEventHandling) {
+        $equationField
+            .on('input', '.mq-textarea textarea', onMqEdit)
+            .on('focus blur', '.mq-textarea textarea', (e) => {
+                focus.equationField = e.type !== 'blur' && e.type !== 'focusout'
+                onFocusChanged()
+            })
+            .on('keydown', onKeyDown)
+            .on('paste', (e) => e.stopPropagation())
 
-    $latexField
-        .on('keypress', transformLatexKeydown)
-        .on('input paste', onLatexUpdate)
-        .on('focus blur', (e) => {
-            focus.latexField = e.type !== 'blur'
-            onFocusChanged()
-        })
-        .on('keydown', onKeyDown)
-        .on('paste', (e) => e.stopPropagation())
+        $latexField
+            .on('keypress', transformLatexKeydown)
+            .on('input paste', onLatexUpdate)
+            .on('focus blur', (e) => {
+                focus.latexField = e.type !== 'blur'
+                onFocusChanged()
+            })
+            .on('keydown', onKeyDown)
+            .on('paste', (e) => e.stopPropagation())
+    }
 
     function onKeyDown(e) {
         if ($('.rich-text-editor-overlay').is(':visible')) return
