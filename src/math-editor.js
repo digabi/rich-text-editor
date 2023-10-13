@@ -26,7 +26,6 @@ const trimLatex = function (latex) {
     return trimmed + (trimmed.endsWith('\\') ? ' ' : '')
 }
 export function init(
-    onInput,
     $outerPlaceholder,
     focus,
     baseUrl,
@@ -37,10 +36,7 @@ export function init(
             src: `${baseUrl}/math.svg?latex=${encodeURIComponent(trimmed)}`,
             alt: trimmedAlt,
         })
-        const $answer = $img.closest('[data-js="answer"]')
-        if ($answer.length > 0) {
-            onInput($answer.get(0))
-        }
+        $img.closest('[data-js="answer"]').trigger('input')
     },
     l,
 ) {

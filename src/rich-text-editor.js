@@ -39,13 +39,9 @@ export const makeRichText = (answer, options, onValueChanged = () => {}) => {
         updateMathImg,
     } = { ...u.defaults, ...options }
     const l = locales[locale].editor
-    function onInput(element) {
-        if (!pasteInProgress)
-            onValueChanged(ignoreSaveObject || u.sanitizeContent(element, screenshotImageSelector, sanitize))
-    }
     if (state.firstCall) {
         state.firstCall = false
-        state.math = mathEditor.init(onInput, $outerPlaceholder, focus, baseUrl, updateMathImg, l)
+        state.math = mathEditor.init($outerPlaceholder, focus, baseUrl, updateMathImg, l)
         const containers = toolbars.init(state.math, () => focus.richText, l)
         state.$toolbar = containers.toolbar
         const $helpOverlay = containers.helpOverlay
@@ -81,8 +77,11 @@ export const makeRichText = (answer, options, onValueChanged = () => {}) => {
             onRichTextEditorFocusChanged(e)
         })
         // Triggered after both drop and paste
-        .on('input', () => {
-            onInput(answer)
+        .on('input', (e) => {
+            if (!pasteInProgress)
+                onValueChanged(
+                    ignoreSaveObject || u.sanitizeContent(e.currentTarget, screenshotImageSelector, sanitize),
+                )
         })
         .on('drop', (e) => {
             pasteInProgress = true
