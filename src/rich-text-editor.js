@@ -26,13 +26,14 @@ window.richTextEditorState = window.richTextEditorState || {
 }
 const state = window.richTextEditorState
 const focus = state.focus
-export const makeRichText = (answer, options, onValueChanged = () => {}) => {
+export const makeRichText = (answer, options, onValueChanged) => {
     const {
         baseUrl,
         fileTypes,
         sanitize,
         screenshotSaver,
         ignoreSaveObject,
+        ignoreEventHandling,
         screenshotImageSelector,
         invalidImageSelector,
         locale,
@@ -41,7 +42,7 @@ export const makeRichText = (answer, options, onValueChanged = () => {}) => {
     const l = locales[locale].editor
     if (state.firstCall) {
         state.firstCall = false
-        state.math = mathEditor.init($outerPlaceholder, focus, baseUrl, updateMathImg, l)
+        state.math = mathEditor.init($outerPlaceholder, focus, baseUrl, updateMathImg, l, ignoreEventHandling)
         const containers = toolbars.init(state.math, () => focus.richText, l)
         state.$toolbar = containers.toolbar
         const $helpOverlay = containers.helpOverlay
@@ -56,46 +57,50 @@ export const makeRichText = (answer, options, onValueChanged = () => {}) => {
             'data-js': 'answer',
         })
         .addClass('rich-text-editor')
-        .on('click', u.equationImageSelector, (e) => {
-            if (e.which === 1) {
-                onRichTextEditorFocus($(e.target).closest('[data-js="answer"]'))
-                state.math.openMathEditor($(e.target))
-            }
-        })
-        .on('keydown', (e) => {
-            if (u.isCtrlKey(e, keyCodes.E) && !focus.equationField && !focus.latexField) {
-                e.preventDefault()
-                state.math.insertNewEquation()
-            }
-        })
-        .on('mathfocus', (e) => {
-            $(e.currentTarget).toggleClass('rich-text-focused', e.hasFocus)
-            if (richTextAndMathBlur()) onRichTextEditorBlur(state.$currentEditor)
-        })
-        .on('focus blur', (e) => {
-            if (e.type === 'focus') state.math.closeMathEditor()
-            onRichTextEditorFocusChanged(e)
-        })
-        // Triggered after both drop and paste
-        .on('input', (e) => {
-            if (!pasteInProgress)
-                onValueChanged(
-                    ignoreSaveObject || u.sanitizeContent(e.currentTarget, screenshotImageSelector, sanitize),
-                )
-        })
-        .on('drop', (e) => {
-            pasteInProgress = true
-            setTimeout(() => {
-                $(e.currentTarget).html(sanitize(e.currentTarget.innerHTML))
-                clipboard.persistInlineImages($(e.currentTarget), screenshotSaver, invalidImageSelector, fileTypes)
-                pasteInProgress = false
-            }, 100)
-        })
-        .on('paste', (e) => {
-            pasteInProgress = true
-            setTimeout(() => (pasteInProgress = false), 0)
-            clipboard.onPaste(e, screenshotSaver, invalidImageSelector, fileTypes, sanitize)
-        })
+    if (!ignoreEventHandling) {
+        $(answer)
+            .on('click', u.equationImageSelector, (e) => {
+                if (e.which === 1) {
+                    onRichTextEditorFocus($(e.target).closest('[data-js="answer"]'))
+                    state.math.openMathEditor($(e.target))
+                }
+            })
+            .on('keydown', (e) => {
+                if (u.isCtrlKey(e, keyCodes.E) && !focus.equationField && !focus.latexField) {
+                    e.preventDefault()
+                    state.math.insertNewEquation()
+                }
+            })
+            .on('mathfocus', (e) => {
+                $(e.currentTarget).toggleClass('rich-text-focused', e.hasFocus)
+                if (richTextAndMathBlur()) onRichTextEditorBlur(state.$currentEditor)
+            })
+            .on('focus blur', (e) => {
+                if (e.type === 'focus') state.math.closeMathEditor()
+                onRichTextEditorFocusChanged(e)
+            })
+            // Triggered after both drop and paste
+            .on('input', (e) => {
+                if (!pasteInProgress)
+                    onValueChanged(
+                        ignoreSaveObject || u.sanitizeContent(e.currentTarget, screenshotImageSelector, sanitize),
+                    )
+            })
+            .on('drop', (e) => {
+                pasteInProgress = true
+                setTimeout(() => {
+                    $(e.currentTarget).html(sanitize(e.currentTarget.innerHTML))
+                    clipboard.persistInlineImages($(e.currentTarget), screenshotSaver, invalidImageSelector, fileTypes)
+                    pasteInProgress = false
+                }, 100)
+            })
+            .on('paste', (e) => {
+                pasteInProgress = true
+                setTimeout(() => (pasteInProgress = false), 0)
+                clipboard.onPaste(e, screenshotSaver, invalidImageSelector, fileTypes, sanitize)
+            })
+    }
+
     setTimeout(() => document.execCommand('enableObjectResizing', false, false), 0)
 }
 

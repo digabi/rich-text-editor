@@ -1,5 +1,6 @@
 export interface RichTextEditorOptions {
   ignoreSaveObject?: boolean;
+  ignoreEventHandling?: boolean;
   locale?: "FI" | "SV";
   screenshotSaver?: ({ type, data, el }: { type: string; data: Buffer; el: Element }) => Promise<string>;
   baseUrl?: string;

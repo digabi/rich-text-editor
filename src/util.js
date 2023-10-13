@@ -7,6 +7,7 @@ export const defaults = {
     screenshotSaver: () => Promise.resolve(''),
     baseUrl: '',
     ignoreSaveObject: false,
+    ignoreEventHandling: false,
     screenshotImageSelector:
         'img[src^="/screenshot/"], img[src^="data:image/png"], img[src^="data:image/gif"], img[src^="data:image/jpeg"]',
     invalidImageSelector: 'img:not(img[src^="data"], img[src^="/math.svg?latex="], img[src^="/screenshot/"])',
