@@ -2,15 +2,29 @@ import $ from 'jquery'
 import loadingImg from './loadingImg'
 
 export function onPaste(e, saver, invalidImageSelector, fileTypes, sanitize) {
+    console.log(`onPaste ${JSON.stringify(e)}`)
     const clipboardData = e.originalEvent.clipboardData
+    console.log(`clipboardData`, clipboardData)
     const file =
         clipboardData.items &&
         clipboardData.items.length > 0 &&
         clipboardData.items[clipboardData.items.length - 1].getAsFile()
+
+    console.log('clipboardData.items', clipboardData.items)
+    if (clipboardData.items.length > 0) {
+        console.log(
+            'clipboardData.items[clipboardData.items.length - 1].getAsFile()',
+            clipboardData.items[clipboardData.items.length - 1].getAsFile(),
+        )
+    }
+
+    console.log(`onPaste file`, file)
     if (file) {
+        console.log(`onPaste onPasteBlob`, file)
         onPasteBlob(e, file, saver, fileTypes)
     } else {
         const clipboardDataAsHtml = clipboardData.getData('text/html')
+        console.log(`onPaste clipboardDataAsHtml ${JSON.stringify(clipboardDataAsHtml)}`)
         if (clipboardDataAsHtml)
             onPasteHtml(e, $(e.currentTarget), clipboardDataAsHtml, saver, invalidImageSelector, fileTypes, sanitize)
         else onLegacyPasteImage($(e.currentTarget), saver, invalidImageSelector, fileTypes)
@@ -66,7 +80,9 @@ function markAndGetInlineImagesAndRemoveForbiddenOnes($editor, invalidImageSelec
         .toArray()
         .map((el) => ({ ...decodeBase64Image(el.getAttribute('src')), el }))
     images.filter(isForbiddenInlineImage).forEach(({ el }) => el.remove())
+    console.log('markAndGetInlineImagesAndRemoveForbiddenOnes images', images)
     const pngImages = images.filter(({ type }) => fileTypes.includes(type))
+    console.log('markAndGetInlineImagesAndRemoveForbiddenOnes pngImages', pngImages)
     pngImages.forEach(({ el }) => el.setAttribute('src', loadingImg))
     return pngImages
 

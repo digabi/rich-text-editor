@@ -84,6 +84,7 @@ export const makeRichText = (answer, options, onValueChanged = () => {}) => {
                 )
         })
         .on('drop', (e) => {
+            console.log('dropping now')
             pasteInProgress = true
             setTimeout(() => {
                 $(e.currentTarget).html(sanitize(e.currentTarget.innerHTML))
@@ -92,6 +93,7 @@ export const makeRichText = (answer, options, onValueChanged = () => {}) => {
             }, 100)
         })
         .on('paste', (e) => {
+            console.log('paste now')
             pasteInProgress = true
             setTimeout(() => (pasteInProgress = false), 0)
             clipboard.onPaste(e, screenshotSaver, invalidImageSelector, fileTypes, sanitize)
