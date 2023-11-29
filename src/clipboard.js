@@ -2,7 +2,7 @@ import $ from 'jquery'
 import loadingImg from './loadingImg'
 
 export function onPaste(e, saver, invalidImageSelector, fileTypes, sanitize) {
-    console.log(`onPaste ${JSON.stringify(e)}`)
+    console.log(`onPaste ${e.originalEvent}`)
     const clipboardData = e.originalEvent.clipboardData
     console.log(`clipboardData`, clipboardData)
     const file =
