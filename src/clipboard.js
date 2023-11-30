@@ -2,7 +2,7 @@ import $ from 'jquery'
 import loadingImg from './loadingImg'
 
 export function onPaste(e, saver, invalidImageSelector, fileTypes, sanitize) {
-    console.log(`onPaste ${e.originalEvent}`)
+    console.log('onPaste originalEvent', e.originalEvent)
     const clipboardData = e.originalEvent.clipboardData
     console.log(`clipboardData`, clipboardData)
     const file =
@@ -13,9 +13,14 @@ export function onPaste(e, saver, invalidImageSelector, fileTypes, sanitize) {
     console.log('clipboardData.items', clipboardData.items)
     if (clipboardData.items.length > 0) {
         console.log(
-            'clipboardData.items[clipboardData.items.length - 1].getAsFile()',
+            `clipboardData.items[clipboardData.items.length - 1].getAsFile(): ${clipboardData.items.length}`,
             clipboardData.items[clipboardData.items.length - 1].getAsFile(),
         )
+        console.log('data.kind', clipboardData.items[clipboardData.items.length - 1].kind)
+        console.log('data.type', clipboardData.items[clipboardData.items.length - 1].type)
+        clipboardData.items[clipboardData.items.length - 1].getAsString((s) => {
+            console.log(`getAsString`, s)
+        })
     }
 
     console.log(`onPaste file`, file)
