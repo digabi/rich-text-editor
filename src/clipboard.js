@@ -74,6 +74,8 @@ export function persistInlineImages($editor, screenshotSaver, invalidImageSelect
 }
 
 function markAndGetInlineImagesAndRemoveForbiddenOnes($editor, invalidImageSelector, fileTypes) {
+    console.log('contents', $editor.contents())
+    console.log('editor innerHTML', $editor.innerHTML)
     console.log('invalidImageSelector', invalidImageSelector)
     console.log('fileTypes', fileTypes)
 
