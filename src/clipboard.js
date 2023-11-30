@@ -29,10 +29,12 @@ export function onPaste(e, saver, invalidImageSelector, fileTypes, sanitize) {
         onPasteBlob(e, file, saver, fileTypes)
     } else {
         const clipboardDataAsHtml = clipboardData.getData('text/html')
-        console.log(`onPaste clipboardDataAsHtml ${JSON.stringify(clipboardDataAsHtml)}`)
-        if (clipboardDataAsHtml)
+        console.log('onPaste clipboardDataAsHtml', clipboardDataAsHtml)
+        if (clipboardDataAsHtml) {
             onPasteHtml(e, $(e.currentTarget), clipboardDataAsHtml, saver, invalidImageSelector, fileTypes, sanitize)
-        else onLegacyPasteImage($(e.currentTarget), saver, invalidImageSelector, fileTypes)
+        } else {
+            onLegacyPasteImage($(e.currentTarget), saver, invalidImageSelector, fileTypes)
+        }
     }
 }
 
@@ -54,6 +56,7 @@ function onPasteBlob(event, file, saver, fileTypes) {
 function onPasteHtml(event, $answer, clipboardDataAsHtml, saver, invalidImageSelector, fileTypes, sanitize) {
     event.preventDefault()
     window.document.execCommand('insertHTML', false, sanitize(clipboardDataAsHtml))
+    console.log('onPasteHtml', sanitize(clipboardDataAsHtml))
     persistInlineImages($answer, saver, invalidImageSelector, fileTypes)
 }
 
