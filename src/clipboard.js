@@ -74,6 +74,12 @@ export function persistInlineImages($editor, screenshotSaver, invalidImageSelect
 }
 
 function markAndGetInlineImagesAndRemoveForbiddenOnes($editor, invalidImageSelector, fileTypes) {
+    console.log('invalidImageSelector', invalidImageSelector)
+    console.log('fileTypes', fileTypes)
+
+    const imagesTemp = $editor.find('img').toArray()
+    console.log('imagesTemp', imagesTemp)
+
     $editor.find(invalidImageSelector).remove()
     const images = $editor
         .find('img[src^="data:image/"]')
