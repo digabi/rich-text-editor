@@ -87,13 +87,13 @@ function markAndGetInlineImagesAndRemoveForbiddenOnes($editor, invalidImageSelec
     console.log('invalidImageSelector', invalidImageSelector)
     console.log('fileTypes', fileTypes)
 
-    $editor
+    const imagesWithOutSrc = $editor
         .find('img')
         .toArray()
-        .forEach((el) => {
-            console.log('element', el)
-            console.log('element src', el.getAttribute('src'))
-        })
+        .filter((el) => !el.getAttribute('src'))
+
+    console.log('imagesWithOutSrc', imagesWithOutSrc)
+    imagesWithOutSrc.forEach((el) => el.remove())
 
     $editor.find(invalidImageSelector).remove()
     const images = $editor
