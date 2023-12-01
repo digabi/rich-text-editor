@@ -87,8 +87,13 @@ function markAndGetInlineImagesAndRemoveForbiddenOnes($editor, invalidImageSelec
     console.log('invalidImageSelector', invalidImageSelector)
     console.log('fileTypes', fileTypes)
 
-    const imagesTemp = $editor.find('img').toArray()
-    console.log('imagesTemp', imagesTemp)
+    $editor
+        .find('img')
+        .toArray()
+        .forEach((el) => {
+            console.log('element', el)
+            console.log('element src', el.getAttribute('src'))
+        })
 
     $editor.find(invalidImageSelector).remove()
     const images = $editor
@@ -96,6 +101,7 @@ function markAndGetInlineImagesAndRemoveForbiddenOnes($editor, invalidImageSelec
         .toArray()
         .map((el) => ({ ...decodeBase64Image(el.getAttribute('src')), el }))
     images.filter(isForbiddenInlineImage).forEach(({ el }) => el.remove())
+
     console.log('markAndGetInlineImagesAndRemoveForbiddenOnes images', images)
     const pngImages = images.filter(({ type }) => fileTypes.includes(type))
     console.log('markAndGetInlineImagesAndRemoveForbiddenOnes pngImages', pngImages)
