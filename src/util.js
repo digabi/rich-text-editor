@@ -82,15 +82,18 @@ function preventIfTrue(e, val) {
 
 export function sanitizeContent(answerElement, screenshotImageSelector, sanitize) {
     const $answerElement = $(answerElement)
+    console.log('sanitizeContent.answerElement', $answerElement)
     const $mathEditor = $answerElement.find('[data-js="mathEditor"]')
     const $renderError = $answerElement.find('.render-error')
     $mathEditor.hide()
     $renderError.hide()
     const text = $answerElement.get(0).innerText
+    console.log('sanitizeContent.text', text)
     $mathEditor.show()
     $renderError.show()
 
     const html = sanitize($answerElement.html())
+    console.log('sanitizeContent.html', html)
 
     const answerConsideredEmpty =
         text.trim().length +
@@ -98,10 +101,14 @@ export function sanitizeContent(answerElement, screenshotImageSelector, sanitize
             $answerElement.find(screenshotImageSelector).length ===
         0
 
+    console.log('sanitizeContent.answerConsideredEmpty', answerConsideredEmpty)
+    const imageCount = $(`<div>${html}</div>`).find(screenshotImageSelector).length
+    console.log('sanitizeContent.imageCount', imageCount)
+
     return {
         answerHTML: answerConsideredEmpty ? '' : stripBrsAndTrimFromEnd(html),
         answerText: stripNewLinesFromStartAndWiteSpacesFromEnd(text),
-        imageCount: $(`<div>${html}</div>`).find(screenshotImageSelector).length,
+        imageCount,
     }
 }
 

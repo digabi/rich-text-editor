@@ -78,10 +78,12 @@ export const makeRichText = (answer, options, onValueChanged = () => {}) => {
         })
         // Triggered after both drop and paste
         .on('input', (e) => {
-            if (!pasteInProgress)
+            if (!pasteInProgress) {
+                console.log('input now', e)
                 onValueChanged(
                     ignoreSaveObject || u.sanitizeContent(e.currentTarget, screenshotImageSelector, sanitize),
                 )
+            }
         })
         .on('drop', (e) => {
             console.log('dropping now')
