@@ -157,6 +157,7 @@ describe('rich text editor', () => {
                 }
                 $el.answer1.trigger(u.pasteEventMock()).trigger('input')
             })
+            before(u.delayFor(150))
 
             it('ignores other than png images', () => {
                 expect($el.answer1.find('img').length).to.equal(currentImgAmout)
@@ -200,6 +201,7 @@ describe('rich text editor', () => {
                 }
                 $el.answer3.trigger(u.pasteEventMock()).trigger('input')
             })
+            before(u.delayFor(150))
 
             it('saves pasted image', () => {
                 expect($el.answer3.find('img:last'))
@@ -437,6 +439,7 @@ describe('rich text editor', () => {
                 )
                 .trigger('input')
         })
+        before(u.delayFor(150))
 
         it('inserts sanitized content', () => {
             expect(savedValues[1]).to.eql([
@@ -450,6 +453,7 @@ describe('rich text editor', () => {
     })
 
     describe('when trying to drag unsanitized content', () => {
+        before(clear)
         before('dropping banned tags', () => {
             $el.answer1.html('<div class="forbidden"><b>drop</b></div><div>bar</div><a href="/">link text</a> ')
             $el.answer1.trigger('drop')
@@ -460,11 +464,6 @@ describe('rich text editor', () => {
         it('drops sanitized content', () => {
             expect($el.answer1).to.have.html('drop<br>bar<br>link text ')
             expect(savedValues[0]).to.eql([
-                {
-                    answerHTML: 'drop<br />bar<br />link text',
-                    answerText: 'drop\nbar\nlink text',
-                    imageCount: 0,
-                },
                 {
                     answerHTML: 'drop<br />bar<br />link text',
                     answerText: 'drop\nbar\nlink text',
