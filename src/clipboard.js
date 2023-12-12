@@ -6,9 +6,6 @@ export function onPaste(e, saver, invalidImageSelector, fileTypes, sanitize) {
 
     console.log('clipboardData', clipboardData)
 
-    const array = Array.from(clipboardData.files)
-    console.log('clipboardData.files', array)
-
     const types = Array.from(clipboardData.types)
     console.log('clipboardData.types', types)
 
@@ -17,12 +14,18 @@ export function onPaste(e, saver, invalidImageSelector, fileTypes, sanitize) {
         clipboardData.items.length > 0 &&
         clipboardData.items[clipboardData.items.length - 1].getAsFile()
 
-    console.log('file', file)
+    const clipboardDataAsHtml = clipboardData.getData('text/html')
+    console.log('clipboardDataAsHtml', clipboardDataAsHtml)
+
+    if (!file && (!clipboardDataAsHtml || !clipboardDataAsHtml.length)) {
+        console.log('PREVENTING')
+        e.preventDefault()
+        return
+    }
 
     if (file) {
         onPasteBlob(e, file, saver, fileTypes)
     } else {
-        const clipboardDataAsHtml = clipboardData.getData('text/html')
         if (clipboardDataAsHtml)
             onPasteHtml(e, $(e.currentTarget), clipboardDataAsHtml, saver, invalidImageSelector, fileTypes, sanitize)
         else onLegacyPasteImage($(e.currentTarget), saver, invalidImageSelector, fileTypes)
