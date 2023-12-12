@@ -9,6 +9,9 @@ export function onPaste(e, saver, invalidImageSelector, fileTypes, sanitize) {
     const array = Array.from(clipboardData.files)
     console.log('clipboardData.files', array)
 
+    const types = Array.from(clipboardData.types)
+    console.log('clipboardData.types', types)
+
     const file =
         clipboardData.items &&
         clipboardData.items.length > 0 &&
