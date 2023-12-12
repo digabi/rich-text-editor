@@ -134,6 +134,7 @@ describe('rich text editor', () => {
                 }
                 $el.answer1.trigger(u.pasteEventMock()).trigger('input')
             })
+            before(u.delayFor(150))
 
             it('saves pasted image', () => {
                 expect($el.answer1.find('img:last'))
@@ -157,6 +158,7 @@ describe('rich text editor', () => {
                 }
                 $el.answer1.trigger(u.pasteEventMock()).trigger('input')
             })
+            before(u.delayFor(150))
 
             it('ignores other than png images', () => {
                 expect($el.answer1.find('img').length).to.equal(currentImgAmout)
@@ -200,6 +202,7 @@ describe('rich text editor', () => {
                 }
                 $el.answer3.trigger(u.pasteEventMock()).trigger('input')
             })
+            before(u.delayFor(150))
 
             it('saves pasted image', () => {
                 expect($el.answer3.find('img:last'))
