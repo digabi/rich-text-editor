@@ -3,10 +3,19 @@ import loadingImg from './loadingImg'
 
 export function onPaste(e, saver, invalidImageSelector, fileTypes, sanitize) {
     const clipboardData = e.originalEvent.clipboardData
+
+    console.log('clipboardData', clipboardData)
+
+    const array = Array.from(clipboardData.files)
+    console.log('clipboardData.files', array)
+
     const file =
         clipboardData.items &&
         clipboardData.items.length > 0 &&
         clipboardData.items[clipboardData.items.length - 1].getAsFile()
+
+    console.log('file', file)
+
     if (file) {
         onPasteBlob(e, file, saver, fileTypes)
     } else {
@@ -65,6 +74,9 @@ function markAndGetInlineImagesAndRemoveForbiddenOnes($editor, invalidImageSelec
         .find('img[src^="data:image/"]')
         .toArray()
         .map((el) => ({ ...decodeBase64Image(el.getAttribute('src')), el }))
+
+    console.log('images', images)
+
     images.filter(isForbiddenInlineImage).forEach(({ el }) => el.remove())
     const pngImages = images.filter(({ type }) => fileTypes.includes(type))
     pngImages.forEach(({ el }) => el.setAttribute('src', loadingImg))

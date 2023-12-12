@@ -93,10 +93,14 @@ export const makeRichText = (answer, options, onValueChanged = () => {}) => {
         })
         .on('paste', (e) => {
             pasteInProgress = true
-            setTimeout(() => {
-                setTimeout(() => (pasteInProgress = false), 0)
-                clipboard.onPaste(e, screenshotSaver, invalidImageSelector, fileTypes, sanitize)
-            }, 100)
+            setTimeout(() => (pasteInProgress = false), 0)
+            clipboard.onPaste(e, screenshotSaver, invalidImageSelector, fileTypes, sanitize)
+
+            // pasteInProgress = true
+            // setTimeout(() => {
+            //     setTimeout(() => (pasteInProgress = false), 0)
+            //     clipboard.onPaste(e, screenshotSaver, invalidImageSelector, fileTypes, sanitize)
+            // }, 100)
         })
     setTimeout(() => document.execCommand('enableObjectResizing', false, false), 0)
 }
