@@ -4,26 +4,18 @@ import loadingImg from './loadingImg'
 export function onPaste(e, saver, invalidImageSelector, fileTypes, sanitize) {
     const clipboardData = e.originalEvent.clipboardData
 
-    console.log('clipboardData', clipboardData)
-
-    const types = Array.from(clipboardData.types)
-    console.log('clipboardData.types', types)
-
     const file =
         clipboardData.items &&
         clipboardData.items.length > 0 &&
         clipboardData.items[clipboardData.items.length - 1].getAsFile()
 
     const clipboardDataAsHtml = clipboardData.getData('text/html')
-    console.log('clipboardDataAsHtml', clipboardDataAsHtml)
 
     if (!file && (!clipboardDataAsHtml || !clipboardDataAsHtml.length)) {
-        console.log('PREVENTING')
+        // when copy pasting images from disk, in certain environments paste event is triggered before
+        // file is populated to clipboardData.items
         e.preventDefault()
-        return
-    }
-
-    if (file) {
+    } else if (file) {
         onPasteBlob(e, file, saver, fileTypes)
     } else {
         if (clipboardDataAsHtml)
