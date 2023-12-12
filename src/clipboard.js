@@ -7,10 +7,20 @@ export function onPaste(e, saver, invalidImageSelector, fileTypes, sanitize) {
         clipboardData.items &&
         clipboardData.items.length > 0 &&
         clipboardData.items[clipboardData.items.length - 1].getAsFile()
+
+    const clipboardDataAsHtml = clipboardData.getData('text/html')
+
+    if (!file && clipboardData.types && (!clipboardDataAsHtml || !clipboardDataAsHtml.length)) {
+        const types = Array.from(clipboardData.types)
+        if (types.length === 1 && types[0] === 'text/plain') {
+            e.preventDefault()
+            return
+        }
+    }
+
     if (file) {
         onPasteBlob(e, file, saver, fileTypes)
     } else {
-        const clipboardDataAsHtml = clipboardData.getData('text/html')
         if (clipboardDataAsHtml)
             onPasteHtml(e, $(e.currentTarget), clipboardDataAsHtml, saver, invalidImageSelector, fileTypes, sanitize)
         else onLegacyPasteImage($(e.currentTarget), saver, invalidImageSelector, fileTypes)
