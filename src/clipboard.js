@@ -10,13 +10,13 @@ export function onPaste(e, saver, invalidImageSelector, fileTypes, sanitize) {
 
     const clipboardDataAsHtml = clipboardData.getData('text/html')
 
-    if (!file && clipboardData.types && (!clipboardDataAsHtml || !clipboardDataAsHtml.length)) {
-        const types = Array.from(clipboardData.types)
-        if (types.length === 1 && types[0] === 'text/plain') {
-            e.preventDefault()
-            return
-        }
-    }
+    // if (!file && clipboardData.types && (!clipboardDataAsHtml || !clipboardDataAsHtml.length)) {
+    //     const types = Array.from(clipboardData.types)
+    //     if (types.length === 1 && types[0] === 'text/plain') {
+    //         e.preventDefault()
+    //         return
+    //     }
+    // }
 
     if (file) {
         onPasteBlob(e, file, saver, fileTypes)
@@ -49,10 +49,10 @@ function onPasteHtml(event, $answer, clipboardDataAsHtml, saver, invalidImageSel
 }
 
 function onLegacyPasteImage($editor, saver, invalidImageSelector, fileTypes) {
-    persistInlineImages($editor, saver, invalidImageSelector, fileTypes)
+    persistInlineImages($editor, saver, invalidImageSelector, fileTypes, 100)
 }
 
-export function persistInlineImages($editor, screenshotSaver, invalidImageSelector, fileTypes) {
+export function persistInlineImages($editor, screenshotSaver, invalidImageSelector, fileTypes, delay = 0) {
     setTimeout(
         () =>
             Promise.all(
@@ -65,7 +65,7 @@ export function persistInlineImages($editor, screenshotSaver, invalidImageSelect
                         }),
                 ),
             ).then(() => $editor.trigger('input')),
-        0,
+        delay,
     )
 }
 
