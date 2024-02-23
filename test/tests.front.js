@@ -92,10 +92,12 @@ describe('rich text editor', () => {
         'wait for tools to hide',
         u.waitUntil(() => u.isOutsideViewPort($('[data-js="tools"]'))),
     )
+
     before(
         'wait answer field to initialize',
         u.waitUntil(() => $('.answer1').attr('contenteditable')),
     )
+
     before(() => {
         $el.answer1 = $('.answer1')
         $el.answer2 = $('.answer2')
@@ -108,11 +110,14 @@ describe('rich text editor', () => {
         $el.mathEditor = $('[data-js="mathEditor"]')
         $el.renderError = $('.render-error')
     })
+
     before('focus', () => $el.answer1.focus())
+
     before(
         'wait for tools visible',
         u.waitUntil(() => $el.tools.is(':visible')),
     )
+
     after(defaults)
 
     it('save handler is never called', () => {
@@ -120,13 +125,17 @@ describe('rich text editor', () => {
         expect(savedValues[1]).to.have.length(0)
         expect(savedValues[2]).to.have.length(0)
     })
+
     it('shows character list', () => expect($('[data-js="charactersList"]')).to.be.visible)
+
     it('hide math tools', () => expect($el.mathToolbar).to.be.hidden)
+
     it('answer has focus style', () => expect($el.answer1).to.have.class('rich-text-focused'))
 
     describe('when pasting images', () => {
         describe('png', () => {
             before(clear)
+
             before('paste image', (done) => {
                 $el.answer1.append(base64png)
                 $el.answer1.find('img:last').get(0).onload = (e) => {
@@ -134,6 +143,7 @@ describe('rich text editor', () => {
                 }
                 $el.answer1.trigger(u.pasteEventMock()).trigger('input')
             })
+
             before(u.delayFor(150))
 
             it('saves pasted image', () => {
@@ -141,15 +151,18 @@ describe('rich text editor', () => {
                     .to.have.attr('src')
                     .match(/\/screenshot/)
             })
+
             it('saves markup', () => {
                 expect(savedValues[0]).to.eql([
                     { answerHTML: '<img src="/screenshot/screenshot.png" />', answerText: '', imageCount: 1 },
                 ])
             })
         })
+
         describe('not png', () => {
             before(clear)
             let currentImgAmout
+
             before('#3', (done) => {
                 currentImgAmout = $el.answer1.find('img').length
                 $el.answer1.append('<img src="data:image/gif;base64,R0lGODlhAQABAIAAAAUEBAAAACwAAAAAAQABAAACAkQBADs=">')
@@ -158,6 +171,7 @@ describe('rich text editor', () => {
                 }
                 $el.answer1.trigger(u.pasteEventMock()).trigger('input')
             })
+
             before(u.delayFor(150))
 
             it('ignores other than png images', () => {
@@ -168,6 +182,7 @@ describe('rich text editor', () => {
 
     describe('when pasting images and content in other environments', () => {
         before(clear)
+
         before('focus', () => $el.answer3.focus())
 
         describe('dropping markup', () => {
@@ -177,6 +192,7 @@ describe('rich text editor', () => {
                 )
                 $el.answer3.trigger('drop')
             })
+
             before(u.delayFor(150))
 
             it('drops sanitized content', () => {
@@ -193,8 +209,10 @@ describe('rich text editor', () => {
                 ])
             })
         })
+
         describe('png', () => {
             before(clear)
+
             before('paste image', (done) => {
                 $el.answer3.append(base64png)
                 $el.answer3.find('img:last').get(0).onload = () => {
@@ -202,6 +220,7 @@ describe('rich text editor', () => {
                 }
                 $el.answer3.trigger(u.pasteEventMock()).trigger('input')
             })
+
             before(u.delayFor(150))
 
             it('saves pasted image', () => {
@@ -209,6 +228,7 @@ describe('rich text editor', () => {
                     .to.have.attr('src')
                     .match(/\/exam-api/)
             })
+
             it('saves markup', () => {
                 expect(savedValues[2]).to.eql([
                     { answerHTML: '<img src="/exam-api/screenshot.png" />', answerText: '', imageCount: 1 },
@@ -219,6 +239,7 @@ describe('rich text editor', () => {
         describe('gif is allowed with custom configuration', () => {
             before(clear)
             let currentImgAmout
+
             before('#3', (done) => {
                 currentImgAmout = $el.answer3.find('img').length
                 $el.answer3.append('<img src="data:image/gif;base64,R0lGODlhAQABAIAAAAUEBAAAACwAAAAAAQABAAACAkQBADs=">')
@@ -236,18 +257,26 @@ describe('rich text editor', () => {
 
     describe('start math', () => {
         before(clear)
+
         before(() => $el.answer1.focus())
+
         before(
             'wait for tools visible',
             u.waitUntil(() => $el.tools.is(':visible')),
         )
+
         before(() => $('[data-js="newEquation"]').mousedown())
+
         before(() => $el.latexField.val('\\ \\'))
+
         before(u.delayFor(600))
 
         it('shows math tools', () => expect($el.mathToolbar).to.be.visible)
+
         it('shows math editor', () => expect($el.mathEditor).to.be.visible)
+
         it('answer still has focus style', () => expect($el.answer1).to.have.class('rich-text-focused'))
+
         it('trims empty equations', () => {
             $el.equationFieldTextArea.trigger({ type: 'keydown', keyCode: 27 })
             expect($el.answer1).to.have.html('')
@@ -259,22 +288,34 @@ describe('rich text editor', () => {
 
         describe('when focus in latex field', () => {
             before(defaults)
+
             before(() => $firstAnswerMath().trigger({ type: 'click', which: 1 }))
+
             before('type', () => $el.latexField.focus().val('xy').trigger('input'))
+
             before(u.delay)
+
             before(() => $('.rich-text-editor-toolbar-characters-group button:eq(3)').mousedown())
+
             before(u.delay)
+
             before('focus', () => $el.answer1.focus())
 
             it('answer still has focus style', () => expect($el.answer1).to.have.class('rich-text-focused'))
+
             it('shows math in equation field', () => expect($el.equationField).to.have.text('xy±'))
+
             it('shows math in latex field', () => expect($el.latexField).to.have.value('xy\\pm'))
+
             it('shows math in img', () => expect($firstAnswerMath()).to.have.attr('src', '/math.svg?latex=xy%5Cpm'))
 
             describe('and typing invalid formula for MathQuill', () => {
                 before(defaults)
+
                 before(() => $firstAnswerMath().trigger({ type: 'click', which: 3 }))
+
                 before('type', () => $el.latexField.focus().val('1\\').trigger('paste'))
+
                 before(u.waitUntil(() => $el.renderError.text().length > 0))
 
                 it('shows error message', () => expect($el.renderError.text()).to.equal('Virhe LaTeX-koodissa'))
@@ -282,8 +323,11 @@ describe('rich text editor', () => {
 
             describe('and typing invalid formula for MathJax', () => {
                 before(defaults)
+
                 before(() => $firstAnswerMath().trigger({ type: 'click', which: 3 }))
+
                 before('type', () => $el.latexField.focus().val('1}{').trigger('paste'))
+
                 before(u.waitUntil(() => $el.renderError.text().length > 0))
 
                 it('shows error message', () => expect($el.renderError.text()).to.equal('Virhe LaTeX-koodissa'))
@@ -292,21 +336,34 @@ describe('rich text editor', () => {
 
         describe('when focus in equation field, pasting content and adding char', () => {
             before(defaults)
+
             before(() => $el.answer1.blur())
+
             before(u.delay)
+
             before(() => $firstAnswerMath().trigger({ type: 'click', which: 1 }))
+
             before(() => $el.latexField.val('').trigger('input'))
+
             before(() => $el.equationFieldTextArea.val('a+b').trigger('paste'))
+
             before(u.delay)
+
             before(() => $('.rich-text-editor-toolbar-characters-group button:eq(4)').mousedown())
+
             before(u.delay)
+
             before(() => $el.answer1.focus())
 
             it('answer still has focus style', () => expect($el.answer1).to.have.class('rich-text-focused'))
+
             it('shows math in equation field', () => expect($el.equationField).to.have.text('a+b∞'))
+
             it('shows math in latex field', () => expect($el.latexField).to.have.value('a+b\\infty'))
+
             it('shows math in img', () =>
                 expect($firstAnswerMath()).to.have.attr('src', '/math.svg?latex=a%2Bb%5Cinfty'))
+
             it('stores latest data', () => {
                 expect(savedValues[0]).to.eql([
                     { answerHTML: '<img alt="c+d" src="/math.svg?latex=c%2Bd" />', answerText: '', imageCount: 0 },
@@ -321,9 +378,13 @@ describe('rich text editor', () => {
 
         describe('equation click opens and esc closes math editor', () => {
             before(() => $el.answer1.blur())
+
             after(defaults)
+
             after(u.delayFor(100))
+
             after(() => $el.equationFieldTextArea.blur())
+
             after(u.delayFor(100))
 
             it('editor is visible and then hidden', () => {
@@ -338,6 +399,7 @@ describe('rich text editor', () => {
 
         describe('when clicking special character from toolbar', () => {
             before(clear)
+
             before(() => $el.answer1.focus())
 
             before(() => $('.rich-text-editor-toolbar-characters-group button:first').mousedown())
@@ -345,6 +407,7 @@ describe('rich text editor', () => {
             it('inserts special character to answer body', () => {
                 expect($el.answer1).to.have.text('°')
             })
+
             it('stores latest data', () => {
                 const lastData = savedValues[0].pop()
                 expect(lastData.answerHTML).to.equal('°')
@@ -354,10 +417,15 @@ describe('rich text editor', () => {
 
         describe('when writing equations', () => {
             before(clear)
+
             before(() => $el.latexField.focus())
+
             before(() => $el.latexField.val('test').trigger('input'))
+
             before(u.delayFor(100))
+
             before(() => $el.latexField.val('test1').trigger('input'))
+
             before(u.delayFor(100))
 
             it('CTRL + Z restores previous answer', () => {
@@ -377,6 +445,7 @@ describe('rich text editor', () => {
                 u.delayFor(100)
                 expect($el.equationField).to.have.text('test')
             })
+
             it('MQ undo and redo change LaTeX', () => {
                 $el.equationFieldTextArea.trigger({ type: 'keydown', keyCode: 89, ctrlKey: true })
                 u.delayFor(100)
@@ -386,13 +455,19 @@ describe('rich text editor', () => {
 
         describe('when writing LaTeX', () => {
             before(clear)
+
             before(() => $el.latexField.focus())
+
             before(() => $el.latexField.val('\\alph').trigger('input'))
+
             before(u.delayFor(100))
+
             before(() => $el.latexField.val('\\alpha').trigger('input'))
+
             before(u.delayFor(100))
 
             after(defaults)
+
             after(() => $el.answer1.focus())
 
             it('Undo and redo work correctly on incorrect LaTeX', () => {
@@ -410,27 +485,37 @@ describe('rich text editor', () => {
 
     describe('when leaving answer box', () => {
         before(() => $el.answer1.blur())
+
         before(u.delayFor(100))
 
         it('removes focus style from answer', () => expect($el.answer1).to.not.have.class('rich-text-focused'))
+
         it('hides toolbaar', () => expect($el.tools.position().top).to.be.below(-10))
     })
 
     describe('when moving to next answer while math is open', () => {
         before(() => $el.answer1.focus())
+
         before(() => $('[data-js="newEquation"]').mousedown())
+
         before(() => $el.answer1.blur())
+
         before(u.delay)
+
         before(() => $el.answer2.focus())
+
         before(u.delayFor(200))
 
         it('removes focus style from previous answer', () => expect($el.answer1).to.not.have.class('rich-text-focused'))
+
         it('adds focus tyle to current answer', () => expect($el.answer2).to.have.class('rich-text-focused'))
+
         it('keeps toolbar visible', () => expect($el.tools.position().top).to.equal(0))
     })
 
     describe('when trying to insert unsanitized content', () => {
         before(clear)
+
         before('pasting banned tags', () => {
             $el.answer1
                 .trigger(
@@ -458,6 +543,7 @@ describe('rich text editor', () => {
             $el.answer1.trigger('drop')
             $el.answer1.trigger('input')
         })
+
         before(u.delayFor(150))
 
         it('drops sanitized content', () => {
@@ -479,15 +565,21 @@ describe('rich text editor', () => {
 
     describe('when entering only white space', () => {
         before(clear)
+
         before('clear answer and open equation', () => {
             $el.answer1.focus()
         })
+
         before(() => $('[data-js="newEquation"]').mousedown())
+
         before('type', () => $el.latexField.val('\\\\'))
+
         before(u.delayFor(600))
+
         before(() => {
             $el.equationFieldTextArea.trigger({ type: 'keydown', keyCode: 27 })
         })
+
         it('trims equations containing only spaces', () => {
             expect(savedValues[0]).to.eql([
                 { answerHTML: '', answerText: '', imageCount: 0 },
@@ -521,12 +613,17 @@ describe('rich text editor', () => {
 
     describe('when typing invalid formula to latex field', () => {
         before(clear)
+
         before(() => $('[data-js="newEquation"]').mousedown())
+
         before('type', () => $el.latexField.val('x\\'))
+
         before(u.delayFor(600))
+
         before(() => {
             $el.equationFieldTextArea.trigger({ type: 'keydown', keyCode: 27 })
         })
+
         it('will not save error text', () => {
             expect(savedValues[0]).to.eql([
                 { answerHTML: '', answerText: '', imageCount: +0 },
@@ -542,13 +639,19 @@ describe('rich text editor', () => {
 
     describe('when typing math ending to backslash and space', () => {
         before(defaults)
+
         before('focus', () => $el.answer1.focus())
+
         before(() => $('[data-js="newEquation"]').mousedown())
+
         before('type', () => $el.latexField.val('x\\ '))
+
         before(u.delayFor(600))
+
         before(() => {
             $el.equationFieldTextArea.trigger({ type: 'keydown', keyCode: 27 })
         })
+
         before(() => $firstAnswerMath().trigger({ type: 'click', which: 1 }))
 
         it("won't trim tailing space", () => {
@@ -598,6 +701,7 @@ describe('rich text editor', () => {
         it('renders mathjax correctly', () => {
             expect($('.mathJaxTests img').width()).to.be.greaterThan(50)
         })
+
         it('renders clientside mathjax correctly', () => {
             expect($('.mathJaxClientSideTests img').width()).to.be.greaterThan(50)
         })
