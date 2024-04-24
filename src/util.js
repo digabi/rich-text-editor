@@ -13,6 +13,7 @@ export const defaults = {
     fileTypes: ['image/png', 'image/jpeg'],
     sanitize: defaultSanitize,
     updateMathImg: undefined,
+    forceInit: false,
 }
 
 const emptyEquationSelector = 'img[src="/math.svg?latex="]'

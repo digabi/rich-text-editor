@@ -37,14 +37,20 @@ export const makeRichText = (answer, options, onValueChanged = () => {}) => {
         invalidImageSelector,
         locale,
         updateMathImg,
+        forceInit,
     } = { ...u.defaults, ...options }
     const l = locales[locale].editor
-    if (state.firstCall) {
+    if (state.firstCall || forceInit) {
         state.firstCall = false
         state.math = mathEditor.init($outerPlaceholder, focus, baseUrl, updateMathImg, l)
         const containers = toolbars.init(state.math, () => focus.richText, l)
         state.$toolbar = containers.toolbar
         const $helpOverlay = containers.helpOverlay
+        if (forceInit) {
+            $('.rich-text-editor-overlay').remove()
+            $('.rich-text-editor-tools').remove()
+            $('.rich-text-editor-hidden').remove()
+        }
         $('body').append($outerPlaceholder, state.$toolbar, $helpOverlay)
     }
     let pasteInProgress = false
