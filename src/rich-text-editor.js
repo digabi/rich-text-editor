@@ -37,9 +37,10 @@ export const makeRichText = (answer, options, onValueChanged = () => {}) => {
         invalidImageSelector,
         locale,
         updateMathImg,
+        forceInit,
     } = { ...u.defaults, ...options }
     const l = locales[locale].editor
-    if (state.firstCall) {
+    if (state.firstCall || forceInit) {
         state.firstCall = false
         state.math = mathEditor.init($outerPlaceholder, focus, baseUrl, updateMathImg, l)
         const containers = toolbars.init(state.math, () => focus.richText, l)
