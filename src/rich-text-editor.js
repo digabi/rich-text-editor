@@ -46,6 +46,11 @@ export const makeRichText = (answer, options, onValueChanged = () => {}) => {
         const containers = toolbars.init(state.math, () => focus.richText, l)
         state.$toolbar = containers.toolbar
         const $helpOverlay = containers.helpOverlay
+        if (forceInit) {
+            $('.rich-text-editor-overlay').remove()
+            $('.rich-text-editor-tools').remove()
+            $('.rich-text-editor-hidden').remove()
+        }
         $('body').append($outerPlaceholder, state.$toolbar, $helpOverlay)
     }
     let pasteInProgress = false
