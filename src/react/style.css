@@ -1,0 +1,452 @@
+.render-error {
+  position: absolute;
+  z-index: 2;
+  top: 0;
+  left: 0;
+  font-family: sans-serif;
+  font-size: 16px;
+  padding: 5px 10px;
+  color: red;
+  pointer-events: none;
+}
+
+.rich-text-editor img[src*='/math.svg'] {
+  vertical-align: middle;
+  margin: 4px;
+  padding: 3px 10px;
+  cursor: pointer;
+  border: 1px solid transparent;
+}
+
+.rich-text-editor img[src$='/math.svg?latex='],
+.rich-text-editor img[src=''] {
+  display: none;
+}
+
+.rich-text-editor:focus img[src*='/math.svg'],
+.rich-text-editor.rich-text-focused img[src*='/math.svg'] {
+  background: #edf9ff;
+  border: 1px solid #e6f2f8;
+}
+
+.rich-text-editor img[src^='/screenshot'] {
+  margin: 4px;
+}
+
+.rich-text-editor:focus img[src^='/screenshot'],
+.rich-text-editor.rich-text-focused img[src^='/screenshot'] {
+  box-shadow: 0 0 3px 1px rgba(0, 0, 0, 0.2);
+}
+
+.rich-text-editor .mq-math-mode .mq-root-block {
+  white-space: nowrap;
+}
+
+.rich-text-editor:focus,
+.rich-text-editor.rich-text-focused,
+.rich-text-editor .mq-editable-field.mq-focused,
+.rich-text-editor textarea:focus {
+  box-shadow: none;
+  outline: 1px solid #359bb7;
+  z-index: 2;
+}
+
+.rich-text-editor img {
+  max-width: 100%;
+  max-height: 1000px;
+}
+
+.rich-text-editor {
+}
+
+.math-editor {
+  z-index: 1;
+  margin: 10px 5px 0;
+  position: relative;
+  box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.2);
+  display: flex;
+}
+
+.math-editor textarea {
+  height: auto;
+  box-shadow: none;
+  border-radius: 0;
+  resize: none;
+  border: none;
+}
+
+.math-editor-equation-field {
+  width: 50%;
+  padding: 5px 10px;
+  border: none;
+  background: #fff;
+}
+
+.math-editor-latex-field {
+  font-size: 15px;
+  width: 50%;
+  padding: 5px 10px;
+  letter-spacing: 1px;
+}
+
+.rich-text-editor-button {
+  text-align: center;
+  display: inline-block;
+  position: relative;
+  cursor: pointer;
+  border: none;
+  padding: 0;
+}
+
+.math-editor-focus .rich-text-editor-button[data-command]:hover:after,
+.rich-text-editor-button-action[data-command]:hover:after {
+  background: #359bb7;
+  border-radius: 5px;
+  color: #fff;
+  content: attr(data-command);
+  letter-spacing: 1.5px;
+  font-size: 16px;
+  left: 50%;
+  top: 100%;
+  padding: 7px 15px;
+  position: absolute;
+  z-index: 32;
+  transform: translate(-50%, 0);
+  white-space: nowrap;
+}
+
+.math-editor-focus .rich-text-editor-button[data-command]:hover:before,
+.rich-text-editor-button-action[data-command]:hover:before {
+  display: inline-block;
+  border: solid;
+  border-color: #359bb7 transparent;
+  border-width: 0 6px 6px 6px;
+  bottom: 0;
+  content: '';
+  left: 50%;
+  position: absolute;
+  z-index: 99;
+  margin-left: -6px;
+}
+
+.rich-text-editor-button[data-command]:after:hover,
+.rich-text-editor-button[data-command]:before:hover {
+  display: none;
+}
+
+.rich-text-editor-button:active {
+  box-shadow: none;
+}
+
+.rich-text-editor-button-action {
+  padding: 5px 10px;
+  font-weight: normal;
+  background: none;
+  border: none;
+  font-family: SourceSansPro-Semibold, sans-serif;
+  font-size: 16px;
+  letter-spacing: 1.5px;
+  color: #359bb7;
+  letter-spacing: 0;
+  line-height: 22px;
+}
+
+.rich-text-editor-new-equation {
+  display: block;
+  vertical-align: top;
+  height: 35px;
+  width: 153px;
+  white-space: nowrap;
+}
+
+.math-editor-focus .rich-text-editor-new-equation {
+  display: none;
+}
+
+.rich-text-editor-tools {
+  z-index: 2;
+  border-bottom: 1px solid #dfdfdf;
+  border-top: 1px solid #dfdfdf;
+  position: fixed;
+  top: 0; /*-110px;*/
+  left: 0;
+  right: 0;
+  box-shadow: 0 1px 10px 1px rgba(0, 0, 0, 0.2);
+  line-height: 0;
+  background: white;
+  transition: top 0.15s;
+}
+
+.rich-text-editor-focus .rich-text-editor-show-all-characters {
+  top: 0;
+}
+
+.rich-text-editor-tools--animating {
+  visibility: visible;
+}
+
+.rich-text-editor-focus .rich-text-editor-tools {
+  visibility: visible;
+  top: 0;
+}
+
+.rich-text-editor-toolbar-wrapper {
+  margin: auto;
+  max-width: 990px;
+  position: relative;
+}
+
+.rich-text-editor-tools-row:nth-child(even) {
+  background: #fff;
+}
+
+.rich-text-editor-tools-row:nth-child(odd) {
+  background: #fafafa;
+  border-top: 1px solid #dfdfdf;
+}
+
+.rich-text-editor-toolbar {
+  z-index: 30;
+  display: inline-block;
+}
+
+.rich-text-editor-toolbar .rich-text-editor-button {
+  font-size: 16px;
+  background: none;
+  position: relative;
+}
+
+.rich-text-editor-toolbar .rich-text-editor-button:hover {
+  background: #eee;
+}
+
+.rich-text-editor-button-grid {
+  width: 35px;
+  height: 35px;
+}
+
+.rich-text-editor-toolbar.rich-text-editor-toolbar-button-list img {
+  max-width: 24px;
+  max-height: 25px;
+}
+
+.rich-text-editor-toolbar-button-list.rich-text-editor-button:hover {
+  background: #ececec;
+}
+
+.rich-text-editor-toolbar-characters {
+  margin-right: 30px;
+}
+
+.rich-text-editor-toolbar-characters.rich-text-editor-toolbar-button-list .rich-text-editor-button {
+  font-family: Symbola, monospace;
+  color: #555;
+}
+
+.rich-text-editor-toolbar-equation {
+  display: none;
+}
+
+.rich-text-editor-toolbar-equation .rich-text-editor-button:last-child {
+  margin-right: 35px;
+}
+
+.math-editor-focus .rich-text-editor-toolbar-equation {
+  display: inline-block;
+}
+
+.rich-text-editor-toolbar-characters-group {
+  margin-right: 12px;
+  display: inline-block;
+  vertical-align: top;
+}
+
+.rich-text-editor-show-all-characters .rich-text-editor-toolbar-characters .rich-text-editor-button {
+  display: inline-block;
+}
+
+.rich-text-editor-characters-expand-collapse {
+  display: inline-block;
+  font-family: 'SansSerif', serif;
+  height: 35px;
+  border: none;
+  cursor: pointer;
+  padding-top: 4px;
+  position: absolute;
+  right: 35px;
+  top: 0;
+  bottom: 0;
+  width: 20px;
+  margin-right: 8px;
+  background: url('./img/expand.svg') 50% 50% no-repeat;
+}
+
+.rich-text-editor-show-all-characters .rich-text-editor-characters-expand-collapse {
+  background-image: url('./img/collapse.svg');
+}
+
+.rich-text-editor-overlay-open {
+  overflow-y: hidden;
+}
+
+.rich-text-editor-overlay {
+  display: flex;
+  position: fixed;
+  left: 0;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  z-index: 101;
+}
+
+.rich-text-editor-overlay-modal {
+  position: relative;
+  margin: auto;
+  max-width: 860px;
+  min-height: 40%;
+  background: #fff;
+  padding: 2rem;
+  line-height: 1.5rem;
+  outline: none;
+}
+
+.rich-text-editor-close-overlay-button {
+  position: absolute;
+  width: 25px;
+  height: 25px;
+  top: 20px;
+  right: 20px;
+  cursor: pointer;
+  background: url('./img/closeButton.svg') no-repeat 50% 50%;
+  border: 0;
+}
+
+.rich-text-editor-close-overlay-button:hover {
+  opacity: 0.5;
+}
+
+.rich-text-editor-hidden {
+  display: none;
+}
+
+.rich-text-editor-help-button {
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 35px;
+  height: 35px;
+  background: url('./img/helpButton.svg') no-repeat 50% 50%;
+  border: none;
+  cursor: pointer;
+  display: block;
+}
+
+.rich-text-editor-undo-redo-wrapper {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  display: inline-flex;
+}
+
+.rich-text-editor-toolbar .rich-text-editor-undo-redo,
+.rich-text-editor-toolbar .rich-text-editor-undo-redo:hover {
+  width: 35px;
+  height: 35px;
+  background-repeat: no-repeat;
+  background-position: 50% 50%;
+  border: none;
+  cursor: pointer;
+}
+
+.rich-text-editor-toolbar .rich-text-editor-undo-button,
+.rich-text-editor-toolbar .rich-text-editor-undo-button:hover {
+  background-image: url('./img/undoButton.svg');
+  margin-right: 5px;
+}
+
+.rich-text-editor-toolbar .rich-text-editor-redo-button,
+.rich-text-editor-toolbar .rich-text-editor-redo-button:hover {
+  background-image: url('./img/redoButton.svg');
+}
+
+.rich-text-editor-undo-redo:disabled {
+  filter: grayscale(100%);
+  pointer-events: none;
+}
+
+.rich-text-editor-modal-columns {
+  display: flex;
+}
+
+.rich-text-editor-modal-column {
+  margin: 0 1rem;
+}
+
+.rich-text-editor-modal-column-1 {
+  flex: 1;
+  white-space: nowrap;
+}
+
+.rich-text-editor-modal-column-2 {
+  flex: 2;
+}
+
+.rich-text-editor-modal-column h3 {
+  font-size: 18px;
+  font-weight: bold;
+  margin-top: 0;
+}
+
+.rich-text-editor-help-shortcuts {
+  width: 100%;
+  border-spacing: 0 4px;
+}
+
+.rich-text-editor-help-shortcuts th {
+  text-align: left;
+  font-weight: normal;
+}
+
+.rich-text-editor-help-shortcuts td {
+  text-align: right;
+}
+
+.rich-text-editor-help-key {
+  background: #fff;
+  box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.3);
+  border-radius: 4px;
+  line-height: 1.3;
+  font-family: monospace;
+  display: inline-block;
+  padding: 0 4px;
+  margin: 0 4px;
+  color: #000;
+  text-align: center;
+  min-width: 15px;
+  text-transform: uppercase;
+  vertical-align: text-top;
+}
+
+.rich-text-editor-help-shortcuts td .rich-text-editor-help-button {
+  width: 100%;
+  padding: 1px;
+}
+
+@media (min-width: 1279px) {
+  .rich-text-editor-new-equation {
+    left: -153px;
+    position: absolute;
+  }
+
+  .rich-text-editor-tools-button-wrapper {
+    position: absolute;
+    top: 0;
+    width: 100%;
+  }
+}
+@media print {
+  .rich-text-editor-focus .rich-text-editor-tools {
+    display: none;
+  }
+}

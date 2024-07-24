@@ -1,0 +1,67 @@
+<!doctype html>
+<html>
+  <head>
+    <title>Rich text editor example</title>
+    <link rel="stylesheet" type="text/css" href="//unpkg.com/@digabi/mathquill/build/mathquill.css" />
+    <link rel="stylesheet" type="text/css" href="./style.css" />
+    <script type="module" src="./index.tsx"></script>
+    <script>
+      window.MathJax = {
+        options: {
+          ignoreHtmlClass: 'tex2jax_ignore',
+          processHtmlClass: 'tex2jax_process',
+        },
+        tex: {
+          packages: ['base', 'ams', 'noerrors', 'noundefined', 'mhchem'],
+        },
+        loader: {
+          load: ['[tex]/noerrors', '[tex]/mhchem'],
+        },
+      }
+    </script>
+    <script src="//cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js" id="MathJax-script"></script>
+    <style type="text/css">
+      body {
+        margin-top: 50px;
+        font-family: sans-serif;
+      }
+      h1 {
+        font-size: 2em;
+        line-height: 2;
+        margin-bottom: 4em;
+      }
+      .answer {
+        border: 1px solid #aaa;
+        padding: 5px;
+        box-sizing: content-box;
+        min-height: 100px;
+        font: 17px 'Times New Roman';
+      }
+      .rich-text-editor img[src^='data:image/svg+xml'] {
+        vertical-align: middle;
+        margin: 4px;
+        padding: 3px 10px;
+        cursor: pointer;
+        border: 1px solid transparent;
+      }
+      .rich-text-editor.rich-text-focused img[src^='data:image/svg+xml'],
+      .rich-text-editor:focus img[src^='data:image/svg+xml'] {
+        background: #edf9ff;
+        border: 1px solid #e6f2f8;
+      }
+      .rich-text-editor img[src*='data:image/png'] {
+        margin: 4px;
+      }
+      .rich-text-editor:focus img[src*='data:image/png'],
+      .rich-text-editor.rich-text-focused img[src*='data:image/png'] {
+        box-shadow: 0 0 3px 1px rgba(0, 0, 0, 0.2);
+      }
+      .result {
+        display: none;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="root"></div>
+  </body>
+</html>

@@ -4,13 +4,7 @@
   "description": "Rich text editor",
   "author": "",
   "homepage": "https://github.com/digabi/rich-text-editor",
-  "main": "dist/rich-text-editor.js",
-  "types": "index.d.ts",
-  "files": [
-    "dist/*",
-    "server/*",
-    "index.d.ts"
-  ],
+  "files": ["dist/*", "server/*", "index.d.ts"],
   "scripts": {
     "clean": "rm -rf dist/",
     "build:tsc": "tsc -p src",
@@ -22,15 +16,24 @@
     "dev": "supervisor -i public,test test/index.js",
     "generateMathButtons": "scripts/createMathSvg.js && prettier --write src/latexCommandsWithSvg.js",
     "lint": "eslint .",
-    "prepare": "npm run build && npm run build:bundle"
+    "prepare": "npm run build && npm run build:bundle",
+    "parcel-watch": "parcel watch src/react/index.html",
+    "parcel-build:": "parcel build src/react/index.html",
+    "parcel-serve": "parcel serve src/react/index.html"
   },
   "repository": {
     "type": "git",
     "url": "https://github.com/digabi/rich-text-editor.git"
   },
   "devDependencies": {
+    "@babel/core": "^7.24.9",
     "@babel/polyfill": "^7.0.0",
     "@digabi/eslint-config": "^3.0.0",
+    "@parcel/core": "^2.12.0",
+    "@parcel/transformer-babel": "^2.12.0",
+    "@parcel/transformer-typescript-types": "^2.12.0",
+    "@types/react": "^18.3.3",
+    "@types/react-dom": "^18.3.0",
     "@typescript-eslint/eslint-plugin": "^7.1.1",
     "@typescript-eslint/parser": "^7.1.1",
     "blueimp-mocha-chrome": "2.3.0",
@@ -47,7 +50,9 @@
     "express": "^4.16.4",
     "mocha": "^10.0.0",
     "morgan": "^1.9.1",
+    "parcel": "^2.12.0",
     "prettier": "^3.0.0",
+    "process": "^0.11.10",
     "sanitize-html": "^2.0.0",
     "supervisor": "^0.12.0",
     "ts-loader": "^9.2.8",
@@ -62,8 +67,10 @@
   "dependencies": {
     "@digabi/mathquill": "^0.10.12",
     "@types/express": "*",
-    "jquery": "^3.3.1",
-    "mathjax-node": "^2.1.1"
+    "jquery": "3.x",
+    "mathjax-node": "^2.1.1",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1"
   },
   "peerDependencies": {
     "jquery": "3.x",
