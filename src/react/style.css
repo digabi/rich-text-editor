@@ -159,10 +159,6 @@
   white-space: nowrap;
 }
 
-.math-editor-focus .rich-text-editor-new-equation {
-  display: none;
-}
-
 .rich-text-editor-tools {
   z-index: 2;
   border-bottom: 1px solid #dfdfdf;
@@ -241,10 +237,6 @@
 .rich-text-editor-toolbar-characters.rich-text-editor-toolbar-button-list .rich-text-editor-button {
   font-family: Symbola, monospace;
   color: #555;
-}
-
-.rich-text-editor-toolbar-equation {
-  display: none;
 }
 
 .rich-text-editor-toolbar-equation .rich-text-editor-button:last-child {

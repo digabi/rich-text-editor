@@ -4,7 +4,11 @@
   "description": "Rich text editor",
   "author": "",
   "homepage": "https://github.com/digabi/rich-text-editor",
-  "files": ["dist/*", "server/*", "index.d.ts"],
+  "files": [
+    "dist/*",
+    "server/*",
+    "index.d.ts"
+  ],
   "scripts": {
     "clean": "rm -rf dist/",
     "build:tsc": "tsc -p src",
@@ -68,6 +72,8 @@
     "@digabi/mathquill": "^0.10.12",
     "@types/express": "*",
     "jquery": "3.x",
+    "mathjax": "^3.2.2",
+    "mathjax-full": "^3.2.2",
     "mathjax-node": "^2.1.1",
     "react": "^18.3.1",
     "react-dom": "^18.3.1"

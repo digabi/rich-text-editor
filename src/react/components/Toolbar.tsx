@@ -1,19 +1,22 @@
 import { useState } from 'react'
 import { SpecialCharacter, SpecialCharacterGroup, Translation, eventHandlerWithoutFocusLoss } from '../utility'
 import { ToolbarHelpOverlay } from './ToolbarHelpOverlay'
+import { MathToolbar } from './MathToolbar'
+import latexCommands from '../resources/latexCommandsWithSvg'
 
 const popularInGroup = (group: SpecialCharacterGroup) =>
   group.characters.filter((character) => character.popular).length
 
-export const Toolbar = ({
-  t,
-  specialCharacterGroups,
-}: {
+interface ToolbarProps {
   t: Translation['editor']
   specialCharacterGroups: SpecialCharacterGroup[]
-}) => {
+  onMathCommand: (command: (typeof latexCommands)[number]) => void
+}
+
+export const Toolbar = ({ t, specialCharacterGroups, onMathCommand }: ToolbarProps) => {
   const [showHelpOverlay, setShowHelpOverlay] = useState(false)
   const [showAllCharacters, setShowCharacters] = useState(false)
+  const [showMathToolbar, setShowMathToolbar] = useState(false)
 
   return (
     <div className="rich-text-editor-tools" data-js="tools">
@@ -63,26 +66,34 @@ export const Toolbar = ({
           </div>
         </div>
       </div>
-      <div className="rich-text-editor-tools-row">
-        <div className="rich-text-editor-toolbar-wrapper rich-text-editor-equation-wrapper">
-          <div
-            className="rich-text-editor-toolbar-equation rich-text-editor-toolbar rich-text-editor-toolbar-button-list"
-            data-js="mathToolbar"
-          ></div>
+      {showMathToolbar ? (
+        <div className="rich-text-editor-tools-row">
+          <div className="rich-text-editor-toolbar-wrapper rich-text-editor-equation-wrapper">
+            <div
+              className="rich-text-editor-toolbar-equation rich-text-editor-toolbar rich-text-editor-toolbar-button-list"
+              data-js="mathToolbar"
+            >
+              {showMathToolbar && <MathToolbar onCommandClick={onMathCommand} />}
+            </div>
+          </div>
         </div>
-      </div>
-      <div className="rich-text-editor-tools-button-wrapper">
-        <div className="rich-text-editor-toolbar-wrapper">
-          <button
-            className="rich-text-editor-new-equation rich-text-editor-button rich-text-editor-button-action"
-            data-js="newEquation"
-            data-command="Ctrl + E"
-            data-i18n="rich_text_editor.insert_equation"
-          >
-            Σ {t.insertEquation}
-          </button>
+      ) : (
+        <div className="rich-text-editor-tools-button-wrapper">
+          <div className="rich-text-editor-toolbar-wrapper">
+            <button
+              className="rich-text-editor-new-equation rich-text-editor-button rich-text-editor-button-action"
+              data-js="newEquation"
+              data-command="Ctrl + E"
+              data-i18n="rich_text_editor.insert_equation"
+              onMouseDown={eventHandlerWithoutFocusLoss(() => {
+                setShowMathToolbar(true)
+              })}
+            >
+              Σ {t.insertEquation}
+            </button>
+          </div>
         </div>
-      </div>
+      )}
     </div>
   )
 }
