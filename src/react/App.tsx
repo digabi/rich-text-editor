@@ -22,9 +22,6 @@ export type Props = {
 }
 
 export const RichTextEditor = ({ options, onValueChanged }: Props) => {
-  const [focusTarget, setFocusTarget] = useState<FocusTarget>('RichText')
-  const [isFirstCall, setIsFirstCall] = useState(true)
-
   const [showToolbar, setShowToolbar] = useState(false)
 
   const editorRef = useRef<HTMLDivElement>(null)
@@ -71,7 +68,15 @@ export const RichTextEditor = ({ options, onValueChanged }: Props) => {
     selection.addRange(range)
 
     // Replace the placeholder with the React component
-    ReactDOM.createRoot(placeholder).render(<MathEditor mathQuill={MathQuill.getInterface(2)} ref={mathEditorRef} />)
+    ReactDOM.createRoot(placeholder).render(
+      <MathEditor
+        mathQuill={MathQuill.getInterface(2)}
+        ref={mathEditorRef}
+        onClose={() => {
+          placeholder.remove()
+        }}
+      />,
+    )
   }
 
   return (

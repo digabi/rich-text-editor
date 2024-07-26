@@ -4,6 +4,7 @@ import { getMathSvg } from '../math'
 
 interface MathEditorProps {
   mathQuill: any
+  onClose: () => void
 }
 
 export interface MathEditorHandle {
@@ -11,12 +12,17 @@ export interface MathEditorHandle {
 }
 
 export const MathEditor = forwardRef<MathEditorHandle, MathEditorProps>((props, ref) => {
-  const { mathQuill } = props
+  const { mathQuill, onClose } = props
   const mathFieldRef = useRef<HTMLDivElement>(null)
   const [mathField, setMathField] = useState(undefined)
   const mathEditorContainerRef = useRef<HTMLDivElement>(null)
   const [isOpen, setIsOpen] = useState(true)
   const [mathLatex, setMathLatex] = useState<string>(undefined)
+
+  const close = () => {
+    setIsOpen(false)
+    onClose()
+  }
 
   useEffect(() => {
     setMathField(
@@ -28,6 +34,16 @@ export const MathEditor = forwardRef<MathEditorHandle, MathEditorProps>((props, 
       }),
     )
   }, [mathQuill, mathFieldRef])
+
+  useEffect(() => {
+    if (mathField) {
+      mathField.el().addEventListener('focusout', (e: FocusEvent) => {
+        if (!mathEditorContainerRef?.current.contains(e.relatedTarget as Node)) {
+          close()
+        }
+      })
+    }
+  }, [mathField])
 
   useImperativeHandle(
     ref,
@@ -45,7 +61,7 @@ export const MathEditor = forwardRef<MathEditorHandle, MathEditorProps>((props, 
       ref={mathEditorContainerRef}
       onBlur={(e) => {
         if (!mathEditorContainerRef?.current.contains(e.relatedTarget)) {
-          setIsOpen(false)
+          close()
         }
       }}
     >
@@ -61,9 +77,9 @@ export const MathEditor = forwardRef<MathEditorHandle, MathEditorProps>((props, 
         <span className="render-error"></span>
       </div>
     </div>
-  ) : (
+  ) : mathLatex !== '' ? (
     <MathImage latex={mathLatex} openEditor={() => setIsOpen(true)} />
-  )
+  ) : null
 })
 
 const MathImage = ({ latex, openEditor }: { latex: string; openEditor: () => void }) => (
