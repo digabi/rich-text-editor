@@ -4,7 +4,7 @@ import { getMathSvg } from '../math'
 
 interface MathEditorProps {
   mathQuill: any
-  onClose: () => void
+  onCancelEditor: () => void
 }
 
 export interface MathEditorHandle {
@@ -12,33 +12,54 @@ export interface MathEditorHandle {
 }
 
 export const MathEditor = forwardRef<MathEditorHandle, MathEditorProps>((props, ref) => {
-  const { mathQuill, onClose } = props
+  const { mathQuill, onCancelEditor } = props
   const mathFieldRef = useRef<HTMLDivElement>(null)
   const [mathField, setMathField] = useState(undefined)
   const mathEditorContainerRef = useRef<HTMLDivElement>(null)
   const [isOpen, setIsOpen] = useState(true)
-  const [mathLatex, setMathLatex] = useState<string>(undefined)
+  const [mathLatex, setMathLatex] = useState<string>('')
+  const [hasInitialized, setHasInitialized] = useState(false)
+
+  // ref needed to access state value in event listener
+  const latexRef = useRef<string>('')
+  latexRef.current = mathLatex
 
   const close = () => {
     setIsOpen(false)
-    onClose()
+    if (latexRef.current?.trim() === '') {
+      onCancelEditor()
+    }
+    setHasInitialized(false)
+    setMathField(undefined)
+  }
+
+  const open = () => {
+    setIsOpen(true)
   }
 
   useEffect(() => {
-    setMathField(
-      mathQuill.MathField(mathFieldRef.current, {
-        handlers: {
-          edit: (field) => setMathLatex(field.latex()),
-          enter: () => {},
-        },
-      }),
-    )
-  }, [mathQuill, mathFieldRef])
+    if (!mathFieldRef.current || mathField) return
+    const field = mathQuill.MathField(mathFieldRef.current, {
+      handlers: {
+        edit: (field) => setMathLatex(field.latex()),
+        enter: () => {},
+      },
+    })
+    setMathField(field)
+  }, [mathFieldRef.current])
+
+  useEffect(() => {
+    if (mathField && isOpen && !hasInitialized) {
+      mathField.focus()
+      mathField.latex(mathLatex)
+      setHasInitialized(true)
+    }
+  }, [isOpen, hasInitialized, mathFieldRef.current])
 
   useEffect(() => {
     if (mathField) {
       mathField.el().addEventListener('focusout', (e: FocusEvent) => {
-        if (!mathEditorContainerRef?.current.contains(e.relatedTarget as Node)) {
+        if (!mathEditorContainerRef?.current?.contains(e.relatedTarget as Node)) {
           close()
         }
       })
@@ -57,14 +78,7 @@ export const MathEditor = forwardRef<MathEditorHandle, MathEditorProps>((props, 
   )
 
   return isOpen ? (
-    <div
-      ref={mathEditorContainerRef}
-      onBlur={(e) => {
-        if (!mathEditorContainerRef?.current.contains(e.relatedTarget)) {
-          close()
-        }
-      }}
-    >
+    <div ref={mathEditorContainerRef}>
       <div className="math-editor" data-js="mathEditor">
         <div ref={mathFieldRef} className="math-editor-equation-field" data-js="equationField"></div>
         <textarea
@@ -73,12 +87,18 @@ export const MathEditor = forwardRef<MathEditorHandle, MathEditorProps>((props, 
           data-js="latexField"
           placeholder="LaTeΧ"
           value={mathLatex}
+          readOnly
+          onBlur={(e) => {
+            if (!mathEditorContainerRef?.current.contains(e.relatedTarget)) {
+              close()
+            }
+          }}
         />
         <span className="render-error"></span>
       </div>
     </div>
   ) : mathLatex !== '' ? (
-    <MathImage latex={mathLatex} openEditor={() => setIsOpen(true)} />
+    <MathImage latex={mathLatex} openEditor={open} />
   ) : null
 })
 

@@ -72,7 +72,7 @@ export const RichTextEditor = ({ options, onValueChanged }: Props) => {
       <MathEditor
         mathQuill={MathQuill.getInterface(2)}
         ref={mathEditorRef}
-        onClose={() => {
+        onCancelEditor={() => {
           placeholder.remove()
         }}
       />,
