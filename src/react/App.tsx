@@ -42,7 +42,7 @@ export const RichTextEditor = ({ options, onValueChanged }: Props) => {
 
   const t = locales[locale].editor
 
-  const insertEquationAtCursor = () => {
+  const insertEquationAtCursor = (cmd: string) => {
     const editor = editorRef.current
     if (!editor) return
 
@@ -72,6 +72,7 @@ export const RichTextEditor = ({ options, onValueChanged }: Props) => {
       <MathEditor
         mathQuill={MathQuill.getInterface(2)}
         ref={mathEditorRef}
+        initialLatex={cmd}
         onCancelEditor={() => {
           placeholder.remove()
         }}
@@ -87,9 +88,9 @@ export const RichTextEditor = ({ options, onValueChanged }: Props) => {
           specialCharacterGroups={specialCharacters}
           onMathCommand={(cmd) => {
             if (window.document.activeElement === editorRef.current) {
-              insertEquationAtCursor()
+              insertEquationAtCursor(cmd.action)
             } else {
-              mathEditorRef.current.insertCharacterAtCursor(cmd.label)
+              mathEditorRef.current.insertCharacterAtCursor(cmd.action)
             }
           }}
         />
