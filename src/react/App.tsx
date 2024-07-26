@@ -56,7 +56,8 @@ export const RichTextEditor = ({ options, onValueChanged }: Props) => {
     // Create a placeholder span element
     const placeholder = document.createElement('span')
     placeholder.className = 'component-placeholder'
-    placeholder.style.display = 'inline-block'
+    placeholder.style.display = 'contents'
+    //placeholder.style.width = '100%'
 
     // Insert the placeholder at the cursor position
     range.insertNode(placeholder)
