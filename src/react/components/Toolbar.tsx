@@ -11,9 +11,11 @@ interface ToolbarProps {
   t: Translation['editor']
   specialCharacterGroups: SpecialCharacterGroup[]
   onMathCommand: (command: (typeof latexCommands)[number]) => void
+  undo?: () => void
+  redo?: () => void
 }
 
-export const Toolbar = ({ t, specialCharacterGroups, onMathCommand }: ToolbarProps) => {
+export const Toolbar = ({ t, specialCharacterGroups, onMathCommand, undo, redo }: ToolbarProps) => {
   const [showHelpOverlay, setShowHelpOverlay] = useState(false)
   const [showAllCharacters, setShowCharacters] = useState(false)
   const [showMathToolbar, setShowMathToolbar] = useState(false)
@@ -73,7 +75,7 @@ export const Toolbar = ({ t, specialCharacterGroups, onMathCommand }: ToolbarPro
               className="rich-text-editor-toolbar-equation rich-text-editor-toolbar rich-text-editor-toolbar-button-list"
               data-js="mathToolbar"
             >
-              {showMathToolbar && <MathToolbar onCommandClick={onMathCommand} />}
+              {showMathToolbar && <MathToolbar onCommandClick={onMathCommand} undo={undo} redo={redo} />}
             </div>
           </div>
         </div>

@@ -77,9 +77,12 @@ export const RichTextEditor = ({ options, onValueChanged }: Props) => {
         onCancelEditor={() => {
           placeholder.remove()
         }}
+        t={t}
       />,
     )
   }
+
+  console.log(mathEditorRef.current)
 
   return (
     <div style={{ position: 'relative', top: 200 }}>
@@ -94,6 +97,8 @@ export const RichTextEditor = ({ options, onValueChanged }: Props) => {
               mathEditorRef.current.insertCharacterAtCursor(cmd.action)
             }
           }}
+          undo={() => mathEditorRef.current.undo()}
+          redo={() => mathEditorRef.current.redo()}
         />
       )}
       <div

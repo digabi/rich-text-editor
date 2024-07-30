@@ -3,9 +3,11 @@ import { eventHandlerWithoutFocusLoss } from '../utility'
 
 interface MathToolbarProps {
   onCommandClick: (command: (typeof latexCommands)[number]) => void
+  undo?: () => void
+  redo?: () => void
 }
 
-export const MathToolbar = ({ onCommandClick }: MathToolbarProps) => (
+export const MathToolbar = ({ onCommandClick, undo, redo }: MathToolbarProps) => (
   <>
     {latexCommands.map((command) => (
       <button
@@ -19,35 +21,21 @@ export const MathToolbar = ({ onCommandClick }: MathToolbarProps) => (
         <img src={command.svg} />
       </button>
     ))}
-    <div className="rich-text-editor-undo-redo-wrapper">
-      <button
-        className="rich-text-editor-button rich-text-editor-undo-redo rich-text-editor-undo-button"
-        disabled={true}
-        data-command="Ctrl + Z"
-        data-js="mathUndo"
-        onMouseDown={eventHandlerWithoutFocusLoss(() => {
-          console.log('undo')
-        })}
-      ></button>
-      <button
-        className="rich-text-editor-button rich-text-editor-undo-redo rich-text-editor-redo-button"
-        disabled={true}
-        data-command="Ctrl + Y"
-        data-js="mathRedo"
-        onMouseDown={eventHandlerWithoutFocusLoss(() => {
-          console.log('redo')
-        })}
-      ></button>
-    </div>
+    {!!undo && !!redo && (
+      <div className="rich-text-editor-undo-redo-wrapper">
+        <button
+          className="rich-text-editor-button rich-text-editor-undo-redo rich-text-editor-undo-button"
+          data-command="Ctrl + Z"
+          data-js="mathUndo"
+          onMouseDown={eventHandlerWithoutFocusLoss(undo)}
+        ></button>
+        <button
+          className="rich-text-editor-button rich-text-editor-undo-redo rich-text-editor-redo-button"
+          data-command="Ctrl + Y"
+          data-js="mathRedo"
+          onMouseDown={eventHandlerWithoutFocusLoss(redo)}
+        ></button>
+      </div>
+    )}
   </>
-)
-
-const MathEditor = () => (
-  <div>
-    <div className="math-editor" data-js="mathEditor">
-      <div className="math-editor-equation-field" data-js="equationField"></div>
-      <textarea rows={1} className="math-editor-latex-field" data-js="latexField" placeholder="LaTeΧ"></textarea>
-      <span className="render-error"></span>
-    </div>
-  </div>
 )
