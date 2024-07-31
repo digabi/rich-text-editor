@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect, forwardRef, useImperativeHandle } from 'react'
+import React, { useState, useRef, useEffect, forwardRef, useImperativeHandle, createContext, useContext } from 'react'
 import ReactDOM from 'react-dom/client'
 import FI from './resources/fi'
 import SV from './resources/sv'
@@ -15,6 +15,35 @@ const locales = { FI, SV }
 const keyCodes = {
   E: 69,
 }
+
+type MathEditorStateContextType = {
+  isUndoAvailable: boolean
+  isRedoAvailable: boolean
+  setIsUndoAvailable: (state: boolean) => void
+  setIsRedoAvailable: (state: boolean) => void
+}
+
+const MathEditorStateContext = createContext<MathEditorStateContextType>({
+  isUndoAvailable: false,
+  isRedoAvailable: false,
+  setIsUndoAvailable: (state: boolean) => {},
+  setIsRedoAvailable: (state: boolean) => {},
+})
+
+export const MathEditorStateProvider: React.FC = ({ children }) => {
+  const [isUndoAvailable, setIsUndoAvailable] = useState(false)
+  const [isRedoAvailable, setIsRedoAvailable] = useState(false)
+
+  return (
+    <MathEditorStateContext.Provider
+      value={{ isUndoAvailable, isRedoAvailable, setIsUndoAvailable, setIsRedoAvailable }}
+    >
+      {children}
+    </MathEditorStateContext.Provider>
+  )
+}
+
+export const useMathEditorState = () => useContext(MathEditorStateContext)
 
 export type Props = {
   options: Options
@@ -82,37 +111,37 @@ export const RichTextEditor = ({ options, onValueChanged }: Props) => {
     )
   }
 
-  console.log(mathEditorRef.current)
-
   return (
-    <div style={{ position: 'relative', top: 200 }}>
-      {true && (
-        <Toolbar
-          t={t}
-          specialCharacterGroups={specialCharacters}
-          onMathCommand={(cmd) => {
-            if (window.document.activeElement === editorRef.current) {
-              insertEquationAtCursor(cmd.action)
-            } else {
-              mathEditorRef.current.insertCharacterAtCursor(cmd.action)
-            }
+    <MathEditorStateProvider>
+      <div style={{ position: 'relative', top: 200 }}>
+        {true && (
+          <Toolbar
+            t={t}
+            specialCharacterGroups={specialCharacters}
+            onMathCommand={(cmd) => {
+              if (window.document.activeElement === editorRef.current) {
+                insertEquationAtCursor(cmd.action)
+              } else {
+                mathEditorRef.current.insertCharacterAtCursor(cmd.action)
+              }
+            }}
+            undo={() => mathEditorRef.current.undo()}
+            redo={() => mathEditorRef.current.redo()}
+          />
+        )}
+        <div
+          ref={editorRef}
+          contentEditable={true}
+          spellCheck={false}
+          className="rich-text-editor answer"
+          onFocus={(e) => {
+            setShowToolbar(true)
           }}
-          undo={() => mathEditorRef.current.undo()}
-          redo={() => mathEditorRef.current.redo()}
+          onBlur={() => {
+            setShowToolbar(false)
+          }}
         />
-      )}
-      <div
-        ref={editorRef}
-        contentEditable={true}
-        spellCheck={false}
-        className="rich-text-editor answer"
-        onFocus={(e) => {
-          setShowToolbar(true)
-        }}
-        onBlur={() => {
-          setShowToolbar(false)
-        }}
-      />
-    </div>
+      </div>
+    </MathEditorStateProvider>
   )
 }

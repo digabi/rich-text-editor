@@ -3,6 +3,7 @@ import ReactDOM from 'react-dom/client'
 import { getMathSvg } from '../math'
 import { Translation } from '../utility'
 import LatexError from '../resources/LatexError'
+import { useMathEditorState } from '../App'
 
 interface MathEditorProps {
   mathQuill: any
@@ -29,6 +30,14 @@ export const MathEditor = forwardRef<MathEditorHandle, MathEditorProps>(
     const [isValidLatex, setIsValidLatex] = useState(true)
     const [undoStack, setUndoStack] = useState<string[]>([])
     const [redoStack, setRedoStack] = useState<string[]>([])
+    const [isEditingManually, setIsEditingManually] = useState(true)
+
+    const { setIsUndoAvailable, setIsRedoAvailable } = useMathEditorState()
+
+    useEffect(() => {
+      setIsUndoAvailable(undoStack.length > 0)
+      setIsRedoAvailable(redoStack.length > 0)
+    }, [mathField])
 
     // These refs are used to access current state values inside event listeners,
     // as without them the values would stay as they were when the event listeners were created
@@ -44,6 +53,9 @@ export const MathEditor = forwardRef<MathEditorHandle, MathEditorProps>(
     const redoStackRef = useRef(redoStack)
     redoStackRef.current = redoStack
 
+    const isEditingManuallyRef = useRef(isEditingManually)
+    isEditingManuallyRef.current = isEditingManually
+
     const validateLatex = () => mathField?.latex() !== '' || mathLatex.length === 0
 
     const updateMathField = (field: any) => {
@@ -56,46 +68,72 @@ export const MathEditor = forwardRef<MathEditorHandle, MathEditorProps>(
       undoStackRef.current = newStack
     }
 
+    const updateRedoStack = (newStack: string[]) => {
+      setRedoStack(newStack)
+      redoStackRef.current = newStack
+    }
+
     const addToUndoStack = (newLatex: string) => {
       const lastEntry = undoStackRef.current.at(-1)
       if (lastEntry !== newLatex && undoStackRef.current) {
         updateUndoStack([...undoStackRef.current, newLatex])
       }
     }
-
     const addToUndoStackRef = useRef(addToUndoStack)
 
+    const setMathLatexWithoutClearingRedoQueue = (latex: string) => {
+      setIsEditingManually(false)
+      isEditingManuallyRef.current = false
+      mathFieldObjectRef.current.latex(latex)
+      setIsEditingManually(true)
+      isEditingManuallyRef.current = true
+    }
+
     const onMathEdit = (newLatex: string) => {
-      addToUndoStackRef.current(newLatex)
-      setMathLatex(newLatex)
+      if (latexRef.current !== newLatex) {
+        addToUndoStackRef.current(newLatex)
+        setMathLatex(newLatex)
+        if (isEditingManuallyRef.current) {
+          setRedoStack([])
+        }
+      }
     }
 
     const onMathEditRef = useRef(onMathEdit)
 
-    const popUndoStack = (): [string, string, string[]] => {
-      const currentContent = undoStackRef.current.at(-1)
-      const lastContent = undoStackRef.current.at(-2)
-      const newUndoStack = undoStackRef.current.slice(0, -1)
+    const popUndoStack = (stack: string[]): [string, string, string[]] => {
+      const currentContent = stack.at(-1)
+      const lastContent = stack.at(-2)
+      const newUndoStack = stack.slice(0, -1)
       return [currentContent, lastContent, newUndoStack]
     }
 
-    const undo = () => {
-      const [, newContent, newStack] = popUndoStack()
-      updateUndoStack(newStack)
-      //setRedoStack([...redoStackRef.current, oldContent])
-      mathFieldObjectRef.current.latex(newContent ?? '')
+    const popRedoStack = (stack: string[]): [string, string[]] => {
+      const lastContent = stack.at(-1)
+      const newRedoStack = stack.slice(0, -1)
+      return [lastContent, newRedoStack]
     }
 
-    const popRedoStack = () => {
-      const lastRedo = redoStackRef.current.at(-1)
-      setRedoStack(redoStack.slice(0, -1))
-      return lastRedo
+    const undo = () => {
+      const [oldContent, newContent, newStack] = popUndoStack(undoStackRef.current)
+      updateUndoStack(newStack)
+      updateRedoStack([...redoStackRef.current, oldContent])
+      setIsEditingManually(false)
+      //mathFieldObjectRef.current.latex(newContent ?? '')
+      setMathLatexWithoutClearingRedoQueue(newContent ?? '')
+      setIsEditingManually(true)
     }
 
     const redo = () => {
-      const lastRedo = popRedoStack()
-      updateUndoStack([...undoStackRef.current, lastRedo])
-      mathFieldObjectRef.current.latex(lastRedo)
+      const [newContent, newStack] = popRedoStack(redoStackRef.current)
+      if (newContent !== undefined) {
+        updateRedoStack(newStack)
+        updateUndoStack([...undoStackRef.current, latexRef.current])
+        setIsEditingManually(false)
+        //mathFieldObjectRef.current.latex(newContent)
+        setMathLatexWithoutClearingRedoQueue(newContent)
+        setIsEditingManually(true)
+      }
     }
 
     const closeEditor = () => {
@@ -158,6 +196,8 @@ export const MathEditor = forwardRef<MathEditorHandle, MathEditorProps>(
         isOpen: isOpen,
         undo: undo,
         redo: redo,
+        //isUndoAvailable: canUndo,
+        //isRedoAvailable: canRedo,
       }),
       [insertCharacterAtCursor, isOpen, undo, redo, undoStack, redoStack, mathLatex],
     )
