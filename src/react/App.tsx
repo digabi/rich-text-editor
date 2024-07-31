@@ -25,8 +25,6 @@ export const RichTextEditor = ({ options }: Props) => {
   const [isUndoAvailable, setIsUndoAvailable] = useState(false)
   const [isRedoAvailable, setIsRedoAvailable] = useState(false)
 
-  console.log({ isUndoAvailable, isRedoAvailable })
-
   const editorRef = useRef<HTMLDivElement>(null)
   const mathEditorRef = useRef<MathEditorHandle>(null)
 
@@ -60,10 +58,18 @@ export const RichTextEditor = ({ options }: Props) => {
     const placeholder = document.createElement('span')
     placeholder.className = 'component-placeholder'
     placeholder.style.display = 'contents'
-    //placeholder.style.width = '100%'
 
     // Insert the placeholder at the cursor position
     range.insertNode(placeholder)
+
+    const parent = placeholder.parentNode as Element
+    if (parent.className === 'component-placeholder') {
+      if (placeholder.nextSibling) {
+        parent.insertAdjacentElement('beforebegin', placeholder)
+      } else {
+        parent.insertAdjacentElement('afterend', placeholder)
+      }
+    }
 
     // Move the cursor after the placeholder
     range.setStartAfter(placeholder)
