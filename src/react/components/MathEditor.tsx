@@ -10,6 +10,8 @@ interface MathEditorProps {
   onCancelEditor: () => void
   initialLatex?: string
   t: Translation['editor']
+  setIsUndoAvailable: (state: boolean) => void
+  setIsRedoAvailable: (state: boolean) => void
 }
 
 export interface MathEditorHandle {
@@ -19,7 +21,7 @@ export interface MathEditorHandle {
 }
 
 export const MathEditor = forwardRef<MathEditorHandle, MathEditorProps>(
-  ({ mathQuill, onCancelEditor, initialLatex, t }, ref) => {
+  ({ mathQuill, onCancelEditor, initialLatex, t, setIsUndoAvailable, setIsRedoAvailable }, ref) => {
     const mathFieldElementRef = useRef<HTMLDivElement>(null)
     const [mathField, setMathField] = useState(undefined)
     const mathEditorContainerRef = useRef<HTMLDivElement>(null)
@@ -32,12 +34,11 @@ export const MathEditor = forwardRef<MathEditorHandle, MathEditorProps>(
     const [redoStack, setRedoStack] = useState<string[]>([])
     const [isEditingManually, setIsEditingManually] = useState(true)
 
-    const { setIsUndoAvailable, setIsRedoAvailable } = useMathEditorState()
-
     useEffect(() => {
+      console.log('plop')
       setIsUndoAvailable(undoStack.length > 0)
       setIsRedoAvailable(redoStack.length > 0)
-    }, [mathField])
+    }, [mathLatex])
 
     // These refs are used to access current state values inside event listeners,
     // as without them the values would stay as they were when the event listeners were created
