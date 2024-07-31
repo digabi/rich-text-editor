@@ -12,6 +12,7 @@ interface MathEditorProps {
   t: Translation['editor']
   setIsUndoAvailable: (state: boolean) => void
   setIsRedoAvailable: (state: boolean) => void
+  onClose: () => void
 }
 
 export interface MathEditorHandle {
@@ -21,7 +22,7 @@ export interface MathEditorHandle {
 }
 
 export const MathEditor = forwardRef<MathEditorHandle, MathEditorProps>(
-  ({ mathQuill, onCancelEditor, initialLatex, t, setIsUndoAvailable, setIsRedoAvailable }, ref) => {
+  ({ mathQuill, onCancelEditor, initialLatex, t, setIsUndoAvailable, setIsRedoAvailable, onClose }, ref) => {
     const mathFieldElementRef = useRef<HTMLDivElement>(null)
     const [mathField, setMathField] = useState(undefined)
     const mathEditorContainerRef = useRef<HTMLDivElement>(null)
@@ -35,7 +36,6 @@ export const MathEditor = forwardRef<MathEditorHandle, MathEditorProps>(
     const [isEditingManually, setIsEditingManually] = useState(true)
 
     useEffect(() => {
-      console.log('plop')
       setIsUndoAvailable(undoStack.length > 0)
       setIsRedoAvailable(redoStack.length > 0)
     }, [mathLatex])
@@ -144,6 +144,7 @@ export const MathEditor = forwardRef<MathEditorHandle, MathEditorProps>(
       }
       setHasInitialized(false)
       updateMathField(null)
+      onClose()
     }
 
     const openEditor = () => {

@@ -83,13 +83,16 @@ export const RichTextEditor = ({ options }: Props) => {
         t={t}
         setIsUndoAvailable={(state) => setIsUndoAvailable(state)}
         setIsRedoAvailable={(state) => setIsRedoAvailable(state)}
+        onClose={() => {
+          setShowToolbar(false)
+        }}
       />,
     )
   }
 
   return (
     <div style={{ position: 'relative', top: 200 }}>
-      {true && (
+      {showToolbar && (
         <Toolbar
           t={t}
           specialCharacterGroups={specialCharacters}
