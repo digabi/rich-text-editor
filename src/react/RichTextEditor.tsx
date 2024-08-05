@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect, forwardRef, useImperativeHandle, createContext, useContext } from 'react'
+import React, { useState, useRef } from 'react'
 import ReactDOM from 'react-dom/client'
 import FI from './resources/fi'
 import SV from './resources/sv'
@@ -12,15 +12,12 @@ type FocusTarget = 'RichText' | 'LatexField' | 'EquationField'
 
 const locales = { FI, SV }
 
-const keyCodes = {
-  E: 69,
-}
-
 export type Props = {
-  options: Options
+  options?: Partial<Options>
+  style?: React.CSSProperties
 }
 
-export const RichTextEditor = ({ options }: Props) => {
+export const RichTextEditor = ({ options, style }: Props) => {
   const [showToolbar, setShowToolbar] = useState(false)
   const [isUndoAvailable, setIsUndoAvailable] = useState(false)
   const [isRedoAvailable, setIsRedoAvailable] = useState(false)
@@ -58,6 +55,7 @@ export const RichTextEditor = ({ options }: Props) => {
     const placeholder = document.createElement('span')
     placeholder.className = 'component-placeholder'
     placeholder.style.display = 'contents'
+    placeholder.contentEditable = 'false'
 
     // Insert the placeholder at the cursor position
     range.insertNode(placeholder)
@@ -70,6 +68,9 @@ export const RichTextEditor = ({ options }: Props) => {
         parent.insertAdjacentElement('afterend', placeholder)
       }
     }
+
+    placeholder.insertAdjacentText('beforebegin', '\u00A0')
+    placeholder.insertAdjacentText('afterend', '\u00A0')
 
     // Move the cursor after the placeholder
     range.setStartAfter(placeholder)
@@ -97,7 +98,7 @@ export const RichTextEditor = ({ options }: Props) => {
   }
 
   return (
-    <div style={{ position: 'relative', top: 200 }}>
+    <>
       {showToolbar && (
         <Toolbar
           t={t}
@@ -120,6 +121,7 @@ export const RichTextEditor = ({ options }: Props) => {
         contentEditable={true}
         spellCheck={false}
         className="rich-text-editor answer"
+        style={style}
         onFocus={(e) => {
           setShowToolbar(true)
         }}
@@ -127,6 +129,6 @@ export const RichTextEditor = ({ options }: Props) => {
           setShowToolbar(false)
         }}
       />
-    </div>
+    </>
   )
 }

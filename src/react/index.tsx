@@ -1,6 +1,6 @@
 import React from 'react'
 import ReactDOM from 'react-dom/client'
-import { RichTextEditor } from './App'
+import { RichTextEditor } from './RichTextEditor'
 
 const root = ReactDOM.createRoot(document.getElementById('root'))
-root.render(<RichTextEditor />)
+root.render(<RichTextEditor style={{ top: 200, position: 'relative' }} />)
