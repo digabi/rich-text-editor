@@ -1,12 +1,12 @@
 import React, { useState, useRef } from 'react'
 import ReactDOM from 'react-dom/client'
-import FI from './resources/fi'
-import SV from './resources/sv'
-import specialCharacters from './resources/specialCharacters'
-import { Options, defaults, Translation, eventHandlerWithoutFocusLoss } from './utility'
-import { Toolbar } from './components/Toolbar'
 import * as MathQuill from '@digabi/mathquill'
-import { MathEditor, MathEditorHandle } from './components/MathEditor'
+import FI from '../resources/fi'
+import SV from '../resources/sv'
+import specialCharacters from '../resources/specialCharacters'
+import { Options, defaults } from '../utility'
+import { Toolbar } from '../components/Toolbar'
+import { MathEditor, MathEditorHandle } from '../components/MathEditor'
 
 type FocusTarget = 'RichText' | 'LatexField' | 'EquationField'
 
