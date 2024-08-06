@@ -1,5 +1,5 @@
 import sanitizeHtml from 'sanitize-html'
-import { sanitizeOpts } from './sanitizeOptions'
+import { sanitizeOpts } from '../sanitizeOpts'
 import fi from './resources/fi'
 import sv from './resources/sv'
 

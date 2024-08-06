@@ -1,7 +1,7 @@
 import React, { useState, useRef, useEffect, forwardRef, useImperativeHandle } from 'react'
-import { getMathSvg } from '../mathSvg'
-import { Translation } from '../utility'
-import LatexError from '../resources/LatexError'
+import { getMathSvg } from '../react/mathSvg'
+import { Translation } from '../react/utility'
+import LatexError from '../react/resources/LatexError'
 
 interface MathEditorProps {
   mathQuill: any

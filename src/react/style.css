@@ -271,11 +271,11 @@
   bottom: 0;
   width: 20px;
   margin-right: 8px;
-  background: url('./img/expand.svg') 50% 50% no-repeat;
+  background: url('../components/img/expand.svg') 50% 50% no-repeat;
 }
 
 .rich-text-editor-show-all-characters .rich-text-editor-characters-expand-collapse {
-  background-image: url('./img/collapse.svg');
+  background-image: url('../components/img/collapse.svg');
 }
 
 .rich-text-editor-overlay-open {
@@ -311,7 +311,7 @@
   top: 20px;
   right: 20px;
   cursor: pointer;
-  background: url('./img/closeButton.svg') no-repeat 50% 50%;
+  background: url('../components/img/closeButton.svg') no-repeat 50% 50%;
   border: 0;
 }
 
@@ -329,7 +329,7 @@
   right: 0;
   width: 35px;
   height: 35px;
-  background: url('./img/helpButton.svg') no-repeat 50% 50%;
+  background: url('../components/img/helpButton.svg') no-repeat 50% 50%;
   border: none;
   cursor: pointer;
   display: block;
@@ -354,13 +354,13 @@
 
 .rich-text-editor-toolbar .rich-text-editor-undo-button,
 .rich-text-editor-toolbar .rich-text-editor-undo-button:hover {
-  background-image: url('./img/undoButton.svg');
+  background-image: url('../components/img/undoButton.svg');
   margin-right: 5px;
 }
 
 .rich-text-editor-toolbar .rich-text-editor-redo-button,
 .rich-text-editor-toolbar .rich-text-editor-redo-button:hover {
-  background-image: url('./img/redoButton.svg');
+  background-image: url('../components/img/redoButton.svg');
 }
 
 .rich-text-editor-undo-redo:disabled {

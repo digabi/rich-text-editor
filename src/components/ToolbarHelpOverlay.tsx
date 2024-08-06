@@ -1,4 +1,4 @@
-import { Translation, eventHandlerWithoutFocusLoss } from '../utility'
+import { Translation, eventHandlerWithoutFocusLoss } from '../react/utility'
 
 export const ToolbarHelpOverlay = ({ t, onClose }: { t: Translation['editor']; onClose: () => void }) => (
   <div className="rich-text-editor-overlay" onMouseDown={eventHandlerWithoutFocusLoss(onClose)}>

@@ -1,8 +1,8 @@
 import { useState } from 'react'
-import { SpecialCharacter, SpecialCharacterGroup, Translation, eventHandlerWithoutFocusLoss } from '../utility'
+import { SpecialCharacter, SpecialCharacterGroup, Translation, eventHandlerWithoutFocusLoss } from '../react/utility'
 import { ToolbarHelpOverlay } from './ToolbarHelpOverlay'
 import { MathToolbar } from './MathToolbar'
-import latexCommands from '../resources/latexCommandsWithSvg'
+import latexCommands from '../latexCommandsWithSvg'
 
 const popularInGroup = (group: SpecialCharacterGroup) =>
   group.characters.filter((character) => character.popular).length

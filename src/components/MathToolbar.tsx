@@ -1,5 +1,5 @@
-import latexCommands from '../resources/latexCommandsWithSvg'
-import { eventHandlerWithoutFocusLoss } from '../utility'
+import latexCommands from '../latexCommandsWithSvg'
+import { eventHandlerWithoutFocusLoss } from '../react/utility'
 
 interface MathToolbarProps {
   onCommandClick: (command: (typeof latexCommands)[number]) => void
