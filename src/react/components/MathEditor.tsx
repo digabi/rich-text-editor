@@ -1,9 +1,7 @@
 import React, { useState, useRef, useEffect, forwardRef, useImperativeHandle } from 'react'
-import ReactDOM from 'react-dom/client'
-import { getMathSvg } from '../math'
+import { getMathSvg } from '../mathSvg'
 import { Translation } from '../utility'
 import LatexError from '../resources/LatexError'
-import { useMathEditorState } from '../App'
 
 interface MathEditorProps {
   mathQuill: any
