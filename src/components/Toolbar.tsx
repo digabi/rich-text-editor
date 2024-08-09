@@ -40,21 +40,13 @@ export const Toolbar = ({
       data-js="tools"
       style={{ position: 'absolute', top: 0, left: 0, zIndex: 1000 }}
     >
-      {showHelpOverlay && (
-        <ToolbarHelpOverlay
-          onClose={() => {
-            setShowHelpOverlay(false)
-          }}
-          t={t}
-        />
-      )}
-
       <ToolbarGrid className="toolbar" gridRows={showMathToolbar ? 'auto auto' : 'auto'}>
         <ButtonContainer row={1} column={1} justify="end" align="start">
           {showMathToolbar ? null : (
             <EquationButton
               onMouseDown={eventHandlerWithoutFocusLoss(() => {
                 setShowMathToolbar(true)
+                onMathCommand('')
               })}
             >
               Σ {t.insertEquation}
@@ -141,6 +133,14 @@ export const Toolbar = ({
           </MathToolbar>
         )}
       </ToolbarGrid>
+      {showHelpOverlay && (
+        <ToolbarHelpOverlay
+          onClose={() => {
+            setShowHelpOverlay(false)
+          }}
+          t={t}
+        />
+      )}
     </div>
   )
 }
