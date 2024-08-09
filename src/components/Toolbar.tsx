@@ -49,7 +49,7 @@ export const Toolbar = ({
         />
       )}
 
-      <ToolbarGrid className="toolbar">
+      <ToolbarGrid className="toolbar" gridRows={showMathToolbar ? 'auto auto' : 'auto'}>
         <ButtonContainer row={1} column={1} justify="end" align="start">
           {showMathToolbar ? null : (
             <EquationButton
@@ -70,7 +70,7 @@ export const Toolbar = ({
               const rowCount = showAllCharacters ? Math.ceil(group.characters.length / columnCount) : 1
 
               return (
-                <IconGrid row={rowCount} column={columnCount}>
+                <IconGrid rows={rowCount} columns={columnCount}>
                   {popularCharacters.map((character: (typeof group.characters)[number], j) => (
                     <SpecialCharacterButton {...character} column={j + 1} row={1} />
                   ))}
@@ -169,10 +169,10 @@ interface GridProps {
   rows: number
 }
 
-const ToolbarGrid = styled.div`
+const ToolbarGrid = styled.div<{ gridRows: string }>`
   display: grid;
   grid-template-columns: 1fr auto 1fr;
-  grid-template-rows: auto auto;
+  grid-template-rows: ${(props) => props.gridRows};
   gap: 10px;
   justify-items: center;
   align-items: center;
@@ -188,7 +188,7 @@ const ToolbarGrid = styled.div`
 const IconCategoriesGrid = styled.div<{ columnRatios: number[] }>`
   display: grid;
   grid-template-columns: ${(props) => props.columnRatios.map((ratio) => `${ratio}fr`).join(' ')};
-  grid-template-rows: auto auto;
+  grid-template-rows: auto;
   gap: 15px;
   justify-items: center;
   align-items: center;
@@ -280,6 +280,8 @@ const EquationButton = styled(Button)`
 const MathToolbar = styled.div`
   display: contents;
   background-color: #fafafa;
+
+  // This serves as the background for the math toolbar
   &::before {
     content: '';
     grid-column: 1 / -1;

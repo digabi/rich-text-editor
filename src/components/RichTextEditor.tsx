@@ -7,8 +7,7 @@ import specialCharacters from '../specialCharacters'
 import { Options, defaults } from '../react/utility'
 import { Toolbar } from '../components/Toolbar'
 import { MathEditor, MathEditorHandle } from '../components/MathEditor'
-
-type FocusTarget = 'RichText' | 'LatexField' | 'EquationField'
+import styled from 'styled-components'
 
 const locales = { FI, SV }
 
@@ -116,7 +115,7 @@ export const RichTextEditor = ({ options, style }: Props) => {
           isRedoAvailable={isRedoAvailable}
         />
       )}
-      <div
+      <DefaultEditor
         ref={editorRef}
         contentEditable={true}
         spellCheck={false}
@@ -127,8 +126,15 @@ export const RichTextEditor = ({ options, style }: Props) => {
         onBlur={() => {
           setShowToolbar(false)
         }}
-        style={{ boxSizing: 'content-box', border: '1px solid #aaa', padding: 5, backgroundColor: '#fff', ...style }}
+        style={style}
       />
     </>
   )
 }
+
+const DefaultEditor = styled.div`
+  box-sizing: 'content-box';
+  border: '1px solid #aaa';
+  padding: 5;
+  background-color: '#fff';
+`
