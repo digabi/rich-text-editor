@@ -2,7 +2,7 @@ import latexCommands from '../latexCommandsWithSvg'
 import { eventHandlerWithoutFocusLoss } from '../react/utility'
 
 interface MathToolbarProps {
-  onCommandClick: (command: (typeof latexCommands)[number]) => void
+  onCommandClick: (action: string) => void
   undo?: () => void
   redo?: () => void
   isUndoAvailable: boolean
@@ -11,18 +11,20 @@ interface MathToolbarProps {
 
 export const MathToolbar = ({ onCommandClick, undo, redo, isUndoAvailable, isRedoAvailable }: MathToolbarProps) => (
   <>
-    {latexCommands.map((command) => (
-      <button
-        key={command.action}
-        className="rich-text-editor-button rich-text-editor-button-grid"
-        data-command={command.action}
-        data-latexcommand={command.label || ''}
-        data-usewrite={command.useWrite || false}
-        onMouseDown={eventHandlerWithoutFocusLoss(() => onCommandClick(command))}
-      >
-        <img src={command.svg} />
-      </button>
-    ))}
+    {latexCommands.map((command) =>
+      typeof command !== 'string' ? ( //  TODO: One of the commands is just <br /> for legacy reasons, fix this
+        <button
+          key={command.action}
+          className="rich-text-editor-button rich-text-editor-button-grid"
+          data-command={command.action}
+          data-latexcommand={command.label || ''}
+          data-usewrite={command.useWrite || false}
+          onMouseDown={eventHandlerWithoutFocusLoss(() => onCommandClick(command.action))}
+        >
+          <img src={command.svg} />
+        </button>
+      ) : null,
+    )}
     {!!undo && !!redo && (
       <div className="rich-text-editor-undo-redo-wrapper">
         <button

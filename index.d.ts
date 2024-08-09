@@ -1,3 +1,5 @@
+import React = require('react')
+
 export interface RichTextEditorOptions {
   ignoreSaveObject?: boolean
   locale?: 'FI' | 'SV'
@@ -16,3 +18,5 @@ export function makeRichText(
   options: RichTextEditorOptions,
   onChange: (data: { answerHTML: string; answerText: string }) => void,
 ): void
+
+export type RichTextEditor = React.FC<RichTextEditorOptions>

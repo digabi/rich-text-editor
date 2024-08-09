@@ -36,7 +36,7 @@ export const RichTextEditor = ({ options, style }: Props) => {
     locale,
     updateMathImg,
     forceInit,
-  } = { ...defaults, ...options }
+  } = { ...defaults, ...(options ?? {}) }
 
   const t = locales[locale].editor
 
@@ -99,19 +99,19 @@ export const RichTextEditor = ({ options, style }: Props) => {
 
   return (
     <>
-      {showToolbar && (
+      {true && (
         <Toolbar
           t={t}
           specialCharacterGroups={specialCharacters}
-          onMathCommand={(cmd) => {
+          onMathCommand={(action) => {
             if (window.document.activeElement === editorRef.current) {
-              insertEquationAtCursor(cmd.action)
+              insertEquationAtCursor(action)
             } else {
-              mathEditorRef.current.insertCharacterAtCursor(cmd.action)
+              mathEditorRef?.current?.insertCharacterAtCursor(action)
             }
           }}
-          undo={() => mathEditorRef.current.undo()}
-          redo={() => mathEditorRef.current.redo()}
+          undo={() => mathEditorRef?.current?.undo()}
+          redo={() => mathEditorRef?.current?.redo()}
           isUndoAvailable={isUndoAvailable}
           isRedoAvailable={isRedoAvailable}
         />
@@ -121,13 +121,13 @@ export const RichTextEditor = ({ options, style }: Props) => {
         contentEditable={true}
         spellCheck={false}
         className="rich-text-editor answer"
-        style={style}
         onFocus={(e) => {
           setShowToolbar(true)
         }}
         onBlur={() => {
           setShowToolbar(false)
         }}
+        style={{ boxSizing: 'content-box', border: '1px solid #aaa', padding: 5, backgroundColor: '#fff', ...style }}
       />
     </>
   )

@@ -1,5 +1,5 @@
 import { makeRichText } from './rich-text-editor'
-import { RichTextEditor } from './RichTextEditor'
+import { RichTextEditor } from './components/RichTextEditor'
 
 window.makeRichText = makeRichText
 

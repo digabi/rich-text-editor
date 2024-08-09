@@ -1,7 +1,7 @@
 import sanitizeHtml from 'sanitize-html'
 import { sanitizeOpts } from '../sanitizeOpts'
-import fi from './resources/fi'
-import sv from './resources/sv'
+import fi from '../FI'
+import sv from '../SV'
 
 export type Translation = typeof fi | typeof sv
 export interface SpecialCharacter {
@@ -55,14 +55,14 @@ function stripDivsFromRichTextAnswer(answerContentValue: string) {
   parent.innerHTML = answerContentValue
 
   do {
-    let lastNode: Node
+    let lastNode: Node | undefined = undefined
     for (let i = 0; i < parent.childNodes.length; i++) {
       const node = parent.childNodes[i]
       if (isBlockElement(node)) {
-        if (lastNode && lastNode.nodeType === Node.TEXT_NODE && /\S/.test(lastNode.textContent))
+        if (lastNode !== undefined && lastNode.nodeType === Node.TEXT_NODE && /\S/.test(lastNode.textContent ?? ''))
           parent.insertBefore(document.createElement('br'), node)
         if (node.lastChild && node.lastChild.nodeName !== 'BR') node.insertBefore(document.createElement('br'), null)
-        while (node.childNodes.length) parent.insertBefore(node.firstChild, node)
+        while (node.childNodes.length && node.firstChild !== null) parent.insertBefore(node.firstChild, node)
         parent.removeChild(node)
       }
       lastNode = node

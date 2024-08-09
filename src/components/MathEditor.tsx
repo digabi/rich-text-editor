@@ -1,10 +1,11 @@
-import React, { useState, useRef, useEffect, forwardRef, useImperativeHandle } from 'react'
+import { useState, useRef, useEffect, forwardRef, useImperativeHandle } from 'react'
 import { getMathSvg } from '../react/mathSvg'
 import { Translation } from '../react/utility'
-import LatexError from '../react/resources/LatexError'
+import LatexError from './LatexError'
+import { MathField, MathQuill } from '@digabi/mathquill'
 
 interface MathEditorProps {
-  mathQuill: any
+  mathQuill: MathQuill
   onCancelEditor: () => void
   initialLatex?: string
   t: Translation['editor']
@@ -22,7 +23,7 @@ export interface MathEditorHandle {
 export const MathEditor = forwardRef<MathEditorHandle, MathEditorProps>(
   ({ mathQuill, onCancelEditor, initialLatex, t, setIsUndoAvailable, setIsRedoAvailable, onClose }, ref) => {
     const mathFieldElementRef = useRef<HTMLDivElement>(null)
-    const [mathField, setMathField] = useState(undefined)
+    const [mathField, setMathField] = useState<MathField | null>(null)
     const mathEditorContainerRef = useRef<HTMLDivElement>(null)
     const [isOpen, setIsOpen] = useState(true)
     const [mathLatex, setMathLatex] = useState<string>('')
@@ -57,7 +58,7 @@ export const MathEditor = forwardRef<MathEditorHandle, MathEditorProps>(
 
     const validateLatex = () => mathField?.latex() !== '' || mathLatex.length === 0
 
-    const updateMathField = (field: any) => {
+    const updateMathField = (field: MathField | null) => {
       setMathField(field)
       mathFieldObjectRef.current = field
     }
@@ -83,7 +84,7 @@ export const MathEditor = forwardRef<MathEditorHandle, MathEditorProps>(
     const setMathLatexWithoutClearingRedoQueue = (latex: string) => {
       setIsEditingManually(false)
       isEditingManuallyRef.current = false
-      mathFieldObjectRef.current.latex(latex)
+      mathFieldObjectRef?.current?.latex(latex)
       setIsEditingManually(true)
       isEditingManuallyRef.current = true
     }
@@ -100,14 +101,14 @@ export const MathEditor = forwardRef<MathEditorHandle, MathEditorProps>(
 
     const onMathEditRef = useRef(onMathEdit)
 
-    const popUndoStack = (stack: string[]): [string, string, string[]] => {
+    const popUndoStack = (stack: string[]): [string | undefined, string | undefined, string[]] => {
       const currentContent = stack.at(-1)
       const lastContent = stack.at(-2)
       const newUndoStack = stack.slice(0, -1)
       return [currentContent, lastContent, newUndoStack]
     }
 
-    const popRedoStack = (stack: string[]): [string, string[]] => {
+    const popRedoStack = (stack: string[]): [string | undefined, string[]] => {
       const lastContent = stack.at(-1)
       const newRedoStack = stack.slice(0, -1)
       return [lastContent, newRedoStack]
@@ -115,12 +116,13 @@ export const MathEditor = forwardRef<MathEditorHandle, MathEditorProps>(
 
     const undo = () => {
       const [oldContent, newContent, newStack] = popUndoStack(undoStackRef.current)
-      updateUndoStack(newStack)
-      updateRedoStack([...redoStackRef.current, oldContent])
-      setIsEditingManually(false)
-      //mathFieldObjectRef.current.latex(newContent ?? '')
-      setMathLatexWithoutClearingRedoQueue(newContent ?? '')
-      setIsEditingManually(true)
+      if (oldContent && newContent) {
+        updateUndoStack(newStack)
+        updateRedoStack([...redoStackRef.current, oldContent])
+        setIsEditingManually(false)
+        setMathLatexWithoutClearingRedoQueue(newContent ?? '')
+        setIsEditingManually(true)
+      }
     }
 
     const redo = () => {
@@ -129,7 +131,6 @@ export const MathEditor = forwardRef<MathEditorHandle, MathEditorProps>(
         updateRedoStack(newStack)
         updateUndoStack([...undoStackRef.current, latexRef.current])
         setIsEditingManually(false)
-        //mathFieldObjectRef.current.latex(newContent)
         setMathLatexWithoutClearingRedoQueue(newContent)
         setIsEditingManually(true)
       }
@@ -186,7 +187,7 @@ export const MathEditor = forwardRef<MathEditorHandle, MathEditorProps>(
     }, [mathField])
 
     const insertCharacterAtCursor = (latex: string) => {
-      mathFieldObjectRef.current.cmd(latex)
+      mathFieldObjectRef?.current?.cmd(latex)
     }
 
     useImperativeHandle(
@@ -196,8 +197,6 @@ export const MathEditor = forwardRef<MathEditorHandle, MathEditorProps>(
         isOpen: isOpen,
         undo: undo,
         redo: redo,
-        //isUndoAvailable: canUndo,
-        //isRedoAvailable: canRedo,
       }),
       [insertCharacterAtCursor, isOpen, undo, redo, undoStack, redoStack, mathLatex],
     )
@@ -213,14 +212,16 @@ export const MathEditor = forwardRef<MathEditorHandle, MathEditorProps>(
             placeholder="LaTeΧ"
             value={mathLatex}
             onBlur={(e) => {
-              if (!mathEditorContainerRef?.current.contains(e.relatedTarget)) {
+              if (mathEditorContainerRef?.current && !mathEditorContainerRef.current.contains(e.relatedTarget)) {
                 closeEditor()
               }
             }}
             onChange={(e) => {
-              onMathEdit(e.target.value)
-              mathField.latex(e.target.value)
-              setIsValidLatex(validateLatex())
+              if (mathField) {
+                onMathEdit(e.target.value)
+                mathField.latex(e.target.value)
+                setIsValidLatex(validateLatex())
+              }
             }}
           />
           {!isValidLatex ? <span className="render-error">{t.render_error}</span> : null}
