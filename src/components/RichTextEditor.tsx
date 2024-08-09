@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react'
+import React, { useState, useRef, useEffect } from 'react'
 import ReactDOM from 'react-dom/client'
 import * as MathQuill from '@digabi/mathquill'
 import FI from '../FI'
@@ -95,6 +95,21 @@ export const RichTextEditor = ({ options, style }: Props) => {
       />,
     )
   }
+
+  useEffect(() => {
+    const handleEquationEditorHotkey = (event: KeyboardEvent) => {
+      if (event.ctrlKey && event.key === 'k') {
+        event.preventDefault()
+        insertEquationAtCursor('')
+      }
+    }
+
+    window.addEventListener('keydown', handleEquationEditorHotkey)
+
+    return () => {
+      window.removeEventListener('keydown', handleEquationEditorHotkey)
+    }
+  }, [])
 
   return (
     <>
