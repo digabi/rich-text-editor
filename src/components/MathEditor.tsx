@@ -136,6 +136,28 @@ export const MathEditor = forwardRef<MathEditorHandle, MathEditorProps>(
       }
     }
 
+    useEffect(() => {
+      const handleUndoRedoKeys = (event: KeyboardEvent) => {
+        if (isOpen) {
+          if (event.ctrlKey && event.key === 'z') {
+            event.preventDefault()
+            event.stopPropagation()
+            undo()
+          } else if (event.ctrlKey && event.key === 'y') {
+            event.preventDefault()
+            event.stopPropagation()
+            redo()
+          }
+        }
+      }
+
+      window.addEventListener('keydown', handleUndoRedoKeys)
+
+      return () => {
+        window.removeEventListener('keydown', handleUndoRedoKeys)
+      }
+    }, [])
+
     const closeEditor = () => {
       setIsOpen(false)
       if (latexRef.current?.trim() === '') {
