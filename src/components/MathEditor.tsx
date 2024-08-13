@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect, forwardRef, useImperativeHandle } from 'react'
+import { useState, useRef, useEffect, forwardRef, useImperativeHandle, useCallback } from 'react'
 import { getMathSvg } from '../react/mathSvg'
 import { Translation } from '../react/utility'
 import LatexError from './LatexError'
@@ -12,6 +12,7 @@ interface MathEditorProps {
   setIsUndoAvailable: (state: boolean) => void
   setIsRedoAvailable: (state: boolean) => void
   onClose: () => void
+  shouldOpen: boolean
 }
 
 export interface MathEditorHandle {
@@ -21,12 +22,15 @@ export interface MathEditorHandle {
 }
 
 export const MathEditor = forwardRef<MathEditorHandle, MathEditorProps>(
-  ({ mathQuill, onCancelEditor, initialLatex, t, setIsUndoAvailable, setIsRedoAvailable, onClose }, ref) => {
-    const mathFieldElementRef = useRef<HTMLDivElement>(null)
+  (
+    { mathQuill, onCancelEditor, initialLatex, t, setIsUndoAvailable, setIsRedoAvailable, onClose, shouldOpen },
+    ref,
+  ) => {
+    //const mathFieldElementRef = useRef<HTMLDivElement>(null)
     const [mathField, setMathField] = useState<MathField | null>(null)
     const mathEditorContainerRef = useRef<HTMLDivElement>(null)
-    const [isOpen, setIsOpen] = useState(true)
-    const [mathLatex, setMathLatex] = useState<string>('')
+    const [isOpen, setIsOpen] = useState(shouldOpen)
+    const [mathLatex, setMathLatex] = useState<string>(initialLatex ?? '')
     const [hasInitialized, setHasInitialized] = useState(false)
     const [isFirstOpen, setIsFirstOpen] = useState(true)
     const [isValidLatex, setIsValidLatex] = useState(true)
@@ -172,31 +176,28 @@ export const MathEditor = forwardRef<MathEditorHandle, MathEditorProps>(
       setIsOpen(true)
     }
 
-    useEffect(() => {
-      if (!mathFieldElementRef.current || mathField) return
-      const field = mathQuill.MathField(mathFieldElementRef.current, {
-        handlers: {
-          edit: (field) => onMathEditRef.current(field.latex()),
-          enter: () => {},
-        },
-      })
-      updateMathField(field)
-    }, [mathFieldElementRef.current])
+    const mathFieldElementRef = useCallback((node: HTMLDivElement | null) => {
+      if (node !== null) {
+        const field = mathQuill.MathField(node, {
+          handlers: {
+            edit: (field) => onMathEdit(field.latex()),
+            enter: () => {},
+          },
+        })
+        updateMathField(field)
+      }
+    }, [])
 
     useEffect(() => {
       if (mathField && isOpen && !hasInitialized) {
         mathField.focus()
 
-        if (isFirstOpen) {
-          mathField.cmd(initialLatex ?? '')
-        } else {
-          mathField.latex(mathLatex)
-        }
+        mathField.latex(mathLatex)
 
         setHasInitialized(true)
         setIsFirstOpen(false)
       }
-    }, [isFirstOpen, isOpen, hasInitialized, mathFieldElementRef.current])
+    }, [isFirstOpen, isOpen, hasInitialized, mathField])
 
     useEffect(() => {
       if (mathField) {

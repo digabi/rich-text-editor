@@ -52,7 +52,7 @@ export const RichTextEditor = ({ options, style }: Props) => {
 
     // Create a placeholder span element
     const placeholder = document.createElement('span')
-    placeholder.className = 'component-placeholder'
+    placeholder.className = 'math-editor-wrapper'
     placeholder.style.display = 'contents'
     placeholder.contentEditable = 'false'
 
@@ -60,7 +60,7 @@ export const RichTextEditor = ({ options, style }: Props) => {
     range.insertNode(placeholder)
 
     const parent = placeholder.parentNode as Element
-    if (parent.className === 'component-placeholder') {
+    if (parent.className === 'math-editor-wrapper') {
       if (placeholder.nextSibling) {
         parent.insertAdjacentElement('beforebegin', placeholder)
       } else {
@@ -92,6 +92,7 @@ export const RichTextEditor = ({ options, style }: Props) => {
         onClose={() => {
           setShowToolbar(false)
         }}
+        shouldOpen={true}
       />,
     )
   }
@@ -111,9 +112,49 @@ export const RichTextEditor = ({ options, style }: Props) => {
     }
   }, [])
 
+  const replacePastedMathWithEditorComponents = () => {
+    // Hack to make this run after the content has been pasted
+    setTimeout(() => {
+      const mathEditors = editorRef.current?.querySelectorAll('span.math-editor-wrapper')
+
+      mathEditors?.forEach((oldPlaceholder) => {
+        const img = oldPlaceholder.querySelector('img')
+
+        if (img instanceof HTMLImageElement) {
+          const newPlaceholder = document.createElement('span')
+          newPlaceholder.className = 'math-editor-wrapper'
+          newPlaceholder.style.display = 'contents'
+          newPlaceholder.contentEditable = 'false'
+
+          oldPlaceholder.replaceWith(newPlaceholder)
+
+          ReactDOM.createRoot(newPlaceholder).render(
+            <MathEditor
+              mathQuill={MathQuill.getInterface(2)}
+              ref={mathEditorRef}
+              initialLatex={img.alt}
+              onCancelEditor={() => {
+                oldPlaceholder.remove()
+              }}
+              t={t}
+              setIsUndoAvailable={(state) => setIsUndoAvailable(state)}
+              setIsRedoAvailable={(state) => setIsRedoAvailable(state)}
+              onClose={() => {
+                setShowToolbar(false)
+              }}
+              shouldOpen={false}
+            />,
+          )
+
+          //img.remove()
+        }
+      })
+    }, 0)
+  }
+
   return (
     <>
-      {true && (
+      {showToolbar && (
         <Toolbar
           t={t}
           specialCharacterGroups={specialCharacters}
@@ -142,6 +183,7 @@ export const RichTextEditor = ({ options, style }: Props) => {
           setShowToolbar(false)
         }}
         style={style}
+        onPaste={replacePastedMathWithEditorComponents}
       />
     </>
   )
