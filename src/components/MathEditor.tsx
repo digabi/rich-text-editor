@@ -13,6 +13,7 @@ interface MathEditorProps {
   setIsRedoAvailable: (state: boolean) => void
   onClose: () => void
   shouldOpen: boolean
+  onOpen: () => void
 }
 
 export interface MathEditorHandle {
@@ -23,7 +24,7 @@ export interface MathEditorHandle {
 
 export const MathEditor = forwardRef<MathEditorHandle, MathEditorProps>(
   (
-    { mathQuill, onCancelEditor, initialLatex, t, setIsUndoAvailable, setIsRedoAvailable, onClose, shouldOpen },
+    { mathQuill, onCancelEditor, initialLatex, t, setIsUndoAvailable, setIsRedoAvailable, onClose, shouldOpen, onOpen },
     ref,
   ) => {
     //const mathFieldElementRef = useRef<HTMLDivElement>(null)
@@ -196,6 +197,7 @@ export const MathEditor = forwardRef<MathEditorHandle, MathEditorProps>(
 
         setHasInitialized(true)
         setIsFirstOpen(false)
+        onOpen()
       }
     }, [isFirstOpen, isOpen, hasInitialized, mathField])
 

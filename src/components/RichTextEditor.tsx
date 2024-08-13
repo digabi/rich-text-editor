@@ -18,6 +18,7 @@ export type Props = {
 
 export const RichTextEditor = ({ options, style }: Props) => {
   const [showToolbar, setShowToolbar] = useState(false)
+  const [showMathToolbar, setShowMathToolbar] = useState(false)
   const [isUndoAvailable, setIsUndoAvailable] = useState(false)
   const [isRedoAvailable, setIsRedoAvailable] = useState(false)
 
@@ -39,7 +40,7 @@ export const RichTextEditor = ({ options, style }: Props) => {
 
   const t = locales[locale].editor
 
-  const insertEquationAtCursor = (cmd: string) => {
+  const insertEquationAtCursor = (cmd: string = '') => {
     const editor = editorRef.current
     if (!editor) return
 
@@ -91,8 +92,10 @@ export const RichTextEditor = ({ options, style }: Props) => {
         setIsRedoAvailable={(state) => setIsRedoAvailable(state)}
         onClose={() => {
           setShowToolbar(false)
+          setShowMathToolbar(false)
         }}
         shouldOpen={true}
+        onOpen={() => setShowMathToolbar(true)}
       />,
     )
   }
@@ -141,12 +144,12 @@ export const RichTextEditor = ({ options, style }: Props) => {
               setIsRedoAvailable={(state) => setIsRedoAvailable(state)}
               onClose={() => {
                 setShowToolbar(false)
+                setShowMathToolbar(false)
               }}
               shouldOpen={false}
+              onOpen={() => setShowMathToolbar(true)}
             />,
           )
-
-          //img.remove()
         }
       })
     }, 0)
@@ -165,10 +168,14 @@ export const RichTextEditor = ({ options, style }: Props) => {
               mathEditorRef?.current?.insertCharacterAtCursor(action)
             }
           }}
+          onEquationButtonClick={() => {
+            insertEquationAtCursor()
+          }}
           undo={() => mathEditorRef?.current?.undo()}
           redo={() => mathEditorRef?.current?.redo()}
           isUndoAvailable={isUndoAvailable}
           isRedoAvailable={isRedoAvailable}
+          showMathToolbar={showMathToolbar}
         />
       )}
       <DefaultEditor
@@ -181,6 +188,7 @@ export const RichTextEditor = ({ options, style }: Props) => {
         }}
         onBlur={() => {
           setShowToolbar(false)
+          setShowMathToolbar(false)
         }}
         style={style}
         onPaste={replacePastedMathWithEditorComponents}

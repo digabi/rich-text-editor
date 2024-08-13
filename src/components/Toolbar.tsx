@@ -15,10 +15,12 @@ interface ToolbarProps {
   t: Translation['editor']
   specialCharacterGroups: SpecialCharacterGroup[]
   onMathCommand: (action: string) => void
+  onEquationButtonClick: () => void
   undo?: () => void
   redo?: () => void
   isUndoAvailable: boolean
   isRedoAvailable: boolean
+  showMathToolbar: boolean
 }
 
 export const Toolbar = ({
@@ -29,10 +31,11 @@ export const Toolbar = ({
   redo,
   isUndoAvailable,
   isRedoAvailable,
+  showMathToolbar,
+  onEquationButtonClick,
 }: ToolbarProps) => {
   const [showHelpOverlay, setShowHelpOverlay] = useState(false)
   const [showAllCharacters, setShowCharacters] = useState(false)
-  const [showMathToolbar, setShowMathToolbar] = useState(false)
 
   return (
     <div
@@ -45,8 +48,7 @@ export const Toolbar = ({
           {showMathToolbar ? null : (
             <EquationButton
               onMouseDown={eventHandlerWithoutFocusLoss(() => {
-                setShowMathToolbar(true)
-                onMathCommand('')
+                onEquationButtonClick()
               })}
             >
               Σ {t.insertEquation}
