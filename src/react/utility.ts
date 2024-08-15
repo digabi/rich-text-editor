@@ -1,7 +1,7 @@
-import sanitizeHtml from 'sanitize-html'
-import { sanitizeOpts } from '../sanitizeOpts'
+import sanitizeHtml, { IOptions } from 'sanitize-html'
 import fi from '../FI'
 import sv from '../SV'
+import { text } from 'express'
 
 export type Translation = typeof fi | typeof sv
 export interface SpecialCharacter {
@@ -16,7 +16,7 @@ export interface SpecialCharacterGroup {
 }
 export interface Options {
   locale: 'FI' | 'SV'
-  screenshotSaver: () => Promise<string>
+  screenshotSaver: (file: File) => Promise<string>
   baseUrl: string
   ignoreSaveObject: boolean
   screenshotImageSelector: string
@@ -29,7 +29,7 @@ export interface Options {
 
 export const defaults: Options = {
   locale: 'FI',
-  screenshotSaver: () => Promise.resolve(''),
+  screenshotSaver: (file: File) => Promise.resolve(''),
   baseUrl: '',
   ignoreSaveObject: false,
   screenshotImageSelector:
@@ -41,15 +41,53 @@ export const defaults: Options = {
   forceInit: false,
 }
 
+const removeTagAndPrependBr = (_tagName: string, attribs: sanitizeHtml.Attributes) => {
+  return {
+    tagName: 'br',
+    text: '',
+    attribs: {},
+    children: [
+      {
+        tagName: '',
+        text: attribs.text,
+      },
+    ],
+  }
+}
+
+export const sanitizeOpts: IOptions = {
+  allowedTags: ['img', 'br', 'span'],
+  allowedAttributes: {
+    img: ['src', 'alt'],
+    span: ['class'],
+  },
+  allowedSchemes: ['data'],
+  allowedClasses: {
+    span: ['math-editor-wrapper'],
+  },
+  // TODO: Use something like this instead of stripDivsFromRichTextAnswer
+  /*
+  transformTags: {
+    span: (tagName, attribs) =>
+      attribs.class === 'math-editor-wrapper' ? { tagName, attribs } : { tagName: '', attribs: { text: attribs.text } },
+    div: removeTagAndPrependBr,
+    p: removeTagAndPrependBr,
+  },*/
+}
+
 function defaultSanitize(html: string) {
   return sanitizeHtml(
     stripDivsFromRichTextAnswer(
-      sanitizeHtml(convertLinksToRelative(html), { ...sanitizeOpts, allowedTags: ['div', 'p', 'img', 'br'] }),
+      sanitizeHtml(convertLinksToRelative(html), {
+        ...sanitizeOpts,
+        allowedTags: [...sanitizeOpts.allowedTags, 'div', 'p'],
+      }),
     ),
     sanitizeOpts,
   )
 }
 
+// TODO: Clean this up, maybe replace with proper config for sanitize-html
 function stripDivsFromRichTextAnswer(answerContentValue: string) {
   const parent = document.createElement('div')
   parent.innerHTML = answerContentValue

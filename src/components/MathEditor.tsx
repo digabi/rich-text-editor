@@ -143,7 +143,7 @@ export const MathEditor = forwardRef<MathEditorHandle, MathEditorProps>(
 
     useEffect(() => {
       const handleUndoRedoKeys = (event: KeyboardEvent) => {
-        if (isOpen) {
+        if (isOpen && mathEditorContainerRef.current?.contains(document.activeElement)) {
           if ((event.ctrlKey || event.metaKey) && event.key === 'z') {
             event.preventDefault()
             event.stopPropagation()

@@ -2,7 +2,7 @@
   "compilerOptions": {
     "allowJs": true,
     "esModuleInterop": true,
-    "lib": ["es2017"],
+    "lib": ["ES2023"],
     "module": "commonjs",
     "moduleResolution": "node",
     "noEmit": true,

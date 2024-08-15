@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from 'react'
+import React, { useState, useRef, useEffect, ClipboardEventHandler } from 'react'
 import ReactDOM from 'react-dom/client'
 import * as MathQuill from '@digabi/mathquill'
 import FI from '../FI'
@@ -12,11 +12,10 @@ import styled from 'styled-components'
 const locales = { FI, SV }
 
 export type Props = {
-  options?: Partial<Options>
   style?: React.CSSProperties
-}
+} & Partial<Options>
 
-export const RichTextEditor = ({ options, style }: Props) => {
+export const RichTextEditor = (props: Props) => {
   const [showToolbar, setShowToolbar] = useState(false)
   const [showMathToolbar, setShowMathToolbar] = useState(false)
   const [isUndoAvailable, setIsUndoAvailable] = useState(false)
@@ -36,7 +35,7 @@ export const RichTextEditor = ({ options, style }: Props) => {
     locale,
     updateMathImg,
     forceInit,
-  } = { ...defaults, ...(options ?? {}) }
+  } = { ...defaults, ...(props ?? {}) }
 
   const t = locales[locale].editor
 
@@ -115,7 +114,45 @@ export const RichTextEditor = ({ options, style }: Props) => {
     }
   }, [])
 
-  const replacePastedMathWithEditorComponents = () => {
+  const handlePaste: ClipboardEventHandler = async (e) => {
+    e.preventDefault()
+    e.stopPropagation()
+
+    const content = e.nativeEvent.clipboardData
+    const plainTextData = content?.getData('text/plain')
+    const htmlData = content?.getData('text/html')
+
+    console.log(htmlData)
+    console.log(sanitize(htmlData ?? ''))
+    //    console.log('plain text', plainTextData)
+
+    if (htmlData) {
+      document.execCommand('insertHTML', false, sanitize(htmlData))
+    } else if (plainTextData) {
+      document.execCommand('insertHTML', false, plainTextData)
+    } else if (content?.items.length && content.items.length > 0) {
+      const imagesToAdd: HTMLImageElement[] = []
+
+      for (const item of content?.items) {
+        const file = item.getAsFile()
+
+        if (file && fileTypes.includes(file.type)) {
+          try {
+            const src = await screenshotSaver(file)
+            const img = document.createElement('img')
+            img.src = src
+            imagesToAdd.push(img)
+          } catch (e) {
+            console.error(e)
+          }
+        }
+      }
+
+      imagesToAdd.forEach((img) => {
+        document.execCommand('insertHTML', false, img.outerHTML)
+      })
+    }
+
     // Hack to make this run after the content has been pasted
     setTimeout(() => {
       const mathEditors = editorRef.current?.querySelectorAll('span.math-editor-wrapper')
@@ -190,8 +227,8 @@ export const RichTextEditor = ({ options, style }: Props) => {
           setShowToolbar(false)
           setShowMathToolbar(false)
         }}
-        style={style}
-        onPaste={replacePastedMathWithEditorComponents}
+        style={props.style}
+        onPaste={handlePaste}
       />
     </>
   )
