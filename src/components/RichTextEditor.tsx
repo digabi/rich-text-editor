@@ -235,8 +235,8 @@ export const RichTextEditor = (props: Props) => {
 }
 
 const DefaultEditor = styled.div`
-  box-sizing: 'content-box';
-  border: '1px solid #aaa';
-  padding: 5;
-  background-color: '#fff';
+  box-sizing: content-box;
+  border: 1px solid #aaa;
+  padding: 5px;
+  background-color: #fff;
 `

@@ -1,3 +1,5 @@
+import React from 'react'
+
 export const HelpIcon = () => (
 	<svg
 		version="1.1"

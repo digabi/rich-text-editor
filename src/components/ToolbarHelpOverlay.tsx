@@ -1,3 +1,4 @@
+import React from 'react'
 import { Translation, eventHandlerWithoutFocusLoss } from '../react/utility'
 
 export const ToolbarHelpOverlay = ({ t, onClose }: { t: Translation['editor']; onClose: () => void }) => (

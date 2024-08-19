@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import React, { useState } from 'react'
 import { SpecialCharacter, SpecialCharacterGroup, Translation, eventHandlerWithoutFocusLoss } from '../react/utility'
 import { ToolbarHelpOverlay } from './ToolbarHelpOverlay'
 import latexCommands from '../latexCommandsWithSvg'
@@ -7,9 +7,6 @@ import { HelpIcon } from './HelpIcon'
 import { UndoIcon } from './UndoIcon'
 import { RedoIcon } from './RedoIcon'
 import styled from 'styled-components'
-
-const getGroupWidth = (group: SpecialCharacterGroup) =>
-  group.characters.filter((character) => character.popular).length * 35
 
 interface ToolbarProps {
   t: Translation['editor']
@@ -178,13 +175,14 @@ const ToolbarGrid = styled.div<{ gridRows: string }>`
   gap: 10px;
   justify-items: center;
   align-items: center;
-  position: absolute;
   top: 0;
   left: 0;
-  z-index: 1000;
+  z-index: 11;
   width: 100%;
+  background-color: #fff;
   box-shadow: 0 1px 10px 1px rgba(0, 0, 0, 0.2);
   border-bottom: 1px solid #dfdfdf;
+  position: fixed;
 `
 
 const IconCategoriesGrid = styled.div<{ columnRatios: number[] }>`
@@ -237,6 +235,7 @@ const GridButton = styled.button<GridItemProps>`
   padding: 0;
   background: none;
   font-size: 16px;
+  z-index: 10;
 
   &:hover {
     background-color: #f0f0f0;
@@ -260,7 +259,8 @@ const Button = styled.button`
   display: block;
   height: ${iconSize};
   width: ${iconSize};
-  z-index: 100;
+  z-index: 10;
+
   &:disabled {
     filter: grayscale(100%);
     pointer-events: none;
@@ -288,7 +288,7 @@ const MathToolbar = styled.div`
     content: '';
     grid-column: 1 / -1;
     grid-row: 2 / 3;
-    z-index: 0;
+    z-index: 10;
     position: absolute;
     top: 0;
     left: 0;

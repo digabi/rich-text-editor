@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect, forwardRef, useImperativeHandle, useCallback } from 'react'
+import React, { useState, useRef, useEffect, forwardRef, useImperativeHandle, useCallback } from 'react'
 import { getMathSvg } from '../react/mathSvg'
 import { Translation } from '../react/utility'
 import LatexError from './LatexError'

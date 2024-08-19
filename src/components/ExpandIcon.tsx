@@ -1,4 +1,4 @@
-import { CSSProperties } from 'react'
+import React, { CSSProperties } from 'react'
 
 export const ExpandIcon = ({ style }: { style: CSSProperties }) => (
   <svg

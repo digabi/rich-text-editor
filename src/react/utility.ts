@@ -55,7 +55,7 @@ const removeTagAndPrependBr = (_tagName: string, attribs: sanitizeHtml.Attribute
   }
 }
 
-export const sanitizeOpts: IOptions = {
+export const sanitizeOpts = {
   allowedTags: ['img', 'br', 'span'],
   allowedAttributes: {
     img: ['src', 'alt'],
