@@ -1,7 +1,6 @@
-import sanitizeHtml, { IOptions } from 'sanitize-html'
+import sanitizeHtml from 'sanitize-html'
 import fi from '../FI'
 import sv from '../SV'
-import { text } from 'express'
 
 export type Translation = typeof fi | typeof sv
 export interface SpecialCharacter {
@@ -55,15 +54,24 @@ const removeTagAndPrependBr = (_tagName: string, attribs: sanitizeHtml.Attribute
   }
 }
 
-export const sanitizeOpts = {
+export const sanitizeOpts: sanitizeHtml.IOptions = {
   allowedTags: ['img', 'br', 'span'],
   allowedAttributes: {
-    img: ['src', 'alt'],
+    img: ['src', 'alt', 'data-math-svg'],
     span: ['class'],
   },
   allowedSchemes: ['data'],
   allowedClasses: {
     span: ['math-editor-wrapper'],
+  },
+  transformTags: {
+    img: (tagName, attribs) => {
+      const newAttribs = attribs.src?.includes('math.svg') ? { ...attribs, 'data-math-svg': 'true' } : attribs
+      return {
+        tagName,
+        attribs: newAttribs,
+      }
+    },
   },
   // TODO: Use something like this instead of stripDivsFromRichTextAnswer
   /*
@@ -80,7 +88,8 @@ function defaultSanitize(html: string) {
     stripDivsFromRichTextAnswer(
       sanitizeHtml(convertLinksToRelative(html), {
         ...sanitizeOpts,
-        allowedTags: [...sanitizeOpts.allowedTags, 'div', 'p'],
+        allowedTags: ['div', 'p', 'img', 'br'],
+        allowedSchemes: ['data', 'http', 'https'],
       }),
     ),
     sanitizeOpts,

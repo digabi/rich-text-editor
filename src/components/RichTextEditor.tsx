@@ -176,6 +176,42 @@ export const RichTextEditor = (props: Props) => {
           )
         }
       })
+
+      // Select all images with data-math-svg attribute set to true
+      const mathImages = editorRef.current?.querySelectorAll('[data-math-svg="true"]')
+
+      mathImages?.forEach((img) => {
+        if (img instanceof HTMLImageElement) {
+          const newPlaceholder = document.createElement('span')
+          const src = img.src
+
+          newPlaceholder.className = 'math-editor-wrapper'
+          newPlaceholder.style.display = 'contents'
+          newPlaceholder.contentEditable = 'false'
+
+          img.replaceWith(newPlaceholder)
+
+          ReactDOM.createRoot(newPlaceholder).render(
+            <MathEditor
+              mathQuill={MathQuill.getInterface(2)}
+              ref={mathEditorRef}
+              initialLatex={img.alt}
+              onCancelEditor={() => {
+                img.remove()
+              }}
+              t={t}
+              setIsUndoAvailable={(state) => setIsUndoAvailable(state)}
+              setIsRedoAvailable={(state) => setIsRedoAvailable(state)}
+              onClose={() => {
+                setShowToolbar(false)
+                setShowMathToolbar(false)
+              }}
+              shouldOpen={false}
+              onOpen={() => setShowMathToolbar(true)}
+            />,
+          )
+        }
+      })
     }, 0)
   }
 
