@@ -121,36 +121,23 @@ export const RichTextEditor = (props: Props) => {
     const content = e.nativeEvent.clipboardData
     const plainTextData = content?.getData('text/plain')
     const htmlData = content?.getData('text/html')
+    const file = content?.items?.[content.items.length - 1]?.getAsFile()
 
-    console.log(htmlData)
-    console.log(sanitize(htmlData ?? ''))
-    //    console.log('plain text', plainTextData)
-
-    if (htmlData) {
+    if (file) {
+      if (fileTypes.includes(file.type)) {
+        try {
+          const src = await screenshotSaver(file)
+          const img = document.createElement('img')
+          img.src = src
+          document.execCommand('insertHTML', false, img.outerHTML)
+        } catch (e) {
+          console.error(e)
+        }
+      }
+    } else if (htmlData) {
       document.execCommand('insertHTML', false, sanitize(htmlData))
     } else if (plainTextData) {
       document.execCommand('insertHTML', false, plainTextData)
-    } else if (content?.items.length && content.items.length > 0) {
-      const imagesToAdd: HTMLImageElement[] = []
-
-      for (const item of content?.items) {
-        const file = item.getAsFile()
-
-        if (file && fileTypes.includes(file.type)) {
-          try {
-            const src = await screenshotSaver(file)
-            const img = document.createElement('img')
-            img.src = src
-            imagesToAdd.push(img)
-          } catch (e) {
-            console.error(e)
-          }
-        }
-      }
-
-      imagesToAdd.forEach((img) => {
-        document.execCommand('insertHTML', false, img.outerHTML)
-      })
     }
 
     // Hack to make this run after the content has been pasted

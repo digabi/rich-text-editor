@@ -126,3 +126,20 @@ export const eventHandlerWithoutFocusLoss = (fn?: () => void) => (e: React.Mouse
   e.stopPropagation()
   return false
 }
+
+export function decodeBase64Image(dataString: string) {
+  if (!dataString) return null
+  const matches = dataString.match(/^data:([A-Za-z-+/]+);base64,(.+)$/)
+  if (!matches || matches.length !== 3) {
+    return null
+  }
+  const byteCharacters = atob(matches[2])
+  const byteNumbers = new Array(byteCharacters.length)
+  for (let i = 0; i < byteCharacters.length; i++) {
+    byteNumbers[i] = byteCharacters.charCodeAt(i)
+  }
+  return {
+    type: matches[1],
+    data: new Uint8Array(byteNumbers),
+  }
+}
