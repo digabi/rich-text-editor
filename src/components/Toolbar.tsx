@@ -40,8 +40,8 @@ export const Toolbar = ({
       data-js="tools"
       style={{ position: 'absolute', top: 0, left: 0, zIndex: 1000 }}
     >
-      <ToolbarGrid className="toolbar" gridRows={showMathToolbar ? 'auto auto' : 'auto'}>
-        <ButtonContainer row={1} column={1} justify="end" align="start">
+      <ToolbarGrid className="toolbar">
+        <EquationButtonContainer row={1} column={1} justify="end" align="start">
           {showMathToolbar ? null : (
             <EquationButton
               onMouseDown={eventHandlerWithoutFocusLoss(() => {
@@ -51,7 +51,7 @@ export const Toolbar = ({
               Σ {t.insertEquation}
             </EquationButton>
           )}
-        </ButtonContainer>
+        </EquationButtonContainer>
         <GridCell row={1} column={2}>
           <IconCategoriesGrid columnRatios={specialCharacterGroups.map((g) => g.characters.length)}>
             {specialCharacterGroups.map((group, i) => {
@@ -168,10 +168,10 @@ interface GridProps {
   rows: number
 }
 
-const ToolbarGrid = styled.div<{ gridRows: string }>`
+const ToolbarGrid = styled.div`
   display: grid;
   grid-template-columns: 1fr auto 1fr;
-  grid-template-rows: ${(props) => props.gridRows};
+  grid-template-rows: auto;
   gap: 10px;
   justify-items: center;
   align-items: center;
@@ -192,6 +192,22 @@ const IconCategoriesGrid = styled.div<{ columnRatios: number[] }>`
   gap: 15px;
   justify-items: center;
   align-items: center;
+
+  @media (max-width: 1000px) {
+    grid-template-columns: ${(props) =>
+      `${props.columnRatios[1]}fr ${props.columnRatios[2]}fr ${props.columnRatios[3]}fr`};
+    grid-template-rows: auto auto;
+    gap: 5px;
+
+    & > *:first-child {
+      grid-column: 1 / -1;
+      grid-row: 1;
+    }
+
+    & > *:not:first-child {
+      grid-row: 2;
+    }
+  }
 `
 
 const IconGrid = styled.div<GridProps>`
@@ -250,6 +266,20 @@ const ButtonContainer = styled(GridCell)<{
   flex-direction: row;
   justify-self: ${(props) => props.justify};
   align-self: ${(props) => props.align};
+
+  @media (max-width: 1000px) {
+    &:nth-child(3) {
+      justify-self: end;
+    }
+  }
+`
+
+const EquationButtonContainer = styled(ButtonContainer)`
+  @media (max-width: 1300px) {
+    grid-row: 2;
+    grid-column: 2;
+    justify-self: start;
+  }
 `
 
 const Button = styled.button`
