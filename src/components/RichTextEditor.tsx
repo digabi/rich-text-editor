@@ -37,6 +37,27 @@ export const RichTextEditor = (props: Props) => {
     forceInit,
   } = { ...defaults, ...(props ?? {}) }
 
+  const renderMathEditor = (
+    rootElement: Element,
+    props: Pick<React.ComponentPropsWithRef<typeof MathEditor>, 'initialLatex' | 'onCancelEditor' | 'shouldOpen'>,
+  ) => {
+    ReactDOM.createRoot(rootElement).render(
+      <MathEditor
+        mathQuill={MathQuill.getInterface(2)}
+        ref={mathEditorRef}
+        t={t}
+        setIsUndoAvailable={(state) => setIsUndoAvailable(state)}
+        setIsRedoAvailable={(state) => setIsRedoAvailable(state)}
+        onClose={() => {
+          setShowToolbar(false)
+          setShowMathToolbar(false)
+        }}
+        onOpen={() => setShowMathToolbar(true)}
+        {...props}
+      />,
+    )
+  }
+
   const t = locales[locale].editor
 
   const insertEquationAtCursor = (cmd: string = '') => {
@@ -78,25 +99,13 @@ export const RichTextEditor = (props: Props) => {
     selection.addRange(range)
 
     // Replace the placeholder with the React component
-    ReactDOM.createRoot(placeholder).render(
-      <MathEditor
-        mathQuill={MathQuill.getInterface(2)}
-        ref={mathEditorRef}
-        initialLatex={cmd}
-        onCancelEditor={() => {
-          placeholder.remove()
-        }}
-        t={t}
-        setIsUndoAvailable={(state) => setIsUndoAvailable(state)}
-        setIsRedoAvailable={(state) => setIsRedoAvailable(state)}
-        onClose={() => {
-          setShowToolbar(false)
-          setShowMathToolbar(false)
-        }}
-        shouldOpen={true}
-        onOpen={() => setShowMathToolbar(true)}
-      />,
-    )
+    renderMathEditor(placeholder, {
+      initialLatex: cmd,
+      onCancelEditor: () => {
+        placeholder.remove()
+      },
+      shouldOpen: true,
+    })
   }
 
   useEffect(() => {
@@ -155,35 +164,21 @@ export const RichTextEditor = (props: Props) => {
 
           oldPlaceholder.replaceWith(newPlaceholder)
 
-          ReactDOM.createRoot(newPlaceholder).render(
-            <MathEditor
-              mathQuill={MathQuill.getInterface(2)}
-              ref={mathEditorRef}
-              initialLatex={img.alt}
-              onCancelEditor={() => {
-                oldPlaceholder.remove()
-              }}
-              t={t}
-              setIsUndoAvailable={(state) => setIsUndoAvailable(state)}
-              setIsRedoAvailable={(state) => setIsRedoAvailable(state)}
-              onClose={() => {
-                setShowToolbar(false)
-                setShowMathToolbar(false)
-              }}
-              shouldOpen={false}
-              onOpen={() => setShowMathToolbar(true)}
-            />,
-          )
+          renderMathEditor(newPlaceholder, {
+            initialLatex: img.alt,
+            onCancelEditor: () => {
+              oldPlaceholder.remove()
+            },
+            shouldOpen: false,
+          })
         }
       })
 
-      // Select all images with data-math-svg attribute set to true
       const mathImages = editorRef.current?.querySelectorAll('[data-math-svg="true"]')
 
       mathImages?.forEach((img) => {
         if (img instanceof HTMLImageElement) {
           const newPlaceholder = document.createElement('span')
-          const src = img.src
 
           newPlaceholder.className = 'math-editor-wrapper'
           newPlaceholder.style.display = 'contents'
@@ -191,25 +186,13 @@ export const RichTextEditor = (props: Props) => {
 
           img.replaceWith(newPlaceholder)
 
-          ReactDOM.createRoot(newPlaceholder).render(
-            <MathEditor
-              mathQuill={MathQuill.getInterface(2)}
-              ref={mathEditorRef}
-              initialLatex={img.alt}
-              onCancelEditor={() => {
-                img.remove()
-              }}
-              t={t}
-              setIsUndoAvailable={(state) => setIsUndoAvailable(state)}
-              setIsRedoAvailable={(state) => setIsRedoAvailable(state)}
-              onClose={() => {
-                setShowToolbar(false)
-                setShowMathToolbar(false)
-              }}
-              shouldOpen={false}
-              onOpen={() => setShowMathToolbar(true)}
-            />,
-          )
+          renderMathEditor(newPlaceholder, {
+            initialLatex: img.alt,
+            onCancelEditor: () => {
+              img.remove()
+            },
+            shouldOpen: false,
+          })
         }
       })
     }, 0)
