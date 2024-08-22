@@ -13,6 +13,7 @@ const locales = { FI, SV }
 
 export type Props = {
   style?: React.CSSProperties
+  onValueChange: (newHtml: string) => void
 } & Partial<Options>
 
 export const RichTextEditor = (props: Props) => {
@@ -35,6 +36,7 @@ export const RichTextEditor = (props: Props) => {
     locale,
     updateMathImg,
     forceInit,
+    onValueChange,
   } = { ...defaults, ...(props ?? {}) }
 
   const renderMathEditor = (
@@ -200,7 +202,7 @@ export const RichTextEditor = (props: Props) => {
 
   return (
     <>
-      {showToolbar && (
+      {true && (
         <Toolbar
           t={t}
           specialCharacterGroups={specialCharacters}
@@ -235,6 +237,7 @@ export const RichTextEditor = (props: Props) => {
         }}
         style={props.style}
         onPaste={handlePaste}
+        onInput={(e) => onValueChange(e.currentTarget.innerHTML)}
       />
     </>
   )

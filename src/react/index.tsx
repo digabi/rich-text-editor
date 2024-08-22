@@ -13,5 +13,6 @@ root.render(
         reader.readAsDataURL(file)
       })
     }
+    onValueChange={(value) => console.log('new value', value)}
   />,
 )
