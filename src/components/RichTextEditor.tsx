@@ -38,7 +38,7 @@ export const RichTextEditor = (props: Props) => {
     updateMathImg,
     forceInit,
     onValueChange,
-    initialValue = '',
+    initialValue,
   } = { ...defaults, ...(props ?? {}) }
 
   const renderMathEditor = (
@@ -60,6 +60,53 @@ export const RichTextEditor = (props: Props) => {
         {...props}
       />,
     )
+  }
+
+  const initMathEditors = () => {
+    const mathEditors = editorRef.current?.querySelectorAll('span.math-editor-wrapper')
+
+    mathEditors?.forEach((oldPlaceholder) => {
+      const img = oldPlaceholder.querySelector('img')
+
+      if (img instanceof HTMLImageElement) {
+        const newPlaceholder = document.createElement('span')
+        newPlaceholder.className = 'math-editor-wrapper'
+        newPlaceholder.style.display = 'contents'
+        newPlaceholder.contentEditable = 'false'
+
+        oldPlaceholder.replaceWith(newPlaceholder)
+
+        renderMathEditor(newPlaceholder, {
+          initialLatex: img.alt,
+          onCancelEditor: () => {
+            oldPlaceholder.remove()
+          },
+          shouldOpen: false,
+        })
+      }
+    })
+
+    const mathImages = editorRef.current?.querySelectorAll('[data-math-svg="true"]')
+
+    mathImages?.forEach((img) => {
+      if (img instanceof HTMLImageElement) {
+        const newPlaceholder = document.createElement('span')
+
+        newPlaceholder.className = 'math-editor-wrapper'
+        newPlaceholder.style.display = 'contents'
+        newPlaceholder.contentEditable = 'false'
+
+        img.replaceWith(newPlaceholder)
+
+        renderMathEditor(newPlaceholder, {
+          initialLatex: img.alt,
+          onCancelEditor: () => {
+            img.remove()
+          },
+          shouldOpen: false,
+        })
+      }
+    })
   }
 
   const t = locales[locale].editor
@@ -127,6 +174,12 @@ export const RichTextEditor = (props: Props) => {
     }
   }, [])
 
+  useEffect(() => {
+    if (initialValue && initialValue !== '') {
+      initMathEditors()
+    }
+  }, [])
+
   const handlePaste: ClipboardEventHandler = async (e) => {
     e.preventDefault()
     e.stopPropagation()
@@ -154,52 +207,7 @@ export const RichTextEditor = (props: Props) => {
     }
 
     // Hack to make this run after the content has been pasted
-    setTimeout(() => {
-      const mathEditors = editorRef.current?.querySelectorAll('span.math-editor-wrapper')
-
-      mathEditors?.forEach((oldPlaceholder) => {
-        const img = oldPlaceholder.querySelector('img')
-
-        if (img instanceof HTMLImageElement) {
-          const newPlaceholder = document.createElement('span')
-          newPlaceholder.className = 'math-editor-wrapper'
-          newPlaceholder.style.display = 'contents'
-          newPlaceholder.contentEditable = 'false'
-
-          oldPlaceholder.replaceWith(newPlaceholder)
-
-          renderMathEditor(newPlaceholder, {
-            initialLatex: img.alt,
-            onCancelEditor: () => {
-              oldPlaceholder.remove()
-            },
-            shouldOpen: false,
-          })
-        }
-      })
-
-      const mathImages = editorRef.current?.querySelectorAll('[data-math-svg="true"]')
-
-      mathImages?.forEach((img) => {
-        if (img instanceof HTMLImageElement) {
-          const newPlaceholder = document.createElement('span')
-
-          newPlaceholder.className = 'math-editor-wrapper'
-          newPlaceholder.style.display = 'contents'
-          newPlaceholder.contentEditable = 'false'
-
-          img.replaceWith(newPlaceholder)
-
-          renderMathEditor(newPlaceholder, {
-            initialLatex: img.alt,
-            onCancelEditor: () => {
-              img.remove()
-            },
-            shouldOpen: false,
-          })
-        }
-      })
-    }, 0)
+    setTimeout(initMathEditors, 0)
   }
 
   return (
@@ -240,9 +248,10 @@ export const RichTextEditor = (props: Props) => {
         style={props.style}
         onPaste={handlePaste}
         onInput={(e) => onValueChange(e.currentTarget.innerHTML)}
-      >
-        {initialValue}
-      </DefaultEditor>
+        dangerouslySetInnerHTML={{
+          __html: initialValue || '',
+        }}
+      ></DefaultEditor>
     </>
   )
 }
