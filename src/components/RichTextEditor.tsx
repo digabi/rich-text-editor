@@ -17,6 +17,16 @@ export type Props = {
   initialValue?: string
 } & Partial<Options>
 
+const mathEditorWrapperClassName = 'math-editor-wrapper'
+
+const getMathEditorWrapper = () => {
+  const wrapper = document.createElement('span')
+  wrapper.className = mathEditorWrapperClassName
+  wrapper.style.display = 'contents'
+  wrapper.contentEditable = 'false'
+  return wrapper
+}
+
 export const RichTextEditor = (props: Props) => {
   const [showToolbar, setShowToolbar] = useState(false)
   const [showMathToolbar, setShowMathToolbar] = useState(false)
@@ -63,16 +73,13 @@ export const RichTextEditor = (props: Props) => {
   }
 
   const initMathEditors = () => {
-    const mathEditors = editorRef.current?.querySelectorAll('span.math-editor-wrapper')
+    const mathEditors = editorRef.current?.querySelectorAll(`span.${mathEditorWrapperClassName}`)
 
     mathEditors?.forEach((oldPlaceholder) => {
       const img = oldPlaceholder.querySelector('img')
 
       if (img instanceof HTMLImageElement) {
-        const newPlaceholder = document.createElement('span')
-        newPlaceholder.className = 'math-editor-wrapper'
-        newPlaceholder.style.display = 'contents'
-        newPlaceholder.contentEditable = 'false'
+        const newPlaceholder = getMathEditorWrapper()
 
         oldPlaceholder.replaceWith(newPlaceholder)
 
@@ -90,11 +97,7 @@ export const RichTextEditor = (props: Props) => {
 
     mathImages?.forEach((img) => {
       if (img instanceof HTMLImageElement) {
-        const newPlaceholder = document.createElement('span')
-
-        newPlaceholder.className = 'math-editor-wrapper'
-        newPlaceholder.style.display = 'contents'
-        newPlaceholder.contentEditable = 'false'
+        const newPlaceholder = getMathEditorWrapper()
 
         img.replaceWith(newPlaceholder)
 
@@ -122,38 +125,33 @@ export const RichTextEditor = (props: Props) => {
     const range = selection.getRangeAt(0)
     range.deleteContents()
 
-    // Create a placeholder span element
-    const placeholder = document.createElement('span')
-    placeholder.className = 'math-editor-wrapper'
-    placeholder.style.display = 'contents'
-    placeholder.contentEditable = 'false'
+    // Create and place a wrapper as we need an element to mount the MathEditor component in
+    const wrapper = getMathEditorWrapper()
+    range.insertNode(wrapper)
 
-    // Insert the placeholder at the cursor position
-    range.insertNode(placeholder)
-
-    const parent = placeholder.parentNode as Element
-    if (parent.className === 'math-editor-wrapper') {
-      if (placeholder.nextSibling) {
-        parent.insertAdjacentElement('beforebegin', placeholder)
+    // If the new equation would be created inside another equations wrapper, move it outside of it
+    const parent = wrapper.parentNode as Element
+    if (parent.className === mathEditorWrapperClassName) {
+      if (wrapper.nextSibling) {
+        parent.insertAdjacentElement('beforebegin', wrapper)
       } else {
-        parent.insertAdjacentElement('afterend', placeholder)
+        parent.insertAdjacentElement('afterend', wrapper)
       }
     }
 
-    placeholder.insertAdjacentText('beforebegin', '\u00A0')
-    placeholder.insertAdjacentText('afterend', '\u00A0')
+    wrapper.insertAdjacentText('beforebegin', '\u00A0')
+    wrapper.insertAdjacentText('afterend', '\u00A0')
 
     // Move the cursor after the placeholder
-    range.setStartAfter(placeholder)
-    range.setEndAfter(placeholder)
+    range.setStartAfter(wrapper)
+    range.setEndAfter(wrapper)
     selection.removeAllRanges()
     selection.addRange(range)
 
-    // Replace the placeholder with the React component
-    renderMathEditor(placeholder, {
+    renderMathEditor(wrapper, {
       initialLatex: cmd,
       onCancelEditor: () => {
-        placeholder.remove()
+        wrapper.remove()
       },
       shouldOpen: true,
     })
