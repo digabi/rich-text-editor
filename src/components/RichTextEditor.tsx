@@ -159,7 +159,7 @@ export const RichTextEditor = (props: Props) => {
 
   useEffect(() => {
     const handleEquationEditorHotkey = (event: KeyboardEvent) => {
-      if ((event.ctrlKey || event.metaKey) && event.key === 'k') {
+      if ((event.ctrlKey || event.metaKey) && event.key === 'e') {
         event.preventDefault()
         insertEquationAtCursor('')
       }
