@@ -174,6 +174,31 @@ export const RichTextEditor = (props: Props) => {
     }
   }, [])
 
+  // Prevent dragging items into the editor
+  useEffect(() => {
+    const editor = editorRef.current
+
+    const preventDrag = (e: DragEvent) => {
+      e.preventDefault()
+    }
+
+    const preventDrop = (e: DragEvent) => {
+      e.preventDefault()
+    }
+
+    if (editor) {
+      editor.addEventListener('dragover', preventDrag)
+      editor.addEventListener('drop', preventDrop)
+    }
+
+    return () => {
+      if (editor) {
+        editor.removeEventListener('dragover', preventDrag)
+        editor.removeEventListener('drop', preventDrop)
+      }
+    }
+  }, [editorRef.current])
+
   useEffect(() => {
     if (initialValue && initialValue !== '') {
       initMathEditors()
