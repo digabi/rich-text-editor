@@ -1,6 +1,7 @@
 import sanitizeHtml from 'sanitize-html'
 import fi from '../FI'
 import sv from '../SV'
+import sanitize from 'sanitize-html'
 
 export type Translation = typeof fi | typeof sv
 export interface SpecialCharacter {
@@ -54,7 +55,7 @@ const removeTagAndPrependBr = (_tagName: string, attribs: sanitizeHtml.Attribute
   }
 }
 
-export const sanitizeOpts: sanitizeHtml.IOptions = {
+export const sanitizeOpts = {
   allowedTags: ['img', 'br', 'span'],
   allowedAttributes: {
     img: ['src', 'alt', 'data-math-svg'],
@@ -65,22 +66,13 @@ export const sanitizeOpts: sanitizeHtml.IOptions = {
     span: ['math-editor-wrapper'],
   },
   transformTags: {
-    img: (tagName, attribs) => {
-      const newAttribs = attribs.src?.includes('math.svg') ? { ...attribs, 'data-math-svg': 'true' } : attribs
-      return {
-        tagName,
-        attribs: newAttribs,
-      }
-    },
+    img: (tagName: string, attribs: sanitize.Attributes) => ({
+      tagName,
+      attribs: attribs.src?.includes('math.svg') ? { ...attribs, 'data-math-svg': 'true' } : attribs,
+    }),
+    span: (tagName: string, attribs: sanitize.Attributes) =>
+      attribs.class === 'math-editor-wrapper' ? { tagName, attribs } : { tagName: '', attribs: { text: '' } },
   },
-  // TODO: Use something like this instead of stripDivsFromRichTextAnswer
-  /*
-  transformTags: {
-    span: (tagName, attribs) =>
-      attribs.class === 'math-editor-wrapper' ? { tagName, attribs } : { tagName: '', attribs: { text: attribs.text } },
-    div: removeTagAndPrependBr,
-    p: removeTagAndPrependBr,
-  },*/
 }
 
 function defaultSanitize(html: string) {
@@ -88,7 +80,7 @@ function defaultSanitize(html: string) {
     stripDivsFromRichTextAnswer(
       sanitizeHtml(convertLinksToRelative(html), {
         ...sanitizeOpts,
-        allowedTags: ['div', 'p', 'img', 'br'],
+        allowedTags: [...sanitizeOpts.allowedTags, 'div', 'p'],
         allowedSchemes: ['data', 'http', 'https'],
       }),
     ),
