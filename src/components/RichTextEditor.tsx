@@ -139,6 +139,7 @@ export const RichTextEditor = (props: Props) => {
       }
     }
 
+    // TODO: Better handling for these than just blindly adding them every time
     wrapper.insertAdjacentText('beforebegin', '\u00A0')
     wrapper.insertAdjacentText('afterend', '\u00A0')
 
@@ -230,6 +231,7 @@ export const RichTextEditor = (props: Props) => {
     }
 
     // Hack to make this run after the content has been pasted
+    // TODO more informative comment
     setTimeout(initMathEditors, 0)
   }
 

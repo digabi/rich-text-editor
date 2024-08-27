@@ -1,3 +1,4 @@
+// TODO: Link to the source Github issue
 import { mathjax } from 'mathjax-full/js/mathjax'
 import { TeX } from 'mathjax-full/js/input/tex'
 import { SVG } from 'mathjax-full/js/output/svg'

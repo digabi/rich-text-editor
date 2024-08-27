@@ -41,20 +41,6 @@ export const defaults: Options = {
   forceInit: false,
 }
 
-const removeTagAndPrependBr = (_tagName: string, attribs: sanitizeHtml.Attributes) => {
-  return {
-    tagName: 'br',
-    text: '',
-    attribs: {},
-    children: [
-      {
-        tagName: '',
-        text: attribs.text,
-      },
-    ],
-  }
-}
-
 export const sanitizeOpts = {
   allowedTags: ['img', 'br', 'span'],
   allowedAttributes: {
@@ -88,7 +74,7 @@ function defaultSanitize(html: string) {
   )
 }
 
-// TODO: Clean this up, maybe replace with proper config for sanitize-html
+// TODO: Clean this up, preferably replace with proper config for sanitize-html
 function stripDivsFromRichTextAnswer(answerContentValue: string) {
   const parent = document.createElement('div')
   parent.innerHTML = answerContentValue
