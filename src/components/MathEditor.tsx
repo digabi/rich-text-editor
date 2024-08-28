@@ -228,12 +228,11 @@ export const MathEditor = forwardRef<MathEditorHandle, MathEditorProps>(
 
     return isOpen ? (
       <div ref={mathEditorContainerRef}>
-        <div className="math-editor" data-js="mathEditor">
-          <div ref={mathFieldElementRef} className="math-editor-equation-field" data-js="equationField"></div>
+        <div className="math-editor">
+          <div ref={mathFieldElementRef} className="math-editor-equation-field"></div>
           <textarea
             rows={1}
             className="math-editor-latex-field"
-            data-js="latexField"
             placeholder="LaTeΧ"
             value={mathLatex}
             onBlur={(e) => {
