@@ -38,7 +38,7 @@ const useEditorMutationObserver = (
       mutations.forEach((mutation) => {
         mutation.removedNodes.forEach((node) => {
           // Check if the removed node is the React component's custom wrapper
-          if (node instanceof HTMLElement && node.classList && node.classList.contains(mathEditorWrapperClassName)) {
+          if (node instanceof HTMLElement && node.classList.contains(mathEditorWrapperClassName)) {
             const root = rootsMap.get(node)
             if (root) {
               console.log('unmounting', root, node)
@@ -70,6 +70,10 @@ export const RichTextEditor = (props: Props) => {
 
   useEditorMutationObserver(editorRef, mathEditorRootMap.current)
 
+  /** for dev use - prepend url with `?forceToolbars=1` to force toolbars to stay open without focus on editor
+   * NOTE: This can cause bugs as it is unintended behaviour */
+  const forceToolbarsOpen = new URL(window.location.href).searchParams.get('forceToolbars') !== null
+
   const {
     baseUrl,
     fileTypes,
@@ -85,8 +89,8 @@ export const RichTextEditor = (props: Props) => {
     initialValue,
   } = { ...defaults, ...(props ?? {}) }
 
-  const renderMathEditor = (
-    rootElement: Element,
+  const mountMathEditor = (
+    rootElement: HTMLSpanElement,
     props: Pick<React.ComponentPropsWithRef<typeof MathEditor>, 'initialLatex' | 'onCancelEditor' | 'shouldOpen'>,
   ) => {
     const root = ReactDOM.createRoot(rootElement)
@@ -114,7 +118,9 @@ export const RichTextEditor = (props: Props) => {
   }
 
   const initMathEditors = () => {
+    // These are copy-pasted math editors
     const mathEditors = editorRef.current?.querySelectorAll(`span.${mathEditorWrapperClassName}`)
+    // These are math images copied from cheat
     const mathImages = editorRef.current?.querySelectorAll('[data-math-svg="true"]')
 
     const roots = [
@@ -128,45 +134,10 @@ export const RichTextEditor = (props: Props) => {
 
         root.replaceWith(newPlaceholder)
 
-        renderMathEditor(newPlaceholder, {
+        mountMathEditor(newPlaceholder, {
           initialLatex: root.alt,
           onCancelEditor: () => {
             root.remove()
-          },
-          shouldOpen: false,
-        })
-      }
-    })
-
-    /*
-    mathEditors?.forEach((oldPlaceholder) => {
-      const img = oldPlaceholder.querySelector('img')
-
-      if (img instanceof HTMLImageElement) {
-        const newPlaceholder = getMathEditorWrapper()
-
-        oldPlaceholder.replaceWith(newPlaceholder)
-
-        renderMathEditor(newPlaceholder, {
-          initialLatex: img.alt,
-          onCancelEditor: () => {
-            oldPlaceholder.remove()
-          },
-          shouldOpen: false,
-        })
-      }
-    })
-
-    mathImages?.forEach((img) => {
-      if (img instanceof HTMLImageElement) {
-        const newPlaceholder = getMathEditorWrapper()
-
-        img.replaceWith(newPlaceholder)
-
-        renderMathEditor(newPlaceholder, {
-          initialLatex: img.alt,
-          onCancelEditor: () => {
-            img.remove()
           },
           shouldOpen: false,
         })
@@ -211,7 +182,7 @@ export const RichTextEditor = (props: Props) => {
     selection.removeAllRanges()
     selection.addRange(range)
 
-    renderMathEditor(wrapper, {
+    mountMathEditor(wrapper, {
       initialLatex: cmd,
       onCancelEditor: () => {
         wrapper.remove()
@@ -293,13 +264,14 @@ export const RichTextEditor = (props: Props) => {
     }
 
     // Hack to make this run after the content has been pasted
+    // TODO would react flush sync be better?
     // TODO more informative comment
     setTimeout(initMathEditors, 0)
   }
 
   return (
     <>
-      {true && (
+      {forceToolbarsOpen || showToolbar ? (
         <Toolbar
           t={t}
           specialCharacterGroups={specialCharacters}
@@ -317,9 +289,9 @@ export const RichTextEditor = (props: Props) => {
           redo={() => mathEditorRef?.current?.redo()}
           isUndoAvailable={isUndoAvailable}
           isRedoAvailable={isRedoAvailable}
-          showMathToolbar={showMathToolbar}
+          showMathToolbar={forceToolbarsOpen || showMathToolbar}
         />
-      )}
+      ) : null}
       <DefaultEditor
         ref={editorRef}
         contentEditable={true}
