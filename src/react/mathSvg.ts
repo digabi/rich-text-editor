@@ -9,18 +9,18 @@ import { RegisterHTMLHandler } from 'mathjax-full/js/handlers/html'
 const adaptor = liteAdaptor()
 RegisterHTMLHandler(adaptor)
 
-const mathjax_document = mathjax.document('', {
+const mathjaxDocument = mathjax.document('', {
   InputJax: new TeX({ packages: AllPackages }),
   OutputJax: new SVG({ fontCache: 'local' }),
 })
 
-const mathjax_options = {
+const mathjaxOptions = {
   em: 16,
   ex: 8,
   containerWidth: 1280,
 }
 
 export function getMathSvg(math: string): string {
-  const node = mathjax_document.convert(math, mathjax_options)
+  const node = mathjaxDocument.convert(math, mathjaxOptions)
   return adaptor.innerHTML(node)
 }

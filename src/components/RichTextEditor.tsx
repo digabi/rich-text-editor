@@ -27,6 +27,37 @@ const getMathEditorWrapper = () => {
   return wrapper
 }
 
+const useEditorMutationObserver = (
+  editorRef: React.RefObject<HTMLSpanElement>,
+  rootsMap: Map<HTMLElement, ReactDOM.Root>,
+) => {
+  useEffect(() => {
+    if (!editorRef.current) return
+
+    const observer = new MutationObserver((mutations) => {
+      mutations.forEach((mutation) => {
+        mutation.removedNodes.forEach((node) => {
+          // Check if the removed node is the React component's custom wrapper
+          if (node instanceof HTMLElement && node.classList && node.classList.contains(mathEditorWrapperClassName)) {
+            const root = rootsMap.get(node)
+            if (root) {
+              console.log('unmounting', root, node)
+              root.unmount()
+              rootsMap.delete(node)
+            }
+          }
+        })
+      })
+    })
+
+    observer.observe(editorRef.current, { childList: true })
+
+    return () => {
+      observer.disconnect()
+    }
+  }, [editorRef])
+}
+
 export const RichTextEditor = (props: Props) => {
   const [showToolbar, setShowToolbar] = useState(false)
   const [showMathToolbar, setShowMathToolbar] = useState(false)
@@ -35,6 +66,9 @@ export const RichTextEditor = (props: Props) => {
 
   const editorRef = useRef<HTMLDivElement>(null)
   const mathEditorRef = useRef<MathEditorHandle>(null)
+  const mathEditorRootMap = useRef<Map<HTMLSpanElement, ReactDOM.Root>>(new Map())
+
+  useEditorMutationObserver(editorRef, mathEditorRootMap.current)
 
   const {
     baseUrl,
@@ -55,7 +89,8 @@ export const RichTextEditor = (props: Props) => {
     rootElement: Element,
     props: Pick<React.ComponentPropsWithRef<typeof MathEditor>, 'initialLatex' | 'onCancelEditor' | 'shouldOpen'>,
   ) => {
-    ReactDOM.createRoot(rootElement).render(
+    const root = ReactDOM.createRoot(rootElement)
+    root.render(
       <MathEditor
         mathQuill={MathQuill.getInterface(2)}
         ref={mathEditorRef}
@@ -67,14 +102,43 @@ export const RichTextEditor = (props: Props) => {
           setShowMathToolbar(false)
         }}
         onOpen={() => setShowMathToolbar(true)}
+        onCancelEditor={() => {
+          root.unmount()
+          props.onCancelEditor()
+        }}
         {...props}
       />,
     )
+
+    mathEditorRootMap.current.set(rootElement, root)
   }
 
   const initMathEditors = () => {
     const mathEditors = editorRef.current?.querySelectorAll(`span.${mathEditorWrapperClassName}`)
+    const mathImages = editorRef.current?.querySelectorAll('[data-math-svg="true"]')
 
+    const roots = [
+      ...Array.from(mathEditors ?? []).map((el) => el.querySelector('img')),
+      ...Array.from(mathImages ?? []),
+    ]
+
+    roots.forEach((root) => {
+      if (root instanceof HTMLImageElement) {
+        const newPlaceholder = getMathEditorWrapper()
+
+        root.replaceWith(newPlaceholder)
+
+        renderMathEditor(newPlaceholder, {
+          initialLatex: root.alt,
+          onCancelEditor: () => {
+            root.remove()
+          },
+          shouldOpen: false,
+        })
+      }
+    })
+
+    /*
     mathEditors?.forEach((oldPlaceholder) => {
       const img = oldPlaceholder.querySelector('img')
 
@@ -92,8 +156,6 @@ export const RichTextEditor = (props: Props) => {
         })
       }
     })
-
-    const mathImages = editorRef.current?.querySelectorAll('[data-math-svg="true"]')
 
     mathImages?.forEach((img) => {
       if (img instanceof HTMLImageElement) {

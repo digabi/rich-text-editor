@@ -41,7 +41,7 @@ export const Toolbar = ({
       style={{ position: 'absolute', top: 0, left: 0, zIndex: 1000 }}
     >
       <ToolbarGrid className="toolbar">
-        <EquationButtonContainer row={1} column={1} justify="end" align="start">
+        <EquationButtonContainer $row={1} $column={1} $justify="end" $align="start">
           {showMathToolbar ? null : (
             <EquationButton
               onMouseDown={eventHandlerWithoutFocusLoss(() => {
@@ -52,8 +52,8 @@ export const Toolbar = ({
             </EquationButton>
           )}
         </EquationButtonContainer>
-        <GridCell row={1} column={2}>
-          <IconCategoriesGrid columnRatios={specialCharacterGroups.map((g) => g.characters.length)}>
+        <GridCell $row={1} $column={2}>
+          <IconCategoriesGrid $columnRatios={specialCharacterGroups.map((g) => g.characters.length)}>
             {specialCharacterGroups.map((group, i) => {
               const popularCharacters = group.characters.filter((character) => character.popular)
               const restOfCharacters = group.characters.filter((character) => !character.popular)
@@ -61,14 +61,15 @@ export const Toolbar = ({
               const rowCount = showAllCharacters ? Math.ceil(group.characters.length / columnCount) : 1
 
               return (
-                <IconGrid rows={rowCount} columns={columnCount}>
+                <IconGrid key={group.label} $rows={rowCount} $columns={columnCount}>
                   {popularCharacters.map((character: (typeof group.characters)[number], j) => (
-                    <SpecialCharacterButton {...character} column={j + 1} row={1} />
+                    <SpecialCharacterButton {...character} key={character.character} column={j + 1} row={1} />
                   ))}
                   {showAllCharacters
                     ? restOfCharacters.map((character: (typeof group.characters)[number], j) => (
                         <SpecialCharacterButton
                           {...character}
+                          key={character.character}
                           column={1 + (j % columnCount)}
                           row={2 + Math.floor(j / columnCount)}
                         />
@@ -79,7 +80,7 @@ export const Toolbar = ({
             })}
           </IconCategoriesGrid>
         </GridCell>
-        <ButtonContainer row={1} column={3} justify="start" align="start">
+        <ButtonContainer $row={1} $column={3} $justify="start" $align="start">
           <Button
             onMouseDown={eventHandlerWithoutFocusLoss(() => {
               setShowCharacters(!showAllCharacters)
@@ -102,22 +103,22 @@ export const Toolbar = ({
         </ButtonContainer>
         {showMathToolbar && (
           <MathToolbar>
-            <GridCell row={2} column={1} />
-            <MathIconGrid rows={2} columns={Math.ceil(latexCommands.length / 2)} row={2} column={2}>
+            <GridCell $row={2} $column={1} />
+            <MathIconGrid $rows={2} $columns={Math.ceil(latexCommands.length / 2)} $row={2} $column={2}>
               {latexCommands.map((command, i) =>
                 typeof command !== 'string' ? ( //  TODO: One of the commands is just <br /> for legacy reasons, fix this
                   <GridButton
                     key={command.action}
                     onMouseDown={eventHandlerWithoutFocusLoss(() => onMathCommand(command.action))}
-                    column={1 + (i % Math.ceil(latexCommands.length / 2))}
-                    row={1 + Math.floor(i / Math.ceil(latexCommands.length / 2))}
+                    $column={1 + (i % Math.ceil(latexCommands.length / 2))}
+                    $row={1 + Math.floor(i / Math.ceil(latexCommands.length / 2))}
                   >
                     <MathIcon src={command.svg} />
                   </GridButton>
                 ) : null,
               )}
             </MathIconGrid>
-            <ButtonContainer row={2} column={3} justify="start" align="end">
+            <ButtonContainer $row={2} $column={3} $justify="start" $align="end">
               {undo && redo && (
                 <>
                   <Button onMouseDown={eventHandlerWithoutFocusLoss(undo)} disabled={!isUndoAvailable}>
@@ -149,8 +150,8 @@ const SpecialCharacterButton = ({ character, column, row }: SpecialCharacter & {
     onMouseDown={eventHandlerWithoutFocusLoss(() => {
       window.document.execCommand('insertText', false, character)
     })}
-    column={column}
-    row={row}
+    $column={column}
+    $row={row}
   >
     {character}
   </GridButton>
@@ -159,13 +160,13 @@ const SpecialCharacterButton = ({ character, column, row }: SpecialCharacter & {
 const iconSize = '35px'
 
 interface GridItemProps {
-  column: number
-  row: number
+  $column: number
+  $row: number
 }
 
 interface GridProps {
-  columns: number
-  rows: number
+  $columns: number
+  $rows: number
 }
 
 const ToolbarGrid = styled.div`
@@ -185,9 +186,9 @@ const ToolbarGrid = styled.div`
   position: fixed;
 `
 
-const IconCategoriesGrid = styled.div<{ columnRatios: number[] }>`
+const IconCategoriesGrid = styled.div<{ $columnRatios: number[] }>`
   display: grid;
-  grid-template-columns: ${(props) => props.columnRatios.map((ratio) => `${ratio}fr`).join(' ')};
+  grid-template-columns: ${(props) => props.$columnRatios.map((ratio) => `${ratio}fr`).join(' ')};
   grid-template-rows: auto;
   gap: 15px;
   justify-items: center;
@@ -195,7 +196,7 @@ const IconCategoriesGrid = styled.div<{ columnRatios: number[] }>`
 
   @media (max-width: 1000px) {
     grid-template-columns: ${(props) =>
-      `${props.columnRatios[1]}fr ${props.columnRatios[2]}fr ${props.columnRatios[3]}fr`};
+      `${props.$columnRatios[1]}fr ${props.$columnRatios[2]}fr ${props.$columnRatios[3]}fr`};
     grid-template-rows: auto auto;
     gap: 5px;
 
@@ -212,16 +213,16 @@ const IconCategoriesGrid = styled.div<{ columnRatios: number[] }>`
 
 const IconGrid = styled.div<GridProps>`
   display: grid;
-  grid-template-columns: repeat(${(props) => props.columns}, 1fr);
-  grid-template-rows: repeat(${(props) => props.rows}, 1fr);
+  grid-template-columns: repeat(${(props) => props.$columns}, 1fr);
+  grid-template-rows: repeat(${(props) => props.$rows}, 1fr);
 `
 
 const MathIconGrid = styled.div<GridProps & GridItemProps>`
   display: grid;
-  grid-template-columns: repeat(${(props) => props.columns}, 1fr);
-  grid-template-rows: repeat(${(props) => props.rows}, 1fr);
-  grid-column: ${(props) => props.column};
-  grid-row: ${(props) => props.row};
+  grid-template-columns: repeat(${(props) => props.$columns}, 1fr);
+  grid-template-rows: repeat(${(props) => props.$rows}, 1fr);
+  grid-column: ${(props) => props.$column};
+  grid-row: ${(props) => props.$row};
   justify-self: start;
 `
 
@@ -231,14 +232,14 @@ const MathIcon = styled.img`
 `
 
 const GridCell = styled.div<GridItemProps>`
-  grid-column: ${(props) => props.column};
-  grid-row: ${(props) => props.row};
+  grid-column: ${(props) => props.$column};
+  grid-row: ${(props) => props.$row};
   justify-content: start;
 `
 
 const GridButton = styled.button<GridItemProps>`
-  grid-column: ${(props) => props.column};
-  grid-row: ${(props) => props.row};
+  grid-column: ${(props) => props.$column};
+  grid-row: ${(props) => props.$row};
   font-family: Symbola, monospace;
   color: #555;
   width: ${iconSize};
@@ -259,13 +260,13 @@ const GridButton = styled.button<GridItemProps>`
 `
 
 const ButtonContainer = styled(GridCell)<{
-  justify: 'start' | 'end'
-  align: 'start' | 'end'
+  $justify: 'start' | 'end'
+  $align: 'start' | 'end'
 }>`
   display: flex;
   flex-direction: row;
-  justify-self: ${(props) => props.justify};
-  align-self: ${(props) => props.align};
+  justify-self: ${(props) => props.$justify};
+  align-self: ${(props) => props.$align};
 
   @media (max-width: 1000px) {
     &:nth-child(3) {
