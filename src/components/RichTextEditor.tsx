@@ -41,9 +41,14 @@ const useEditorMutationObserver = (
           if (node instanceof HTMLElement && node.classList.contains(mathEditorWrapperClassName)) {
             const root = rootsMap.get(node)
             if (root) {
-              console.log('unmounting', root, node)
-              root.unmount()
-              rootsMap.delete(node)
+              // This can cause errors in some very hard to reproduce cases, so wrapping in try-catch for safety.
+              // It's not very significant if the unmount fails in rare cases
+              try {
+                root.unmount()
+                rootsMap.delete(node)
+              } catch (e) {
+                console.error(e)
+              }
             }
           }
         })
