@@ -4,11 +4,7 @@
   "description": "Rich text editor",
   "author": "",
   "homepage": "https://github.com/digabi/rich-text-editor",
-  "files": [
-    "dist/*",
-    "server/*",
-    "index.d.ts"
-  ],
+  "files": ["dist/*", "server/*", "index.d.ts"],
   "scripts": {
     "clean": "rm -rf dist/",
     "build:tsc": "tsc -p src",
@@ -17,6 +13,7 @@
     "build:bundle": "TYPECHECK=1 webpack --mode production --config webpack.bundle.config.js",
     "start": "node test/index.js",
     "test": "eslint . && test/testRunner.js",
+    "test:ui": "playwright test",
     "dev": "supervisor -i public,test test/index.js",
     "generateMathButtons": "scripts/createMathSvg.js && prettier --write src/latexCommandsWithSvg.js",
     "lint": "eslint .",
@@ -70,7 +67,9 @@
   },
   "dependencies": {
     "@digabi/mathquill": "^0.10.12",
+    "@playwright/test": "^1.46.1",
     "@types/express": "*",
+    "@types/jquery": "^3.5.30",
     "@types/sanitize-html": "^2.11.0",
     "jquery": "3.x",
     "mathjax": "^3.2.2",
