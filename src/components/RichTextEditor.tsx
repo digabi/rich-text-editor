@@ -111,10 +111,6 @@ export const RichTextEditor = (props: Props) => {
           setShowMathToolbar(false)
         }}
         onOpen={() => setShowMathToolbar(true)}
-        onCancelEditor={() => {
-          root.unmount()
-          props.onCancelEditor()
-        }}
         {...props}
       />,
     )
@@ -314,6 +310,7 @@ export const RichTextEditor = (props: Props) => {
         contentEditable={true}
         spellCheck={false}
         className="rich-text-editor answer"
+        data-testid="rich-text-editor"
         onFocus={(e) => {
           setShowToolbar(true)
         }}

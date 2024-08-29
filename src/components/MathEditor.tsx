@@ -177,6 +177,7 @@ export const MathEditor = forwardRef<MathEditorHandle, MathEditorProps>(
       setIsOpen(true)
     }
 
+    // TODO document why this is like it is
     const mathFieldElementRef = useCallback((node: HTMLDivElement | null) => {
       if (node !== null) {
         const field = mathQuill.MathField(node, {
@@ -227,7 +228,7 @@ export const MathEditor = forwardRef<MathEditorHandle, MathEditorProps>(
     )
 
     return isOpen ? (
-      <div ref={mathEditorContainerRef}>
+      <div ref={mathEditorContainerRef} data-testid="equation-editor">
         <div className="math-editor">
           <div ref={mathFieldElementRef} className="math-editor-equation-field"></div>
           <textarea

@@ -37,7 +37,7 @@ export const Toolbar = ({
   return (
     <div
       className="rich-text-editor-tools"
-      data-js="tools"
+      data-testid="toolbar"
       style={{ position: 'absolute', top: 0, left: 0, zIndex: 1000 }}
     >
       <ToolbarGrid className="toolbar">
@@ -85,6 +85,7 @@ export const Toolbar = ({
             onMouseDown={eventHandlerWithoutFocusLoss(() => {
               setShowCharacters(!showAllCharacters)
             })}
+            aria-label="Näytä kaikki erikoismerkit"
           >
             <ExpandIcon
               style={{
@@ -109,6 +110,7 @@ export const Toolbar = ({
                 typeof command !== 'string' ? ( //  TODO: One of the commands is just <br /> for legacy reasons, fix this
                   <GridButton
                     key={command.action}
+                    title={command.action}
                     onMouseDown={eventHandlerWithoutFocusLoss(() => onMathCommand(command.action))}
                     $column={1 + (i % Math.ceil(latexCommands.length / 2))}
                     $row={1 + Math.floor(i / Math.ceil(latexCommands.length / 2))}
@@ -145,13 +147,19 @@ export const Toolbar = ({
   )
 }
 
-const SpecialCharacterButton = ({ character, column, row }: SpecialCharacter & { column: number; row: number }) => (
+const SpecialCharacterButton = ({
+  character,
+  latexCommand,
+  column,
+  row,
+}: SpecialCharacter & { column: number; row: number }) => (
   <GridButton
     onMouseDown={eventHandlerWithoutFocusLoss(() => {
       window.document.execCommand('insertText', false, character)
     })}
     $column={column}
     $row={row}
+    title={latexCommand}
   >
     {character}
   </GridButton>
