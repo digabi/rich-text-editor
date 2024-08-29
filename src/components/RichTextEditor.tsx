@@ -123,17 +123,29 @@ export const RichTextEditor = (props: Props) => {
   }
 
   const initMathEditors = () => {
-    // These are copy-pasted math editors
+    // These are existing and copy-pasted math editors
     const mathEditors = editorRef.current?.querySelectorAll(`span.${mathEditorWrapperClassName}`)
-    // These are math images copied from cheat
+    // These are math images copied from cheat, 'marked' to be replaced with math editors
     const mathImages = editorRef.current?.querySelectorAll('[data-math-svg="true"]')
 
-    const roots = [
-      ...Array.from(mathEditors ?? []).map((el) => el.querySelector('img')),
-      ...Array.from(mathImages ?? []),
-    ]
+    mathEditors?.forEach((root) => {
+      const img = root.querySelector('img')
+      if (root instanceof HTMLSpanElement && img instanceof HTMLImageElement) {
+        const newPlaceholder = getMathEditorWrapper()
 
-    roots.forEach((root) => {
+        root.replaceWith(newPlaceholder)
+
+        mountMathEditor(newPlaceholder, {
+          initialLatex: img.alt,
+          onCancelEditor: () => {
+            root.remove()
+          },
+          shouldOpen: false,
+        })
+      }
+    })
+
+    mathImages?.forEach((root) => {
       if (root instanceof HTMLImageElement) {
         const newPlaceholder = getMathEditorWrapper()
 
