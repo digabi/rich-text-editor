@@ -123,10 +123,18 @@ export const Toolbar = ({
             <ButtonContainer $row={2} $column={3} $justify="start" $align="end">
               {undo && redo && (
                 <>
-                  <Button onMouseDown={eventHandlerWithoutFocusLoss(undo)} disabled={!isUndoAvailable}>
+                  <Button
+                    onMouseDown={eventHandlerWithoutFocusLoss(undo)}
+                    disabled={!isUndoAvailable}
+                    data-testid="undo"
+                  >
                     <UndoIcon />
                   </Button>
-                  <Button onMouseDown={eventHandlerWithoutFocusLoss(redo)} disabled={!isRedoAvailable}>
+                  <Button
+                    onMouseDown={eventHandlerWithoutFocusLoss(redo)}
+                    disabled={!isRedoAvailable}
+                    data-testid="redo"
+                  >
                     <RedoIcon />
                   </Button>
                 </>

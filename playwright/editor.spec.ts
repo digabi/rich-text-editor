@@ -1,27 +1,16 @@
-import { test, expect, Page, Locator } from '@playwright/test'
-
-const assertEditorTextContent = async (editor: Locator, content: string) => {
-  expect(await editor.textContent()).toBe(content)
-}
-
-const assertEditorHTMLContent = async (editor: Locator, content: string) => {
-  expect(await editor.innerHTML()).toBe(content)
-}
-
-const getEditorLocator = (page: Page) => {
-  return page.getByTestId('rich-text-editor')
-}
-
-const repeat = async (times: number, action: () => Promise<void>) => {
-  for (const _i of Array(times)) {
-    await action()
-  }
-  return Promise.resolve()
-}
-
-const inputSpecialCharacter = async (page: Page, latexCommand: string) => {
-  await page.getByTitle(latexCommand, { exact: true }).click()
-}
+import { test, expect } from '@playwright/test'
+import {
+  getEditorLocator,
+  assertEditorHTMLContent,
+  assertEditorTextContent,
+  repeat,
+  inputSpecialCharacter,
+  clickOutsideEditor,
+  getUndoButton,
+  getRedoButton,
+  assertEquationEditorTextContent,
+  assertEquationEditorLatexContent,
+} from './test-utils'
 
 test.describe('Rich text editor', () => {
   test.beforeEach(async ({ page }) => {
@@ -74,11 +63,34 @@ test.describe('Rich text editor', () => {
     test('can insert LaTeX commands', async ({ page }) => {
       const equationEditor = page.getByTestId('equation-editor')
       await inputSpecialCharacter(page, '\\sqrt')
-      expect(await equationEditor.locator('.math-editor-equation-field').textContent()).toBe('√​')
-      expect(await equationEditor.locator('.math-editor-latex-field').textContent()).toBe('\\sqrt{ }')
+      await assertEquationEditorTextContent(equationEditor, '√​')
+      await assertEquationEditorLatexContent(equationEditor, '\\sqrt{ }')
       await page.keyboard.press('1')
-      expect(await equationEditor.locator('.math-editor-equation-field').textContent()).toBe('√1​')
-      expect(await equationEditor.locator('.math-editor-latex-field').textContent()).toBe('\\sqrt{1}')
+      await assertEquationEditorTextContent(equationEditor, '√1​')
+      await assertEquationEditorLatexContent(equationEditor, '\\sqrt{1}')
+    })
+
+    test('closes on focus loss and reopens on click', async ({ page }) => {
+      const equationEditor = page.getByTestId('equation-editor')
+      await inputSpecialCharacter(page, '\\sqrt')
+      await assertEquationEditorTextContent(equationEditor, '√​')
+      await clickOutsideEditor(page)
+      expect(getEditorLocator(page).locator('span > img')).toBeVisible()
+      await getEditorLocator(page).locator('span.math-editor-wrapper').click()
+    })
+
+    test('can undo and redo changes', async ({ page }) => {
+      const equationEditor = page.getByTestId('equation-editor')
+      await inputSpecialCharacter(page, '\\sqrt')
+      await page.keyboard.press('1')
+      expect(await getUndoButton(page)).toBeEnabled()
+      expect(await getRedoButton(page)).toBeDisabled()
+      await (await getUndoButton(page)).click()
+      expect(await getRedoButton(page)).toBeEnabled()
+      await page.keyboard.press('ArrowLeft')
+      await page.keyboard.press('2')
+      expect(await getRedoButton(page)).toBeDisabled()
+      assertEquationEditorLatexContent(equationEditor, '\\sqrt{2}')
     })
   })
 })
