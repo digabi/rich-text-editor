@@ -1,3 +1,4 @@
 {
-  "extends": "@digabi/eslint-config"
+  "extends": "@digabi/eslint-config",
+  "parserOptions": { "project": true }
 }
