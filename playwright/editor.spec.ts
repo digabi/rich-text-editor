@@ -60,25 +60,6 @@ test.describe('Rich text editor', () => {
       await expect(page.getByTestId('equation-editor')).toHaveCount(1)
     })
 
-    test('can insert LaTeX commands', async ({ page }) => {
-      const equationEditor = page.getByTestId('equation-editor')
-      await inputSpecialCharacter(page, '\\sqrt')
-      await assertEquationEditorTextContent(equationEditor, '√​')
-      await assertEquationEditorLatexContent(equationEditor, '\\sqrt{ }')
-      await page.keyboard.press('1')
-      await assertEquationEditorTextContent(equationEditor, '√1​')
-      await assertEquationEditorLatexContent(equationEditor, '\\sqrt{1}')
-    })
-
-    test('closes on focus loss and reopens on click', async ({ page }) => {
-      const equationEditor = page.getByTestId('equation-editor')
-      await inputSpecialCharacter(page, '\\sqrt')
-      await assertEquationEditorTextContent(equationEditor, '√​')
-      await clickOutsideEditor(page)
-      expect(getEditorLocator(page).locator('span > img')).toBeVisible()
-      await getEditorLocator(page).locator('span.math-editor-wrapper').click()
-    })
-
     test.describe('can undo and redo changes with ', () => {
       test.beforeEach(async ({ page }) => {
         await inputSpecialCharacter(page, '\\sqrt')
@@ -112,6 +93,34 @@ test.describe('Rich text editor', () => {
         assertEquationEditorLatexContent(page.getByTestId('equation-editor'), '\\sqrt{2}')
       })
     })
+
+    test('can insert LaTeX commands', async ({ page }) => {
+      const equationEditor = page.getByTestId('equation-editor')
+      await inputSpecialCharacter(page, '\\sqrt')
+      await assertEquationEditorTextContent(equationEditor, '√​')
+      await assertEquationEditorLatexContent(equationEditor, '\\sqrt{ }')
+      await page.keyboard.press('1')
+      await assertEquationEditorTextContent(equationEditor, '√1​')
+      await assertEquationEditorLatexContent(equationEditor, '\\sqrt{1}')
+    })
+
+    test('closes on focus loss and reopens on click', async ({ page }) => {
+      const equationEditor = page.getByTestId('equation-editor')
+      await inputSpecialCharacter(page, '\\sqrt')
+      await assertEquationEditorTextContent(equationEditor, '√​')
+      await clickOutsideEditor(page)
+      expect(getEditorLocator(page).locator('span > img')).toBeVisible()
+      await getEditorLocator(page).locator('span.math-editor-wrapper').click()
+    })
+
+    test('opens with hot key', async ({ page }) => {
+      await repeat(3, async () => await page.keyboard.press('Backspace'))
+      expect(page.getByTestId('equation-editor')).toHaveCount(1)
+      await clickOutsideEditor(page)
+      expect(page.getByTestId('equation-editor')).toHaveCount(0)
+      await getEditorLocator(page).click()
+      await page.keyboard.press('Control+e')
+      await expect(page.getByTestId('equation-editor')).toHaveCount(1)
     })
   })
 })
