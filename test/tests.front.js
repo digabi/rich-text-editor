@@ -295,7 +295,7 @@ describe('rich text editor', () => {
 
             before(u.delay)
 
-            before(() => $('.rich-text-editor-toolbar-characters-group button:eq(3)').mousedown())
+            before(() => $('.rich-text-editor-toolbar-characters-group button').eq(3).mousedown())
 
             before(u.delay)
 
@@ -349,7 +349,7 @@ describe('rich text editor', () => {
 
             before(u.delay)
 
-            before(() => $('.rich-text-editor-toolbar-characters-group button:eq(4)').mousedown())
+            before(() => $('.rich-text-editor-toolbar-characters-group button').eq(4).mousedown())
 
             before(u.delay)
 
