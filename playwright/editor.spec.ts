@@ -14,6 +14,7 @@ import {
   paste,
   setClipboardHTML,
   samplePNG,
+  sampleGIF,
 } from './test-utils'
 
 test.describe('Rich text editor', () => {
@@ -75,6 +76,14 @@ test.describe('Rich text editor', () => {
     await setClipboardHTML(page, img)
     await paste(page)
     await assertEditorHTMLContent(editor, img)
+  })
+
+  test.skip('can not paste gif <img> from clipboard', async ({ page }) => {
+    const editor = getEditorLocator(page)
+    const img = `<img src="data:image/gif;base64,${sampleGIF}" alt="Hello World!">`
+    await setClipboardHTML(page, img)
+    await paste(page)
+    await assertEditorHTMLContent(editor, '')
   })
 
   test('can paste equation SVG from clipboard', async ({ page }) => {
