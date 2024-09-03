@@ -85,7 +85,7 @@ const clear = () => {
     $el.answer3.empty()
     clearSaveData()
 }
-const $firstAnswerMath = () => $('.answer1 img:first')
+const $firstAnswerMath = () => $('.answer1 img').first()
 
 describe('rich text editor', () => {
     before(
@@ -138,7 +138,7 @@ describe('rich text editor', () => {
 
             before('paste image', (done) => {
                 $el.answer1.append(base64png)
-                $el.answer1.find('img:last').get(0).onload = (e) => {
+                $el.answer1.find('img').last().get(0).onload = (e) => {
                     if (~e.target.src.indexOf('http')) done()
                 }
                 $el.answer1.trigger(u.pasteEventMock()).trigger('input')
@@ -147,7 +147,7 @@ describe('rich text editor', () => {
             before(u.delayFor(150))
 
             it('saves pasted image', () => {
-                expect($el.answer1.find('img:last'))
+                expect($el.answer1.find('img').last())
                     .to.have.attr('src')
                     .match(/\/screenshot/)
             })
@@ -166,7 +166,7 @@ describe('rich text editor', () => {
             before('#3', (done) => {
                 currentImgAmout = $el.answer1.find('img').length
                 $el.answer1.append('<img src="data:image/gif;base64,R0lGODlhAQABAIAAAAUEBAAAACwAAAAAAQABAAACAkQBADs=">')
-                $('.answer1 img:last').get(0).onload = () => {
+                $('.answer1 img').last().get(0).onload = () => {
                     done()
                 }
                 $el.answer1.trigger(u.pasteEventMock()).trigger('input')
@@ -215,7 +215,7 @@ describe('rich text editor', () => {
 
             before('paste image', (done) => {
                 $el.answer3.append(base64png)
-                $el.answer3.find('img:last').get(0).onload = () => {
+                $el.answer3.find('img').last().get(0).onload = () => {
                     done()
                 }
                 $el.answer3.trigger(u.pasteEventMock()).trigger('input')
@@ -224,7 +224,7 @@ describe('rich text editor', () => {
             before(u.delayFor(150))
 
             it('saves pasted image', () => {
-                expect($el.answer3.find('img:last'))
+                expect($el.answer3.find('img').last())
                     .to.have.attr('src')
                     .match(/\/exam-api/)
             })
@@ -243,7 +243,7 @@ describe('rich text editor', () => {
             before('#3', (done) => {
                 currentImgAmout = $el.answer3.find('img').length
                 $el.answer3.append('<img src="data:image/gif;base64,R0lGODlhAQABAIAAAAUEBAAAACwAAAAAAQABAAACAkQBADs=">')
-                $('.answer3 img:last').get(0).onload = () => {
+                $('.answer3 img').last().get(0).onload = () => {
                     done()
                 }
                 $el.answer3.trigger(u.pasteEventMock()).trigger('input')
@@ -265,7 +265,7 @@ describe('rich text editor', () => {
             u.waitUntil(() => $el.tools.is(':visible')),
         )
 
-        before(() => $('[data-js="newEquation"]').mousedown())
+        before(() => $('[data-js="newEquation"]').trigger('mousedown'))
 
         before(() => $el.latexField.val('\\ \\'))
 
@@ -295,7 +295,7 @@ describe('rich text editor', () => {
 
             before(u.delay)
 
-            before(() => $('.rich-text-editor-toolbar-characters-group button').eq(3).mousedown())
+            before(() => $('.rich-text-editor-toolbar-characters-group button').eq(3).trigger('mousedown'))
 
             before(u.delay)
 
@@ -349,7 +349,7 @@ describe('rich text editor', () => {
 
             before(u.delay)
 
-            before(() => $('.rich-text-editor-toolbar-characters-group button').eq(4).mousedown())
+            before(() => $('.rich-text-editor-toolbar-characters-group button').eq(4).trigger('mousedown'))
 
             before(u.delay)
 
@@ -389,7 +389,7 @@ describe('rich text editor', () => {
 
             it('editor is visible and then hidden', () => {
                 expect($el.answer1).to.not.have.class('rich-text-focused')
-                $('img:first').trigger({ type: 'click', which: 1 })
+                $('img').first().trigger({ type: 'click', which: 1 })
                 expect($el.answer1).to.have.class('rich-text-focused')
                 expect($el.mathEditor).to.be.visible
                 $el.equationFieldTextArea.trigger({ type: 'keydown', keyCode: 27 })
@@ -402,7 +402,7 @@ describe('rich text editor', () => {
 
             before(() => $el.answer1.focus())
 
-            before(() => $('.rich-text-editor-toolbar-characters-group button:first').mousedown())
+            before(() => $('.rich-text-editor-toolbar-characters-group button').first().trigger('mousedown'))
 
             it('inserts special character to answer body', () => {
                 expect($el.answer1).to.have.text('°')
@@ -496,7 +496,7 @@ describe('rich text editor', () => {
     describe('when moving to next answer while math is open', () => {
         before(() => $el.answer1.focus())
 
-        before(() => $('[data-js="newEquation"]').mousedown())
+        before(() => $('[data-js="newEquation"]').trigger('mousedown'))
 
         before(() => $el.answer1.blur())
 
@@ -570,7 +570,7 @@ describe('rich text editor', () => {
             $el.answer1.focus()
         })
 
-        before(() => $('[data-js="newEquation"]').mousedown())
+        before(() => $('[data-js="newEquation"]').trigger('mousedown'))
 
         before('type', () => $el.latexField.val('\\\\'))
 
@@ -614,7 +614,7 @@ describe('rich text editor', () => {
     describe('when typing invalid formula to latex field', () => {
         before(clear)
 
-        before(() => $('[data-js="newEquation"]').mousedown())
+        before(() => $('[data-js="newEquation"]').trigger('mousedown'))
 
         before('type', () => $el.latexField.val('x\\'))
 
@@ -642,7 +642,7 @@ describe('rich text editor', () => {
 
         before('focus', () => $el.answer1.focus())
 
-        before(() => $('[data-js="newEquation"]').mousedown())
+        before(() => $('[data-js="newEquation"]').trigger('mousedown'))
 
         before('type', () => $el.latexField.val('x\\ '))
 
