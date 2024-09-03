@@ -69,7 +69,7 @@ test.describe('Rich text editor', () => {
     await assertEditorHTMLContent(editor, 'Hello World!<br>')
   })
 
-  test('can paste <img> from clipboard', async ({ page }) => {
+  test('can paste png <img> from clipboard', async ({ page }) => {
     const editor = getEditorLocator(page)
     const img = `<img src="data:image/png;base64,${samplePNG}" alt="Hello World!">`
     await setClipboardHTML(page, img)
@@ -166,6 +166,12 @@ test.describe('Rich text editor', () => {
       await page.keyboard.press('Tab')
       await page.keyboard.type('\\sqrt{1}')
       await assertEquationEditorTextContent(equationEditor, '√1')
+    })
+
+    test('writing invalid LaTeX shows error message', async ({ page }) => {
+      await page.keyboard.press('Tab')
+      await page.keyboard.type('\\sqt{1}')
+      expect(page.locator('span.render-error')).toBeVisible()
     })
   })
 })
