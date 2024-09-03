@@ -151,6 +151,17 @@ test.describe('Rich text editor', () => {
       await getEditorLocator(page).locator('span.math-editor-wrapper').click()
     })
 
+    test('closes on Esc press', async ({ page }) => {
+      await page.keyboard.press('A')
+      await clickOutsideEditor(page)
+      expect(getEditorLocator(page).locator('span > img')).toBeVisible()
+    })
+
+    test('is removed if closed with empty LaTeX', async ({ page }) => {
+      await clickOutsideEditor(page)
+      await assertEditorHTMLContent(getEditorLocator(page), '&nbsp;&nbsp;')
+    })
+
     test('opens with hot key', async ({ page }) => {
       await repeat(2, async () => await page.keyboard.press('Backspace'))
       expect(page.getByTestId('equation-editor')).toHaveCount(1)
