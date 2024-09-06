@@ -3,6 +3,7 @@ import { getMathSvg } from '../react/mathSvg'
 import { Translation } from '../react/utility'
 import LatexError from './LatexError'
 import { MathField, MathQuill } from '@digabi/mathquill'
+import styled from 'styled-components'
 
 interface MathEditorProps {
   mathQuill: MathQuill
@@ -229,9 +230,9 @@ export const MathEditor = forwardRef<MathEditorHandle, MathEditorProps>(
 
     return isOpen ? (
       <div ref={mathEditorContainerRef} data-testid="equation-editor">
-        <div className="math-editor">
-          <div ref={mathFieldElementRef} className="math-editor-equation-field"></div>
-          <textarea
+        <MathEditorContainer className="math-editor">
+          <EquationField ref={mathFieldElementRef} className="math-editor-equation-field"></EquationField>
+          <LatexField
             rows={1}
             className="math-editor-latex-field"
             placeholder="LaTeΧ"
@@ -250,7 +251,7 @@ export const MathEditor = forwardRef<MathEditorHandle, MathEditorProps>(
             }}
           />
           {!isValidLatex ? <span className="render-error">{t.render_error}</span> : null}
-        </div>
+        </MathEditorContainer>
       </div>
     ) : mathLatex !== '' ? (
       isValidLatex ? (
@@ -265,3 +266,31 @@ export const MathEditor = forwardRef<MathEditorHandle, MathEditorProps>(
 const MathImage = ({ latex, openEditor }: { latex: string; openEditor: () => void }) => (
   <img onClick={openEditor} src={`data:image/svg+xml;utf8,${encodeURIComponent(getMathSvg(latex))}`} alt={latex} />
 )
+
+const MathEditorContainer = styled.div`
+  z-index: 1;
+  width: 100%;
+  margin: 10px 5px 0;
+  display: flex;
+  position: relative;
+  box-shadow: 0 0 10px #0003;
+`
+
+const EquationField = styled.div`
+  background: #fff;
+  border: none;
+  width: 50%;
+  padding: 5px 10px;
+`
+
+const LatexField = styled.textarea`
+  letter-spacing: 1px;
+  width: 50%;
+  padding: 5px 10px;
+  font-size: 15px;
+  box-shadow: none;
+  resize: none;
+  border: none;
+  border-radius: 0;
+  height: auto;
+`
