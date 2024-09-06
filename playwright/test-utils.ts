@@ -50,13 +50,21 @@ export const getUndoButton = async (page: Page) => page.getByTestId('undo')
 
 export const getRedoButton = async (page: Page) => page.getByTestId('redo')
 
+const grantClipboardPermissions = async (page: Page) => {
+  await page.context().grantPermissions(['clipboard-read', 'clipboard-write'])
+}
+
 export const setClipboardText = async (page: Page, text: string) => {
-  await page.evaluate((text) => {
+  await grantClipboardPermissions(page)
+  await page.evaluate(async (text) => {
+    console.log(text)
     navigator.clipboard.writeText(text)
+    console.log(await navigator.clipboard.readText())
   }, text)
 }
 
 export const setClipboardHTML = async (page: Page, text: string) => {
+  await grantClipboardPermissions(page)
   await page.evaluate((text) => {
     navigator.clipboard.write([new ClipboardItem({ 'text/html': new Blob([text], { type: 'text/html' }) })])
   }, text)
