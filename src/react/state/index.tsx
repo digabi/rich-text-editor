@@ -7,7 +7,7 @@ import useMap, { MapHookHandle } from '../hooks/use-map'
 import useMutationObserver from '../hooks/use-mutation-observer'
 
 import MathBox, { Props as MathBoxProps } from '../components/math-box'
-import { createMathStub, createMathStubAtSelection, MATH_EDITOR_CLASS } from '../utils/create-math-stub'
+import { createMathStub, MATH_EDITOR_CLASS } from '../utils/create-math-stub'
 
 type EditorState = {
   /** Ref to the main text-area (which is a `contenteditable` `<div />`) */
