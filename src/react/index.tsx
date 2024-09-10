@@ -1,18 +1,7 @@
-import React from 'react'
 import ReactDOM from 'react-dom/client'
-import { RichTextEditor } from '../components/RichTextEditor'
+import RichTextEditor from './rich-text-editor'
 
-const root = ReactDOM.createRoot(document.getElementById('root'))
-root.render(
-  <RichTextEditor
-    style={{ top: 200, position: 'relative' }}
-    screenshotSaver={(file) =>
-      new Promise((resolve) => {
-        const reader = new FileReader()
-        reader.onload = (evt) => resolve(reader.result as string)
-        reader.readAsDataURL(file)
-      })
-    }
-    onValueChange={(value) => console.log('new value', value)}
-  />,
-)
+export const TOOLBAR_ROOT = document.getElementById('toolbar')!
+export const REACT_ROOT = document.getElementById('root')!
+
+ReactDOM.createRoot(REACT_ROOT).render(<RichTextEditor />)
