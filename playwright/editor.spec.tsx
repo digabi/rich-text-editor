@@ -15,13 +15,22 @@ import {
   setClipboardHTML,
   samplePNG,
   sampleGIF,
+  assertAnswerContent,
 } from './test-utils'
 import { RichTextEditor } from '../src/components/RichTextEditor'
+import { Answer } from '../src/react/utility'
 
 test.describe('Rich text editor', () => {
+  let answer: Answer = { answerHtml: '', answerText: '', imageCount: 0 }
+
+  const onAnswerChange = (newAnswer: Answer) => {
+    answer = newAnswer
+  }
+
   test.beforeEach(async ({ page, mount }) => {
+    answer = { answerHtml: '', answerText: '', imageCount: 0 }
     await mount(
-      <RichTextEditor onValueChange={(_newHtml) => {}} style={{ position: 'absolute', top: '300px', width: '100%' }} />,
+      <RichTextEditor onValueChange={onAnswerChange} style={{ position: 'absolute', top: '300px', width: '100%' }} />,
     )
     await page.addStyleTag({
       url: '//unpkg.com/@digabi/mathquill/build/mathquill.css',
@@ -35,6 +44,8 @@ test.describe('Rich text editor', () => {
     await page.keyboard.type('Hello World!')
     await assertEditorHTMLContent(editor, 'Hello World!')
     await assertEditorTextContent(editor, 'Hello World!')
+
+    assertAnswerContent(answer, { answerHtml: 'Hello World!', answerText: 'Hello World!', imageCount: 0 })
   })
 
   test('can erase in the editor', async ({ page }) => {
@@ -82,6 +93,12 @@ test.describe('Rich text editor', () => {
     await setClipboardHTML(page, img)
     await paste(page)
     await assertEditorHTMLContent(editor, img)
+
+    assertAnswerContent(answer, {
+      answerHtml: img,
+      answerText: '',
+      imageCount: 1,
+    })
   })
 
   test.skip('can not paste gif <img> from clipboard', async ({ page }) => {
@@ -94,9 +111,6 @@ test.describe('Rich text editor', () => {
 
   test('can paste equation SVG from clipboard', async ({ page }) => {
     const latex = '\\varepsilon=\\frac{Q_2}{Q_1-Q_2}=\\frac{1}{eta}-1'
-    await page.route(`*/**/math.svg?latex="${latex}"`, async (route) => {
-      await route.fulfill({ body: '<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100"></svg>' })
-    })
     const img = `<img src="/math.svg?latex=\"${latex}\" alt=\"${latex}\">`
 
     await setClipboardHTML(page, img)
@@ -106,11 +120,19 @@ test.describe('Rich text editor', () => {
     await equation.click()
     const equationEditor = page.getByTestId('equation-editor')
     await assertEquationEditorLatexContent(equationEditor, latex)
+    await clickOutsideEditor(page)
+
+    // TODO: This fails. It should not fail. Caused by math editor's closing not triggering onChange
+    assertAnswerContent(answer, {
+      answerHtml:
+        '<img src="/math.svg?latex=" alt="\\varepsilon=\\frac{Q_2}{Q_1-Q_2}=\\frac{1}{eta}-1" data-math-svg="true" />',
+      answerText: '',
+      imageCount: 0,
+    })
   })
 
   test.describe('Equation editor', () => {
     test.beforeEach(async ({ page }) => {
-      //await page.goto('http://localhost:1234')
       const editor = getEditorLocator(page)
       await editor.click()
       await page.getByRole('button', { name: 'Lisää kaava' }).click()

@@ -4,7 +4,7 @@ import * as MathQuill from '@digabi/mathquill'
 import FI from '../FI'
 import SV from '../SV'
 import specialCharacters from '../specialCharacters'
-import { Options, defaults } from '../react/utility'
+import { Answer, Options, defaults, getAnswer } from '../react/utility'
 import { Toolbar } from '../components/Toolbar'
 import { MathEditor, MathEditorHandle } from '../components/MathEditor'
 import styled from 'styled-components'
@@ -13,7 +13,7 @@ const locales = { FI, SV }
 
 export type Props = {
   style?: React.CSSProperties
-  onValueChange: (newHtml: string) => void
+  onValueChange: (answer: Answer) => void
   initialValue?: string
 } & Partial<Options>
 
@@ -320,7 +320,7 @@ export const RichTextEditor = (props: Props) => {
         }}
         style={props.style}
         onPaste={handlePaste}
-        onInput={(e) => onValueChange(e.currentTarget.innerHTML)}
+        onInput={(e) => onValueChange(getAnswer(e.currentTarget.innerHTML, sanitize))}
         dangerouslySetInnerHTML={{
           __html: initialValue || '',
         }}

@@ -1,4 +1,5 @@
 import { expect, Page, Locator } from '@playwright/test'
+import { Answer } from '../src/react/utility'
 
 export const assertEditorTextContent = async (editor: Locator, content: string) => {
   expect(await editor.textContent()).toBe(content)
@@ -105,3 +106,11 @@ export const samplePNG =
   'iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAYAAACNMs+9AAAAFUlEQVR42mP8z8BQz0AEYBxVSF+FABJADveWkH6oAAAAAElFTkSuQmCC'
 
 export const sampleGIF = 'R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw=='
+
+export const assertAnswerContent = (answer: Answer, expected: Partial<Answer>) => {
+  Object.entries(expected).forEach(([key, value]: [keyof Answer, string | number]) => {
+    if (value !== undefined) {
+      expect(answer[key], `${key} does not match`).toBe(value)
+    }
+  })
+}

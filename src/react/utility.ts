@@ -130,3 +130,41 @@ export function decodeBase64Image(dataString: string) {
     data: new Uint8Array(byteNumbers),
   }
 }
+
+export type Answer = {
+  answerHtml: string
+  answerText: string
+  imageCount: number
+}
+
+// TODO: Finishing touches, make sure this is cross compatible with the old version
+export const getAnswer = (html: string, sanitizeFn: (oldHtml: string) => string) => {
+  console.log(html)
+  const answerHtml = sanitizeFn(html)
+  const answer = new DOMParser().parseFromString(answerHtml, 'text/html').body
+  const answerText = new DOMParser().parseFromString(answerHtml.replaceAll('<br />', '\n'), 'text/html').body.innerText
+
+  // All images that are direct children of the answer are "screenshots"
+  const screenshots = answer.querySelectorAll(':scope > img:not([data-math-svg])')
+
+  // Remove equation wrappers
+  answer.querySelectorAll('span.math-editor-wrapper').forEach((wrapper) => {
+    wrapper.replaceWith(wrapper.querySelectorAll('img'))
+  })
+
+  const isEmpty = answerText?.trim().length === 0 && screenshots.length === 0
+
+  return {
+    answerHtml: isEmpty ? '' : stripBrsAndTrimFromEnd(answerHtml),
+    answerText: stripNewLinesFromStartAndWhiteSpacesFromEnd(answerText ?? ''),
+    imageCount: screenshots.length,
+  }
+}
+
+const stripBrsAndTrimFromEnd = (answerHtml: string) => {
+  return answerHtml.replace(/^(\n|<br ?\/?>)*/g, '').replace(/(\s|<br ?\/?>)*$/g, '')
+}
+
+const stripNewLinesFromStartAndWhiteSpacesFromEnd = (answerHtml: string) => {
+  return answerHtml.replace(/^(\n)*/g, '').replace(/(\s)*$/g, '')
+}
