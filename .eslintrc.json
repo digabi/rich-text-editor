@@ -1,4 +1,7 @@
 {
   "extends": "@digabi/eslint-config",
-  "parserOptions": { "project": true }
+  "parserOptions": { "project": true },
+  "rules": {
+    "prefer-arrow-callback": ["error", { "allowNamedFunctions": true }]
+  }
 }
