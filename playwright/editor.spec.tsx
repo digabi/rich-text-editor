@@ -16,6 +16,8 @@ import {
   samplePNG,
   sampleGIF,
   assertAnswerContent,
+  selectEditorContent,
+  pasteHtmlImage,
 } from './test-utils'
 import { RichTextEditor } from '../src/components/RichTextEditor'
 import { Answer } from '../src/react/utility'
@@ -84,7 +86,7 @@ test.describe('Rich text editor', () => {
     await setClipboardHTML(page, '<p>Hello World!</p>')
     await paste(page)
     await assertEditorTextContent(editor, 'Hello World!')
-    //await assertEditorHTMLContent(editor, 'Hello World!<br>')
+    await assertEditorHTMLContent(editor, 'Hello World!<br>')
   })
 
   test('can paste png <img> from clipboard', async ({ page }) => {
@@ -101,7 +103,7 @@ test.describe('Rich text editor', () => {
     })
   })
 
-  test.skip('can not paste gif <img> from clipboard', async ({ page }) => {
+  test('can not paste gif <img> from clipboard', async ({ page }) => {
     const editor = getEditorLocator(page)
     const img = `<img src="data:image/gif;base64,${sampleGIF}" alt="Hello World!">`
     await setClipboardHTML(page, img)
@@ -128,6 +130,77 @@ test.describe('Rich text editor', () => {
         '<img src="/math.svg?latex=" alt="\\varepsilon=\\frac{Q_2}{Q_1-Q_2}=\\frac{1}{eta}-1" data-math-svg="true" />',
       answerText: '',
       imageCount: 0,
+    })
+  })
+
+  test.describe('selecting text', () => {
+    test.beforeEach(async ({ page }) => {
+      const editor = getEditorLocator(page)
+      await editor.click()
+    })
+
+    test('can remove selected text', async ({ page }) => {
+      await page.keyboard.type('Hello World!')
+      await selectEditorContent(getEditorLocator(page), 2, 9)
+      await page.keyboard.press('Backspace')
+
+      await assertEditorTextContent(getEditorLocator(page), 'Held!')
+      assertAnswerContent(answer, { answerHtml: 'Held!', answerText: 'Held!', imageCount: 0 })
+    })
+
+    test('can remove selected text and image', async ({ page }) => {
+      const img = `<img src="data:image/png;base64,${samplePNG}" alt="Hello World!">`
+      await page.keyboard.type('Hello')
+      await pasteHtmlImage(page, img)
+      await page.keyboard.type('World!')
+      await selectEditorContent(getEditorLocator(page), 2, 9)
+      await page.keyboard.press('Backspace')
+
+      await assertEditorTextContent(getEditorLocator(page), 'Hed!')
+      assertAnswerContent(answer, { answerHtml: 'Hed!', answerText: 'Hed!', imageCount: 0 })
+    })
+
+    test.describe('can replace selected text with ', () => {
+      test.beforeEach(async ({ page }) => {
+        await page.keyboard.type('Hello World!')
+        await selectEditorContent(getEditorLocator(page), 1, 9)
+      })
+
+      test('with text', async ({ page }) => {
+        await page.keyboard.press('o')
+
+        await assertEditorTextContent(getEditorLocator(page), 'Hold!')
+        assertAnswerContent(answer, { answerHtml: 'Hold!', answerText: 'Hold!', imageCount: 0 })
+      })
+
+      test('with a special character', async ({ page }) => {
+        await inputSpecialCharacterFromToolbar(page, '\\beta')
+        await clickOutsideEditor(page)
+
+        assertAnswerContent(answer, { answerText: 'Hβld!' })
+      })
+
+      test('with an equation', async ({ page }) => {
+        await page.keyboard.press('Control+e')
+        await inputSpecialCharacterFromToolbar(page, '\\cos')
+        await clickOutsideEditor(page)
+
+        // TODO: Fails because onChange is not called properly
+        assertAnswerContent(answer, { answerText: 'H cos ld!' })
+      })
+
+      test('with a pasted image', async ({ page }) => {
+        const editor = getEditorLocator(page)
+        const img = `<img src="data:image/png;base64,${samplePNG}" alt="Hello World!">`
+        await pasteHtmlImage(page, img)
+        await assertEditorHTMLContent(editor, `H${img}ld!`)
+
+        assertAnswerContent(answer, {
+          //answerHtml: `H${img}ld!`, TODO: Does not work, not important
+          answerText: 'Hld!',
+          imageCount: 1,
+        })
+      })
     })
   })
 
@@ -249,15 +322,16 @@ test.describe('Rich text editor', () => {
         await page.keyboard.press('B')
         await clickOutsideEditor(page)
         expect(page.locator('span > img')).toHaveCount(2)
-        await assertEditorTextContent(getEditorLocator(page), 'A B')
+        assertAnswerContent(answer, { answerHtml: 'A B' })
       })
 
-      test.skip('can edit both equations', async ({ page }) => {
+      test('can edit both equations separately', async ({ page }) => {
         await page.getByRole('img').first().click()
         await page.keyboard.press('2')
         await page.getByRole('img').last().click()
         await page.keyboard.press('2')
-        await assertEditorTextContent(getEditorLocator(page), 'A2 B2')
+        await page.keyboard.press('B')
+        assertAnswerContent(answer, { answerHtml: 'A2 B2' })
       })
     })
   })

@@ -102,15 +102,57 @@ export const setClipboardHTML = async (page: Page, text: string) => {
 export const paste = async (page: Page) =>
   process.platform === 'darwin' ? page.keyboard.press('Meta+V') : page.keyboard.press('Control+V')
 
+export const pasteHtmlImage = async (page: Page, base64: string) => {
+  await setClipboardHTML(page, base64)
+  await paste(page)
+}
+
 export const samplePNG =
   'iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAYAAACNMs+9AAAAFUlEQVR42mP8z8BQz0AEYBxVSF+FABJADveWkH6oAAAAAElFTkSuQmCC'
 
 export const sampleGIF = 'R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw=='
 
+/** Assert that selected fields of Answer are as expected. Allows specifying just the fields to test,
+ *   for convenience.
+ */
 export const assertAnswerContent = (answer: Answer, expected: Partial<Answer>) => {
   Object.entries(expected).forEach(([key, value]: [keyof Answer, string | number]) => {
     if (value !== undefined) {
       expect(answer[key], `${key} does not match`).toBe(value)
     }
   })
+}
+
+/**  Helper for selecting part of the answer text, with logic to handle selections that span multiple nodes.
+ *  Does not do anything to the content, beyond selecting it.
+ */
+export const selectEditorContent = async (locator: Locator, start: number, end: number) => {
+  await (
+    await locator.elementHandle()
+  ).evaluate(
+    async (element, [start, end]) => {
+      const findNodeByOffset = (nodes: NodeListOf<ChildNode>, offset: number): [Node, number] => {
+        let currentOffset = 0
+
+        for (const node of Array.from(nodes)) {
+          const nodeLength = node.textContent.length
+          if (currentOffset + nodeLength >= offset) {
+            return [node, offset - currentOffset]
+          } else {
+            currentOffset += nodeLength
+          }
+        }
+      }
+
+      const range = document.createRange()
+      const [startNode, startOffset] = findNodeByOffset(element.childNodes, start)
+      const [endNode, endOffset] = findNodeByOffset(element.childNodes, end)
+      range.setStart(startNode, startOffset)
+      range.setEnd(endNode, endOffset)
+      const selection = window.getSelection()
+      selection.removeAllRanges()
+      selection.addRange(range)
+    },
+    [start, end],
+  )
 }
