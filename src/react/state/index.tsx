@@ -80,7 +80,7 @@ export function EditorStateProvider({ children }: PropsWithChildren) {
   }
 
   function spawnMathBoxAtCursor() {
-    spawnMathBox(createMathStubAtSelection(), { initialOpen: true })
+    spawnMathBox(createMathStub(true), { initialOpen: true })
   }
 
   function initMathBoxes() {
@@ -95,7 +95,7 @@ export function EditorStateProvider({ children }: PropsWithChildren) {
       .concat(
         mathBoxes
           .filter((elem) => !roots.has(elem) && elem.querySelector('img')?.alt)
-          .map((elem) => [elem, elem.querySelector('img')!.alt] as const),
+          .map((elem) => [elem, elem.querySelector('img')!.alt]),
       )
       .concat(
         mathImages
