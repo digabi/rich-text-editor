@@ -18,27 +18,19 @@ export type Props = {
 }
 
 export default function MathBox(props: Props) {
+  const containerRef = useRef<HTMLDivElement>(null)
   const [isOpen, setIsOpen] = useState(props.initialOpen ?? false)
   const [latex, setLatex] = useState(props.initialLatex ?? '')
   const { ref: latexRef, isError, mq } = useMathQuill({ latex, onChange: setLatex })
-  const containerRef = useRef<HTMLDivElement>(null)
 
   useEffect(
     function signalOpenedMathBox() {
       if (isOpen && mq) {
         props.onOpen?.({ mq, close: () => setIsOpen(false) })
-        setTimeout(() => {
-          console.log(mq.el())
-          mq.el().focus()
-        }, 500)
       }
     },
     [isOpen, mq],
   )
-
-  function onChange(e: React.ChangeEvent<HTMLTextAreaElement>) {
-    setLatex(e.target.value)
-  }
 
   function onBlur(e: React.FocusEvent) {
     // Only actually lose focus if neither of the two children is focused
@@ -58,8 +50,8 @@ export default function MathBox(props: Props) {
             placeholder="LaTeΧ"
             rows={1}
             value={latex}
+            onChange={(e) => setLatex(e.target.value)}
             onBlur={onBlur}
-            onChange={onChange}
           />
           {isError && <span className="render-error">TODO</span>}
         </div>
