@@ -24,25 +24,26 @@ export default function useMathQuill(opts: Opts) {
 
   // React `ref` objects aren't valid as `useEffect` deps; the official
   // workaround is to use a memoised callback as the `ref` prop to an element:
-  const ref = useCallback(
-    function spawnMathQuillOnElement(node: HTMLDivElement | null) {
-      if (!node) return
+  const ref = useCallback(function spawnMathQuillOnElement(node: HTMLDivElement | null) {
+    if (!node) return
 
-      function edit(field: MathQuill.MathField) {
+    function edit(field: MathQuill.MathField) {
+      // We don't want to signal an event edit that didn't happen from user input.
+      // The actual focused event is a hidden textbox inside `field.el()` so we need to use
+      // the `.contains()` method.
+      if (field.el().contains(document.activeElement)) {
         opts.onChange?.(field.latex())
       }
+    }
 
-      const field = MQ.MathField(node, { handlers: { edit } })
-      field.latex(opts.latex)
-      setMqHandle(field)
-    },
-    [opts.latex, opts.onChange],
-  )
+    const field = MQ.MathField(node, { handlers: { edit } })
+    field.latex(opts.latex)
+    setMqHandle(field)
+  }, [])
 
   useEffect(
     function updateMathQuillField() {
       if (mqHandle && mqHandle.latex() != opts.latex) {
-        //   console.log('Setting to', opts.latex)
         mqHandle?.latex(opts.latex)
         rerender()
       }
