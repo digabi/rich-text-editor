@@ -14,12 +14,12 @@ export const ToolbarHelpOverlay = ({ t, onClose }: { t: Translation['editor']; o
         <div
           className="rich-text-editor-modal-column rich-text-editor-modal-column-2"
           data-i18n="[html]rich_text_editor.help_overlay.screenshot"
-          dangerouslySetInnerHTML={{ __html: t.help_overlay.screenshot }}
+          dangerouslySetInnerHTML={{ __html: t.help_overlay.screenshotInstruction }}
         ></div>
         <div
           className="rich-text-editor-modal-column rich-text-editor-modal-column-1"
           data-i18n="[html]rich_text_editor.help_overlay.equation"
-          dangerouslySetInnerHTML={{ __html: t.help_overlay.equation }}
+          dangerouslySetInnerHTML={{ __html: t.help_overlay.equationTable }}
         ></div>
       </div>
       <button

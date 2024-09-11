@@ -7,6 +7,7 @@ import { defaults } from '../../../util'
 import { TOOLBAR_ROOT } from '../..'
 
 import Toolbar from '../toolbar'
+import { HelpDialog } from '../help-dialog'
 
 export const ALLOWED_IMG_TYPES = ['image/png', 'image/jpeg']
 export const MATH_EDITOR_CLASS = 'math-editor-wrapper'
@@ -77,6 +78,7 @@ function MainTextArea(props: {}, ref: any) {
   return (
     <>
       {editor.isToolbarOpen && createPortal(<Toolbar />, TOOLBAR_ROOT)}
+      {editor.isHelpDialogOpen && <HelpDialog />}
       <Box
         ref={editor.ref}
         className="rich-text-editor answer"

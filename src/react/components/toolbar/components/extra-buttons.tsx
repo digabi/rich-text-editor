@@ -1,8 +1,9 @@
-import { useState } from 'react'
 import styled from 'styled-components'
 
 import ExpandIcon from '../../icons/expand'
 import HelpIcon from '../../icons/help'
+import useEditorState from '../../../state'
+import { eventHandlerWithoutFocusLoss } from '../../../utility'
 
 export type Props = {
   isExpand: boolean
@@ -10,6 +11,8 @@ export type Props = {
 }
 
 export default function ExtraButtons(props: Props) {
+  const { showHelpDialog } = useEditorState()
+
   return (
     <Container>
       <Button onClick={props.expandFlip}>
@@ -21,7 +24,7 @@ export default function ExtraButtons(props: Props) {
           }}
         />
       </Button>
-      <Button>
+      <Button onMouseDown={eventHandlerWithoutFocusLoss(showHelpDialog)}>
         <HelpIcon />
       </Button>
     </Container>
