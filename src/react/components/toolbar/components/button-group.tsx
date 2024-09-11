@@ -25,9 +25,11 @@ export default function ButtonGroup({ cols, chars, isExpand, span = 1 }: Props) 
   const editor = useEditorState()
   const charsToShow = isExpand ? chars : chars.slice(0, cols)
 
-  function doLatexInput(char: Props['chars'][number]) {
-    if (editor.activeMathBox?.mq) {
-      editor.activeMathBox?.mq.cmd(char.latex ?? char.label)
+  function onMouseDown(e: React.MouseEvent, char: Props['chars'][number]) {
+    e.preventDefault()
+    e.stopPropagation()
+    if (editor.activeMathEditor?.mq.el().contains(document.activeElement)) {
+      editor.activeMathEditor.mq.cmd(char.latex ?? char.label)
     } else {
       window.document.execCommand('insertText', false, char.label)
     }
@@ -36,7 +38,7 @@ export default function ButtonGroup({ cols, chars, isExpand, span = 1 }: Props) 
   return (
     <Container cols={cols} span={span}>
       {charsToShow.map((char) => (
-        <Button key={char.label} onClick={() => doLatexInput(char)}>
+        <Button key={char.label} onMouseDown={(e) => onMouseDown(e, char)}>
           {char.label}
         </Button>
       ))}
