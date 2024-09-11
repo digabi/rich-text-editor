@@ -28,9 +28,10 @@ export default function useMathQuill(opts: Opts) {
     if (!node) return
 
     function edit(field: MathQuill.MathField) {
-      // We don't want to signal an event edit that didn't happen from user input.
-      // The actual focused event is a hidden textbox inside `field.el()` so we need to use
-      // the `.contains()` method.
+      // We don't want to signal an event edit that didn't happen from user input *on the
+      // `MathField`*, i.e. we don't want to call `onChange` when it's caused by the raw latex
+      // changing (we'd end up in an infinite loop). The actual focused event is a hidden
+      // textbox inside `field.el()` so we need to use the `.contains()` method.
       if (field.el().contains(document.activeElement)) {
         opts.onChange?.(field.latex())
       }

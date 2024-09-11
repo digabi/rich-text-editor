@@ -1,10 +1,14 @@
+import MathEditor from '../components/math-editor'
+
 export const MATH_EDITOR_CLASS = 'math-editor-wrapper'
 
 /**
- * Creates a new `HTMLSpanElement` that can be initialised into a new `MathBox`.
+ * Creates a new `HTMLSpanElement` that can be initialised into a new {@link MathEditor}.
  * The element will have the `MATH_EDITOR_CLASS` class name.
  *
- * If the `atSelection` argument is set to `true`, the box will be placed at the
+ * By default the created `HTMLSpanElement` is *not* attached to the DOM. It is the
+ * caller's responsibility to actually mount the element to the document. *However*,
+ * if the `atSelection` argument is set to `true`, the box **will** be placed at the
  * current selection (or cursor position, which is a selection of length zero)
  * in the document. It is the caller's responsibility to check if the current
  * cursor position/selection is legal.
