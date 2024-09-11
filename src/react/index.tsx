@@ -6,4 +6,4 @@ import RichTextEditor from './rich-text-editor'
 export const TOOLBAR_ROOT = document.getElementById('toolbar')!
 export const REACT_ROOT = document.getElementById('root')!
 
-ReactDOM.createRoot(REACT_ROOT).render(<RichTextEditor />)
+ReactDOM.createRoot(REACT_ROOT).render(<RichTextEditor language="FI" />)

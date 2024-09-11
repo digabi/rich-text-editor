@@ -3,6 +3,7 @@ import fi from '../FI'
 import sv from '../SV'
 import sanitize from 'sanitize-html'
 
+export type Language = 'FI' | 'SV'
 export type Translation = typeof fi | typeof sv
 export interface SpecialCharacter {
   character: string
@@ -15,7 +16,7 @@ export interface SpecialCharacterGroup {
   characters: SpecialCharacter[]
 }
 export interface Options {
-  locale: 'FI' | 'SV'
+  locale: Language
   screenshotSaver: (file: File) => Promise<string>
   baseUrl: string
   ignoreSaveObject: boolean

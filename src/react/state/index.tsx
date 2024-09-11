@@ -9,6 +9,9 @@ import useMutationObserver from '../hooks/use-mutation-observer'
 import MathEditor, { Props as MathEditorProps } from '../components/math-editor'
 import { createMathStub, MATH_EDITOR_CLASS } from '../utils/create-math-stub'
 
+import FI from '../../FI'
+import SV from '../../SV'
+
 type EditorState = {
   /** Ref to the main text-area (which is a `contenteditable` `<div />`) */
   ref: React.RefObject<HTMLDivElement>
@@ -29,12 +32,18 @@ type EditorState = {
   showToolbar: () => void
   hideToolbar: () => void
 
+  isHelpDialogOpen: boolean
+  showHelpDialog: () => void
+  hideHelpDialog: () => void
+
   // TODO: Move handle to its own type
   setActiveMathEditor: (handle: { mq: MathField; close: () => void } | null) => void
   activeMathEditor: { mq: MathField; close: () => void } | null
 
   canUndo: boolean
   canRedo: boolean
+
+  t: typeof FI | typeof SV
 }
 
 const editorCtx = createContext<EditorState>(null!)
@@ -45,13 +54,21 @@ export default function useEditorState() {
   return ctx
 }
 
-export function EditorStateProvider({ children }: PropsWithChildren) {
+type Props = {
+  language: 'FI' | 'SV'
+}
+
+export function EditorStateProvider({ children, language }: PropsWithChildren<Props>) {
   const [isToolbarOpen, setIsToolbarOpen] = useState(false)
   const [isMathbarOpen, setIsMathbarOpen] = useState(false)
+  const [isHelpDialogOpen, setIsHelpDialogOpen] = useState(false)
   const [activeMathEditor, setActiveMathEditor] = useState<{ mq: MathField; close: () => void } | null>(null) // TODO: Move to own type
+
   const mathEditorRoots = useMap<Node, Root>()
   const history = useHistory()
   const mainTextAreaRef = useRef<HTMLDivElement>(null)
+
+  const t = { FI, SV }[language]
 
   useMutationObserver(mainTextAreaRef, function unmountRemovedRoots(muts) {
     muts
@@ -119,6 +136,10 @@ export function EditorStateProvider({ children }: PropsWithChildren) {
         showToolbar: () => setIsToolbarOpen(true),
         hideToolbar: () => setIsToolbarOpen(false),
 
+        isHelpDialogOpen,
+        showHelpDialog: () => setIsHelpDialogOpen(true),
+        hideHelpDialog: () => setIsHelpDialogOpen(false),
+
         activeMathEditor: activeMathEditor,
         setActiveMathEditor: setActiveMathEditor,
 
@@ -131,6 +152,8 @@ export function EditorStateProvider({ children }: PropsWithChildren) {
 
         canUndo: false,
         canRedo: false,
+
+        t,
       }}
     >
       {children}
