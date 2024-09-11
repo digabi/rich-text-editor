@@ -17,14 +17,14 @@ export type Props = {
   onBlur?: () => void
 }
 
-export default function MathBox(props: Props) {
+export default function MathEditor(props: Props) {
   const containerRef = useRef<HTMLDivElement>(null)
   const [isOpen, setIsOpen] = useState(props.initialOpen ?? false)
   const [latex, setLatex] = useState(props.initialLatex ?? '')
   const { ref: latexRef, isError, mq } = useMathQuill({ latex, onChange: setLatex })
 
   useEffect(
-    function signalOpenedMathBox() {
+    function signalOpenedMathEditor() {
       if (isOpen && mq) {
         props.onOpen?.({ mq, close: () => setIsOpen(false) })
       }
