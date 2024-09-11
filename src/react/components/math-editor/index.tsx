@@ -26,6 +26,7 @@ export default function MathEditor(props: Props) {
   useEffect(
     function signalOpenedMathEditor() {
       if (isOpen && mq) {
+        mq.focus()
         props.onOpen?.({ mq, close: () => setIsOpen(false) })
       }
     },
