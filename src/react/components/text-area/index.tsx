@@ -1,18 +1,12 @@
-import { Container, Root, createRoot } from 'react-dom/client'
-import { ClipboardEvent, FocusEvent, forwardRef, useEffect, useRef } from 'react'
+import { ClipboardEvent, FocusEvent, forwardRef, useEffect } from 'react'
+import { createPortal } from 'react-dom'
 import styled from 'styled-components'
 
-import useMap from '../../hooks/use-map'
-import useMutationObserver from '../../hooks/use-mutation-observer'
-
-import MathBox from '../math-box'
-
-import { defaults } from '../../../util'
 import useEditorState from '../../state'
-import Toolbar from '../toolbar'
-import { createPortal } from 'react-dom'
+import { defaults } from '../../../util'
 import { TOOLBAR_ROOT } from '../..'
-import { createMathStub } from '../../utils/create-math-stub'
+
+import Toolbar from '../toolbar'
 
 export const ALLOWED_IMG_TYPES = ['image/png', 'image/jpeg']
 export const MATH_EDITOR_CLASS = 'math-editor-wrapper'
@@ -29,8 +23,8 @@ function MainTextArea(props: {}, ref: any) {
 
   useEffect(
     () =>
-      function clearMathBoxRootsOnUnmount() {
-        for (const root of editor.roots.values()) {
+      function clearMathEditorRootsOnUnmount() {
+        for (const root of editor.mathEditorRoots.values()) {
           root.unmount()
         }
       },
@@ -42,12 +36,13 @@ function MainTextArea(props: {}, ref: any) {
     e.stopPropagation()
 
     const content = e.nativeEvent.clipboardData
-
     if (!content) return
 
-    const text = content.getData('text/plain')
+    // The old editor always picked the last picture so we do that too,
+    // the reason's lost to history though.
+    const file = Array.from(content.items).at(-1)?.getAsFile()
     const html = content.getData('text/html')
-    const file = Array.from(content.items).at(-1)?.getAsFile() // TODO: Why do we pick the last one?
+    const text = content.getData('text/plain')
 
     if (file && ALLOWED_IMG_TYPES.includes(file.type)) {
       try {
@@ -72,6 +67,8 @@ function MainTextArea(props: {}, ref: any) {
   }
 
   function onBlur(e: FocusEvent) {
+    // We don't want to hide the toolbar when it's the toolbar itself
+    // that steals focus from the editor
     if (!TOOLBAR_ROOT.contains(e.relatedTarget)) {
       editor.hideToolbar()
     }
@@ -79,7 +76,7 @@ function MainTextArea(props: {}, ref: any) {
 
   return (
     <>
-      {editor.isToolbarOpen && createPortal(<Toolbar />, document.getElementById('toolbar')!)}
+      {editor.isToolbarOpen && createPortal(<Toolbar />, TOOLBAR_ROOT)}
       <Box
         ref={editor.ref}
         className="rich-text-editor answer"

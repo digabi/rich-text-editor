@@ -5,7 +5,7 @@ import useToolbarState from './state'
 import AddEqButton from './components/add-eq-button'
 import ButtonGroup from './components/button-group'
 import ExtraButtons from './components/extra-buttons'
-import LatexButtons from './components/latex-buttons'
+import MathShortcutButtons from './components/math-shortcut-buttons'
 
 import * as chars from './char-data'
 
@@ -31,7 +31,7 @@ export default function Toolbar() {
       tabIndex={0}
     >
       <AddEqButton />
-      <LatexButtons />
+      <MathShortcutButtons />
       <Grid cols={GRID_COLS}>
         <ButtonGroup isExpand={state.isExpand} cols={13} chars={chars.BASIC} span={GRID_COLS} />
         <ButtonGroup isExpand={state.isExpand} cols={3} chars={chars.ALGEBRA} />

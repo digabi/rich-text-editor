@@ -1,27 +1,28 @@
+import { createContext, PropsWithChildren, useContext, useRef, useState } from 'react'
 import { createRoot, Root, Container } from 'react-dom/client'
 import { MathField } from '@digabi/mathquill'
-import { createContext, PropsWithChildren, useContext, useEffect, useRef, useState } from 'react'
 
 import useHistory from './history'
 import useMap, { MapHookHandle } from '../hooks/use-map'
 import useMutationObserver from '../hooks/use-mutation-observer'
 
-import MathBox, { Props as MathBoxProps } from '../components/math-box'
+import MathEditor, { Props as MathEditorProps } from '../components/math-editor'
 import { createMathStub, MATH_EDITOR_CLASS } from '../utils/create-math-stub'
 
 type EditorState = {
   /** Ref to the main text-area (which is a `contenteditable` `<div />`) */
   ref: React.RefObject<HTMLDivElement>
 
-  /** Mapping of DOM `Node`s to the React `Root`s mounted in them */
-  roots: MapHookHandle<Node, Root>
+  /** An ES6 `Map` of DOM `Node`s to the React `Root`s mounted in them */
+  mathEditorRoots: MapHookHandle<Node, Root>
 
   /**
    * Spawns a new Math/LaTeX editing box at the given node.
-   * The created React `Root` will be associated with the given node in the {@link EditorState.roots} map.
+   * The created React `Root` will be associated with the given node in the
+   * {@link EditorState.mathEditorRoots} Map.
    */
-  spawnMathBox(stub: Container): void
-  spawnMathBoxAtCursor(): void
+  spawnMathEditor(stub: Container): void
+  spawnMathEditorAtCursor(): void
 
   isToolbarOpen: boolean
   isMathbarOpen: boolean
@@ -29,8 +30,8 @@ type EditorState = {
   hideToolbar: () => void
 
   // TODO: Move handle to its own type
-  setActiveMathBox: (handle: { mq: MathField; close: () => void } | null) => void
-  activeMathBox: { mq: MathField; close: () => void } | null
+  setActiveMathEditor: (handle: { mq: MathField; close: () => void } | null) => void
+  activeMathEditor: { mq: MathField; close: () => void } | null
 
   canUndo: boolean
   canRedo: boolean
@@ -47,66 +48,66 @@ export default function useEditorState() {
 export function EditorStateProvider({ children }: PropsWithChildren) {
   const [isToolbarOpen, setIsToolbarOpen] = useState(false)
   const [isMathbarOpen, setIsMathbarOpen] = useState(false)
-  const [activeMathBox, setActiveMathBox] = useState<{ mq: MathField; close: () => void } | null>(null)
-  const roots = useMap<Node, Root>()
+  const [activeMathEditor, setActiveMathEditor] = useState<{ mq: MathField; close: () => void } | null>(null) // TODO: Move to own type
+  const mathEditorRoots = useMap<Node, Root>()
   const history = useHistory()
-  const ref = useRef<HTMLDivElement>(null)
+  const mainTextAreaRef = useRef<HTMLDivElement>(null)
 
-  useMutationObserver(ref, function unmountRemovedRoots(muts) {
+  useMutationObserver(mainTextAreaRef, function unmountRemovedRoots(muts) {
     muts
       .flatMap((m) => Array.from(m.removedNodes))
-      .filter((node) => roots.has(node))
+      .filter((node) => mathEditorRoots.has(node))
       .forEach((node) => {
-        roots.get(node)!.unmount()
-        roots.delete(node)
+        mathEditorRoots.get(node)!.unmount()
+        mathEditorRoots.delete(node)
       })
   })
 
-  function spawnMathBox(stub: Container, props?: MathBoxProps) {
+  function spawnMathEditor(stub: Container, props?: MathEditorProps) {
     const root = createRoot(stub)
 
     // TODO: This should probs be `onFocus` that's called by default
     function onOpen(handle: any) {
       history.clear()
-      setActiveMathBox(handle)
+      setActiveMathEditor(handle)
     }
 
     function onBlur() {
-      setActiveMathBox(null)
+      setActiveMathEditor(null)
     }
 
-    roots.set(stub, root)
-    root.render(<MathBox onOpen={onOpen} onBlur={onBlur} {...props} />)
+    mathEditorRoots.set(stub, root)
+    root.render(<MathEditor onOpen={onOpen} onBlur={onBlur} {...props} />)
   }
 
-  function spawnMathBoxAtCursor() {
-    spawnMathBox(createMathStub(true), { initialOpen: true })
+  function spawnMathEditorAtCursor() {
+    spawnMathEditor(createMathStub(true), { initialOpen: true })
   }
 
-  function initMathBoxes() {
-    if (!ref.current) return
+  function initMathEditors() {
+    if (!mainTextAreaRef.current) return
 
     // These are existing and copy-pasted math editors
-    const mathBoxes = Array.from(ref.current.querySelectorAll(`span.${MATH_EDITOR_CLASS}`))
+    const mathEditors = Array.from(mainTextAreaRef.current.querySelectorAll(`span.${MATH_EDITOR_CLASS}`))
     // These are math images copied from cheat, 'marked' to be replaced with math editors
-    const mathImages = Array.from(ref.current.querySelectorAll('[data-math-svg="true"]'))
+    const mathImages = Array.from(mainTextAreaRef.current.querySelectorAll('[data-math-svg="true"]'))
 
     const allBoxes = ([] as [elementToInit: Element, initialLatex: string][])
       .concat(
-        mathBoxes
-          .filter((elem) => !roots.has(elem) && elem.querySelector('img')?.alt)
+        mathEditors
+          .filter((elem) => !mathEditorRoots.has(elem) && elem.querySelector('img')?.alt)
           .map((elem) => [elem, elem.querySelector('img')!.alt]),
       )
       .concat(
         mathImages
-          .filter((elem) => !roots.has(elem) && elem instanceof HTMLImageElement && elem.alt)
+          .filter((elem) => !mathEditorRoots.has(elem) && elem instanceof HTMLImageElement && elem.alt)
           .map((elem) => [elem, (elem as HTMLImageElement).alt]),
       )
 
     for (const [box, initialLatex] of allBoxes) {
       const stub = createMathStub()
       box.replaceWith(stub)
-      spawnMathBox(stub, { initialLatex })
+      spawnMathEditor(stub, { initialLatex })
     }
   }
 
@@ -118,15 +119,15 @@ export function EditorStateProvider({ children }: PropsWithChildren) {
         showToolbar: () => setIsToolbarOpen(true),
         hideToolbar: () => setIsToolbarOpen(false),
 
-        activeMathBox,
-        setActiveMathBox,
+        activeMathEditor: activeMathEditor,
+        setActiveMathEditor: setActiveMathEditor,
 
-        ref,
+        ref: mainTextAreaRef,
 
-        roots,
+        mathEditorRoots: mathEditorRoots,
 
-        spawnMathBox,
-        spawnMathBoxAtCursor,
+        spawnMathEditor: spawnMathEditor,
+        spawnMathEditorAtCursor: spawnMathEditorAtCursor,
 
         canUndo: false,
         canRedo: false,

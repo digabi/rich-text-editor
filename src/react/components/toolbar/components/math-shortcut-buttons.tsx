@@ -1,13 +1,11 @@
 import styled from 'styled-components'
 
-import { ExpandIcon } from '../../ExpandIcon'
-import { HelpIcon } from '../../HelpIcon'
-
 export type Props = {
   show?: boolean
 }
 
-export default function LatexButtons(props: Props) {
+// TODO: A Better Name
+export default function MathShortcutButtons(props: Props) {
   return (props.show ?? true) && <Container></Container>
 }
 
@@ -16,5 +14,5 @@ const Container = styled.div`
   top: 100%;
   width: 100%;
   height: 20px;
-  background: red;
+  //   background: red;
 `
