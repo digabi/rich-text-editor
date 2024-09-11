@@ -29,7 +29,7 @@ export default function ButtonGroup({ cols, chars, isExpand, span = 1 }: Props) 
     e.preventDefault()
     e.stopPropagation()
     if (editor.activeMathEditor?.mq.el().contains(document.activeElement)) {
-      editor.activeMathEditor.mq.cmd(char.latex ?? char.label)
+      editor.activeMathEditor.mq.write(char.latex ?? char.label)
     } else {
       window.document.execCommand('insertText', false, char.label)
     }
