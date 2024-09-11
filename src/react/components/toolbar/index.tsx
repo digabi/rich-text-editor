@@ -7,7 +7,7 @@ import ButtonGroup from './components/button-group'
 import ExtraButtons from './components/extra-buttons'
 import MathShortcutButtons from './components/math-shortcut-buttons'
 
-import * as chars from './char-data'
+import * as chars from './math-char-data'
 
 /**
  * When the page is resized to a small enough width, the button groups
