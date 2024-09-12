@@ -32,6 +32,8 @@ type EditorState = {
   showToolbar: () => void
   hideToolbar: () => void
 
+  toolbarRoot: HTMLElement
+
   isHelpDialogOpen: boolean
   showHelpDialog: () => void
   hideHelpDialog: () => void
@@ -43,7 +45,7 @@ type EditorState = {
   canUndo: boolean
   canRedo: boolean
 
-  t: typeof FI | typeof SV
+  t: typeof FI
 }
 
 const editorCtx = createContext<EditorState>(null!)
@@ -54,11 +56,12 @@ export default function useEditorState() {
   return ctx
 }
 
-type Props = {
+export type EditorStateProviderProps = {
   language: 'FI' | 'SV'
+  toolbarRoot: HTMLElement
 }
 
-export function EditorStateProvider({ children, language }: PropsWithChildren<Props>) {
+export function EditorStateProvider({ children, language, toolbarRoot }: PropsWithChildren<Props>) {
   const [isToolbarOpen, setIsToolbarOpen] = useState(false)
   const [isMathbarOpen, setIsMathbarOpen] = useState(false)
   const [isHelpDialogOpen, setIsHelpDialogOpen] = useState(false)
@@ -135,6 +138,8 @@ export function EditorStateProvider({ children, language }: PropsWithChildren<Pr
         isMathbarOpen,
         showToolbar: () => setIsToolbarOpen(true),
         hideToolbar: () => setIsToolbarOpen(false),
+
+        toolbarRoot,
 
         isHelpDialogOpen,
         showHelpDialog: () => setIsHelpDialogOpen(true),

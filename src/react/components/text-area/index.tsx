@@ -4,7 +4,6 @@ import styled from 'styled-components'
 
 import useEditorState from '../../state'
 import { defaults } from '../../../util'
-import { TOOLBAR_ROOT } from '../..'
 
 import Toolbar from '../toolbar'
 import { HelpDialog } from '../help-dialog'
@@ -70,14 +69,14 @@ function MainTextArea(props: {}, ref: any) {
   function onBlur(e: FocusEvent) {
     // We don't want to hide the toolbar when it's the toolbar itself
     // that steals focus from the editor
-    if (!TOOLBAR_ROOT.contains(e.relatedTarget)) {
+    if (!editor.toolbarRoot.contains(e.relatedTarget)) {
       editor.hideToolbar()
     }
   }
 
   return (
     <>
-      {editor.isToolbarOpen && createPortal(<Toolbar />, TOOLBAR_ROOT)}
+      {editor.isToolbarOpen && createPortal(<Toolbar />, editor.toolbarRoot)}
       {editor.isHelpDialogOpen && <HelpDialog />}
       <Box
         ref={editor.ref}

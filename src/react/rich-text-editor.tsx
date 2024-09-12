@@ -1,10 +1,9 @@
 import MainTextArea from './components/text-area'
-import { EditorStateProvider } from './state'
-import { Language } from './utility'
+import { EditorStateProvider, EditorStateProviderProps } from './state'
 
-export default function RichTextEditor({ language }: { language: Language }) {
+export default function RichTextEditor({ language, toolbarRoot }: EditorStateProviderProps) {
   return (
-    <EditorStateProvider language={language}>
+    <EditorStateProvider language={language} toolbarRoot={toolbarRoot}>
       <MainTextArea />
     </EditorStateProvider>
   )
