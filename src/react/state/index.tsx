@@ -1,18 +1,19 @@
-import { createContext, PropsWithChildren, useContext, useRef, useState } from 'react'
-import { createRoot, Root, Container } from 'react-dom/client'
+import { createContext, PropsWithChildren, ReactPortal, useContext, useRef, useState } from 'react'
+import { Container } from 'react-dom/client'
 import { MathField } from '@digabi/mathquill'
 
 import useHistory from './history'
 import useMap, { MapHookHandle } from '../hooks/use-map'
 import useMutationObserver from '../hooks/use-mutation-observer'
 
-import MathEditor, { Props as MathEditorProps } from '../components/math-editor'
 import { Props as RichTextEditorProps } from '../rich-text-editor'
 
+import MathEditor, { MathEditorHandle, Props as MathEditorProps } from '../components/math-editor'
 import { createMathStub, MATH_EDITOR_CLASS } from '../utils/create-math-stub'
 
 import FI from '../../FI'
 import SV from '../../SV'
+import { createPortal } from 'react-dom'
 
 export type Props = RichTextEditorProps
 
@@ -21,12 +22,12 @@ export type EditorState = {
   ref: React.RefObject<HTMLDivElement>
 
   /** An ES6 `Map` of DOM `Node`s to the React `Root`s mounted in them */
-  mathEditorRoots: MapHookHandle<Node, Root>
+  mathEditorPortals: MapHookHandle<Node, ReactPortal>
 
   /**
    * Spawns a new Math/LaTeX editing box at the given node.
    * The created React `Root` will be associated with the given node in the
-   * {@link EditorState.mathEditorRoots} Map.
+   * {@link EditorState.mathEditorPortals} Map.
    */
   spawnMathEditor(stub: Container): void
   spawnMathEditorAtCursor(): void
@@ -65,29 +66,37 @@ export function EditorStateProvider({ children, language, toolbarRoot, getPasteS
   const [isToolbarOpen, setIsToolbarOpen] = useState(false)
   const [isMathbarOpen, setIsMathbarOpen] = useState(false)
   const [isHelpDialogOpen, setIsHelpDialogOpen] = useState(false)
-  const [activeMathEditor, setActiveMathEditor] = useState<{ mq: MathField; close: () => void } | null>(null) // TODO: Move to own type
+  const [activeMathEditor, setActiveMathEditor] = useState<MathEditorHandle | null>(null) // TODO: Move to own type
+  const [nextKey, setNextKey] = useState(0)
 
-  const mathEditorRoots = useMap<Node, Root>()
+  const mathEditorPortals = useMap<Node, ReactPortal>()
   const history = useHistory()
   const mainTextAreaRef = useRef<HTMLDivElement>(null)
 
   const t = { FI, SV }[language]
 
-  useMutationObserver(mainTextAreaRef, function unmountRemovedRoots(muts) {
+  const getNextKey = () => {
+    const key = nextKey
+    setNextKey((k) => k + 1)
+    return key
+  }
+
+  // When a MathEditor's container element is removed,
+  // we need to also remove the ReactPortal it was rendered in.
+  // This is done by removing the portal from the map, as this means it will no
+  // longer be rendered.
+  useMutationObserver(mainTextAreaRef, function removeDanglingPortals(muts) {
     muts
       .flatMap((m) => Array.from(m.removedNodes))
-      .filter((node) => mathEditorRoots.has(node))
+      .filter((node) => mathEditorPortals.has(node))
       .forEach((node) => {
-        mathEditorRoots.get(node)!.unmount()
-        mathEditorRoots.delete(node)
+        mathEditorPortals.delete(node)
       })
   })
 
   function spawnMathEditor(stub: Container, props?: MathEditorProps) {
-    const root = createRoot(stub)
-
     // TODO: This should probs be `onFocus` that's called by default
-    function onOpen(handle: any) {
+    function onOpen(handle: MathEditorHandle) {
       history.clear()
       setActiveMathEditor(handle)
     }
@@ -96,12 +105,16 @@ export function EditorStateProvider({ children, language, toolbarRoot, getPasteS
       setActiveMathEditor(null)
     }
 
-    mathEditorRoots.set(stub, root)
-    root.render(<MathEditor onOpen={onOpen} onBlur={onBlur} {...props} />)
+    function onChange(latex: string) {
+      console.log(latex)
+    }
+
+    const portal = createPortal(<MathEditor onOpen={onOpen} onBlur={onBlur} onChange={onChange} {...props} />, stub)
+    mathEditorPortals.set(stub, portal)
   }
 
   function spawnMathEditorAtCursor() {
-    spawnMathEditor(createMathStub(true), { initialOpen: true })
+    spawnMathEditor(createMathStub(getNextKey(), true), { initialOpen: true })
   }
 
   function initMathEditors() {
@@ -115,17 +128,17 @@ export function EditorStateProvider({ children, language, toolbarRoot, getPasteS
     const allBoxes = ([] as [elementToInit: Element, initialLatex: string][])
       .concat(
         mathEditors
-          .filter((elem) => !mathEditorRoots.has(elem) && elem.querySelector('img')?.alt)
+          .filter((elem) => !mathEditorPortals.has(elem) && elem.querySelector('img')?.alt)
           .map((elem) => [elem, elem.querySelector('img')!.alt]),
       )
       .concat(
         mathImages
-          .filter((elem) => !mathEditorRoots.has(elem) && elem instanceof HTMLImageElement && elem.alt)
+          .filter((elem) => !mathEditorPortals.has(elem) && elem instanceof HTMLImageElement && elem.alt)
           .map((elem) => [elem, (elem as HTMLImageElement).alt]),
       )
 
     for (const [box, initialLatex] of allBoxes) {
-      const stub = createMathStub()
+      const stub = createMathStub(getNextKey())
       box.replaceWith(stub)
       spawnMathEditor(stub, { initialLatex })
     }
@@ -148,7 +161,7 @@ export function EditorStateProvider({ children, language, toolbarRoot, getPasteS
 
         ref: mainTextAreaRef,
 
-        mathEditorRoots: mathEditorRoots,
+        mathEditorPortals: mathEditorPortals,
 
         spawnMathEditor: spawnMathEditor,
         spawnMathEditorAtCursor: spawnMathEditorAtCursor,
