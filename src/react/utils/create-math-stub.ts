@@ -13,9 +13,10 @@ export const MATH_EDITOR_CLASS = 'math-editor-wrapper'
  * in the document. It is the caller's responsibility to check if the current
  * cursor position/selection is legal.
  */
-export function createMathStub(atSelection = false) {
+export function createMathStub(id: string | number, atSelection = false) {
   const stub = document.createElement('span')
   stub.className = MATH_EDITOR_CLASS
+  stub.id = `math-editor-${id}`
   stub.style.display = 'contents'
   stub.contentEditable = 'false'
 

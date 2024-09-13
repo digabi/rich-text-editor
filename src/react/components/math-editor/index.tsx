@@ -5,23 +5,28 @@ import useMathQuill from '../../hooks/use-mathquill'
 import LatexError from '../icons/latex-error'
 import { getMathSvg } from '../../mathSvg'
 
-type Handle = {
+export type MathEditorHandle = {
   mq: MathQuill.MathField
   close: () => void
 }
 
 export type Props = {
-  onOpen?: (handle: Handle) => void
+  onOpen?: (handle: MathEditorHandle) => void
   initialLatex?: string
   initialOpen?: boolean
   onBlur?: () => void
+  onChange?: (latex: string) => void
 }
 
 export default function MathEditor(props: Props) {
   const containerRef = useRef<HTMLDivElement>(null)
   const [isOpen, setIsOpen] = useState(props.initialOpen ?? false)
   const [latex, setLatex] = useState(props.initialLatex ?? '')
-  const { ref: latexRef, isError, mq } = useMathQuill({ latex, onChange: setLatex })
+  const onChange = (latex: string) => {
+    setLatex(latex)
+    props.onChange?.(latex)
+  }
+  const { ref: latexRef, isError, mq } = useMathQuill({ latex, onChange })
 
   useEffect(
     function signalOpenedMathEditor() {

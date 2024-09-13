@@ -1,4 +1,4 @@
-import { ClipboardEvent, FocusEvent, forwardRef, useEffect } from 'react'
+import { ClipboardEvent, FocusEvent, forwardRef, Fragment, useEffect } from 'react'
 import { createPortal } from 'react-dom'
 import styled from 'styled-components'
 
@@ -24,7 +24,7 @@ function MainTextArea(props: {}, ref: any) {
   useEffect(
     () =>
       function clearMathEditorRootsOnUnmount() {
-        for (const root of editor.mathEditorRoots.values()) {
+        for (const root of editor.mathEditorPortals.values()) {
           root.unmount()
         }
       },
@@ -90,6 +90,14 @@ function MainTextArea(props: {}, ref: any) {
         //   onInput={(e) => onValueChange(e.currentTarget.innerHTML)}
         //   dangerouslySetInnerHTML={{ __html: initialValue ?? '' }}
       />
+
+      {
+        // NOTE: Be careful to not mess up the keys here, as that will definitively
+        // result in the editor behaving in weird and confusing ways
+        Array.from(editor.mathEditorPortals.raw).map(([node, portal]) => (
+          <Fragment key={(node as Element).id}>{portal}</Fragment>
+        ))
+      }
     </>
   )
 }
