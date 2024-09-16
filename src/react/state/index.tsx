@@ -110,10 +110,13 @@ export function EditorStateProvider({ children, language, toolbarRoot, getPasteS
     function onOpen(handle: MathEditorHandle) {
       history.clear()
       setActiveMathEditor(handle)
+      setIsToolbarOpen(true)
+      setIsMathbarOpen(true)
     }
 
     function onBlur() {
       setActiveMathEditor(null)
+      setIsMathbarOpen(false)
     }
 
     function onChange(latex: string) {
