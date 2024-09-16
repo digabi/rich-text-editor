@@ -5,26 +5,23 @@ import HelpIcon from '../../icons/help'
 import useEditorState from '../../../state'
 import { eventHandlerWithoutFocusLoss } from '../../../utility'
 
-export type Props = {
-  isExpand: boolean
-  expandFlip: (e: any) => void
-}
+export default function ExtraButtons() {
+  const editor = useEditorState()
 
-export default function ExtraButtons(props: Props) {
-  const { showHelpDialog } = useEditorState()
+  const onClick = editor.isToolbarExpanded ? editor.collapseToolbar : editor.expandToolbar
 
   return (
     <Container>
-      <Button onClick={props.expandFlip}>
+      <Button onClick={onClick}>
         <ExpandIcon
           style={{
             transformOrigin: 'center center',
             transition: 'transform 200ms',
-            transform: props.isExpand ? 'rotate(0deg)' : 'rotate(180deg)',
+            transform: editor.isToolbarExpanded ? 'rotate(0deg)' : 'rotate(180deg)',
           }}
         />
       </Button>
-      <Button onMouseDown={eventHandlerWithoutFocusLoss(showHelpDialog)}>
+      <Button onMouseDown={eventHandlerWithoutFocusLoss(editor.showHelpDialog)}>
         <HelpIcon />
       </Button>
     </Container>

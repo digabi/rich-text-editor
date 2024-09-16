@@ -37,6 +37,10 @@ export type EditorState = {
   showToolbar: () => void
   hideToolbar: () => void
 
+  isToolbarExpanded: boolean
+  expandToolbar: () => void
+  collapseToolbar: () => void
+
   toolbarRoot: RichTextEditorProps['toolbarRoot']
   getPasteSource: NonNullable<RichTextEditorProps['getPasteSource']>
 
@@ -71,6 +75,7 @@ export default function useEditorState() {
 export function EditorStateProvider({ children, language, toolbarRoot, getPasteSource }: PropsWithChildren<Props>) {
   const [isToolbarOpen, setIsToolbarOpen] = useState(false)
   const [isMathbarOpen, setIsMathbarOpen] = useState(false)
+  const [isToolbarExpanded, setIsToolbarExpanded] = useState(false)
   const [isHelpDialogOpen, setIsHelpDialogOpen] = useState(false)
   const [activeMathEditor, setActiveMathEditor] = useState<MathEditorHandle | null>(null) // TODO: Move to own type
   const [nextKey, setNextKey] = useState(0)
@@ -157,6 +162,10 @@ export function EditorStateProvider({ children, language, toolbarRoot, getPasteS
         isMathbarOpen,
         showToolbar: () => setIsToolbarOpen(true),
         hideToolbar: () => setIsToolbarOpen(false),
+
+        isToolbarExpanded,
+        expandToolbar: () => setIsToolbarExpanded(true),
+        collapseToolbar: () => setIsToolbarExpanded(false),
 
         isHelpDialogOpen,
         showHelpDialog: () => setIsHelpDialogOpen(true),
