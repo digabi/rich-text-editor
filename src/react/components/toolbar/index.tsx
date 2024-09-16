@@ -1,13 +1,12 @@
 import styled from 'styled-components'
 
-import useToolbarState from './state'
-
 import AddEqButton from './components/add-eq-button'
 import ButtonGroup from './components/button-group'
 import ExtraButtons from './components/extra-buttons'
 import MathShortcutButtons from './components/math-shortcut-buttons'
 
 import * as chars from './math-char-data'
+import useEditorState from '../../state'
 
 /**
  * When the page is resized to a small enough width, the button groups
@@ -16,10 +15,10 @@ import * as chars from './math-char-data'
  */
 const GRID_COLS = 3
 
-export type Props = {}
-
 export default function Toolbar() {
-  const state = useToolbarState()
+  const editor = useEditorState()
+
+  const isExpand = editor.isToolbarExpanded
 
   return (
     <Container
@@ -33,12 +32,12 @@ export default function Toolbar() {
       <AddEqButton />
       <MathShortcutButtons />
       <Grid cols={GRID_COLS}>
-        <ButtonGroup isExpand={state.isExpand} cols={13} chars={chars.BASIC} span={GRID_COLS} />
-        <ButtonGroup isExpand={state.isExpand} cols={3} chars={chars.ALGEBRA} />
-        <ButtonGroup isExpand={state.isExpand} cols={3} chars={chars.GEOMETRY} />
-        <ButtonGroup isExpand={state.isExpand} cols={6} chars={chars.SET_THEORY} />
+        <ButtonGroup isExpand={isExpand} cols={13} chars={chars.BASIC} span={GRID_COLS} />
+        <ButtonGroup isExpand={isExpand} cols={3} chars={chars.ALGEBRA} />
+        <ButtonGroup isExpand={isExpand} cols={3} chars={chars.GEOMETRY} />
+        <ButtonGroup isExpand={isExpand} cols={6} chars={chars.SET_THEORY} />
       </Grid>
-      <ExtraButtons {...state} />
+      <ExtraButtons />
     </Container>
   )
 }
