@@ -31,7 +31,7 @@ function MainTextArea(props: {}, ref: any) {
     [],
   )
 
-  function onPaste(e: ClipboardEvent) {
+  async function onPaste(e: ClipboardEvent) {
     e.preventDefault()
     e.stopPropagation()
 
@@ -46,11 +46,10 @@ function MainTextArea(props: {}, ref: any) {
 
     if (file && ALLOWED_IMG_TYPES.includes(file.type)) {
       try {
-        // TODO:
-        // const src = /* await */ screenshotSaver(file)
-        // const img = document.createElement('img')
-        // img.src = src
-        // document.execCommand('insertHTML', false, img.outerHTML)
+        const src = await editor.getPasteSource(file)
+        const img = document.createElement('img')
+        img.src = src
+        document.execCommand('insertHTML', false, img.outerHTML)
       } catch (e) {
         console.error(e)
       }
