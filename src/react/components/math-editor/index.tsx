@@ -75,7 +75,9 @@ export default function MathEditor(props: Props) {
     return (
       <img
         src={`data:image/svg+xml;utf8,${encodeURIComponent(getMathSvg(latex))}`}
+        data-math-svg={true}
         data-latex={latex}
+        alt={latex}
         onClick={() => setIsOpen(true) /* TODO Fix this */}
       />
     )

@@ -3,10 +3,10 @@ import { createPortal } from 'react-dom'
 import styled from 'styled-components'
 
 import useEditorState from '../../state'
-import { defaults } from '../../../util'
 
 import Toolbar from '../toolbar'
 import { HelpDialog } from '../help-dialog'
+import sanitize from '../../utils/sanitization'
 
 export const ALLOWED_IMG_TYPES = ['image/png', 'image/jpeg']
 export const MATH_EDITOR_CLASS = 'math-editor-wrapper'
@@ -54,7 +54,7 @@ function MainTextArea(props: {}, ref: any) {
         console.error(e)
       }
     } else if (html) {
-      document.execCommand('insertHTML', false, defaults.sanitize(html))
+      document.execCommand('insertHTML', false, sanitize(html))
     } else if (text) {
       document.execCommand('insertHTML', false, text)
     }
@@ -62,7 +62,7 @@ function MainTextArea(props: {}, ref: any) {
     // Hack to make this run after the content has been pasted
     // TODO would react flush sync be better?
     // TODO more informative comment
-    // setTimeout(initMathEditors, 0)
+    setTimeout(editor.initMathEditors, 0)
   }
 
   function onBlur(e: FocusEvent) {
