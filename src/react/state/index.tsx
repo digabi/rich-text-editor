@@ -7,12 +7,16 @@ import useMap, { MapHookHandle } from '../hooks/use-map'
 import useMutationObserver from '../hooks/use-mutation-observer'
 
 import MathEditor, { Props as MathEditorProps } from '../components/math-editor'
+import { Props as RichTextEditorProps } from '../rich-text-editor'
+
 import { createMathStub, MATH_EDITOR_CLASS } from '../utils/create-math-stub'
 
 import FI from '../../FI'
 import SV from '../../SV'
 
-type EditorState = {
+export type Props = RichTextEditorProps
+
+export type EditorState = {
   /** Ref to the main text-area (which is a `contenteditable` `<div />`) */
   ref: React.RefObject<HTMLDivElement>
 
@@ -32,7 +36,8 @@ type EditorState = {
   showToolbar: () => void
   hideToolbar: () => void
 
-  toolbarRoot: HTMLElement
+  toolbarRoot: RichTextEditorProps['toolbarRoot']
+  getPasteSource: NonNullable<RichTextEditorProps['getPasteSource']>
 
   isHelpDialogOpen: boolean
   showHelpDialog: () => void
@@ -56,12 +61,7 @@ export default function useEditorState() {
   return ctx
 }
 
-export type EditorStateProviderProps = {
-  language: 'FI' | 'SV'
-  toolbarRoot: HTMLElement
-}
-
-export function EditorStateProvider({ children, language, toolbarRoot }: PropsWithChildren<Props>) {
+export function EditorStateProvider({ children, language, toolbarRoot, getPasteSource }: PropsWithChildren<Props>) {
   const [isToolbarOpen, setIsToolbarOpen] = useState(false)
   const [isMathbarOpen, setIsMathbarOpen] = useState(false)
   const [isHelpDialogOpen, setIsHelpDialogOpen] = useState(false)
@@ -139,8 +139,6 @@ export function EditorStateProvider({ children, language, toolbarRoot }: PropsWi
         showToolbar: () => setIsToolbarOpen(true),
         hideToolbar: () => setIsToolbarOpen(false),
 
-        toolbarRoot,
-
         isHelpDialogOpen,
         showHelpDialog: () => setIsHelpDialogOpen(true),
         hideHelpDialog: () => setIsHelpDialogOpen(false),
@@ -159,6 +157,18 @@ export function EditorStateProvider({ children, language, toolbarRoot }: PropsWi
         canRedo: false,
 
         t,
+
+        toolbarRoot,
+
+        getPasteSource:
+          getPasteSource ??
+          function defaultPasteSource(file) {
+            return new Promise((resolve) => {
+              const reader = new FileReader()
+              reader.onload = (evt) => resolve(reader.result as string)
+              reader.readAsDataURL(file)
+            })
+          },
       }}
     >
       {children}
