@@ -48,6 +48,12 @@ export type EditorState = {
   setActiveMathEditor: (handle: { mq: MathField; close: () => void } | null) => void
   activeMathEditor: { mq: MathField; close: () => void } | null
 
+  /**
+   * Finds all math-editor boxes in the text area and makes them interactive.
+   * Should be called after e.g. pasting in new content.
+   */
+  initMathEditors: () => void
+
   canUndo: boolean
   canRedo: boolean
 
@@ -165,6 +171,7 @@ export function EditorStateProvider({ children, language, toolbarRoot, getPasteS
 
         spawnMathEditor: spawnMathEditor,
         spawnMathEditorAtCursor: spawnMathEditorAtCursor,
+        initMathEditors,
 
         canUndo: false,
         canRedo: false,
