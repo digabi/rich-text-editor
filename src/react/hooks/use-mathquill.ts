@@ -1,5 +1,5 @@
 import * as MathQuill from '@digabi/mathquill'
-import { useCallback, useEffect, useState } from 'react'
+import { useCallback, useEffect, useRef, useState } from 'react'
 
 import useRerender from './use-rerender'
 
@@ -7,7 +7,7 @@ const MQ = MathQuill.getInterface(2)
 
 type Opts = {
   latex: string
-  onChange?: (latex: string) => void
+  onChange?: (oldLatex: string | undefined, newLatex: string) => void
 }
 
 export default function useMathQuill(opts: Opts) {
@@ -22,6 +22,12 @@ export default function useMathQuill(opts: Opts) {
   const rerender = useRerender()
   const [mqHandle, setMqHandle] = useState<MathQuill.MathField | null>(null)
 
+  const [lastLatex, setLastLatex] = useState(opts.latex)
+
+  // These refs are needed to access the current state values inside event handler
+  const mqRef = useRef<MathQuill.MathField | null>(null)
+  const lastLatexRef = useRef(lastLatex)
+
   // React `ref` objects aren't valid as `useEffect` deps; the official
   // workaround is to use a memoised callback as the `ref` prop to an element:
   const ref = useCallback(function spawnMathQuillOnElement(node: HTMLDivElement | null) {
@@ -33,13 +39,19 @@ export default function useMathQuill(opts: Opts) {
       // changing (we'd end up in an infinite loop). The actual focused event is a hidden
       // textbox inside `field.el()` so we need to use the `.contains()` method.
       if (field.el().contains(document.activeElement)) {
-        opts.onChange?.(field.latex())
+        const newValue = mqRef.current?.latex()
+        if (newValue) {
+          opts.onChange?.(lastLatexRef.current, newValue)
+          setLastLatex(newValue)
+          lastLatexRef.current = newValue
+        }
       }
     }
 
     const field = MQ.MathField(node, { handlers: { edit } })
     field.latex(opts.latex)
     setMqHandle(field)
+    mqRef.current = field
   }, [])
 
   useEffect(
@@ -59,5 +71,7 @@ export default function useMathQuill(opts: Opts) {
     mq: mqHandle,
     /** Boolean representing if the current `latex` code is parseable by MathQuill */
     isError: mqHandle?.latex() === '' && opts.latex !== '',
+
+    lastValue: lastLatex,
   }
 }

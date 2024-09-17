@@ -57,12 +57,8 @@ export type EditorState = {
    * Should be called after e.g. pasting in new content.
    */
   initMathEditors: () => void
-
-  canUndo: boolean
-  canRedo: boolean
-
   t: typeof FI
-}
+} & Pick<ReturnType<typeof useHistory>, 'undo' | 'redo' | 'canUndo' | 'canRedo'>
 
 const editorCtx = createContext<EditorState>(null!)
 
@@ -117,10 +113,11 @@ export function EditorStateProvider({ children, language, toolbarRoot, getPasteS
     function onBlur() {
       setActiveMathEditor(null)
       setIsMathbarOpen(false)
+      history.clear()
     }
 
     function onChange(latex: string) {
-      console.log(latex)
+      history.write(latex)
     }
 
     const portal = createPortal(<MathEditor onOpen={onOpen} onBlur={onBlur} onChange={onChange} {...props} />, stub)
@@ -185,8 +182,10 @@ export function EditorStateProvider({ children, language, toolbarRoot, getPasteS
         spawnMathEditorAtCursor: spawnMathEditorAtCursor,
         initMathEditors,
 
-        canUndo: false,
-        canRedo: false,
+        canUndo: history.canUndo,
+        canRedo: history.canRedo,
+        undo: history.undo,
+        redo: history.redo,
 
         t,
 

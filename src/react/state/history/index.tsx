@@ -1,38 +1,70 @@
-import { useState } from 'react'
+import { useRef, useState } from 'react'
+
+const popUndoStack = (stack: string[]): [rest: string[], last?: string] => {
+  const last = stack.at(-2)
+  const rest = stack.slice(0, -1)
+  return [rest, last]
+}
+
+const popRedoStack = (stack: string[]): [rest: string[], last?: string] => {
+  const last = stack.at(-1)
+  const rest = stack.slice(0, -1)
+  return [rest, last]
+}
 
 export default function useHistory() {
-  const [undoStack, setUndoStack] = useState<string[]>([])
-  const [redoStack, setRedoStack] = useState<string[]>([])
+  const [undoStack, _setUndoStack] = useState<string[]>([])
+  const [redoStack, _setRedoStack] = useState<string[]>([])
+
+  // Refs are needed to make the current, up to date state accessible in
+  // the event handlers these are passed to and called from in the end.
+  // Because of these, the state should be only updated using the helpers here,
+  // so that the refs always keep in sync
+  const undoStackRef = useRef(undoStack)
+  const redoStackRef = useRef(redoStack)
+
+  const updateUndoStack = (stack: string[]) => {
+    _setUndoStack(stack)
+    undoStackRef.current = stack
+  }
+
+  const updateRedoStack = (stack: string[]) => {
+    _setRedoStack(stack)
+    redoStackRef.current = stack
+  }
 
   const canUndo = undoStack.length > 0
   const canRedo = redoStack.length > 0
 
   function clear() {
-    setRedoStack([])
-    setUndoStack([])
+    updateUndoStack([])
+    updateRedoStack([])
   }
 
   function write(value: string) {
-    if (value === '') return
+    //console.log(value, undoStack.at(-1))
+    if (value === undoStackRef.current.at(-1)) return
 
-    setRedoStack([])
-    setUndoStack((s) => [...s, value])
+    updateUndoStack([...undoStackRef.current, value])
+    updateRedoStack([])
   }
 
   function undo() {
-    const value = undoStack.pop()
-    if (!value) return null
+    const [rest, newValue] = popUndoStack(undoStack)
+    if (!newValue) return null
 
-    setRedoStack((s) => [...s, value])
-    return value
+    updateRedoStack([...redoStackRef.current, undoStackRef.current.at(-1) ?? ''])
+    updateUndoStack(rest)
+    return newValue
   }
 
   function redo() {
-    const value = redoStack.pop()
-    if (!value) return null
+    const [rest, newValue] = popRedoStack(redoStack)
+    if (!newValue) return null
 
-    setUndoStack((s) => [...s, value])
-    return value
+    updateRedoStack(rest)
+    updateUndoStack([...undoStackRef.current, newValue])
+    return newValue
   }
 
   return {

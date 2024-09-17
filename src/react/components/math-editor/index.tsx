@@ -4,6 +4,9 @@ import * as MathQuill from '@digabi/mathquill'
 import useMathQuill from '../../hooks/use-mathquill'
 import LatexError from '../icons/latex-error'
 import { getMathSvg } from '../../mathSvg'
+import useHistory from '../../state/history'
+import useEditorState from '../../state'
+import { useKeyboardEventListener } from '../../hooks/use-keyboard-events'
 
 export type MathEditorHandle = {
   mq: MathQuill.MathField
@@ -22,10 +25,27 @@ export default function MathEditor(props: Props) {
   const containerRef = useRef<HTMLDivElement>(null)
   const [isOpen, setIsOpen] = useState(props.initialOpen ?? false)
   const [latex, setLatex] = useState(props.initialLatex ?? '')
-  const onChange = (latex: string) => {
-    setLatex(latex)
-    props.onChange?.(latex)
+
+  const { undo, redo } = useEditorState()
+
+  const historyHandler = (fn: typeof undo | typeof redo) => () => {
+    const oldValue = latex
+    const newValue = fn() ?? ''
+
+    if (newValue !== latex) {
+      onChange(oldValue, newValue)
+    }
   }
+
+  useKeyboardEventListener('z', historyHandler(undo))
+  useKeyboardEventListener('y', historyHandler(redo))
+
+  const onChange = (oldValue: string | undefined, newValue: string) => {
+    if (oldValue === newValue) return
+    setLatex(newValue)
+    props.onChange?.(newValue)
+  }
+
   const { ref: latexRef, isError, mq } = useMathQuill({ latex, onChange })
 
   useEffect(
@@ -56,7 +76,7 @@ export default function MathEditor(props: Props) {
             placeholder="LaTeΧ"
             rows={1}
             value={latex}
-            onChange={(e) => setLatex(e.target.value)}
+            onChange={(e) => onChange(undefined, e.target.value)} // real oldLatex value here?
             onBlur={onBlur}
           />
           {isError && <span className="render-error">TODO</span>}
