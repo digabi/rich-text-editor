@@ -121,10 +121,18 @@ const LatexCommandButton = styled(Button)`
   }
 `
 
-const HistoryButton = styled(Button)``
+const HistoryButton = styled(Button)`
+  &:disabled {
+    opacity: 50%;
+    filter: grayscale(1);
+    pointer-events: none;
+    cursor: default;
+  }
+`
 
 const ButtonContainer = styled.div`
   display: flex;
+
   z-index: 11;
   grid-column: 3;
   grid-row: 2;

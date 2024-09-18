@@ -81,7 +81,7 @@ export function EditorStateProvider({ children, language, toolbarRoot, getPasteS
    * `?forceToolbars=2` to force basic and math toolbars to stay open
    * NOTE: Using this will likely cause things to break, as this is for debug/dev reasons
    * */
-  const forceToolbarsOpen = new URL(window.location.href).searchParams.get('forceToolbars')
+  const forceToolbarsOpen = new URL(window.location.href).searchParams.get('forceToolbars') ?? '0'
 
   const mathEditorPortals = useMap<Node, ReactPortal>()
   const history = useHistory()
@@ -168,7 +168,7 @@ export function EditorStateProvider({ children, language, toolbarRoot, getPasteS
   return (
     <editorCtx.Provider
       value={{
-        isToolbarOpen: forceToolbarsOpen !== null || isToolbarOpen,
+        isToolbarOpen: forceToolbarsOpen !== '0' || isToolbarOpen,
         isMathToolbarOpen: forceToolbarsOpen === '2' || isMathToolbarOpen,
         showToolbar: () => setIsToolbarOpen(true),
         hideToolbar: () => setIsToolbarOpen(false),
