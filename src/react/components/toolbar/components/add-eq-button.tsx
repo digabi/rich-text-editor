@@ -5,7 +5,9 @@ export default function AddEqButton() {
   const editor = useEditorState()
   return (
     <Container>
-      {!editor.activeMathEditor && <Button onClick={editor.spawnMathEditorAtCursor}>Σ Lisää kaava</Button>}
+      {!editor.activeMathEditor && (
+        <Button onClick={editor.spawnMathEditorAtCursor}>Σ {editor.t.editor.insertEquation}</Button>
+      )}
     </Container>
   )
 }
