@@ -14,6 +14,7 @@ export type MathEditorHandle = {
 }
 
 export type Props = {
+  errorText: string
   onOpen?: (handle: MathEditorHandle) => void
   initialLatex?: string
   initialOpen?: boolean
@@ -79,7 +80,7 @@ export default function MathEditor(props: Props) {
             onChange={(e) => onChange(undefined, e.target.value)} // real oldLatex value here?
             onBlur={onBlur}
           />
-          {isError && <span className="render-error">TODO</span>}
+          {isError && <span className="render-error">{props.errorText}</span>}
         </div>
       </div>
     )

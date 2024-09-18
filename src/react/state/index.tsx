@@ -101,7 +101,7 @@ export function EditorStateProvider({ children, language, toolbarRoot, getPasteS
       })
   })
 
-  function spawnMathEditor(stub: Container, props?: MathEditorProps) {
+  function spawnMathEditor(stub: Container, props?: Partial<MathEditorProps>) {
     // TODO: This should probs be `onFocus` that's called by default
     function onOpen(handle: MathEditorHandle) {
       history.clear()
@@ -120,7 +120,10 @@ export function EditorStateProvider({ children, language, toolbarRoot, getPasteS
       history.write(latex)
     }
 
-    const portal = createPortal(<MathEditor onOpen={onOpen} onBlur={onBlur} onChange={onChange} {...props} />, stub)
+    const portal = createPortal(
+      <MathEditor onOpen={onOpen} onBlur={onBlur} onChange={onChange} errorText={t.editor.render_error} {...props} />,
+      stub,
+    )
     mathEditorPortals.set(stub, portal)
   }
 
