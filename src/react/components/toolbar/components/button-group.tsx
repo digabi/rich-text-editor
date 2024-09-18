@@ -18,12 +18,12 @@ type Props = {
   /** The number of columns this group should span when it itself is in a grid */
   span?: number
 
-  isExpand: boolean
+  isExpanded: boolean
 }
 
-export default function ButtonGroup({ cols, chars, isExpand, span = 1 }: Props) {
+export default function ButtonGroup({ cols, chars, isExpanded, span = 1 }: Props) {
   const editor = useEditorState()
-  const charsToShow = isExpand ? chars : chars.slice(0, cols)
+  const charsToShow = isExpanded ? chars : chars.slice(0, cols)
 
   function onMouseDown(e: React.MouseEvent, char: Props['chars'][number]) {
     e.preventDefault()

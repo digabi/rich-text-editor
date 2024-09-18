@@ -33,7 +33,7 @@ export type EditorState = {
   spawnMathEditorAtCursor(): void
 
   isToolbarOpen: boolean
-  isMathbarOpen: boolean
+  isMathToolbarOpen: boolean
   showToolbar: () => void
   hideToolbar: () => void
 
@@ -70,16 +70,18 @@ export default function useEditorState() {
 
 export function EditorStateProvider({ children, language, toolbarRoot, getPasteSource }: PropsWithChildren<Props>) {
   const [isToolbarOpen, setIsToolbarOpen] = useState(false)
-  const [isMathbarOpen, setIsMathbarOpen] = useState(false)
+  const [isMathToolbarOpen, setIsMathToolbarOpen] = useState(false)
   const [isToolbarExpanded, setIsToolbarExpanded] = useState(false)
   const [isHelpDialogOpen, setIsHelpDialogOpen] = useState(false)
   const [activeMathEditor, setActiveMathEditor] = useState<MathEditorHandle | null>(null) // TODO: Move to own type
   const [nextKey, setNextKey] = useState(0)
 
-  /** for dev use - prepend url with `?forceToolbars=1` to force toolbars to stay open without focus on editor
+  /** url search parameterr for dev use
+   * `?forceToolbars=1` to force basic toolbar to stay open
+   * `?forceToolbars=2` to force basic and math toolbars to stay open
    * NOTE: Using this will likely cause things to break, as this is for debug/dev reasons
    * */
-  const forceToolbarsOpen = new URL(window.location.href).searchParams.get('forceToolbars') !== null
+  const forceToolbarsOpen = new URL(window.location.href).searchParams.get('forceToolbars')
 
   const mathEditorPortals = useMap<Node, ReactPortal>()
   const history = useHistory()
@@ -112,12 +114,12 @@ export function EditorStateProvider({ children, language, toolbarRoot, getPasteS
       history.clear()
       setActiveMathEditor(handle)
       setIsToolbarOpen(true)
-      setIsMathbarOpen(true)
+      setIsMathToolbarOpen(true)
     }
 
     function onBlur() {
       setActiveMathEditor(null)
-      setIsMathbarOpen(false)
+      setIsMathToolbarOpen(false)
       history.clear()
     }
 
@@ -166,8 +168,8 @@ export function EditorStateProvider({ children, language, toolbarRoot, getPasteS
   return (
     <editorCtx.Provider
       value={{
-        isToolbarOpen: forceToolbarsOpen || isToolbarOpen,
-        isMathbarOpen: forceToolbarsOpen || isMathbarOpen,
+        isToolbarOpen: forceToolbarsOpen !== null || isToolbarOpen,
+        isMathToolbarOpen: forceToolbarsOpen === '2' || isMathToolbarOpen,
         showToolbar: () => setIsToolbarOpen(true),
         hideToolbar: () => setIsToolbarOpen(false),
 
