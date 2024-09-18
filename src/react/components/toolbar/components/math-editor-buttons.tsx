@@ -12,7 +12,7 @@ export type Props = {
 }
 
 export default function MathEditorButtons(props: Props) {
-  const { undo, redo, canUndo, canRedo, activeMathEditor } = useEditorState()
+  const { isMathToolbarOpen, undo, redo, canUndo, canRedo, activeMathEditor } = useEditorState()
 
   function onMouseDown(e: React.MouseEvent, shortcut: (typeof mathShortcutData)[number]) {
     e.preventDefault()
@@ -31,44 +31,68 @@ export default function MathEditorButtons(props: Props) {
       activeMathEditor?.mq.latex(newValue ?? '')
     })
 
-  if (!activeMathEditor) return null
-
-  return (
+  return isMathToolbarOpen ? (
     <Container>
       <Grid>
         {mathShortcutData.map((shortcut) => (
-          <Button onMouseDown={(e) => onMouseDown(e, shortcut)} data-latex={shortcut.action}>
+          <LatexCommandButton onMouseDown={(e) => onMouseDown(e, shortcut)} data-latex={shortcut.action}>
             <img src={shortcut.svg} />
-          </Button>
+          </LatexCommandButton>
         ))}
       </Grid>
-      <HistoryButton onMouseDown={onHistoryEvent(undo)} disabled={!canUndo}>
-        <UndoIcon />
-      </HistoryButton>
-      <HistoryButton onMouseDown={onHistoryEvent(redo)} disabled={!canRedo}>
-        <RedoIcon />
-      </HistoryButton>
+      <ButtonContainer>
+        <HistoryButton onMouseDown={onHistoryEvent(undo)} disabled={!canUndo}>
+          <UndoIcon />
+        </HistoryButton>
+        <HistoryButton onMouseDown={onHistoryEvent(redo)} disabled={!canRedo}>
+          <RedoIcon />
+        </HistoryButton>
+      </ButtonContainer>
     </Container>
-  )
+  ) : null
 }
 
 const buttonWidth = '35px'
 
 const Container = styled.div`
+  display: contents;
   position: absolute;
   top: 100%;
   width: 100%;
   background-color: #fafafa;
+
+  &::before {
+    content: '';
+    grid-row: 2 / 3;
+    z-index: 10;
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    pointer-events: none; /* Prevent interference with grid items */
+    background: #fafafa;
+    border-top: 1px solid #dfdfdf;
+  }
 `
 
 const Grid = styled.div`
-  display: inline-grid;
+  grid-column: 2;
+  grid-row: 2;
+  display: grid;
   grid-template-columns: repeat(17, 1fr);
+  grid-template-rows: 1fr 1fr;
+  width: fit-content;
+
+  @media (max-width: 799px) {
+    grid-column: 1;
+  }
 `
 
 const Button = styled.button`
   width: ${buttonWidth};
   height: ${buttonWidth};
+  z-index: 11;
 
   & > img {
     max-width: ${buttonWidth};
@@ -79,6 +103,7 @@ const Button = styled.button`
   border: none;
 
   cursor: pointer;
+  padding: 0;
 `
 
 const LatexCommandButton = styled(Button)`
@@ -97,3 +122,15 @@ const LatexCommandButton = styled(Button)`
 `
 
 const HistoryButton = styled(Button)``
+
+const ButtonContainer = styled.div`
+  display: flex;
+  z-index: 11;
+  grid-column: 3;
+  grid-row: 2;
+
+  @media (max-width: 799px) {
+    position: absolute;
+    right: 0;
+  }
+`

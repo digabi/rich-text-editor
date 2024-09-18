@@ -13,22 +13,21 @@ export default function AddEqButton() {
 }
 
 const Container = styled.div`
-  @media (min-width: 800px) {
-    width: 160px;
+  background-color: white;
 
+  @media (min-width: 800px) {
     display: flex;
     justify-content: flex-end;
+
+    grid-column: 1;
+    grid-row: 1;
   }
-  @media not (min-width: 800px) {
-    position: absolute;
-    top: 100%;
+
+  @media (max-width: 799px) {
+    grid-column: 1;
+    grid-row: 2;
 
     width: 100%;
-    background-color: white;
-
-    background-color: #fff;
-    box-shadow: 0 1px 10px 1px rgba(0, 0, 0, 0.2);
-    border-bottom: 1px solid #dfdfdf;
   }
 `
 

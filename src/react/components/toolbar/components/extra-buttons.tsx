@@ -29,13 +29,15 @@ export default function ExtraButtons() {
 }
 
 const Container = styled.div`
-  @media (min-width: 800px) {
-    width: 160px;
+  display: flex;
+  justify-content: flex-start;
 
-    display: flex;
-    justify-content: flex-start;
+  @media (min-width: 800px) {
+    grid-column: 3;
+    grid-row: 1;
   }
-  @media (max-width: 801px) {
+
+  @media (max-width: 799px) {
     position: absolute;
     right: 0;
   }
