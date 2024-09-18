@@ -21,16 +21,6 @@ export default forwardRef(MainTextArea)
 function MainTextArea(props: {}, ref: any) {
   const editor = useEditorState()
 
-  useEffect(
-    () =>
-      function clearMathEditorRootsOnUnmount() {
-        for (const root of editor.mathEditorPortals.values()) {
-          root.unmount()
-        }
-      },
-    [],
-  )
-
   async function onPaste(e: ClipboardEvent) {
     e.preventDefault()
     e.stopPropagation()
