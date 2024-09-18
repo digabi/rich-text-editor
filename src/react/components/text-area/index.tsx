@@ -11,14 +11,7 @@ import sanitize from '../../utils/sanitization'
 export const ALLOWED_IMG_TYPES = ['image/png', 'image/jpeg']
 export const MATH_EDITOR_CLASS = 'math-editor-wrapper'
 
-type Props = {
-  onFocus?: () => void
-  onBlur?: () => void
-}
-
-export default forwardRef(MainTextArea)
-
-function MainTextArea(props: {}, ref: any) {
+export default function MainTextArea() {
   const editor = useEditorState()
 
   async function onPaste(e: ClipboardEvent) {
