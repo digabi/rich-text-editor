@@ -3,7 +3,7 @@ import styled from 'styled-components'
 import AddEqButton from './components/add-eq-button'
 import ButtonGroup from './components/button-group'
 import ExtraButtons from './components/extra-buttons'
-import MathShortcutButtons from './components/math-shortcut-buttons'
+import MathEditorButtons from './components/math-editor-buttons'
 
 import * as chars from './math-char-data'
 import useEditorState from '../../state'
@@ -30,13 +30,13 @@ export default function Toolbar() {
       tabIndex={0}
     >
       <AddEqButton />
-      <MathShortcutButtons />
       <Grid cols={GRID_COLS}>
         <ButtonGroup isExpand={isExpand} cols={13} chars={chars.BASIC} span={GRID_COLS} />
         <ButtonGroup isExpand={isExpand} cols={3} chars={chars.ALGEBRA} />
         <ButtonGroup isExpand={isExpand} cols={3} chars={chars.GEOMETRY} />
         <ButtonGroup isExpand={isExpand} cols={6} chars={chars.SET_THEORY} />
       </Grid>
+      <MathEditorButtons />
       <ExtraButtons />
     </Container>
   )
