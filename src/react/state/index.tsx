@@ -76,6 +76,11 @@ export function EditorStateProvider({ children, language, toolbarRoot, getPasteS
   const [activeMathEditor, setActiveMathEditor] = useState<MathEditorHandle | null>(null) // TODO: Move to own type
   const [nextKey, setNextKey] = useState(0)
 
+  /** for dev use - prepend url with `?forceToolbars=1` to force toolbars to stay open without focus on editor
+   * NOTE: Using this will likely cause things to break, as this is for debug/dev reasons
+   * */
+  const forceToolbarsOpen = new URL(window.location.href).searchParams.get('forceToolbars') !== null
+
   const mathEditorPortals = useMap<Node, ReactPortal>()
   const history = useHistory()
   const mainTextAreaRef = useRef<HTMLDivElement>(null)
@@ -161,8 +166,8 @@ export function EditorStateProvider({ children, language, toolbarRoot, getPasteS
   return (
     <editorCtx.Provider
       value={{
-        isToolbarOpen,
-        isMathbarOpen,
+        isToolbarOpen: forceToolbarsOpen || isToolbarOpen,
+        isMathbarOpen: forceToolbarsOpen || isMathbarOpen,
         showToolbar: () => setIsToolbarOpen(true),
         hideToolbar: () => setIsToolbarOpen(false),
 
