@@ -1,9 +1,22 @@
 import sanitizeHtml from 'sanitize-html'
 
 const sanitizeOpts = {
-  allowedTags: ['img', 'br'],
+  allowedTags: ['img', 'br', 'span'],
   allowedAttributes: {
-    img: ['src', 'alt', 'data-*'],
+    img: ['src', 'alt', 'data-math-svg'],
+    span: ['class'],
+  },
+  allowedSchemes: ['data'],
+  allowedClasses: {
+    span: ['math-editor-wrapper'],
+  },
+  transformTags: {
+    img: (tagName: string, attribs: sanitizeHtml.Attributes) => ({
+      tagName,
+      attribs: attribs.src?.includes('math.svg') ? { ...attribs, 'data-math-svg': 'true' } : attribs,
+    }),
+    span: (tagName: string, attribs: sanitizeHtml.Attributes) =>
+      attribs.class === 'math-editor-wrapper' ? { tagName, attribs } : { tagName: '', attribs: { text: '' } },
   },
 }
 
