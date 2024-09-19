@@ -1,69 +1,71 @@
 import { useRef, useState } from 'react'
 
-const popUndoStack = (stack: string[]): [rest: string[], last?: string] => {
-  const last = stack.at(-2)
-  const rest = stack.slice(0, -1)
-  return [rest, last]
-}
-
-const popRedoStack = (stack: string[]): [rest: string[], last?: string] => {
-  const last = stack.at(-1)
-  const rest = stack.slice(0, -1)
-  return [rest, last]
-}
-
 export default function useHistory() {
-  const [undoStack, _setUndoStack] = useState<string[]>([])
-  const [redoStack, _setRedoStack] = useState<string[]>([])
+  /** `stack` is an array with all the current history in order.
+   *
+   * `pointer` is a number that points to the current position in the history.
+   * Undo lowers the pointer, redo makes it higher.
+   *
+   * Writing anything always clears the history stack above the pointer, adds a new value
+   * and moves the pointer to the top of the stack.
+   * */
+  const [stack, _setStack] = useState<string[]>([])
+  const [pointer, _setPointer] = useState(0)
 
-  // Refs are needed to make the current, up to date state accessible in
-  // the event handlers these are passed to and called from in the end.
-  // Because of these, the state should be only updated using the helpers here,
-  // so that the refs always keep in sync
-  const undoStackRef = useRef(undoStack)
-  const redoStackRef = useRef(redoStack)
+  /** Refs are needed to make the current value always accessible
+   * in the handlers these will be ultimately called from. This is a bit convoluted
+   * and prone to errors if the refs are not used and updated correctly,
+   * so remember to always use the `set...` wrappers to update the state instead of
+   * doing it directly.
+   * */
+  const stackRef = useRef(stack)
+  const pointerRef = useRef(pointer)
 
-  const updateUndoStack = (stack: string[]) => {
-    _setUndoStack(stack)
-    undoStackRef.current = stack
+  const setStack = (newStack: string[]) => {
+    stackRef.current = newStack
+    _setStack(newStack)
   }
 
-  const updateRedoStack = (stack: string[]) => {
-    _setRedoStack(stack)
-    redoStackRef.current = stack
+  const setPointer = (newPointer: number) => {
+    pointerRef.current = newPointer
+    _setPointer(newPointer)
   }
 
-  const canUndo = undoStack.length > 0
-  const canRedo = redoStack.length > 0
+  const canUndo = pointer !== 0
+  const canRedo = pointer < stack.length - 1
 
-  function clear() {
-    updateUndoStack([])
-    updateRedoStack([])
+  const clear = () => {
+    setStack([''])
+    setPointer(0)
   }
 
-  function write(value: string) {
-    //console.log(value, undoStack.at(-1))
-    if (value === undoStackRef.current.at(-1)) return
+  const write = (value: string) => {
+    // If the pointer is at a value that's equal to the new value,
+    // we don't do anything so we don't get duplicate values in the history
+    if (value === stackRef.current.at(pointerRef.current)) return
 
-    updateUndoStack([...undoStackRef.current, value])
-    updateRedoStack([])
+    const newStack = [...stackRef.current.slice(0, pointerRef.current + 1), value]
+
+    setStack(newStack)
+    setPointer(newStack.length - 1)
   }
 
-  function undo() {
-    const [rest, newValue] = popUndoStack(undoStack)
-    if (!newValue) return null
+  const undo = () => {
+    const newPointer = pointerRef.current - 1
+    if (newPointer < 0) return null
+    const newValue = stackRef.current.at(newPointer)
 
-    updateRedoStack([...redoStackRef.current, undoStackRef.current.at(-1) ?? ''])
-    updateUndoStack(rest)
+    setPointer(newPointer)
+
     return newValue
   }
 
-  function redo() {
-    const [rest, newValue] = popRedoStack(redoStack)
-    if (!newValue) return null
+  const redo = () => {
+    const newPointer = pointerRef.current + 1
+    if (newPointer >= stackRef.current.length) return null
+    const newValue = stackRef.current.at(newPointer)
 
-    updateRedoStack(rest)
-    updateUndoStack([...undoStackRef.current, newValue])
+    setPointer(newPointer)
     return newValue
   }
 
