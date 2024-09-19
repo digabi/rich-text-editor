@@ -21,7 +21,7 @@ export type EditorState = {
   /** Ref to the main text-area (which is a `contenteditable` `<div />`) */
   ref: React.RefObject<HTMLDivElement>
 
-  /** An ES6 `Map` of DOM `Node`s to the React `Root`s mounted in them */
+  /** An ES6 `Map` of DOM `Node`s to the React `Portal`s mounted in them */
   mathEditorPortals: MapHookHandle<Node, ReactPortal>
 
   /**
@@ -42,7 +42,7 @@ export type EditorState = {
   collapseToolbar: () => void
 
   toolbarRoot: RichTextEditorProps['toolbarRoot']
-  getPasteSource: NonNullable<RichTextEditorProps['getPasteSource']>
+  handlePastedImage: NonNullable<RichTextEditorProps['getPasteSource']>
 
   isHelpDialogOpen: boolean
   showHelpDialog: () => void
@@ -109,7 +109,7 @@ export function EditorStateProvider({ children, language, toolbarRoot, getPasteS
   })
 
   function spawnMathEditor(stub: Container, props?: Partial<MathEditorProps>) {
-    // TODO: This should probs be `onFocus` that's called by default
+    // This is called both on the creation of the component and each time the equation is opened after that
     function onOpen(handle: MathEditorHandle) {
       history.clear()
       setActiveMathEditor(handle)
@@ -201,7 +201,7 @@ export function EditorStateProvider({ children, language, toolbarRoot, getPasteS
 
         toolbarRoot,
 
-        getPasteSource:
+        handlePastedImage:
           getPasteSource ??
           function defaultPasteSource(file) {
             return new Promise((resolve) => {
