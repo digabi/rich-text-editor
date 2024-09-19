@@ -7,11 +7,7 @@ import { eventHandlerWithoutFocusLoss } from '../../../utility'
 import UndoIcon from '../../icons/undo'
 import RedoIcon from '../../icons/redo'
 
-export type Props = {
-  show?: boolean
-}
-
-export default function MathEditorButtons(props: Props) {
+export default function MathEditorButtons() {
   const { isMathToolbarOpen, undo, redo, canUndo, canRedo, activeMathEditor } = useEditorState()
 
   function onMouseDown(e: React.MouseEvent, shortcut: (typeof mathShortcutData)[number]) {
@@ -28,7 +24,9 @@ export default function MathEditorButtons(props: Props) {
     eventHandlerWithoutFocusLoss(() => {
       const newValue = fn()
 
-      activeMathEditor?.mq.latex(newValue ?? '')
+      if (newValue !== null) {
+        activeMathEditor?.mq.latex(newValue)
+      }
     })
 
   return isMathToolbarOpen ? (

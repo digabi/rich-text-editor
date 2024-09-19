@@ -29,7 +29,7 @@ export default function MainTextArea() {
 
     if (file && ALLOWED_IMG_TYPES.includes(file.type)) {
       try {
-        const src = await editor.getPasteSource(file)
+        const src = await editor.handlePastedImage(file)
         const img = document.createElement('img')
         img.src = src
         document.execCommand('insertHTML', false, img.outerHTML)
