@@ -20,6 +20,7 @@ export type Props = {
   initialOpen?: boolean
   onBlur?: () => void
   onChange?: (latex: string) => void
+  onEditorRemoved?: () => void
 }
 
 export default function MathEditor(props: Props) {
@@ -66,6 +67,12 @@ export default function MathEditor(props: Props) {
       setIsOpen(false)
     }
   }
+
+  useEffect(() => {
+    if (!isOpen && latex === '') {
+      props.onEditorRemoved?.()
+    }
+  }, [isOpen, latex])
 
   if (isOpen) {
     return (

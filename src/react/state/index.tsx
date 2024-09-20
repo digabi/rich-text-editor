@@ -127,8 +127,21 @@ export function EditorStateProvider({ children, language, toolbarRoot, getPasteS
       history.write(latex)
     }
 
+    function onEditorRemoved() {
+      mathEditorPortals.delete(stub)
+      ;(stub as HTMLElement).remove()
+      history.clear()
+    }
+
     const portal = createPortal(
-      <MathEditor onOpen={onOpen} onBlur={onBlur} onChange={onChange} errorText={t.editor.render_error} {...props} />,
+      <MathEditor
+        onOpen={onOpen}
+        onBlur={onBlur}
+        onChange={onChange}
+        onEditorRemoved={onEditorRemoved}
+        errorText={t.editor.render_error}
+        {...props}
+      />,
       stub,
     )
     mathEditorPortals.set(stub, portal)
