@@ -49,8 +49,8 @@ export type EditorState = {
   hideHelpDialog: () => void
 
   // TODO: Move handle to its own type
-  setActiveMathEditor: (handle: { mq: MathField; close: () => void } | null) => void
-  activeMathEditor: { mq: MathField; close: () => void } | null
+  setActiveMathEditor: (handle: MathEditorHandle | null) => void
+  activeMathEditor: MathEditorHandle | null
 
   /**
    * Finds all math-editor boxes in the text area and makes them interactive.
