@@ -11,6 +11,7 @@ import { useKeyboardEventListener } from '../../hooks/use-keyboard-events'
 export type MathEditorHandle = {
   mq: MathQuill.MathField
   close: () => void
+  setLatex: (latex: string) => void
 }
 
 export type Props = {
@@ -54,7 +55,13 @@ export default function MathEditor(props: Props) {
     function signalOpenedMathEditor() {
       if (isOpen && mq) {
         mq.focus()
-        props.onOpen?.({ mq, close: () => setIsOpen(false) })
+        props.onOpen?.({
+          mq,
+          close: () => setIsOpen(false),
+          setLatex: (latex: string) => {
+            onChange(undefined, latex)
+          },
+        })
       }
     },
     [isOpen, mq],

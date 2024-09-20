@@ -52,17 +52,16 @@ export default function useHistory() {
 
   const undo = () => {
     const newPointer = pointerRef.current - 1
-    if (newPointer < 0) return null
+    if (newPointer < 0) return undefined
     const newValue = stackRef.current.at(newPointer)
 
     setPointer(newPointer)
-
     return newValue
   }
 
   const redo = () => {
     const newPointer = pointerRef.current + 1
-    if (newPointer >= stackRef.current.length) return null
+    if (newPointer >= stackRef.current.length) return undefined
     const newValue = stackRef.current.at(newPointer)
 
     setPointer(newPointer)
