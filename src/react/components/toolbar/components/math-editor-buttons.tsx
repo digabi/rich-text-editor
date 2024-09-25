@@ -36,16 +36,19 @@ export default function MathEditorButtons() {
     <Container>
       <Grid>
         {mathShortcutData.map((shortcut) => (
-          <LatexCommandButton onMouseDown={(e) => onMouseDown(e, shortcut)} data-latex={shortcut.action}>
+          <LatexCommandButton
+            onMouseDown={(e) => onMouseDown(e, shortcut)}
+            data-testid={`math-command-${shortcut.action}`}
+          >
             <img src={shortcut.svg} />
           </LatexCommandButton>
         ))}
       </Grid>
       <ButtonContainer>
-        <HistoryButton onMouseDown={onHistoryEvent(undo)} disabled={!canUndo}>
+        <HistoryButton onMouseDown={onHistoryEvent(undo)} disabled={!canUndo} data-testid="undo">
           <UndoIcon />
         </HistoryButton>
-        <HistoryButton onMouseDown={onHistoryEvent(redo)} disabled={!canRedo}>
+        <HistoryButton onMouseDown={onHistoryEvent(redo)} disabled={!canRedo} data-testid="redo">
           <RedoIcon />
         </HistoryButton>
       </ButtonContainer>

@@ -12,7 +12,7 @@ export default function ExtraButtons() {
 
   return (
     <Container>
-      <Button onClick={onClick}>
+      <Button onClick={onClick} data-testid="toggle-all-special-characters">
         <ExpandIcon
           style={{
             transformOrigin: 'center center',

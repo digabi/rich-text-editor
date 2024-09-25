@@ -162,3 +162,10 @@ export const selectEditorContent = async (locator: Locator, start: number, end: 
     [start, end],
   )
 }
+
+export const specialCharacters: Record<string, [latex: string, unicode?: string]> = {
+  alpha: ['\\alpha', '\u03B1'],
+  delta: ['\\delta', '\u0394'],
+  cos: ['\\cos'],
+  sqrt: ['\\sqrt'],
+}

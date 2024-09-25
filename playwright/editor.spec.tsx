@@ -18,8 +18,11 @@ import {
   assertAnswerContent,
   selectEditorContent,
   pasteHtmlImage,
+  specialCharacters,
+  inputLatexCommandFromToolbar,
 } from './test-utils'
-import { RichTextEditor } from '../src/components/RichTextEditor'
+//import { RichTextEditor } from '../src/components/RichTextEditor'
+import RichTextEditor from '../src/react/rich-text-editor'
 import { Answer } from '../src/react/utility'
 
 test.describe('Rich text editor', () => {
@@ -30,9 +33,12 @@ test.describe('Rich text editor', () => {
   }
 
   test.beforeEach(async ({ page, mount }) => {
-    answer = { answerHtml: '', answerText: '', imageCount: 0 }
     await mount(
-      <RichTextEditor onValueChange={onAnswerChange} style={{ position: 'absolute', top: '300px', width: '100%' }} />,
+      <RichTextEditor
+        language="FI"
+        editorStyle={{ position: 'absolute', top: '300px', width: '100%' }}
+        onValueChange={onAnswerChange}
+      />,
     )
     await page.addStyleTag({
       url: '//unpkg.com/@digabi/mathquill/build/mathquill.css',
@@ -65,13 +71,13 @@ test.describe('Rich text editor', () => {
   test('can input special characters from toolbar', async ({ page }) => {
     const editor = getEditorLocator(page)
 
-    await inputSpecialCharacterFromToolbar(page, '\\alpha')
-    await assertEditorTextContent(editor, 'α')
+    await inputSpecialCharacterFromToolbar(page, specialCharacters.alpha[1])
+    await assertEditorTextContent(editor, specialCharacters.alpha[1])
 
-    await page.getByRole('button', { name: 'Näytä kaikki erikoismerkit' }).click()
+    await page.getByTestId('toggle-all-special-characters').click()
 
-    await inputSpecialCharacterFromToolbar(page, '\\delta')
-    await assertEditorTextContent(editor, 'αδ')
+    await inputSpecialCharacterFromToolbar(page, specialCharacters.delta[1])
+    await assertEditorTextContent(editor, specialCharacters.alpha[1] + specialCharacters.delta[1])
   })
 
   test('can paste text from clipboard', async ({ page }) => {
@@ -124,7 +130,6 @@ test.describe('Rich text editor', () => {
     await assertEquationEditorLatexContent(equationEditor, latex)
     await clickOutsideEditor(page)
 
-    // TODO: This fails. It should not fail. Caused by math editor's closing not triggering onChange
     assertAnswerContent(answer, {
       answerHtml:
         '<img src="/math.svg?latex=" alt="\\varepsilon=\\frac{Q_2}{Q_1-Q_2}=\\frac{1}{eta}-1" data-math-svg="true" />',
@@ -174,19 +179,18 @@ test.describe('Rich text editor', () => {
       })
 
       test('with a special character', async ({ page }) => {
-        await inputSpecialCharacterFromToolbar(page, '\\beta')
+        await inputSpecialCharacterFromToolbar(page, specialCharacters.alpha[1])
         await clickOutsideEditor(page)
 
-        assertAnswerContent(answer, { answerText: 'Hβld!' })
+        assertAnswerContent(answer, { answerText: `H${specialCharacters.alpha[1]}ld!` })
       })
 
       test('with an equation', async ({ page }) => {
         await page.keyboard.press('Control+e')
-        await inputSpecialCharacterFromToolbar(page, '\\cos')
+        await inputLatexCommandFromToolbar(page, specialCharacters.cos[0])
         await clickOutsideEditor(page)
 
-        // TODO: Fails because onChange is not called properly
-        assertAnswerContent(answer, { answerText: 'H cos ld!' })
+        assertAnswerContent(answer, { answerText: 'H\u00A0\u00A0ld!' })
       })
 
       test('with a pasted image', async ({ page }) => {
@@ -196,7 +200,7 @@ test.describe('Rich text editor', () => {
         await assertEditorHTMLContent(editor, `H${img}ld!`)
 
         assertAnswerContent(answer, {
-          //answerHtml: `H${img}ld!`, TODO: Does not work, not important
+          answerHtml: `H${img}ld!`, //TODO: Does not work, not important
           answerText: 'Hld!',
           imageCount: 1,
         })
@@ -214,7 +218,7 @@ test.describe('Rich text editor', () => {
 
     test.describe('can undo and redo changes with ', () => {
       test.beforeEach(async ({ page }) => {
-        await inputSpecialCharacterFromToolbar(page, '\\sqrt')
+        await inputLatexCommandFromToolbar(page, specialCharacters.sqrt[0])
         await page.keyboard.press('1')
         expect(await getUndoButton(page)).toBeEnabled()
         expect(await getRedoButton(page)).toBeDisabled()
@@ -248,7 +252,7 @@ test.describe('Rich text editor', () => {
 
     test('can insert LaTeX commands', async ({ page }) => {
       const equationEditor = page.getByTestId('equation-editor')
-      await inputSpecialCharacterFromToolbar(page, '\\sqrt')
+      await inputLatexCommandFromToolbar(page, specialCharacters.sqrt[0])
       await assertEquationEditorTextContent(equationEditor, '√​')
       await assertEquationEditorLatexContent(equationEditor, '\\sqrt{ }')
       await page.keyboard.press('1')
@@ -258,7 +262,7 @@ test.describe('Rich text editor', () => {
 
     test('closes on focus loss and reopens on click', async ({ page }) => {
       const equationEditor = page.getByTestId('equation-editor')
-      await inputSpecialCharacterFromToolbar(page, '\\sqrt')
+      await inputLatexCommandFromToolbar(page, specialCharacters.sqrt[0])
       await assertEquationEditorTextContent(equationEditor, '√​')
       await clickOutsideEditor(page)
       expect(getEditorLocator(page).locator('span > img')).toBeVisible()
@@ -295,7 +299,7 @@ test.describe('Rich text editor', () => {
 
     test('editing the Mathquill field updates the LaTeX', async ({ page }) => {
       const equationEditor = page.getByTestId('equation-editor')
-      await inputSpecialCharacterFromToolbar(page, '\\sqrt')
+      await inputLatexCommandFromToolbar(page, specialCharacters.sqrt[0])
       await page.keyboard.press('1')
       await page.keyboard.press('ArrowRight')
       await page.keyboard.press('2')
