@@ -14,6 +14,8 @@ import { createMathStub, MATH_EDITOR_CLASS } from '../utils/create-math-stub'
 import FI from '../../FI'
 import SV from '../../SV'
 import { createPortal } from 'react-dom'
+import { Answer, getAnswer } from '../utility'
+import { sanitizeForExport } from '../utils/sanitization'
 
 export type Props = RichTextEditorProps
 
@@ -57,7 +59,18 @@ export type EditorState = {
    * Should be called after e.g. pasting in new content.
    */
   initMathEditors: () => void
+
   t: typeof FI
+
+  /** The callback to be called every time the value of the answer changes */
+  // onValueChange: (answer: Answer) => void
+
+  /** Called when answer has changed. This needs to happen on this level,
+   * as programmatic changes to the answer (e.g. creating and editing equations)
+   * do not trigger the main text area's `onInput` event so we need a mechanism to
+   * trigger this from multiple places
+   */
+  onAnswerChange: () => void
 } & Pick<ReturnType<typeof useHistory>, 'undo' | 'redo' | 'canUndo' | 'canRedo'>
 
 const editorCtx = createContext<EditorState>(null!)
@@ -68,7 +81,13 @@ export default function useEditorState() {
   return ctx
 }
 
-export function EditorStateProvider({ children, language, toolbarRoot, getPasteSource }: PropsWithChildren<Props>) {
+export function EditorStateProvider({
+  children,
+  language,
+  toolbarRoot,
+  getPasteSource,
+  onValueChange,
+}: PropsWithChildren<Props>) {
   const [isToolbarOpen, setIsToolbarOpen] = useState(false)
   const [isMathToolbarOpen, setIsMathToolbarOpen] = useState(false)
   const [isToolbarExpanded, setIsToolbarExpanded] = useState(false)
@@ -121,6 +140,7 @@ export function EditorStateProvider({ children, language, toolbarRoot, getPasteS
       setActiveMathEditor(null)
       setIsMathToolbarOpen(false)
       history.clear()
+      onAnswerChange()
     }
 
     function onChange(latex: string) {
@@ -178,6 +198,22 @@ export function EditorStateProvider({ children, language, toolbarRoot, getPasteS
     }
   }
 
+  function onAnswerChange() {
+    /** This 0ms timeout is crucial - it essentially moves the callback into the next event loop,
+     * after pending DOM changes have been made in the current loop (in practice,
+     * this is needed because closing a math editor changes the HTML of the answer,
+     * but doesn't trigger the text area's onInput event. With this hack we can get the answer HTML with
+     * the changes already included.)
+     */
+    const fn = () => {
+      const content = mainTextAreaRef.current?.innerHTML
+      if (content) {
+        onValueChange(getAnswer(content, sanitizeForExport))
+      }
+    }
+    setTimeout(fn, 0)
+  }
+
   return (
     <editorCtx.Provider
       value={{
@@ -223,6 +259,7 @@ export function EditorStateProvider({ children, language, toolbarRoot, getPasteS
               reader.readAsDataURL(file)
             })
           },
+        onAnswerChange,
       }}
     >
       {children}

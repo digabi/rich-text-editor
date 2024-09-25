@@ -7,5 +7,6 @@ ReactDOM.createRoot(REACT_ROOT).render(
   <RichTextEditor
     language="FI"
     editorStyle={{ top: '300px', position: 'relative' }}
+    onValueChange={(answer) => console.debug(answer)}
   />,
 )

@@ -1,4 +1,4 @@
-import { ClipboardEvent, FocusEvent, forwardRef, Fragment, useEffect } from 'react'
+import { ClipboardEvent, FocusEvent, forwardRef, Fragment, useEffect, useRef } from 'react'
 import { createPortal } from 'react-dom'
 import styled from 'styled-components'
 
@@ -52,23 +52,29 @@ export default function MainTextArea({
       document.execCommand('insertHTML', false, text)
     }
 
-    // Hack to make this run after the content has been pasted
-    // TODO would react flush sync be better?
-    // TODO more informative comment
-    setTimeout(editor.initMathEditors, 0)
+    /** setTimeout makes the callback run in the next (or later) loop of
+     * the event loop. We use this to make sure that the we run these operations after
+     * the innerHtml of the text field has already been updated
+     */
+    setTimeout(() => {
+      editor.initMathEditors()
+      setTimeout(() => {
+        editor.onAnswerChange()
+      }, 0)
+    }, 0)
   }
 
   function onBlur(e: FocusEvent) {
     // We don't want to hide the toolbar when it's the toolbar itself
     // that steals focus from the editor
-    if (!editor.toolbarRoot.contains(e.relatedTarget)) {
+    if (!toolbarRoot?.contains(e.relatedTarget)) {
       editor.hideToolbar()
     }
   }
 
   return (
     <>
-      {editor.isToolbarOpen && createPortal(<Toolbar />, editor.toolbarRoot)}
+      {toolbarRoot && editor.isToolbarOpen && createPortal(<Toolbar />, toolbarRoot)}
       {editor.isHelpDialogOpen && <HelpDialog />}
       <Box
         ref={editor.ref}
@@ -97,7 +103,9 @@ export default function MainTextArea({
 }
 
 const Box = styled.div`
-  // TODO: Remove
-  transform: translateY(100px);
-  position: default;
+  box-sizing: content-box;
+  border: 1px solid #aaa;
+  min-height: 100px;
+  padding: 5px;
+  font: 17px Times New Roman;
 `
