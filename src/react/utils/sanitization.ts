@@ -20,7 +20,7 @@ const sanitizeOpts = {
   },
 }
 
-export default function sanitize(html: string) {
+export function sanitize(html: string, opts?: sanitizeHtml.IOptions) {
   return (
     [
       (v) => convertLinksToRelative(v),
@@ -31,7 +31,23 @@ export default function sanitize(html: string) {
           allowedSchemes: ['data', 'http', 'https'],
         }),
       (v) => stripBlockElements(v),
-      (v) => sanitizeHtml(v, sanitizeOpts),
+      (v) => sanitizeHtml(v, { ...sanitizeOpts, ...opts }),
+    ] as Array<(html: string) => string>
+  ).reduce((value, fn) => fn(value), html)
+}
+
+export function sanitizeForExport(html: string) {
+  return (
+    [
+      (v) =>
+        sanitize(v, {
+          ...sanitizeOpts,
+          transformTags: {
+            // if the span is a math editor wrapper, we just take the image out of it and remove the wrapper
+            span: (tagName: string, attribs: sanitizeHtml.Attributes) =>
+              attribs.class === 'math-editor-wrapper' ? { tagName: '', attribs: {} } : { tagName, attribs },
+          },
+        }),
     ] as Array<(html: string) => string>
   ).reduce((value, fn) => fn(value), html)
 }
@@ -44,9 +60,9 @@ function isBlockElement(node: Node) {
   return node.nodeName === 'DIV' || node.nodeName === 'P'
 }
 
-// TODO: Change this to e.g. a DFS-algorithm.
+// TODO: Change this to e.g. a DFS-algorithm or a html-sanitize transformTags rule
 // This is copied pretty much as-is from the legacy jQuery version;
-// it's difficult to say *what exactly* it does but it attempts t
+// it's difficult to say *what exactly* it does but it attempts to
 // change block-elements (namely `div` and `p`) into `br`s.
 function stripBlockElements(html: string) {
   const parent = document.createElement('div')
