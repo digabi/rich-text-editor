@@ -131,11 +131,14 @@ test.describe('Rich text editor', () => {
     await clickOutsideEditor(page)
 
     assertAnswerContent(answer, {
-      answerHtml:
-        '<img src="/math.svg?latex=" alt="\\varepsilon=\\frac{Q_2}{Q_1-Q_2}=\\frac{1}{eta}-1" data-math-svg="true" />',
       answerText: '',
       imageCount: 0,
     })
+
+    const mathImage = getEditorLocator(page).getByRole('img')
+    await expect(mathImage).toHaveAttribute('data-math-svg', 'true')
+    await expect(mathImage).toHaveAttribute('src', /^data:image\/svg/)
+    await expect(mathImage).toHaveAttribute('alt', latex)
   })
 
   test.describe('selecting text', () => {
