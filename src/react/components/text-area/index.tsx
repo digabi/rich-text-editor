@@ -6,13 +6,23 @@ import useEditorState from '../../state'
 
 import Toolbar from '../toolbar'
 import { HelpDialog } from '../help-dialog'
-import sanitize from '../../utils/sanitization'
+import { sanitize } from '../../utils/sanitization'
+import { getAnswer } from '../../utility'
+import { useKeyboardEventListener } from '../../hooks/use-keyboard-events'
 
 export const ALLOWED_IMG_TYPES = ['image/png', 'image/jpeg']
 export const MATH_EDITOR_CLASS = 'math-editor-wrapper'
 
-export default function MainTextArea() {
+export default function MainTextArea({
+  style,
+  toolbarRoot,
+}: {
+  style: React.CSSProperties
+  toolbarRoot?: HTMLElement
+}) {
   const editor = useEditorState()
+
+  useKeyboardEventListener('e', editor.spawnMathEditorAtCursor)
 
   async function onPaste(e: ClipboardEvent) {
     e.preventDefault()
@@ -69,8 +79,9 @@ export default function MainTextArea() {
         onFocus={editor.showToolbar}
         onBlur={onBlur}
         onPaste={onPaste}
-        //   style={props.style}
-        //   onInput={(e) => onValueChange(e.currentTarget.innerHTML)}
+        style={style}
+        onInput={() => editor.onAnswerChange()}
+        // onInput={(e) => editor.onValueChange(getAnswer(e.currentTarget.innerHTML, sanitize))}
         //   dangerouslySetInnerHTML={{ __html: initialValue ?? '' }}
       />
 
