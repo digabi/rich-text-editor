@@ -4,10 +4,9 @@ import { EditorStateProvider } from './state'
 import { Answer } from './utility'
 
 export type Props = {
-  /** TODO: Do we need documentation for this? */
   language: 'FI' | 'SV'
-  /** TODO: Documentation */
-  toolbarRoot: HTMLElement
+  /** The toolbars will be rendered in this root via a React Portal */
+  toolbarRoot?: HTMLElement
   /**
    * Callback that's called when the user pastes an image to the text area.
    * The function is given a `File` Blob and is expected to return a string
@@ -20,11 +19,21 @@ export type Props = {
   onValueChange: (answer: Answer) => void
 }
 
-export default function RichTextEditor({ language, toolbarRoot }: Props) {
 export default function RichTextEditor({ language, toolbarRoot, editorStyle, onValueChange }: Props) {
+  const [toolbarRootElement, setToolbarRootElement] = useState<HTMLElement | undefined>(toolbarRoot)
+  const toolbarRootRef = useRef<HTMLDivElement>(null)
+
+  useEffect(() => {
+    if (toolbarRoot) {
+      setToolbarRootElement(toolbarRoot)
+    } else if (toolbarRootRef.current) {
+      setToolbarRootElement(toolbarRootRef.current)
+    }
+  }, [toolbarRoot, toolbarRootRef])
+
   return (
-    <EditorStateProvider language={language} toolbarRoot={toolbarRoot}>
-      <MainTextArea />
+    <EditorStateProvider language={language} toolbarRoot={toolbarRoot} onValueChange={onValueChange}>
+      {toolbarRoot ? null : <div ref={toolbarRootRef} className="rich-text-editor-toolbar-root" />}
       <MainTextArea style={editorStyle ?? {}} toolbarRoot={toolbarRootElement} />
     </EditorStateProvider>
   )
