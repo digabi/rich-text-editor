@@ -28,8 +28,12 @@ export const repeat = async (times: number, action: () => Promise<void>) => {
   return Promise.resolve()
 }
 
-export const inputSpecialCharacterFromToolbar = async (page: Page, latexCommand: string) => {
-  await page.getByTitle(latexCommand, { exact: true }).click()
+export const inputSpecialCharacterFromToolbar = async (page: Page, character: string) => {
+  await page.getByText(character, { exact: true }).click()
+}
+
+export const inputLatexCommandFromToolbar = async (page: Page, latexCommand: string) => {
+  await page.getByTestId(`math-command-${latexCommand}`).click()
 }
 
 /** Clicks near the bottom corner of the page, to make sure it doesn't hit the editor or toolbar */
