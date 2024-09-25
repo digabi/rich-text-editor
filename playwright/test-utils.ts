@@ -121,8 +121,10 @@ export const sampleGIF = 'R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRA
  */
 export const assertAnswerContent = (answer: Answer, expected: Partial<Answer>) => {
   Object.entries(expected).forEach(([key, value]: [keyof Answer, string | number]) => {
-    if (value !== undefined) {
-      expect(answer[key], `${key} does not match`).toBe(value)
+    // Remove slashes from self-closing tags because we do not care about that
+    const [expected, received] = [value, answer[key]].map((v) => String(v).replace(/ \/>/g, '>'))
+    if (expected !== undefined) {
+      expect(received, `${key} does not match`).toBe(expected)
     }
   })
 }
