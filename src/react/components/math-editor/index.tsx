@@ -40,8 +40,9 @@ export default function MathEditor(props: Props) {
     }
   }
 
-  useKeyboardEventListener('z', historyHandler(undo))
-  useKeyboardEventListener('y', historyHandler(redo))
+  useKeyboardEventListener('z', true, historyHandler(undo))
+  useKeyboardEventListener('y', true, historyHandler(redo))
+  useKeyboardEventListener('Escape', false, close)
 
   const onChange = (oldValue: string | undefined, newValue: string) => {
     if (oldValue === newValue) return
@@ -67,11 +68,15 @@ export default function MathEditor(props: Props) {
     [isOpen, mq],
   )
 
+  function close() {
+    props.onBlur?.()
+    setIsOpen(false)
+  }
+
   function onBlur(e: React.FocusEvent) {
     // Only actually lose focus if neither of the two children is focused
     if (!containerRef?.current?.contains(e.relatedTarget)) {
-      props.onBlur?.()
-      setIsOpen(false)
+      close()
     }
   }
 

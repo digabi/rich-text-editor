@@ -165,8 +165,7 @@ test.describe('Rich text editor', () => {
 
       await test.step('hides math commands when math editor closes', async () => {
         await inputLatexCommandFromToolbar(page, specialCharacters.sqrt[0])
-        // 3 tab presses, to first move out of the square root and then out of the math editor
-        await repeat(3, async () => await page.keyboard.press('Tab'))
+        await page.keyboard.press('Escape')
         await expect(page.getByTestId('math-toolbar')).not.toBeVisible()
       })
     })

@@ -1,9 +1,9 @@
 import { useEffect } from 'react'
 
-export const useKeyboardEventListener = (key: string, fn: () => void) => {
+export const useKeyboardEventListener = (key: string, ctrl: boolean, fn: () => void) => {
   useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
-      if (event.ctrlKey) {
+      if (!ctrl || (ctrl && event.ctrlKey)) {
         if (event.key === key) {
           event.preventDefault() // Prevent the default browser undo behavior
           fn()

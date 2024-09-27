@@ -21,7 +21,7 @@ export default function MainTextArea({
 }) {
   const editor = useEditorState()
 
-  useKeyboardEventListener('e', editor.spawnMathEditorAtCursor)
+  useKeyboardEventListener('e', true, editor.spawnMathEditorAtCursor)
 
   async function onPaste(e: ClipboardEvent) {
     e.preventDefault()
