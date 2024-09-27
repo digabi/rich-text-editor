@@ -31,7 +31,11 @@ export function sanitize(html: string, opts?: sanitizeHtml.IOptions) {
           allowedSchemes: ['data', 'http', 'https'],
         }),
       (v) => stripBlockElements(v),
-      (v) => sanitizeHtml(v, { ...sanitizeOpts, ...opts }),
+      (v) =>
+        sanitizeHtml(v, {
+          ...sanitizeOpts,
+          ...opts,
+        }),
     ] as Array<(html: string) => string>
   ).reduce((value, fn) => fn(value), html)
 }

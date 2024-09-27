@@ -212,7 +212,7 @@ export function EditorStateProvider({
     const fn = () => {
       const content = mainTextAreaRef.current?.innerHTML
       if (content) {
-        onValueChange(getAnswer(content, sanitizeForExport))
+        onValueChange(getAnswer(content))
       }
     }
     setTimeout(fn, 0)

@@ -2,6 +2,7 @@ import sanitizeHtml from 'sanitize-html'
 import fi from '../FI'
 import sv from '../SV'
 import sanitize from 'sanitize-html'
+import { sanitizeForExport } from './utils/sanitization'
 
 export type Language = 'FI' | 'SV'
 export type Translation = typeof fi | typeof sv
@@ -139,8 +140,8 @@ export type Answer = {
 }
 
 // TODO: Finishing touches, make sure this is cross compatible with the old version
-export const getAnswer = (html: string, sanitizeFn: (oldHtml: string) => string) => {
-  const answerHtml = sanitizeFn(html)
+export const getAnswer = (html: string) => {
+  const answerHtml = sanitizeForExport(html)
   const answer = new DOMParser().parseFromString(answerHtml, 'text/html').body
   const answerText = new DOMParser().parseFromString(answerHtml.replaceAll('<br />', '\n'), 'text/html').body.innerText
 

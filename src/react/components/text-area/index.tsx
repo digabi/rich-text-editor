@@ -41,7 +41,7 @@ export default function MainTextArea({
         const src = await editor.handlePastedImage(file)
         const img = document.createElement('img')
         img.src = src
-        document.execCommand('insertHTML', false, img.outerHTML)
+        document.execCommand('insertHTML', false, sanitize(img.outerHTML))
       } catch (e) {
         console.error(e)
       }
