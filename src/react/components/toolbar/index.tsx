@@ -26,6 +26,7 @@ export default function Toolbar() {
       // text area `onBlur`. But the toolbar container won't show up in that
       // property unless it has a tab index (to make it "focusable"):
       tabIndex={0}
+      data-testid="toolbar"
     >
       <AddEqButton />
       <SpecialCharacterGrid cols={GRID_COLS}>

@@ -22,7 +22,6 @@ import {
   inputLatexCommandFromToolbar,
   setClipboardImage,
 } from './test-utils'
-//import { RichTextEditor } from '../src/components/RichTextEditor'
 import RichTextEditor from '../src/react/rich-text-editor'
 import { Answer } from '../src/react/utility'
 
@@ -148,6 +147,29 @@ test.describe('Rich text editor', () => {
     await expect(mathImage).toHaveAttribute('data-math-svg', 'true')
     await expect(mathImage).toHaveAttribute('src', /^data:image\/svg/)
     await expect(mathImage).toHaveAttribute('alt', latex)
+  })
+
+  test.describe('toolbar', () => {
+    test('appears and closes according to editor and math editor focus', async ({ page }) => {
+      await test.step('appears when editor is focused', async () => {
+        await clickOutsideEditor(page)
+        await expect(page.getByTestId('toolbar')).not.toBeVisible()
+        await getEditorLocator(page).click()
+        await expect(page.getByTestId('toolbar')).toBeVisible()
+      })
+
+      await test.step('renders math commands when a math editor is open', async () => {
+        await page.keyboard.press('Control+e')
+        await expect(page.getByTestId('math-toolbar')).toBeVisible()
+      })
+
+      await test.step('hides math commands when math editor closes', async () => {
+        await inputLatexCommandFromToolbar(page, specialCharacters.sqrt[0])
+        // 3 tab presses, to first move out of the square root and then out of the math editor
+        await repeat(3, async () => await page.keyboard.press('Tab'))
+        await expect(page.getByTestId('math-toolbar')).not.toBeVisible()
+      })
+    })
   })
 
   test.describe('selecting text', () => {

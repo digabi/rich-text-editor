@@ -33,7 +33,7 @@ export default function MathEditorButtons() {
     })
 
   return isMathToolbarOpen ? (
-    <Container>
+    <Container data-testid="math-toolbar">
       <Grid>
         {mathShortcutData.map((shortcut) => (
           <LatexCommandButton
