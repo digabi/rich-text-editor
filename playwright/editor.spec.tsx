@@ -149,6 +149,19 @@ test.describe('Rich text editor', () => {
     await expect(mathImage).toHaveAttribute('alt', latex)
   })
 
+  test('sanitizes pasted html', async ({ page }) => {
+    const badHtml = '<div class="forbidden"><b>drop</b></div><div>bar</div><a href="/">link text</a> '
+    const goodHtml = 'drop<br />bar<br />link text'
+
+    const editor = getEditorLocator(page)
+    await editor.click()
+
+    await setClipboardHTML(page, badHtml)
+    await paste(page)
+
+    assertAnswerContent(answer, { answerHtml: goodHtml, answerText: 'drop\nbar\nlink text', imageCount: 0 })
+  })
+
   test.describe('toolbar', () => {
     test('appears and closes according to editor and math editor focus', async ({ page }) => {
       await test.step('appears when editor is focused', async () => {
