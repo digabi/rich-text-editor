@@ -10,7 +10,6 @@ import { sanitize } from '../../utils/sanitization'
 import { getAnswer } from '../../utility'
 import { useKeyboardEventListener } from '../../hooks/use-keyboard-events'
 
-export const ALLOWED_IMG_TYPES = ['image/png', 'image/jpeg']
 export const MATH_EDITOR_CLASS = 'math-editor-wrapper'
 
 export default function MainTextArea({
@@ -37,7 +36,7 @@ export default function MainTextArea({
     const html = content.getData('text/html')
     const text = content.getData('text/plain')
 
-    if (file && ALLOWED_IMG_TYPES.includes(file.type)) {
+    if (file && editor.allowedFileTypes.includes(file.type)) {
       try {
         const src = await editor.handlePastedImage(file)
         const img = document.createElement('img')

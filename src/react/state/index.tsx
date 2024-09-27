@@ -45,6 +45,7 @@ export type EditorState = {
 
   toolbarRoot: RichTextEditorProps['toolbarRoot']
   handlePastedImage: NonNullable<RichTextEditorProps['getPasteSource']>
+  allowedFileTypes: NonNullable<RichTextEditorProps['allowedFileTypes']>
 
   isHelpDialogOpen: boolean
   showHelpDialog: () => void
@@ -86,6 +87,7 @@ export function EditorStateProvider({
   language,
   toolbarRoot,
   getPasteSource,
+  allowedFileTypes,
   onValueChange,
 }: PropsWithChildren<Props>) {
   const [isToolbarOpen, setIsToolbarOpen] = useState(false)
@@ -107,6 +109,8 @@ export function EditorStateProvider({
   const mainTextAreaRef = useRef<HTMLDivElement>(null)
 
   const t = { FI, SV }[language]
+
+  const allowedTypes = allowedFileTypes ?? ['image/png', 'image/jpeg']
 
   const getNextKey = () => {
     const key = nextKey
@@ -259,6 +263,7 @@ export function EditorStateProvider({
               reader.readAsDataURL(file)
             })
           },
+        allowedFileTypes: allowedTypes,
         onAnswerChange,
       }}
     >

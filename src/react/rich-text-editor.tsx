@@ -13,6 +13,7 @@ export type Props = {
    * that can be used as the `src` attribute of an `<img />` tag.
    */
   getPasteSource?: (file: File) => Promise<string>
+  allowedFileTypes?: string[]
 
   editorStyle?: React.CSSProperties
 

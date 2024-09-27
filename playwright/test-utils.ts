@@ -75,33 +75,20 @@ export const setClipboardHTML = async (page: Page, text: string) => {
   }, text)
 }
 
-// WIP for pasting images
-// export const setClipboardImage = async (page: Page, base64: string) => {
-//   await page.evaluate((base64) => {
-//     const binary = atob(base64)
-//     const buffer = new Uint8Array(binary.length)
-//     for (let i = 0; i < binary.length; i++) {
-//       buffer[i] = binary.charCodeAt(i)
-//     }
-//     const blob = new Blob([buffer], { type: 'image/png' })
-//     const clipboardItem = new ClipboardItem({ 'image/png': blob })
-//     navigator.clipboard.write([clipboardItem])
-//   }, base64)
-// }
-//
-// export const mockImagePaste = async (element: Locator, base64: string) => {
-//   await page.evaluate((base64) => {
-//     const binary = atob(base64)
-//     const buffer = new Uint8Array(binary.length)
-//     for (let i = 0; i < binary.length; i++) {
-//       buffer[i] = binary.charCodeAt(i)
-//     }
-//     const blob = new Blob([buffer], { type: 'image/png' })
-//     const clipboardItem = new ClipboardItem({ 'image/png': blob })
-//     const transferItem = new DataTransferItem()
-//     element.dispatchEvent('paste', new ClipboardEvent('paste', { clipboardData: { items: [clipboardItem] } }))
-//   }, base64)
-// }
+export const setClipboardImage = async (page: Page, filetype: string, base64: string) => {
+  await page.evaluate(
+    async ([filetype, base64]) => {
+      const response = await fetch(`data:image/png;base64,${base64}`)
+      const blob = await response.blob()
+
+      const clipboardData = {}
+      clipboardData[filetype] = blob
+
+      navigator.clipboard.write([new ClipboardItem(clipboardData)])
+    },
+    [filetype, base64],
+  )
+}
 
 export const paste = async (page: Page) =>
   process.platform === 'darwin' ? page.keyboard.press('Meta+V') : page.keyboard.press('Control+V')

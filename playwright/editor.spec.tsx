@@ -20,6 +20,7 @@ import {
   pasteHtmlImage,
   specialCharacters,
   inputLatexCommandFromToolbar,
+  setClipboardImage,
 } from './test-utils'
 //import { RichTextEditor } from '../src/components/RichTextEditor'
 import RichTextEditor from '../src/react/rich-text-editor'
@@ -38,11 +39,13 @@ test.describe('Rich text editor', () => {
         language="FI"
         editorStyle={{ position: 'absolute', top: '300px', width: '100%' }}
         onValueChange={onAnswerChange}
+        allowedFileTypes={['image/png', 'image/jpeg']}
       />,
     )
     await page.addStyleTag({
       url: '//unpkg.com/@digabi/mathquill/build/mathquill.css',
     })
+    await page.context().grantPermissions(['clipboard-read', 'clipboard-write'])
     const editor = getEditorLocator(page)
     await editor.click()
   })
@@ -109,12 +112,18 @@ test.describe('Rich text editor', () => {
     })
   })
 
-  test('can not paste gif <img> from clipboard', async ({ page }) => {
+  test('can paste png file from clipboard', async ({ page }) => {
     const editor = getEditorLocator(page)
-    const img = `<img src="data:image/gif;base64,${sampleGIF}" alt="Hello World!">`
-    await setClipboardHTML(page, img)
+    await setClipboardImage(page, 'image/png', samplePNG)
     await paste(page)
-    await assertEditorHTMLContent(editor, '')
+    await expect(editor.locator('img')).toBeVisible()
+  })
+
+  test('can not paste a gif file from clipboard', async ({ page }) => {
+    const editor = getEditorLocator(page)
+    await setClipboardImage(page, 'image/gif', sampleGIF)
+    await paste(page)
+    await expect(editor.locator('img')).not.toBeVisible()
   })
 
   test('can paste equation SVG from clipboard', async ({ page }) => {
