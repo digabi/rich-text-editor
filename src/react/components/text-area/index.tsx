@@ -9,6 +9,7 @@ import { HelpDialog } from '../help-dialog'
 import { sanitize } from '../../utils/sanitization'
 import { getAnswer } from '../../utility'
 import { useKeyboardEventListener } from '../../hooks/use-keyboard-events'
+import useMutationObserver from '../../hooks/use-mutation-observer'
 
 export const MATH_EDITOR_CLASS = 'math-editor-wrapper'
 
@@ -22,6 +23,37 @@ export default function MainTextArea({
   const editor = useEditorState()
 
   useKeyboardEventListener('e', true, editor.spawnMathEditorAtCursor)
+
+  /**
+   * This is hacky, but necessary. If a wrapper does not have text on both sides,
+   * the user cannot place their cursor there
+   */
+  useMutationObserver(editor.ref, () => {
+    const editorElement = editor.ref.current
+    if (!editorElement) return
+
+    if (editorElement.firstChild?.nodeType !== Node.TEXT_NODE) {
+      editorElement.insertBefore(document.createTextNode('\u00A0'), editorElement.firstChild)
+    }
+    if (editorElement.lastChild?.nodeType !== Node.TEXT_NODE) {
+      editorElement.appendChild(document.createTextNode('\u00A0'))
+    }
+
+    editor.ref.current?.querySelectorAll(`.${MATH_EDITOR_CLASS}`)?.forEach((wrapper) => {
+      const next = wrapper.nextSibling
+      const prev = wrapper.previousSibling
+
+      if (!prev || prev.nodeType !== Node.TEXT_NODE) {
+        console.debug('inserting text before', wrapper)
+        wrapper.parentNode?.insertBefore(document.createTextNode('\u00A0'), wrapper)
+      }
+
+      if (!next || next.nodeType !== Node.TEXT_NODE) {
+        console.debug('inserting text after', wrapper)
+        wrapper.parentNode?.insertBefore(document.createTextNode('\u00A0'), wrapper.nextSibling)
+      }
+    })
+  })
 
   async function onPaste(e: ClipboardEvent) {
     e.preventDefault()
@@ -86,7 +118,6 @@ export default function MainTextArea({
         onPaste={onPaste}
         style={style}
         onInput={() => editor.onAnswerChange()}
-        // onInput={(e) => editor.onValueChange(getAnswer(e.currentTarget.innerHTML, sanitize))}
         //   dangerouslySetInnerHTML={{ __html: initialValue ?? '' }}
       />
 
