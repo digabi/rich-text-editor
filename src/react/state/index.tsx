@@ -14,8 +14,7 @@ import { createMathStub, MATH_EDITOR_CLASS } from '../utils/create-math-stub'
 import FI from '../../FI'
 import SV from '../../SV'
 import { createPortal } from 'react-dom'
-import { Answer, getAnswer } from '../utility'
-import { sanitizeForExport } from '../utils/sanitization'
+import { getAnswer } from '../utility'
 
 export type Props = RichTextEditorProps
 

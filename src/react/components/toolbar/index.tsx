@@ -7,6 +7,7 @@ import MathEditorButtons from './components/math-editor-buttons'
 
 import * as chars from './math-char-data'
 import useEditorState from '../../state'
+import { eventHandlerWithoutFocusLoss } from '../../utility'
 
 /**
  * When the page is resized to a small enough width, the button groups
@@ -27,6 +28,7 @@ export default function Toolbar() {
       // property unless it has a tab index (to make it "focusable"):
       tabIndex={0}
       data-testid="toolbar"
+      onMouseDown={eventHandlerWithoutFocusLoss()}
     >
       <AddEqButton />
       <SpecialCharacterGrid cols={GRID_COLS}>
