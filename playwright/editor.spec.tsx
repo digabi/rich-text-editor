@@ -394,7 +394,7 @@ test.describe('Rich text editor', () => {
     test.beforeEach(async ({ page, mount }) => {
       const initialContent = `\
 testi.
-kuva: <img src=${samplePNG}/>
+kuva: <img src="data:image/png;base64,${samplePNG}" alt="Hello World!">
 kaava:\
 <span
   class="math-editor-wrapper"
