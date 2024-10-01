@@ -1,7 +1,6 @@
 import sanitizeHtml from 'sanitize-html'
 import fi from '../FI'
 import sv from '../SV'
-import sanitize from 'sanitize-html'
 import { sanitizeForExport } from './utils/sanitization'
 
 export type Language = 'FI' | 'SV'

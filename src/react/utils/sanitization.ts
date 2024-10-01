@@ -52,6 +52,8 @@ export function sanitizeForExport(html: string) {
               attribs.class === 'math-editor-wrapper' ? { tagName: '', attribs: {} } : { tagName, attribs },
           },
         }),
+      (v) => v.trim(),
+      (v) => v.replace(/&nbsp;/g, ''),
     ] as Array<(html: string) => string>
   ).reduce((value, fn) => fn(value), html)
 }

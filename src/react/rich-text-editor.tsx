@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from 'react'
 import MainTextArea from './components/text-area'
 import { EditorStateProvider } from './state'
 import { Answer } from './utility'
+import { sanitize } from './utils/sanitization'
 
 export type Props = {
   language: 'FI' | 'SV'
@@ -18,9 +19,11 @@ export type Props = {
   editorStyle?: React.CSSProperties
 
   onValueChange: (answer: Answer) => void
+
+  initialValue?: string
 }
 
-export default function RichTextEditor({ language, toolbarRoot, editorStyle, onValueChange }: Props) {
+export default function RichTextEditor({ language, toolbarRoot, editorStyle, onValueChange, initialValue }: Props) {
   const [toolbarRootElement, setToolbarRootElement] = useState<HTMLElement | undefined>(toolbarRoot)
   const toolbarRootRef = useRef<HTMLDivElement>(null)
 
@@ -33,7 +36,12 @@ export default function RichTextEditor({ language, toolbarRoot, editorStyle, onV
   }, [toolbarRoot, toolbarRootRef])
 
   return (
-    <EditorStateProvider language={language} toolbarRoot={toolbarRoot} onValueChange={onValueChange}>
+    <EditorStateProvider
+      language={language}
+      toolbarRoot={toolbarRoot}
+      onValueChange={onValueChange}
+      initialValue={initialValue}
+    >
       {toolbarRoot ? null : <div ref={toolbarRootRef} className="rich-text-editor-toolbar-root" />}
       <MainTextArea style={editorStyle ?? {}} toolbarRoot={toolbarRootElement} />
     </EditorStateProvider>

@@ -1,4 +1,4 @@
-import { createContext, PropsWithChildren, ReactPortal, useContext, useRef, useState } from 'react'
+import { createContext, PropsWithChildren, ReactPortal, useContext, useEffect, useMemo, useRef, useState } from 'react'
 import { Container } from 'react-dom/client'
 import { MathField } from '@digabi/mathquill'
 
@@ -15,6 +15,7 @@ import FI from '../../FI'
 import SV from '../../SV'
 import { createPortal } from 'react-dom'
 import { getAnswer } from '../utility'
+import { sanitize } from '../utils/sanitization'
 
 export type Props = RichTextEditorProps
 
@@ -71,6 +72,7 @@ export type EditorState = {
    * trigger this from multiple places
    */
   onAnswerChange: () => void
+  initialValue: string
 } & Pick<ReturnType<typeof useHistory>, 'undo' | 'redo' | 'canUndo' | 'canRedo'>
 
 const editorCtx = createContext<EditorState>(null!)
@@ -88,15 +90,17 @@ export function EditorStateProvider({
   getPasteSource,
   allowedFileTypes,
   onValueChange,
+  initialValue,
 }: PropsWithChildren<Props>) {
   const [isToolbarOpen, setIsToolbarOpen] = useState(false)
   const [isMathToolbarOpen, setIsMathToolbarOpen] = useState(false)
   const [isToolbarExpanded, setIsToolbarExpanded] = useState(false)
   const [isHelpDialogOpen, setIsHelpDialogOpen] = useState(false)
-  const [activeMathEditor, setActiveMathEditor] = useState<MathEditorHandle | null>(null) // TODO: Move to own type
+  const [activeMathEditor, setActiveMathEditor] = useState<MathEditorHandle | null>(null)
+  const [hasBeenInitialized, setHasBeenInitialized] = useState(false)
   const [nextKey, setNextKey] = useState(0)
 
-  /** url search parameterr for dev use
+  /** url search parameter for dev use
    * `?forceToolbars=1` to force basic toolbar to stay open
    * `?forceToolbars=2` to force basic and math toolbars to stay open
    * NOTE: Using this will likely cause things to break, as this is for debug/dev reasons
@@ -219,6 +223,19 @@ export function EditorStateProvider({
     setTimeout(fn, 0)
   }
 
+  /** This will initialize any equations present in the initial content */
+  useEffect(() => {
+    if (!hasBeenInitialized && mainTextAreaRef.current) {
+      if (initialValue) {
+        mainTextAreaRef.current.innerHTML = initialValue
+      }
+      setTimeout(() => {
+        initMathEditors()
+        setHasBeenInitialized(true)
+      }, 0)
+    }
+  }, [hasBeenInitialized, initialValue, mainTextAreaRef.current])
+
   return (
     <editorCtx.Provider
       value={{
@@ -266,6 +283,7 @@ export function EditorStateProvider({
           },
         allowedFileTypes: allowedTypes,
         onAnswerChange,
+        initialValue: initialValue ?? '',
       }}
     >
       {children}

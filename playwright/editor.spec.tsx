@@ -1,3 +1,4 @@
+import React from 'react'
 import { test, expect } from '@playwright/experimental-ct-react'
 import {
   getEditorLocator,
@@ -27,20 +28,23 @@ import { Answer } from '../src/react/utility'
 
 test.describe('Rich text editor', () => {
   let answer: Answer = { answerHtml: '', answerText: '', imageCount: 0 }
+  let unmountComponent: () => Promise<void>
 
   const onAnswerChange = (newAnswer: Answer) => {
     answer = newAnswer
   }
 
   test.beforeEach(async ({ page, mount }) => {
-    await mount(
+    const { unmount } = await mount(
       <RichTextEditor
         language="FI"
         editorStyle={{ position: 'absolute', top: '300px', width: '100%' }}
         onValueChange={onAnswerChange}
         allowedFileTypes={['image/png', 'image/jpeg']}
+        initialValue=""
       />,
     )
+    unmountComponent = unmount
     await page.addStyleTag({
       url: '//unpkg.com/@digabi/mathquill/build/mathquill.css',
     })
@@ -383,6 +387,46 @@ test.describe('Rich text editor', () => {
         await page.keyboard.press('B')
         assertAnswerContent(answer, { answerHtml: 'A2 B2' })
       })
+    })
+  })
+
+  test.describe('initial value', async () => {
+    test.beforeEach(async ({ page, mount }) => {
+      const initialContent = `\
+testi.
+kuva: <img src=${samplePNG}/>
+kaava:\
+<span
+  class="math-editor-wrapper"
+  id="math-editor-1"
+  style="display: contents;"
+  contenteditable="false"
+>
+  <img
+    src="data:image/svg+xml;utf8,this_is_not_relevant"
+    data-math-svg="true"
+    data-latex="\\sqrt{123}"
+    alt="\\sqrt{123}"
+  />
+</span>`
+      await unmountComponent()
+      await mount(
+        <RichTextEditor
+          language="FI"
+          editorStyle={{ position: 'absolute', top: '300px', width: '100%' }}
+          onValueChange={onAnswerChange}
+          allowedFileTypes={['image/png', 'image/jpeg']}
+          initialValue={initialContent}
+        />,
+      )
+    })
+
+    test('is editable', async ({ page }) => {
+      const equationEditor = getEditorLocator(page)
+      await page.getByRole('img').last().click()
+      await assertEquationEditorLatexContent(equationEditor, '\\sqrt{123}')
+      await clickOutsideEditor(page)
+      assertAnswerContent(answer, { imageCount: 1 })
     })
   })
 })
