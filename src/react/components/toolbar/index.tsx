@@ -57,7 +57,7 @@ const Container = styled.div`
   box-shadow: 0 1px 10px 1px rgba(0, 0, 0, 0.2);
   border-bottom: 1px solid #dfdfdf;
 
-  z-index: 1000;
+  z-index: 10;
 
   @media (max-width: 799px) {
     grid-column: 1;
