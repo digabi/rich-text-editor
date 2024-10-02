@@ -24,6 +24,20 @@ export default function MainTextArea({
 
   useKeyboardEventListener('e', true, editor.spawnMathEditorAtCursor)
 
+  /** We need to capture Enter presses and handle them manually. Otherwise browsers may do weird things that interfere with our
+   *  React tomfoolery, leading to behaviours like equations getting deleted if the user enters
+   *  a line break on the same line as an Equation
+   */
+  useKeyboardEventListener('Enter', false, () => {
+    const selection = window.getSelection()
+    if (
+      selection?.anchorNode &&
+      ((selection.anchorNode as Element) === editor.ref.current || editor.ref.current?.contains(selection.anchorNode))
+    ) {
+      document.execCommand('insertHTML', false, '<br>')
+    }
+  })
+
   /**
    * This is hacky, but necessary. If a wrapper does not have text on both sides,
    * the user cannot place their cursor there
@@ -78,6 +92,7 @@ export default function MainTextArea({
         console.error(e)
       }
     } else if (html) {
+      // TODO: Are img urls handled correctly?
       document.execCommand('insertHTML', false, sanitize(html))
     } else if (text) {
       document.execCommand('insertHTML', false, text)

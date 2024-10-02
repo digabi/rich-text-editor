@@ -51,7 +51,6 @@ export type EditorState = {
   showHelpDialog: () => void
   hideHelpDialog: () => void
 
-  // TODO: Move handle to its own type
   setActiveMathEditor: (handle: MathEditorHandle | null) => void
   activeMathEditor: MathEditorHandle | null
 
@@ -63,16 +62,13 @@ export type EditorState = {
 
   t: typeof FI
 
-  /** The callback to be called every time the value of the answer changes */
-  // onValueChange: (answer: Answer) => void
-
   /** Called when answer has changed. This needs to happen on this level,
    * as programmatic changes to the answer (e.g. creating and editing equations)
    * do not trigger the main text area's `onInput` event so we need a mechanism to
    * trigger this from multiple places
    */
   onAnswerChange: () => void
-  initialValue: string
+  initialValue?: string
 } & Pick<ReturnType<typeof useHistory>, 'undo' | 'redo' | 'canUndo' | 'canRedo'>
 
 const editorCtx = createContext<EditorState>(null!)
