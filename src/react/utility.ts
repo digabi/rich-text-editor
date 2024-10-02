@@ -1,10 +1,9 @@
-import sanitizeHtml from 'sanitize-html'
+import sanitizeHtml, { Attributes } from 'sanitize-html'
 import fi from '../FI'
-import sv from '../SV'
 import { sanitizeForExport } from './utils/sanitization'
 
 export type Language = 'FI' | 'SV'
-export type Translation = typeof fi | typeof sv
+export type Translation = typeof fi
 export interface SpecialCharacter {
   character: string
   latexCommand?: string
@@ -53,11 +52,11 @@ export const sanitizeOpts = {
     span: ['math-editor-wrapper'],
   },
   transformTags: {
-    img: (tagName: string, attribs: sanitize.Attributes) => ({
+    img: (tagName: string, attribs: Attributes) => ({
       tagName,
       attribs: attribs.src?.includes('math.svg') ? { ...attribs, 'data-math-svg': 'true' } : attribs,
     }),
-    span: (tagName: string, attribs: sanitize.Attributes) =>
+    span: (tagName: string, attribs: Attributes) =>
       attribs.class === 'math-editor-wrapper' ? { tagName, attribs } : { tagName: '', attribs: { text: '' } },
   },
 }
