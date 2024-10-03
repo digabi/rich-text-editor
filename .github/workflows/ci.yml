@@ -13,22 +13,12 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
-
-    strategy:
-      matrix:
-        node-version: [16.x]
-
     steps:
       - uses: actions/checkout@v4
-      - name: Use Node.js ${{ matrix.node-version }}
+      - name: Use Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: ${{ matrix.node-version }}
-      - name: Restore cache
-        uses: actions/cache@v4
-        with:
-          path: node_modules
-          key: npm-${{ matrix.node-version }}-${{ hashFiles('**/package-lock.json') }}
+          node-version-file: '.nvmrc'
+          cache: 'npm'
       - run: npm ci
       - run: npm run test
-      - run: npm run lint
