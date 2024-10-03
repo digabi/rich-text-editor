@@ -28,15 +28,22 @@ export default function MainTextArea({
    *  React tomfoolery, leading to behaviours like equations getting deleted if the user enters
    *  a line break on the same line as an Equation
    */
-  useKeyboardEventListener('Enter', false, () => {
-    const selection = window.getSelection()
-    if (
-      selection?.anchorNode &&
-      ((selection.anchorNode as Element) === editor.ref.current || editor.ref.current?.contains(selection.anchorNode))
-    ) {
-      document.execCommand('insertHTML', false, '<br>')
-    }
-  })
+  useKeyboardEventListener(
+    'Enter',
+    false,
+    (e) => {
+      const selection = window.getSelection()
+      if (
+        selection?.anchorNode &&
+        !editor.activeMathEditor &&
+        ((selection.anchorNode as Element) === editor.ref.current || editor.ref.current?.contains(selection.anchorNode))
+      ) {
+        e?.preventDefault()
+        document.execCommand('insertHTML', false, '<br>')
+      }
+    },
+    false,
+  )
 
   /**
    * This is hacky, but necessary. If a wrapper does not have text on both sides,

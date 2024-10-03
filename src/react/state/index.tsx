@@ -15,7 +15,6 @@ import FI from '../../FI'
 import SV from '../../SV'
 import { createPortal } from 'react-dom'
 import { getAnswer } from '../utility'
-import { sanitize } from '../utils/sanitization'
 
 export type Props = RichTextEditorProps
 
@@ -33,6 +32,7 @@ export type EditorState = {
    */
   spawnMathEditor(stub: Container): void
   spawnMathEditorAtCursor(): void
+  spawnMathEditorInNewLine(): void
 
   isToolbarOpen: boolean
   isMathToolbarOpen: boolean
@@ -176,6 +176,13 @@ export function EditorStateProvider({
     spawnMathEditor(createMathStub(getNextKey(), true), { initialOpen: true })
   }
 
+  function spawnMathEditorInNewLine() {
+    const stub = createMathStub(getNextKey(), false)
+    mainTextAreaRef.current?.appendChild(document.createElement('br'))
+    mainTextAreaRef.current?.appendChild(stub)
+    spawnMathEditor(stub, { initialOpen: true })
+  }
+
   function initMathEditors() {
     if (!mainTextAreaRef.current) return
 
@@ -257,6 +264,7 @@ export function EditorStateProvider({
 
         spawnMathEditor: spawnMathEditor,
         spawnMathEditorAtCursor: spawnMathEditorAtCursor,
+        spawnMathEditorInNewLine: spawnMathEditorInNewLine,
         initMathEditors,
 
         canUndo: history.canUndo,

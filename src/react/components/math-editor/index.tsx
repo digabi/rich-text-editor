@@ -29,7 +29,7 @@ export default function MathEditor(props: Props) {
   const [isOpen, setIsOpen] = useState(props.initialOpen ?? false)
   const [latex, setLatex] = useState(props.initialLatex ?? '')
 
-  const { undo, redo } = useEditorState()
+  const { undo, redo, spawnMathEditorInNewLine } = useEditorState()
 
   const historyHandler = (fn: typeof undo | typeof redo) => () => {
     const oldValue = latex
@@ -50,7 +50,12 @@ export default function MathEditor(props: Props) {
     props.onChange?.(newValue)
   }
 
-  const { ref: latexRef, isError, mq } = useMathQuill({ latex, onChange })
+  const onEnter = () => {
+    spawnMathEditorInNewLine()
+    close()
+  }
+
+  const { ref: latexRef, isError, mq } = useMathQuill({ latex, onChange, onEnter })
 
   useEffect(
     function signalOpenedMathEditor() {
