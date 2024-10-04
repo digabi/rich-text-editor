@@ -2,22 +2,21 @@
   "name": "rich-text-editor",
   "version": "7.3.0",
   "description": "Rich text editor",
-  "author": "",
   "homepage": "https://github.com/digabi/rich-text-editor",
-  "main": "dist/rich-text-editor.js",
-  "types": "index.d.ts",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
   "files": [
     "dist/*",
-    "server/*",
-    "index.d.ts"
+    "server/*"
   ],
   "scripts": {
     "generateMathButtons": "scripts/createMathSvg.js && prettier --write src/latexCommandsWithSvg.js",
+    "typecheck": "tsc --noEmit",
     "lint": "eslint .",
     "test:ct": "playwright test -c playwright-ct.config.ts --project=chromium",
-    "parcel-watch": "parcel watch src/react/index.html",
-    "parcel-build:": "parcel build src/react/index.html",
-    "parcel-serve": "parcel serve src/react/index.html"
+    "test": "npm run typecheck && npm run lint && npm run test:ct",
+    "build": "rm -rf dist/ && parcel build src/react/index.tsx",
+    "watch": "parcel serve index.html"
   },
   "repository": {
     "type": "git",
@@ -28,7 +27,9 @@
     "@babel/polyfill": "^7.0.0",
     "@digabi/eslint-config": "^3.0.0",
     "@parcel/core": "^2.12.0",
+    "@parcel/packager-ts": "^2.12.0",
     "@parcel/transformer-babel": "^2.12.0",
+    "@parcel/transformer-typescript-tsc": "^2.12.0",
     "@parcel/transformer-typescript-types": "^2.12.0",
     "@playwright/experimental-ct-react": "^1.46.1",
     "@types/node": "^22.5.4",
