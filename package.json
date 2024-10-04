@@ -3,7 +3,7 @@
   "version": "7.3.0",
   "description": "Rich text editor",
   "homepage": "https://github.com/digabi/rich-text-editor",
-  "main": "dist/index.js",
+  "source": "src/react/index.tsx",
   "types": "dist/index.d.ts",
   "files": [
     "dist/*",
@@ -15,7 +15,7 @@
     "lint": "eslint .",
     "test:ct": "playwright test -c playwright-ct.config.ts --project=chromium",
     "test": "npm run typecheck && npm run lint && npm run test:ct",
-    "build": "rm -rf dist/ && parcel build src/react/index.tsx",
+    "build": "rm -rf dist/ && parcel build",
     "watch": "parcel serve index.html"
   },
   "repository": {
