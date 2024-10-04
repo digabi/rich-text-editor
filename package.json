@@ -20,14 +20,14 @@
     "start": "node test/index.js",
     "test": "eslint . && test/testRunner.js",
     "test:ui": "playwright test",
+    "test:ct": "playwright test -c playwright-ct.config.ts --project=chromium",
     "dev": "supervisor -i public,test test/index.js",
     "generateMathButtons": "scripts/createMathSvg.js && prettier --write src/latexCommandsWithSvg.js",
     "lint": "eslint .",
     "prepare": "npm run build && npm run build:bundle",
     "parcel-watch": "parcel watch src/react/index.html",
     "parcel-build:": "parcel build src/react/index.html",
-    "parcel-serve": "parcel serve src/react/index.html",
-    "test-ct": "playwright test -c playwright-ct.config.ts"
+    "parcel-serve": "parcel serve src/react/index.html"
   },
   "repository": {
     "type": "git",
