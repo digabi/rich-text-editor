@@ -1,3 +1,5 @@
+/// <reference types="../mathquill.d.ts" />
+
 import ReactDOM from 'react-dom/client'
 import RichTextEditor from './rich-text-editor'
 
