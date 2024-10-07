@@ -4,6 +4,13 @@
   "description": "Rich text editor",
   "homepage": "https://github.com/digabi/rich-text-editor",
   "source": "src/react/index.tsx",
+  "browser": "dist/bundle.js",
+  "targets": {
+    "browser": {
+      "includeNodeModules": true,
+      "optimize": true
+    }
+  },
   "types": "dist/index.d.ts",
   "files": [
     "dist/*",
@@ -15,7 +22,7 @@
     "lint": "eslint .",
     "test:ct": "playwright test -c playwright-ct.config.ts --project=chromium",
     "test": "npm run typecheck && npm run lint && npm run test:ct",
-    "build": "rm -rf dist/ && parcel build",
+    "build": "rm -rf dist/ && parcel build --no-source-maps --detailed-report",
     "watch": "parcel serve index.html"
   },
   "repository": {
