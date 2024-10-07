@@ -23,7 +23,9 @@
     "test:ct": "playwright test -c playwright-ct.config.ts --project=chromium",
     "test": "npm run typecheck && npm run lint && npm run test:ct",
     "build": "rm -rf dist/ && parcel build --no-source-maps --detailed-report",
-    "watch": "parcel serve index.html"
+    "dev": "parcel serve index.html",
+    "dev-server": "ts-node dev-server.ts",
+    "watch": "concurrently -n='PARCEL,DEVSERVER' -c=auto 'npm run dev' 'npm run dev-server'"
   },
   "repository": {
     "type": "git",
@@ -48,7 +50,7 @@
     "buffer": "^6.0.3",
     "chai": "^4.2.0",
     "chai-jquery": "^2.1.0",
-    "concurrently": "^8.0.1",
+    "concurrently": "^8.2.2",
     "eslint": "^8.45.0",
     "eslint-config-prettier": "^9.0.0",
     "eslint-plugin-import": "^2.27.5",
@@ -76,8 +78,6 @@
     "@types/jquery": "^3.5.30",
     "@types/sanitize-html": "^2.11.0",
     "jquery": "3.x",
-    "mathjax": "^3.2.2",
-    "mathjax-full": "^3.2.2",
     "mathjax-node": "^2.1.1",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",

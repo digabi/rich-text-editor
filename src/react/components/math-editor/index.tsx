@@ -3,8 +3,6 @@ import * as MathQuill from '@digabi/mathquill'
 
 import useMathQuill from '../../hooks/use-mathquill'
 import LatexError from '../icons/latex-error'
-import { getMathSvg } from '../../mathSvg'
-import useHistory from '../../state/history'
 import useEditorState from '../../state'
 import { useKeyboardEventListener } from '../../hooks/use-keyboard-events'
 
@@ -118,8 +116,9 @@ export default function MathEditor(props: Props) {
     )
   } else if (latex !== '') {
     return (
+      // TODO: parametrize baseurl
       <img
-        src={`data:image/svg+xml;utf8,${encodeURIComponent(getMathSvg(latex))}`}
+        src={`http://localhost:5111/math.svg?latex=${encodeURIComponent(latex)}`}
         data-math-svg={true}
         data-latex={latex}
         alt={latex}

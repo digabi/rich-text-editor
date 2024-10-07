@@ -28,6 +28,14 @@ export default defineConfig({
     ctPort: 3100,
   },
 
+  webServer: {
+    command: 'npm run dev-server',
+    url: 'http://localhost:5111',
+    reuseExistingServer: !process.env.CI,
+    stdout: 'pipe',
+    stderr: 'pipe',
+  },
+
   // TODO: fix tests for firefox
   projects: [
     {
