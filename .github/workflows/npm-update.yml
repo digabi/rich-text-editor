@@ -14,7 +14,7 @@ jobs:
       - name: Authenticate with private NPM package
         run: echo "//registry.npmjs.org/:_authToken=${{ secrets.NPM_TOKEN }}" > ~/.npmrc
       - run: |
-          npm update
+          npm update --save
           git config user.name npm-update
           git config user.email npm-update@ylioppilastutkinto.fi
           git add package-lock.json
