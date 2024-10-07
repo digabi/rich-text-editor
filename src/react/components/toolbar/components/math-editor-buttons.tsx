@@ -35,8 +35,9 @@ export default function MathEditorButtons() {
   return isMathToolbarOpen ? (
     <Container data-testid="math-toolbar">
       <Grid>
-        {mathShortcutData.map((shortcut) => (
+        {mathShortcutData.map((shortcut, i) => (
           <LatexCommandButton
+            key={`math-shortcut-${i}`}
             onMouseDown={(e) => onMouseDown(e, shortcut)}
             data-testid={`math-command-${shortcut.action}`}
           >

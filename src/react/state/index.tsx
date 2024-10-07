@@ -79,6 +79,14 @@ export default function useEditorState() {
   return ctx
 }
 
+let nextKey = 0
+
+const getNextKey = () => {
+  const next = nextKey
+  nextKey = next + 1
+  return next
+}
+
 export function EditorStateProvider({
   children,
   language,
@@ -94,7 +102,6 @@ export function EditorStateProvider({
   const [isHelpDialogOpen, setIsHelpDialogOpen] = useState(false)
   const [activeMathEditor, setActiveMathEditor] = useState<MathEditorHandle | null>(null)
   const [hasBeenInitialized, setHasBeenInitialized] = useState(false)
-  const [nextKey, setNextKey] = useState(0)
 
   /** url search parameter for dev use
    * `?forceToolbars=1` to force basic toolbar to stay open
@@ -110,12 +117,6 @@ export function EditorStateProvider({
   const t = { FI, SV }[language]
 
   const allowedTypes = allowedFileTypes ?? ['image/png', 'image/jpeg']
-
-  const getNextKey = () => {
-    const key = nextKey
-    setNextKey((k) => k + 1)
-    return key
-  }
 
   // When a MathEditor's container element is removed,
   // we need to also remove the ReactPortal it was rendered in.
