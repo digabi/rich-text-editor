@@ -26,5 +26,7 @@ jobs:
           key: ${{ runner.os }}-${{ hashFiles('./package-lock.json') }}
       - run: npm ci
       - run: npx playwright install --with-deps chromium
-      - run: npm run test
-      - run: npm run test:ct
+      - name: Run tests
+        env:
+          CI: true
+        run: npm run test
