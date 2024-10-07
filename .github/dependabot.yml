@@ -12,8 +12,6 @@ updates:
       time: '01:00'
     open-pull-requests-limit: 99
     ignore:
-      # chai 5 is pure esm package that cannot be used yet
-      - dependency-name: "chai"
       - dependency-name: "*"
         update-types: [ "version-update:semver-patch", "version-update:semver-minor" ]
   - package-ecosystem: 'github-actions'
