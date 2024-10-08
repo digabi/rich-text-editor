@@ -134,6 +134,7 @@ test.describe('Rich text editor', () => {
   test('can paste equation SVG from clipboard', async ({ page }) => {
     const latex = '\\varepsilon=\\frac{Q_2}{Q_1-Q_2}=\\frac{1}{eta}-1'
     const img = `<img src="/math.svg?latex=\"${latex}\" alt=\"${latex}\">`
+    const img = `<img src="/math.svg?latex="${latex}" alt="${latex}">`
 
     await setClipboardHTML(page, img)
     await paste(page)
@@ -151,7 +152,7 @@ test.describe('Rich text editor', () => {
 
     const mathImage = getEditorLocator(page).getByRole('img')
     await expect(mathImage).toHaveAttribute('data-math-svg', 'true')
-    await expect(mathImage).toHaveAttribute('src', /^data:image\/svg/)
+    await expect(mathImage).toHaveAttribute('src', new RegExp(`/math.svg\\?latex=${encodeURIComponent(latex)}$`))
     await expect(mathImage).toHaveAttribute('alt', latex)
   })
 
