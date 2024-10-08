@@ -17,9 +17,7 @@ export const assertEquationEditorLatexContent = async (equationEditor: Locator, 
   expect(await equationEditor.locator('.math-editor-latex-field').textContent()).toBe(content)
 }
 
-export const getEditorLocator = (page: Page) => {
-  return page.getByTestId('rich-text-editor')
-}
+export const getEditorLocator = (page: Page) => page.getByTestId('rich-text-editor')
 
 export const repeat = async (times: number, action: () => Promise<void>) => {
   for (const _i of Array(times)) {
@@ -51,9 +49,9 @@ export const clickOutsideEditor = async (page: Page) => {
   })
 }
 
-export const getUndoButton = async (page: Page) => page.getByTestId('undo')
+export const getUndoButton = (page: Page) => page.getByTestId('undo')
 
-export const getRedoButton = async (page: Page) => page.getByTestId('redo')
+export const getRedoButton = (page: Page) => page.getByTestId('redo')
 
 const grantClipboardPermissions = async (page: Page) => {
   await page.context().grantPermissions(['clipboard-read', 'clipboard-write'])
@@ -63,15 +61,14 @@ export const setClipboardText = async (page: Page, text: string) => {
   await grantClipboardPermissions(page)
   await page.evaluate(async (text) => {
     console.log(text)
-    navigator.clipboard.writeText(text)
-    console.log(await navigator.clipboard.readText())
+    await navigator.clipboard.writeText(text)
   }, text)
 }
 
 export const setClipboardHTML = async (page: Page, text: string) => {
   await grantClipboardPermissions(page)
-  await page.evaluate((text) => {
-    navigator.clipboard.write([new ClipboardItem({ 'text/html': new Blob([text], { type: 'text/html' }) })])
+  await page.evaluate(async (text) => {
+    await navigator.clipboard.write([new ClipboardItem({ 'text/html': new Blob([text], { type: 'text/html' }) })])
   }, text)
 }
 
@@ -81,10 +78,10 @@ export const setClipboardImage = async (page: Page, filetype: string, base64: st
       const response = await fetch(`data:image/png;base64,${base64}`)
       const blob = await response.blob()
 
-      const clipboardData = {}
+      const clipboardData: Record<string, Blob> = {}
       clipboardData[filetype] = blob
 
-      navigator.clipboard.write([new ClipboardItem(clipboardData)])
+      await navigator.clipboard.write([new ClipboardItem(clipboardData)])
     },
     [filetype, base64],
   )
@@ -103,14 +100,20 @@ export const samplePNG =
 
 export const sampleGIF = 'R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw=='
 
+const isAnswerKey = (key: string, answer: Answer): key is keyof Answer => key in answer
+
 /** Assert that selected fields of Answer are as expected. Allows specifying just the fields to test,
  *   for convenience.
  */
 export const assertAnswerContent = (answer: Answer, expected: Partial<Answer>) => {
-  Object.entries(expected).forEach(([key, value]: [keyof Answer, string | number]) => {
+  Object.entries(expected).forEach(([key, value]) => {
     // Remove slashes from self-closing tags because we do not care about that
-    const [expected, received] = [value, answer[key]].map((v) => String(v).replace(/ \/>/g, '>'))
+    const expected = String(value).replace(/ \/>/g, '>')
     if (expected !== undefined) {
+      if (!isAnswerKey(key, answer)) {
+        throw new Error(`${key} not found in answer`)
+      }
+      const received = String(answer[key]).replace(/ \/>/g, '>')
       expect(received, `${key} does not match`).toBe(expected)
     }
   })
@@ -120,21 +123,27 @@ export const assertAnswerContent = (answer: Answer, expected: Partial<Answer>) =
  *  Does not do anything to the content, beyond selecting it.
  */
 export const selectEditorContent = async (locator: Locator, start: number, end: number) => {
-  await (
-    await locator.elementHandle()
-  ).evaluate(
-    async (element, [start, end]) => {
+  const handle = await locator.elementHandle()
+  if (!handle) {
+    throw new Error('Element not found')
+  }
+
+  await handle.evaluate(
+    (element, [start, end]) => {
       const findNodeByOffset = (nodes: NodeListOf<ChildNode>, offset: number): [Node, number] => {
+        const firstNode = nodes[0]
         let currentOffset = 0
 
         for (const node of Array.from(nodes)) {
-          const nodeLength = node.textContent.length
+          const nodeLength = node.textContent?.length ?? 0
           if (currentOffset + nodeLength >= offset) {
             return [node, offset - currentOffset]
           } else {
             currentOffset += nodeLength
           }
         }
+
+        return [firstNode, 0]
       }
 
       const range = document.createRange()
@@ -143,6 +152,11 @@ export const selectEditorContent = async (locator: Locator, start: number, end: 
       range.setStart(startNode, startOffset)
       range.setEnd(endNode, endOffset)
       const selection = window.getSelection()
+
+      if (!selection) {
+        throw new Error('Selection not succesfull')
+      }
+
       selection.removeAllRanges()
       selection.addRange(range)
     },
@@ -150,7 +164,7 @@ export const selectEditorContent = async (locator: Locator, start: number, end: 
   )
 }
 
-export const specialCharacters: Record<string, [latex: string, unicode?: string]> = {
+export const specialCharacters = {
   alpha: ['\\alpha', '\u03B1'],
   delta: ['\\delta', '\u0394'],
   cos: ['\\cos'],

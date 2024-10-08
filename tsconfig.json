@@ -15,5 +15,5 @@
     "declaration": true,
     "isolatedModules": true
   },
-  "include": ["src/**/*"]
+  "include": ["src/**/*", "playwright/**/*"]
 }
