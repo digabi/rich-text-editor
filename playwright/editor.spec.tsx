@@ -363,6 +363,14 @@ test.describe('Rich text editor', () => {
       await page.keyboard.press('Tab')
       await page.keyboard.type('\\sqt{1}')
       expect(page.locator('span.render-error')).toBeVisible()
+    test('opens a new editor on the next line when Enter is pressed', async ({ page }) => {
+      await page.keyboard.press('1')
+      await page.keyboard.press('Enter')
+      await page.keyboard.press('2')
+      await page.keyboard.press('Tab')
+      await page.keyboard.press('Tab')
+
+      await expect(page.locator('span.math-editor-wrapper > img')).toHaveCount(2)
     })
 
     test.describe('when multiple equation editors in answer', async () => {
