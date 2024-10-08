@@ -47,6 +47,14 @@ We hope you understand our desire to focus on our goal specified by law.
 5. Browser tests: [http://localhost:5111/test/tests.html](http://localhost:5111/test/tests.html)
 6. Manual testing: [http://localhost:5111/test/tests.html?grep=manual](http://localhost:5111/test/tests.html?grep=manual)
 
+### Testing the bundle locally
+
+1. Run `npm run build`
+2. Run `npm run dev-server`
+3. Run a simple http server in the project root, for example `python3 -m http.server 8080`
+4. Edit `dev/index.html` script tag to point to the bundle: `<script type="module" src="/dist/rich-text-editor-bundle.js"></script>` (don't commit this).
+5. Go to http://localhost:8080/dev/index.html
+
 ## Example of direct usage
 
 Demo: http://digabi.github.io/rich-text-editor/
