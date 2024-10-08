@@ -15,7 +15,7 @@
     "test:ct": "playwright test -c playwright-ct.config.ts --project=chromium",
     "test": "npm run typecheck && npm run lint && npm run test:ct",
     "build": "rm -rf dist/ && npx esbuild src/react/index.tsx --outfile=./dist/rich-text-editor-bundle.js --allow-overwrite --bundle --minify",
-    "dev": "esbuild src/react/index.tsx --outfile=dev/js/index.js --bundle --servedir=dev --watch",
+    "dev": "esbuild --serve=localhost:1234 src/react/index.tsx --outfile=dev/js/index.js --bundle --servedir=dev --watch",
     "dev-server": "ts-node dev-server.ts",
     "watch": "concurrently -n='ESBUILD,DEVSERVER' -c=auto 'npm run dev' 'npm run dev-server'"
   },
