@@ -133,7 +133,6 @@ test.describe('Rich text editor', () => {
 
   test('can paste equation SVG from clipboard', async ({ page }) => {
     const latex = '\\varepsilon=\\frac{Q_2}{Q_1-Q_2}=\\frac{1}{eta}-1'
-    const img = `<img src="/math.svg?latex=\"${latex}\" alt=\"${latex}\">`
     const img = `<img src="/math.svg?latex="${latex}" alt="${latex}">`
 
     await setClipboardHTML(page, img)
@@ -273,33 +272,33 @@ test.describe('Rich text editor', () => {
       test.beforeEach(async ({ page }) => {
         await inputLatexCommandFromToolbar(page, specialCharacters.sqrt[0])
         await page.keyboard.press('1')
-        expect(await getUndoButton(page)).toBeEnabled()
-        expect(await getRedoButton(page)).toBeDisabled()
+        await expect(getUndoButton(page)).toBeEnabled()
+        await expect(getRedoButton(page)).toBeDisabled()
       })
 
       test('toolbar buttons', async ({ page }) => {
-        await (await getUndoButton(page)).click()
-        expect(await getRedoButton(page)).toBeEnabled()
+        await getUndoButton(page).click()
+        await expect(getRedoButton(page)).toBeEnabled()
         await page.keyboard.press('ArrowLeft')
         await page.keyboard.press('2')
-        expect(await getRedoButton(page)).toBeDisabled()
-        await (await getUndoButton(page)).click()
-        assertEquationEditorLatexContent(page.getByTestId('equation-editor'), '\\sqrt{ }')
-        await (await getRedoButton(page)).click()
-        assertEquationEditorLatexContent(page.getByTestId('equation-editor'), '\\sqrt{2}')
+        await expect(getRedoButton(page)).toBeDisabled()
+        await getUndoButton(page).click()
+        await assertEquationEditorLatexContent(page.getByTestId('equation-editor'), '\\sqrt{ }')
+        await getRedoButton(page).click()
+        await assertEquationEditorLatexContent(page.getByTestId('equation-editor'), '\\sqrt{2}')
       })
 
       test('hotkeys', async ({ page }) => {
         await page.keyboard.press('Control+z')
-        expect(await getRedoButton(page)).toBeEnabled()
+        await expect(getRedoButton(page)).toBeEnabled()
         await page.keyboard.press('ArrowLeft')
         await page.keyboard.press('2')
-        expect(await getRedoButton(page)).toBeDisabled()
+        await expect(getRedoButton(page)).toBeDisabled()
         await page.keyboard.press('Control+z')
-        expect(await getRedoButton(page)).toBeEnabled()
-        assertEquationEditorLatexContent(page.getByTestId('equation-editor'), '\\sqrt{ }')
+        await expect(getRedoButton(page)).toBeEnabled()
+        await assertEquationEditorLatexContent(page.getByTestId('equation-editor'), '\\sqrt{ }')
         await page.keyboard.press('Control+y')
-        assertEquationEditorLatexContent(page.getByTestId('equation-editor'), '\\sqrt{2}')
+        await assertEquationEditorLatexContent(page.getByTestId('equation-editor'), '\\sqrt{2}')
       })
     })
 
@@ -318,14 +317,14 @@ test.describe('Rich text editor', () => {
       await inputLatexCommandFromToolbar(page, specialCharacters.sqrt[0])
       await assertEquationEditorTextContent(equationEditor, '√​')
       await clickOutsideEditor(page)
-      expect(getEditorLocator(page).locator('span > img')).toBeVisible()
+      await expect(getEditorLocator(page).locator('span > img')).toBeVisible()
       await getEditorLocator(page).locator('span.math-editor-wrapper').click()
     })
 
     test('closes on Esc press', async ({ page }) => {
       await page.keyboard.press('A')
       await clickOutsideEditor(page)
-      expect(getEditorLocator(page).locator('span > img')).toBeVisible()
+      await expect(getEditorLocator(page).locator('span > img')).toBeVisible()
     })
 
     test('is removed if closed with empty LaTeX', async ({ page }) => {
@@ -335,9 +334,9 @@ test.describe('Rich text editor', () => {
 
     test('opens with hot key', async ({ page }) => {
       await repeat(2, async () => await page.keyboard.press('Backspace'))
-      expect(page.getByTestId('equation-editor')).toHaveCount(1)
+      await expect(page.getByTestId('equation-editor')).toHaveCount(1)
       await clickOutsideEditor(page)
-      expect(page.getByTestId('equation-editor')).toHaveCount(0)
+      await expect(page.getByTestId('equation-editor')).toHaveCount(0)
       await getEditorLocator(page).click()
       await page.keyboard.press('Control+e')
       await expect(page.getByTestId('equation-editor')).toHaveCount(1)
@@ -362,7 +361,9 @@ test.describe('Rich text editor', () => {
     test('writing invalid LaTeX shows error message', async ({ page }) => {
       await page.keyboard.press('Tab')
       await page.keyboard.type('\\sqt{1}')
-      expect(page.locator('span.render-error')).toBeVisible()
+      await expect(page.locator('span.render-error')).toBeVisible()
+    })
+
     test('opens a new editor on the next line when Enter is pressed', async ({ page }) => {
       await page.keyboard.press('1')
       await page.keyboard.press('Enter')
@@ -373,7 +374,7 @@ test.describe('Rich text editor', () => {
       await expect(page.locator('span.math-editor-wrapper > img')).toHaveCount(2)
     })
 
-    test.describe('when multiple equation editors in answer', async () => {
+    test.describe('when multiple equation editors in answer', () => {
       test.beforeEach(async ({ page }) => {
         await page.goto('http://localhost:1234')
         const editor = getEditorLocator(page)
@@ -386,7 +387,7 @@ test.describe('Rich text editor', () => {
         await page.getByRole('button', { name: 'Lisää kaava' }).click()
         await page.keyboard.press('B')
         await clickOutsideEditor(page)
-        expect(page.locator('span > img')).toHaveCount(2)
+        await expect(page.locator('span > img')).toHaveCount(2)
         assertAnswerContent(answer, { answerHtml: 'A B' })
       })
 
@@ -401,7 +402,7 @@ test.describe('Rich text editor', () => {
     })
   })
 
-  test.describe('initial value', async () => {
+  test.describe('initial value', () => {
     test.beforeEach(async ({ page, mount }) => {
       const initialContent = `\
 testi.
