@@ -3,7 +3,8 @@
   "version": "7.3.0",
   "description": "Rich text editor",
   "homepage": "https://github.com/digabi/rich-text-editor",
-  "types": "dist/index.d.ts",
+  "types": "dist/react/index.d.ts",
+  "main": "dist/react/index.js",
   "files": [
     "dist/*",
     "server/*"
@@ -14,7 +15,9 @@
     "lint": "eslint .",
     "test:ct": "playwright test -c playwright-ct.config.ts --project=chromium",
     "test": "npm run typecheck && npm run lint && npm run test:ct",
-    "build": "rm -rf dist/ && npx esbuild src/react/index.tsx --outfile=./dist/rich-text-editor-bundle.js --allow-overwrite --bundle --minify",
+    "build:bundle": "npx esbuild src/react/index.tsx --outfile=./dist/rich-text-editor-bundle.js --allow-overwrite --bundle --minify",
+    "build:npm": "npx tsc",
+    "build": "rm -rf dist && npm run build:bundle && npm run build:npm",
     "dev": "esbuild --serve=localhost:1234 src/react/index.tsx --outfile=dev/js/index.js --bundle --servedir=dev --watch",
     "dev-server": "ts-node dev-server.ts",
     "watch": "concurrently -n='ESBUILD,DEVSERVER' -c=auto 'npm run dev' 'npm run dev-server'"
