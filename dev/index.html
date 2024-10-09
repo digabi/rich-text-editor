@@ -6,80 +6,84 @@
     <script src="//cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js" id="MathJax-script"></script>
     <script type="module" src="js/index.js"></script>
     <script>
-      window.addEventListener("DOMContentLoaded", function() {
-        window.makeRichText({initialValue: 'testi. <br>kaava: &nbsp;<span class="math-editor-wrapper" id="math-editor-1" style="display: contents;" contenteditable="false"><img src="data:image/svg+xml;utf8," data-math-svg="true" data-latex="\\sqrt{123}" alt="\\sqrt{123}"></span>&nbsp;<br> <br>&nbsp;'})
-      });
+      window.addEventListener('DOMContentLoaded', function () {
+        window.makeRichText({
+          baseUrl: 'http://localhost:5111',
+          initialValue:
+            'testi. <br>kaava: &nbsp;<span class="math-editor-wrapper" id="math-editor-1" style="display: contents;" contenteditable="false"><img src="data:image/svg+xml;utf8," data-math-svg="true" data-latex="\\sqrt{123}" alt="\\sqrt{123}"></span>&nbsp;<br> <br>&nbsp;',
+        })
+      })
     </script>
     <!-- TODO: Move these to styled components or proper CSS files -->
     <style type="text/css">
-        .render-error {
-            position: absolute;
-            z-index: 2;
-            top: 0;
-            left: 0;
-            font-family: sans-serif;
-            font-size: 16px;
-            padding: 5px 10px;
-            color: red;
-            pointer-events: none;
-        }
+      .render-error {
+        position: absolute;
+        z-index: 2;
+        top: 0;
+        left: 0;
+        font-family: sans-serif;
+        font-size: 16px;
+        padding: 5px 10px;
+        color: red;
+        pointer-events: none;
+      }
 
-        .rich-text-editor img[src^='/screenshot'] {
-            margin: 4px;
-        }
+      .rich-text-editor img[src^='/screenshot'] {
+        margin: 4px;
+      }
 
-        .rich-text-editor:focus img[src^='/screenshot'],
-        .rich-text-editor.rich-text-focused img[src^='/screenshot'] {
-            box-shadow: 0 0 3px 1px rgba(0, 0, 0, 0.2);
-        }
+      .rich-text-editor:focus img[src^='/screenshot'],
+      .rich-text-editor.rich-text-focused img[src^='/screenshot'] {
+        box-shadow: 0 0 3px 1px rgba(0, 0, 0, 0.2);
+      }
 
-        .rich-text-editor .mq-math-mode .mq-root-block {
-            white-space: nowrap;
-        }
+      .rich-text-editor .mq-math-mode .mq-root-block {
+        white-space: nowrap;
+      }
 
-        .rich-text-editor:focus,
-        .rich-text-editor .mq-editable-field.mq-focused,
-        .rich-text-editor textarea:focus {
-            box-shadow: none;
-            outline: 1px solid #359bb7;
-            z-index: 2;
-        }
+      .rich-text-editor:focus,
+      .rich-text-editor .mq-editable-field.mq-focused,
+      .rich-text-editor textarea:focus {
+        box-shadow: none;
+        outline: 1px solid #359bb7;
+        z-index: 2;
+      }
 
-        .rich-text-editor img {
-            max-width: 100%;
-            max-height: 1000px;
-        }
+      .rich-text-editor img {
+        max-width: 100%;
+        max-height: 1000px;
+      }
 
-        .math-editor {
-            z-index: 1;
-            margin: 10px 5px 0;
-            position: relative;
-            box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.2);
-            display: flex;
-            width: 100%;
-        }
+      .math-editor {
+        z-index: 1;
+        margin: 10px 5px 0;
+        position: relative;
+        box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.2);
+        display: flex;
+        width: 100%;
+      }
 
-        .math-editor textarea {
-            height: auto;
-            box-shadow: none;
-            border-radius: 0;
-            resize: none;
-            border: none;
-        }
+      .math-editor textarea {
+        height: auto;
+        box-shadow: none;
+        border-radius: 0;
+        resize: none;
+        border: none;
+      }
 
-        .math-editor-equation-field {
-            width: 50%;
-            padding: 5px 10px;
-            border: none;
-            background: #fff;
-        }
+      .math-editor-equation-field {
+        width: 50%;
+        padding: 5px 10px;
+        border: none;
+        background: #fff;
+      }
 
-        .math-editor-latex-field {
-            font-size: 15px;
-            width: 50%;
-            padding: 5px 10px;
-            letter-spacing: 1px;
-        }
+      .math-editor-latex-field {
+        font-size: 15px;
+        width: 50%;
+        padding: 5px 10px;
+        letter-spacing: 1px;
+      }
     </style>
   </head>
   <body>

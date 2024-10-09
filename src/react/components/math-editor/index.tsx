@@ -27,7 +27,7 @@ export default function MathEditor(props: Props) {
   const [isOpen, setIsOpen] = useState(props.initialOpen ?? false)
   const [latex, setLatex] = useState(props.initialLatex ?? '')
 
-  const { undo, redo, spawnMathEditorInNewLine } = useEditorState()
+  const { baseUrl, undo, redo, spawnMathEditorInNewLine } = useEditorState()
 
   const historyHandler = (fn: typeof undo | typeof redo) => () => {
     const oldValue = latex
@@ -116,9 +116,8 @@ export default function MathEditor(props: Props) {
     )
   } else if (latex !== '') {
     return (
-      // TODO: parametrize baseurl
       <img
-        src={`http://localhost:5111/math.svg?latex=${encodeURIComponent(latex)}`}
+        src={`${baseUrl}/math.svg?latex=${encodeURIComponent(latex)}`}
         data-math-svg={true}
         data-latex={latex}
         alt={latex}

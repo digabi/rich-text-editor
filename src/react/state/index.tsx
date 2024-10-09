@@ -66,6 +66,7 @@ export type EditorState = {
    */
   onAnswerChange: () => void
   initialValue?: string
+  baseUrl: string
 } & Pick<ReturnType<typeof useHistory>, 'undo' | 'redo' | 'canUndo' | 'canRedo'>
 
 const editorCtx = createContext<EditorState>(null!)
@@ -92,6 +93,7 @@ export function EditorStateProvider({
   allowedFileTypes,
   onValueChange,
   initialValue,
+  baseUrl,
 }: PropsWithChildren<RichTextEditorProps>) {
   const [isToolbarOpen, setIsToolbarOpen] = useState(false)
   const [isMathToolbarOpen, setIsMathToolbarOpen] = useState(false)
@@ -286,6 +288,7 @@ export function EditorStateProvider({
         allowedFileTypes: allowedTypes,
         onAnswerChange,
         initialValue: initialValue ?? '',
+        baseUrl,
       }}
     >
       {children}

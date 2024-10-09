@@ -7,14 +7,15 @@ declare global {
   }
 }
 
-export const makeRichText = ({ initialValue }: RichTextEditorProps) => {
-  console.log(initialValue)
+export const makeRichText = ({ initialValue, baseUrl }: RichTextEditorProps) => {
+  console.debug({ baseUrl })
   ReactDOM.createRoot(document.getElementById('root')!).render(
     <RichTextEditor
       language="FI"
       editorStyle={{ top: '300px', position: 'relative' }}
       onValueChange={() => {}}
       initialValue={initialValue}
+      baseUrl={baseUrl}
     />,
   )
 }

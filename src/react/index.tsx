@@ -20,6 +20,7 @@ export type RichTextEditorProps = {
   onValueChange: (answer: Answer) => void
 
   initialValue?: string
+  baseUrl: string
 }
 
 export default function RichTextEditor({
@@ -28,6 +29,7 @@ export default function RichTextEditor({
   editorStyle,
   onValueChange,
   initialValue,
+  baseUrl,
 }: RichTextEditorProps) {
   const [toolbarRootElement, setToolbarRootElement] = useState<HTMLElement | undefined>(toolbarRoot)
   const toolbarRootRef = useRef<HTMLDivElement>(null)
@@ -46,6 +48,7 @@ export default function RichTextEditor({
       toolbarRoot={toolbarRoot}
       onValueChange={onValueChange}
       initialValue={initialValue}
+      baseUrl={baseUrl}
     >
       {toolbarRoot ? null : <div ref={toolbarRootRef} className="rich-text-editor-toolbar-root" />}
       <MainTextArea style={editorStyle ?? {}} toolbarRoot={toolbarRootElement} />
