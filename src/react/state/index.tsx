@@ -1,12 +1,11 @@
 import { createContext, PropsWithChildren, ReactPortal, useContext, useEffect, useMemo, useRef, useState } from 'react'
 import { Container } from 'react-dom/client'
-import { MathField } from '@digabi/mathquill'
 
 import useHistory from './history'
 import useMap, { MapHookHandle } from '../hooks/use-map'
 import useMutationObserver from '../hooks/use-mutation-observer'
 
-import { Props as RichTextEditorProps } from '../rich-text-editor'
+import { RichTextEditorProps } from '../../react'
 
 import MathEditor, { MathEditorHandle, Props as MathEditorProps } from '../components/math-editor'
 import { createMathStub, MATH_EDITOR_CLASS } from '../utils/create-math-stub'
@@ -15,8 +14,6 @@ import FI from '../../FI'
 import SV from '../../SV'
 import { createPortal } from 'react-dom'
 import { getAnswer } from '../utility'
-
-export type Props = RichTextEditorProps
 
 export type EditorState = {
   /** Ref to the main text-area (which is a `contenteditable` `<div />`) */
@@ -95,7 +92,7 @@ export function EditorStateProvider({
   allowedFileTypes,
   onValueChange,
   initialValue,
-}: PropsWithChildren<Props>) {
+}: PropsWithChildren<RichTextEditorProps>) {
   const [isToolbarOpen, setIsToolbarOpen] = useState(false)
   const [isMathToolbarOpen, setIsMathToolbarOpen] = useState(false)
   const [isToolbarExpanded, setIsToolbarExpanded] = useState(false)
