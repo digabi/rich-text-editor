@@ -1,24 +1,48 @@
-/// <reference types="../mathquill.d.ts" />
+import { useEffect, useRef, useState } from 'react'
+import MainTextArea from './components/text-area'
+import { EditorStateProvider } from './state'
+import { Answer } from './utility'
 
-import ReactDOM from 'react-dom/client'
-import RichTextEditor from './rich-text-editor'
+export type Props = {
+  language: 'FI' | 'SV'
+  /** The toolbars will be rendered in this root via a React Portal */
+  toolbarRoot?: HTMLElement
+  /**
+   * Callback that's called when the user pastes an image to the text area.
+   * The function is given a `File` Blob and is expected to return a string
+   * that can be used as the `src` attribute of an `<img />` tag.
+   */
+  getPasteSource?: (file: File) => Promise<string>
+  allowedFileTypes?: string[]
 
-declare global {
-  interface Window {
-    makeRichText: () => void
-  }
+  editorStyle?: React.CSSProperties
+
+  onValueChange: (answer: Answer) => void
+
+  initialValue?: string
 }
 
-export const REACT_ROOT = document.getElementById('root')!
+export default function RichTextEditor({ language, toolbarRoot, editorStyle, onValueChange, initialValue }: Props) {
+  const [toolbarRootElement, setToolbarRootElement] = useState<HTMLElement | undefined>(toolbarRoot)
+  const toolbarRootRef = useRef<HTMLDivElement>(null)
 
-export const makeRichText = () =>
-  ReactDOM.createRoot(REACT_ROOT).render(
-    <RichTextEditor
-      language="FI"
-      editorStyle={{ top: '300px', position: 'relative' }}
-      onValueChange={() => {}}
-      initialValue='testi. <br>kaava: &nbsp;<span class="math-editor-wrapper" id="math-editor-1" style="display: contents;" contenteditable="false"><img src="data:image/svg+xml;utf8," data-math-svg="true" data-latex="\sqrt{123}" alt="\sqrt{123}"></span>&nbsp;<br> <br>&nbsp;'
-    />,
+  useEffect(() => {
+    if (toolbarRoot) {
+      setToolbarRootElement(toolbarRoot)
+    } else if (toolbarRootRef.current) {
+      setToolbarRootElement(toolbarRootRef.current)
+    }
+  }, [toolbarRoot, toolbarRootRef])
+
+  return (
+    <EditorStateProvider
+      language={language}
+      toolbarRoot={toolbarRoot}
+      onValueChange={onValueChange}
+      initialValue={initialValue}
+    >
+      {toolbarRoot ? null : <div ref={toolbarRootRef} className="rich-text-editor-toolbar-root" />}
+      <MainTextArea style={editorStyle ?? {}} toolbarRoot={toolbarRootElement} />
+    </EditorStateProvider>
   )
-
-window.makeRichText = makeRichText
+}

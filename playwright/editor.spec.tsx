@@ -23,7 +23,7 @@ import {
   inputLatexCommandFromToolbar,
   setClipboardImage,
 } from './test-utils'
-import RichTextEditor from '../src/react/rich-text-editor'
+import RichTextEditor from '../src/react'
 import { Answer } from '../src/react/utility'
 
 test.describe('Rich text editor', () => {
