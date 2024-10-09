@@ -16,8 +16,9 @@
     "test:ct": "playwright test -c playwright-ct.config.ts --project=chromium",
     "test": "npm run typecheck && npm run lint && npm run test:ct",
     "build:bundle": "npx esbuild ./src/rich-text-editor-bundle.tsx --outfile=./dist/rich-text-editor-bundle.js --allow-overwrite --bundle --minify",
+    "copy-bundle-types": "cp ./src/rich-test-editor-bundle.d.ts dist",
     "build:npm": "npx tsc -p ./tsconfig.build.json",
-    "build": "rm -rf dist && npm run build:bundle && npm run build:npm",
+    "build": "rm -rf dist && npm run build:bundle && npm run copy-bundle-types && npm run build:npm",
     "dev": "esbuild --serve=localhost:1234 src/rich-text-editor-bundle.tsx --outfile=dev/js/index.js --bundle --servedir=dev --watch",
     "dev-server": "ts-node dev-server.ts",
     "watch": "concurrently -n='ESBUILD,DEVSERVER' -c=auto 'npm run dev' 'npm run dev-server'"
