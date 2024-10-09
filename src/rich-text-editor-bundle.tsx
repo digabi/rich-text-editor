@@ -1,20 +1,22 @@
 import ReactDOM from 'react-dom/client'
-import RichTextEditor from './react'
+import RichTextEditor, { RichTextEditorProps } from './react'
 
 declare global {
   interface Window {
-    makeRichText: () => void
+    makeRichText: (props: RichTextEditorProps) => void
   }
 }
 
-export const makeRichText = () =>
+export const makeRichText = ({ initialValue }: RichTextEditorProps) => {
+  console.log(initialValue)
   ReactDOM.createRoot(document.getElementById('root')!).render(
     <RichTextEditor
       language="FI"
       editorStyle={{ top: '300px', position: 'relative' }}
       onValueChange={() => {}}
-      initialValue='testi. <br>kaava: &nbsp;<span class="math-editor-wrapper" id="math-editor-1" style="display: contents;" contenteditable="false"><img src="data:image/svg+xml;utf8," data-math-svg="true" data-latex="\sqrt{123}" alt="\sqrt{123}"></span>&nbsp;<br> <br>&nbsp;'
+      initialValue={initialValue}
     />,
   )
+}
 
 window.makeRichText = makeRichText

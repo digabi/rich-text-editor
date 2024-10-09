@@ -3,7 +3,7 @@ import MainTextArea from './components/text-area'
 import { EditorStateProvider } from './state'
 import { Answer } from './utility'
 
-export type Props = {
+export type RichTextEditorProps = {
   language: 'FI' | 'SV'
   /** The toolbars will be rendered in this root via a React Portal */
   toolbarRoot?: HTMLElement
@@ -22,7 +22,13 @@ export type Props = {
   initialValue?: string
 }
 
-export default function RichTextEditor({ language, toolbarRoot, editorStyle, onValueChange, initialValue }: Props) {
+export default function RichTextEditor({
+  language,
+  toolbarRoot,
+  editorStyle,
+  onValueChange,
+  initialValue,
+}: RichTextEditorProps) {
   const [toolbarRootElement, setToolbarRootElement] = useState<HTMLElement | undefined>(toolbarRoot)
   const toolbarRootRef = useRef<HTMLDivElement>(null)
 
