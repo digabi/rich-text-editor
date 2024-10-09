@@ -7,15 +7,24 @@ declare global {
   }
 }
 
-export const makeRichText = ({ initialValue, baseUrl }: RichTextEditorProps) => {
-  console.debug({ baseUrl })
-  ReactDOM.createRoot(document.getElementById('root')!).render(
+const defaultProps: { container: HTMLElement } & RichTextEditorProps = {
+  container: document.getElementById('root')!,
+  language: 'FI',
+  baseUrl: '',
+  allowedFileTypes: ['image/png', 'image/jpeg'],
+  onValueChange: () => {},
+}
+
+export const makeRichText = (props: RichTextEditorProps) => {
+  const { container, initialValue, baseUrl, language, editorStyle, allowedFileTypes } = { ...defaultProps, ...props }
+  ReactDOM.createRoot(container).render(
     <RichTextEditor
-      language="FI"
-      editorStyle={{ top: '300px', position: 'relative' }}
+      language={language}
+      editorStyle={editorStyle}
       onValueChange={() => {}}
       initialValue={initialValue}
       baseUrl={baseUrl}
+      allowedFileTypes={allowedFileTypes}
     />,
   )
 }
