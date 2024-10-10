@@ -5,6 +5,7 @@ import useMathQuill from '../../hooks/use-mathquill'
 import LatexError from '../icons/latex-error'
 import useEditorState from '../../state'
 import { useKeyboardEventListener } from '../../hooks/use-keyboard-events'
+import styled from 'styled-components'
 
 export type MathEditorHandle = {
   mq: MathQuill.MathField
@@ -21,6 +22,20 @@ export type Props = {
   onChange?: (latex: string) => void
   onEditorRemoved?: () => void
 }
+
+const Error = styled.span`
+  {
+    position: absolute;
+    z-index: 2;
+    top: 0;
+    left: 0;
+    font-family: sans-serif;
+    font-size: 16px;
+    padding: 5px 10px;
+    color: red;
+    pointer-events: none;
+  }
+`
 
 export default function MathEditor(props: Props) {
   const containerRef = useRef<HTMLDivElement>(null)
@@ -102,7 +117,7 @@ export default function MathEditor(props: Props) {
             onChange={(e) => onChange(undefined, e.target.value)} // real oldLatex value here?
             onBlur={onBlur}
           />
-          {isError && <span className="render-error">{props.errorText}</span>}
+          {isError && <Error className="render-error">{props.errorText}</Error>}
         </div>
       </div>
     )
