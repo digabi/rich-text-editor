@@ -42,6 +42,7 @@ test.describe('Rich text editor', () => {
         onValueChange={onAnswerChange}
         allowedFileTypes={['image/png', 'image/jpeg']}
         initialValue=""
+        baseUrl="http://localhost:5111"
       />,
     )
     unmountComponent = unmount
@@ -323,8 +324,14 @@ test.describe('Rich text editor', () => {
 
     test('closes on Esc press', async ({ page }) => {
       await page.keyboard.press('A')
-      await clickOutsideEditor(page)
+      await page.keyboard.press('Escape')
       await expect(getEditorLocator(page).locator('span > img')).toBeVisible()
+
+      await test.step(' and places cursor after equation image', async () => {
+        await page.keyboard.press('B')
+
+        assertAnswerContent(answer, { answerText: 'A B' })
+      })
     })
 
     test('is removed if closed with empty LaTeX', async ({ page }) => {
@@ -429,6 +436,7 @@ kaava:\
           onValueChange={onAnswerChange}
           allowedFileTypes={['image/png', 'image/jpeg']}
           initialValue={initialContent}
+          baseUrl="http://localhost:5111"
         />,
       )
     })

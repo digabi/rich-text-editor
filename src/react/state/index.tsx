@@ -15,6 +15,16 @@ import SV from '../../SV'
 import { createPortal } from 'react-dom'
 import { getAnswer } from '../utility'
 
+const findWrapperParent = (currentElement: Element): Element | null => {
+  if (currentElement?.classList?.contains(MATH_EDITOR_CLASS)) {
+    return currentElement
+  } else if (currentElement.parentElement) {
+    return findWrapperParent(currentElement.parentElement)
+  } else {
+    return null
+  }
+}
+
 export type EditorState = {
   /** Ref to the main text-area (which is a `contenteditable` `<div />`) */
   ref: React.RefObject<HTMLDivElement>
@@ -146,6 +156,20 @@ export function EditorStateProvider({
 
       history.clear()
       onAnswerChange()
+
+      const anchorElement = window.getSelection()?.anchorNode as Element
+      if (anchorElement) {
+        const mathEditor = findWrapperParent(anchorElement)
+        if (mathEditor) {
+          // Move the cursor to after the parent wrapper if one was found
+          const selection = window.getSelection()
+          const range = document.createRange()
+          range.setStartAfter(mathEditor)
+          range.collapse(true)
+          selection?.removeAllRanges()
+          selection?.addRange(range)
+        }
+      }
     }
 
     function onChange(latex: string) {
