@@ -1,8 +1,9 @@
 import { useEffect, useRef, useState } from 'react'
 import MainTextArea from './components/text-area'
 import { EditorStateProvider } from './state'
-import { Answer } from './utility'
+import type { Answer } from './utility'
 
+export type { Answer }
 export type RichTextEditorProps = {
   language: 'FI' | 'SV'
   /** The toolbars will be rendered in this root via a React Portal */
