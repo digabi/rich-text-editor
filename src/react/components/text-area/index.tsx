@@ -169,4 +169,16 @@ const Box = styled.div`
   &:focus img {
     box-shadow: 0 0 3px 1px rgba(0, 0, 0, 0.2);
   }
+
+  & .mq-math-mode .mq-root-block {
+    white-space: nowrap;
+  }
+
+  &:focus,
+  & .mq-editable-field.mq-focused,
+  & textarea:focus {
+    box-shadow: none;
+    outline: 1px solid #359bb7;
+    z-index: 2;
+  }
 `
