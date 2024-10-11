@@ -34,3 +34,8 @@ $RECYCLE.BIN/
 target
 bower_components
 proto
+playwright-report/
+
+## TODO: typescriptify these
+scripts/createMathSvg.js
+server/mathSvg.js

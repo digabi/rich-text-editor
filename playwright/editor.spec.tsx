@@ -39,6 +39,7 @@ test.describe('Rich text editor', () => {
     const { unmount } = await mount(
       <RichTextEditor
         language="FI"
+        baseUrl="http://localhost:5111"
         editorStyle={{ position: 'absolute', top: '300px', width: '100%' }}
         onValueChange={onAnswerChange}
         allowedFileTypes={['image/png', 'image/jpeg']}
@@ -426,6 +427,7 @@ kaava:\
       await mount(
         <RichTextEditor
           language="FI"
+          baseUrl="http://localhost:5111"
           editorStyle={{ position: 'absolute', top: '300px', width: '100%' }}
           onValueChange={onAnswerChange}
           allowedFileTypes={['image/png', 'image/jpeg']}

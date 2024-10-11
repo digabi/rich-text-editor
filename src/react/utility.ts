@@ -92,7 +92,7 @@ function stripDivsFromRichTextAnswer(answerContentValue: string) {
       }
       lastNode = node
     }
-  } while (Array.prototype.some.call(parent.childNodes, (node) => isBlockElement(node)))
+  } while (Array.prototype.some.call(parent.childNodes, (node: ChildNode) => isBlockElement(node)))
 
   return parent.innerHTML
 }

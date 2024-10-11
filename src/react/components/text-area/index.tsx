@@ -9,8 +9,7 @@ import { HelpDialog } from '../help-dialog'
 import { sanitize } from '../../utils/sanitization'
 import { useKeyboardEventListener } from '../../hooks/use-keyboard-events'
 import useMutationObserver from '../../hooks/use-mutation-observer'
-
-export const MATH_EDITOR_CLASS = 'math-editor-wrapper'
+import { MATH_EDITOR_CLASS } from '../../../react/utils/create-math-stub'
 
 export default function MainTextArea({
   style,

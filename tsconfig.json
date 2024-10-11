@@ -15,5 +15,5 @@
     "declaration": true,
     "isolatedModules": true
   },
-  "include": ["src/**/*", "playwright/**/*"]
+  "include": ["src/**/*", "playwright/**/*", "dev-server.ts", "playwright-ct.config.ts"]
 }
