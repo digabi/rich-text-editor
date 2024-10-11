@@ -24,17 +24,41 @@ export type Props = {
 }
 
 const Error = styled.span`
-  {
-    position: absolute;
-    z-index: 2;
-    top: 0;
-    left: 0;
-    font-family: sans-serif;
-    font-size: 16px;
-    padding: 5px 10px;
-    color: red;
-    pointer-events: none;
-  }
+  color: red;
+  font-family: sans-serif;
+  font-size: 16px;
+  left: 0;
+  padding: 5px 10px;
+  pointer-events: none;
+  position: absolute;
+  top: 0;
+  z-index: 2;
+`
+
+const MathEditorElement = styled.div`
+  box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.2);
+  display: flex;
+  margin: 10px 5px 0;
+  position: relative;
+  width: 100%;
+  z-index: 1;
+`
+
+const MathEditorEquationField = styled.div`
+  background: #fff;
+  border: none;
+  padding: 5px 10px;
+  width: 50%;
+`
+const MathEditorLatexField = styled.textarea`
+  border: none;
+  box-shadow: none;
+  font-size: 15px;
+  height: auto;
+  letter-spacing: 1px;
+  padding: 5px 10px;
+  resize: none;
+  width: 50%;
 `
 
 export default function MathEditor(props: Props) {
@@ -107,9 +131,9 @@ export default function MathEditor(props: Props) {
   if (isOpen) {
     return (
       <div ref={containerRef} data-testid="equation-editor" data-latex={latex}>
-        <div className="math-editor">
-          <div ref={latexRef} onBlur={onBlur} className="math-editor-equation-field" />
-          <textarea
+        <MathEditorElement className="math-editor">
+          <MathEditorEquationField ref={latexRef} onBlur={onBlur} className="math-editor-equation-field" />
+          <MathEditorLatexField
             className="math-editor-latex-field"
             placeholder="LaTeΧ"
             rows={1}
@@ -118,7 +142,7 @@ export default function MathEditor(props: Props) {
             onBlur={onBlur}
           />
           {isError && <Error className="render-error">{props.errorText}</Error>}
-        </div>
+        </MathEditorElement>
       </div>
     )
   } else if (isError) {
