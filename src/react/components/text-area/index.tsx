@@ -1,4 +1,4 @@
-import { ClipboardEvent, FocusEvent, forwardRef, Fragment, useEffect, useRef } from 'react'
+import { ClipboardEvent, FocusEvent, Fragment } from 'react'
 import { createPortal } from 'react-dom'
 import styled from 'styled-components'
 
@@ -7,7 +7,6 @@ import useEditorState from '../../state'
 import Toolbar from '../toolbar'
 import { HelpDialog } from '../help-dialog'
 import { sanitize } from '../../utils/sanitization'
-import { getAnswer } from '../../utility'
 import { useKeyboardEventListener } from '../../hooks/use-keyboard-events'
 import useMutationObserver from '../../hooks/use-mutation-observer'
 
@@ -160,4 +159,14 @@ const Box = styled.div`
   min-height: 100px;
   padding: 5px;
   font: 17px Times New Roman;
+
+  & > img {
+    margin: 4px;
+    max-width: 100%;
+    max-height: 1000px;
+  }
+
+  &:focus img {
+    box-shadow: 0 0 3px 1px rgba(0, 0, 0, 0.2);
+  }
 `
