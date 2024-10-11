@@ -1,4 +1,4 @@
-import { ClipboardEvent, FocusEvent, forwardRef, Fragment, useEffect, useRef } from 'react'
+import { ClipboardEvent, FocusEvent, Fragment } from 'react'
 import { createPortal } from 'react-dom'
 import styled from 'styled-components'
 
@@ -7,11 +7,9 @@ import useEditorState from '../../state'
 import Toolbar from '../toolbar'
 import { HelpDialog } from '../help-dialog'
 import { sanitize } from '../../utils/sanitization'
-import { getAnswer } from '../../utility'
 import { useKeyboardEventListener } from '../../hooks/use-keyboard-events'
 import useMutationObserver from '../../hooks/use-mutation-observer'
-
-export const MATH_EDITOR_CLASS = 'math-editor-wrapper'
+import { MATH_EDITOR_CLASS } from '../../../react/utils/create-math-stub'
 
 export default function MainTextArea({
   style,
@@ -160,4 +158,26 @@ const Box = styled.div`
   min-height: 100px;
   padding: 5px;
   font: 17px Times New Roman;
+
+  & > img {
+    margin: 4px;
+    max-width: 100%;
+    max-height: 1000px;
+  }
+
+  &:focus img {
+    box-shadow: 0 0 3px 1px rgba(0, 0, 0, 0.2);
+  }
+
+  & .mq-math-mode .mq-root-block {
+    white-space: nowrap;
+  }
+
+  &:focus,
+  & .mq-editable-field.mq-focused,
+  & textarea:focus {
+    box-shadow: none;
+    outline: 1px solid #359bb7;
+    z-index: 2;
+  }
 `

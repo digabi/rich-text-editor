@@ -25,6 +25,7 @@ import {
 } from './test-utils'
 import RichTextEditor from '../src/react'
 import { Answer } from '../src/react/utility'
+import fi from '../src/FI'
 
 test.describe('Rich text editor', () => {
   let answer: Answer = { answerHtml: '', answerText: '', imageCount: 0 }
@@ -38,6 +39,7 @@ test.describe('Rich text editor', () => {
     const { unmount } = await mount(
       <RichTextEditor
         language="FI"
+        baseUrl="http://localhost:5111"
         editorStyle={{ position: 'absolute', top: '300px', width: '100%' }}
         onValueChange={onAnswerChange}
         allowedFileTypes={['image/png', 'image/jpeg']}
@@ -368,7 +370,7 @@ test.describe('Rich text editor', () => {
     test('writing invalid LaTeX shows error message', async ({ page }) => {
       await page.keyboard.press('Tab')
       await page.keyboard.type('\\sqt{1}')
-      await expect(page.locator('span.render-error')).toBeVisible()
+      await expect(page.getByText(fi.editor.render_error)).toBeVisible()
     })
 
     test('opens a new editor on the next line when Enter is pressed', async ({ page }) => {
@@ -432,6 +434,7 @@ kaava:\
       await mount(
         <RichTextEditor
           language="FI"
+          baseUrl="http://localhost:5111"
           editorStyle={{ position: 'absolute', top: '300px', width: '100%' }}
           onValueChange={onAnswerChange}
           allowedFileTypes={['image/png', 'image/jpeg']}
