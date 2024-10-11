@@ -138,7 +138,6 @@ export default function MainTextArea({
         onPaste={onPaste}
         style={style}
         onInput={() => editor.onAnswerChange()}
-        dangerouslySetInnerHTML={{ __html: editor.initialValue ?? '' }}
       />
 
       {
