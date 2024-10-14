@@ -48,13 +48,15 @@ export default function MainTextArea({
    * the user cannot place their cursor there
    */
   useMutationObserver(editor.ref, () => {
+    const isTextNode = (node: Node | null) =>
+      node && node.nodeType === Node.TEXT_NODE /*|| (node as Element).tagName === 'BR'*/
     const editorElement = editor.ref.current
     if (!editorElement) return
 
-    if (editorElement.firstChild?.nodeType !== Node.TEXT_NODE) {
+    if (!isTextNode(editorElement.firstChild)) {
       editorElement.insertBefore(document.createTextNode('\u00A0'), editorElement.firstChild)
     }
-    if (editorElement.lastChild?.nodeType !== Node.TEXT_NODE) {
+    if (!isTextNode(editorElement.lastChild)) {
       editorElement.appendChild(document.createTextNode('\u00A0'))
     }
 
@@ -62,13 +64,11 @@ export default function MainTextArea({
       const next = wrapper.nextSibling
       const prev = wrapper.previousSibling
 
-      if (!prev || prev.nodeType !== Node.TEXT_NODE) {
-        console.debug('inserting text before', wrapper)
+      if (!isTextNode(prev)) {
         wrapper.parentNode?.insertBefore(document.createTextNode('\u00A0'), wrapper)
       }
 
-      if (!next || next.nodeType !== Node.TEXT_NODE) {
-        console.debug('inserting text after', wrapper)
+      if (!isTextNode(next)) {
         wrapper.parentNode?.insertBefore(document.createTextNode('\u00A0'), wrapper.nextSibling)
       }
     })
@@ -157,6 +157,7 @@ const Box = styled.div`
   min-height: 100px;
   padding: 5px;
   font: 17px Times New Roman;
+  white-space: pre;
 
   & > img {
     margin: 4px;
