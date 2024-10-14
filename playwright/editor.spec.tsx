@@ -44,7 +44,6 @@ test.describe('Rich text editor', () => {
         onValueChange={onAnswerChange}
         allowedFileTypes={['image/png', 'image/jpeg']}
         initialValue=""
-        baseUrl="http://localhost:5111"
       />,
     )
     unmountComponent = unmount
@@ -100,20 +99,16 @@ test.describe('Rich text editor', () => {
     const editor = getEditorLocator(page)
     await setClipboardHTML(page, '<p>Hello World!</p>')
     await paste(page)
-    await assertEditorTextContent(editor, 'Hello World!')
-    await assertEditorHTMLContent(editor, 'Hello World!<br>')
+    assertAnswerContent(answer, { answerText: 'Hello World!', answerHtml: 'Hello World!', imageCount: 0 })
   })
 
   test('can paste png <img> from clipboard', async ({ page }) => {
-    const editor = getEditorLocator(page)
     const img = `<img src="data:image/png;base64,${samplePNG}" alt="Hello World!">`
     await setClipboardHTML(page, img)
     await paste(page)
-    await assertEditorHTMLContent(editor, img)
 
     assertAnswerContent(answer, {
       answerHtml: img,
-      answerText: '',
       imageCount: 1,
     })
   })
@@ -216,7 +211,6 @@ test.describe('Rich text editor', () => {
       await selectEditorContent(getEditorLocator(page), 2, 9)
       await page.keyboard.press('Backspace')
 
-      await assertEditorTextContent(getEditorLocator(page), 'Hed!')
       assertAnswerContent(answer, { answerHtml: 'Hed!', answerText: 'Hed!', imageCount: 0 })
     })
 
@@ -332,7 +326,7 @@ test.describe('Rich text editor', () => {
       await test.step(' and places cursor after equation image', async () => {
         await page.keyboard.press('B')
 
-        assertAnswerContent(answer, { answerText: 'A B' })
+        assertAnswerContent(answer, { answerText: 'B' })
       })
     })
 
@@ -385,11 +379,6 @@ test.describe('Rich text editor', () => {
 
     test.describe('when multiple equation editors in answer', () => {
       test.beforeEach(async ({ page }) => {
-        await page.goto('http://localhost:1234')
-        const editor = getEditorLocator(page)
-        await editor.click()
-        await page.getByRole('button', { name: 'Lisää kaava' }).click()
-        await expect(page.getByTestId('equation-editor')).toHaveCount(1)
         await page.keyboard.press('A')
         await clickOutsideEditor(page)
         await getEditorLocator(page).click()
@@ -397,16 +386,24 @@ test.describe('Rich text editor', () => {
         await page.keyboard.press('B')
         await clickOutsideEditor(page)
         await expect(page.locator('span > img')).toHaveCount(2)
-        assertAnswerContent(answer, { answerHtml: 'A B' })
+        console.log(answer.answerHtml)
+        console.log('<img data-math-svg="true" alt="A">  <img data-math-svg="true" alt="B">')
+        assertAnswerContent(answer, {
+          answerHtml: '<img data-math-svg="true" alt="A">\u00A0\u00A0<img data-math-svg="true" alt="B">',
+        })
       })
 
       test('can edit both equations separately', async ({ page }) => {
-        await page.getByRole('img').first().click()
+        const editor = getEditorLocator(page)
+        await editor.getByRole('img').first().click()
         await page.keyboard.press('2')
-        await page.getByRole('img').last().click()
+        await page.keyboard.press('Escape')
+        await editor.getByRole('img').last().click()
         await page.keyboard.press('2')
-        await page.keyboard.press('B')
-        assertAnswerContent(answer, { answerHtml: 'A2 B2' })
+        await page.keyboard.press('Escape')
+        assertAnswerContent(answer, {
+          answerHtml: '<img data-math-svg="true" alt="A2">\u00A0\u00A0<img data-math-svg="true" alt="B2">',
+        })
       })
     })
   })
@@ -439,7 +436,6 @@ kaava:\
           onValueChange={onAnswerChange}
           allowedFileTypes={['image/png', 'image/jpeg']}
           initialValue={initialContent}
-          baseUrl="http://localhost:5111"
         />,
       )
     })

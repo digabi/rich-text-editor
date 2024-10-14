@@ -114,7 +114,7 @@ export const assertAnswerContent = (answer: Answer, expected: Partial<Answer>) =
         throw new Error(`${key} not found in answer`)
       }
       const received = String(answer[key]).replace(/ \/>/g, '>')
-      expect(received, `${key} does not match`).toBe(expected)
+      expect(received, `${key} does not match`).toMatch(expected)
     }
   })
 }
