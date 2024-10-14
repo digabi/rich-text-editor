@@ -228,6 +228,9 @@ export function EditorStateProvider({
               !mathEditorPortals.has(elem) &&
               elem instanceof HTMLImageElement &&
               elem.alt &&
+              // This is important! We need to make sure we don't include images that are already in wrapper,
+              // as they are already handled by the previous list - including them here as well results in components
+              // being nested inside each other in the DOM, and very obscure crashes when they are removed from the answer.
               elem.closest(`span.${MATH_EDITOR_CLASS}`) === null,
           )
           .map((elem) => [elem, (elem as HTMLImageElement).alt]),
