@@ -223,7 +223,13 @@ export function EditorStateProvider({
       )
       .concat(
         mathImages
-          .filter((elem) => !mathEditorPortals.has(elem) && elem instanceof HTMLImageElement && elem.alt)
+          .filter(
+            (elem) =>
+              !mathEditorPortals.has(elem) &&
+              elem instanceof HTMLImageElement &&
+              elem.alt &&
+              elem.closest(`span.${MATH_EDITOR_CLASS}`) === null,
+          )
           .map((elem) => [elem, (elem as HTMLImageElement).alt]),
       )
 
