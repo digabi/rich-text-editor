@@ -10,11 +10,11 @@ export const assertEditorHTMLContent = async (editor: Locator, content: string) 
 }
 
 export const assertEquationEditorTextContent = async (equationEditor: Locator, content: string) => {
-  expect(await equationEditor.getByTestId('math-editor-equation-field').textContent()).toBe(content)
+  expect(await equationEditor.locator('.math-editor-equation-field').textContent()).toBe(content)
 }
 
 export const assertEquationEditorLatexContent = async (equationEditor: Locator, content: string) => {
-  expect(await equationEditor.getByTestId('math-editor-latex-field').textContent()).toBe(content)
+  expect(await equationEditor.locator('.math-editor-latex-field').textContent()).toBe(content)
 }
 
 export const getEditorLocator = (page: Page) => page.getByTestId('rich-text-editor')
