@@ -24,6 +24,7 @@ export type RichTextEditorProps = {
   baseUrl: string
   questionId?: number
   textAreaClassNames?: string
+  ariaLabelledBy?: string
 }
 
 export default function RichTextEditor({
@@ -35,6 +36,7 @@ export default function RichTextEditor({
   baseUrl,
   questionId,
   textAreaClassNames,
+  ariaLabelledBy,
 }: RichTextEditorProps) {
   const [toolbarRootElement, setToolbarRootElement] = useState<HTMLElement | undefined>(toolbarRoot)
   const toolbarRootRef = useRef<HTMLDivElement>(null)
@@ -60,7 +62,8 @@ export default function RichTextEditor({
         style={editorStyle ?? {}}
         toolbarRoot={toolbarRootElement}
         questionId={questionId}
-        textAreaClassNames={textAreaClassNames || 'test-answer answer'}
+        textAreaClassNames={textAreaClassNames}
+        ariaLabelledBy={ariaLabelledBy}
       />
     </EditorStateProvider>
   )

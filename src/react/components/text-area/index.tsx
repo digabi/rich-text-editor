@@ -17,11 +17,13 @@ export default function MainTextArea({
   toolbarRoot,
   questionId,
   textAreaClassNames,
+  ariaLabelledBy,
 }: {
   style: React.CSSProperties
   toolbarRoot?: HTMLElement
   questionId?: number // helper for testing purposes of library users
   textAreaClassNames?: string
+  ariaLabelledBy?: string
 }) {
   const editor = useEditorState()
 
@@ -144,6 +146,7 @@ export default function MainTextArea({
         style={style}
         onInput={() => editor.onAnswerChange()}
         data-question-id={questionId}
+        aria-labelledby={ariaLabelledBy}
       />
 
       {
