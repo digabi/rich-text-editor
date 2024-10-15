@@ -140,7 +140,7 @@ export default function MainTextArea({
         onPaste={onPaste}
         style={style}
         onInput={() => editor.onAnswerChange()}
-        data-questionid={questionId}
+        data-question-id={questionId}
       />
 
       {
