@@ -14,9 +14,11 @@ import { MATH_EDITOR_CLASS } from '../../../react/utils/create-math-stub'
 export default function MainTextArea({
   style,
   toolbarRoot,
+  questionId,
 }: {
   style: React.CSSProperties
   toolbarRoot?: HTMLElement
+  questionId?: number // helper for testing purposes of library users
 }) {
   const editor = useEditorState()
 
@@ -138,6 +140,7 @@ export default function MainTextArea({
         onPaste={onPaste}
         style={style}
         onInput={() => editor.onAnswerChange()}
+        data-questionid={questionId}
       />
 
       {

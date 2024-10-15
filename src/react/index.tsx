@@ -22,6 +22,7 @@ export type RichTextEditorProps = {
 
   initialValue?: string
   baseUrl: string
+  questionId?: number
 }
 
 export default function RichTextEditor({
