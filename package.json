@@ -1,6 +1,6 @@
 {
   "name": "rich-text-editor",
-  "version": "8.0.0-alpha5",
+  "version": "8.0.0-alpha6",
   "description": "Rich text editor",
   "homepage": "https://github.com/digabi/rich-text-editor",
   "types": "dist/react/index.d.ts",
@@ -58,6 +58,7 @@
     "@types/express": "^4.17.21",
     "@types/jquery": "^3.5.31",
     "@types/sanitize-html": "^2.13.0",
+    "classnames": "^2.5.1",
     "jquery": "^3.7.1",
     "mathjax-node": "^2.1.1",
     "styled-components": "^6.1.13"

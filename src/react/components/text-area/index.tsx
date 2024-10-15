@@ -10,15 +10,18 @@ import { sanitize } from '../../utils/sanitization'
 import { useKeyboardEventListener } from '../../hooks/use-keyboard-events'
 import useMutationObserver from '../../hooks/use-mutation-observer'
 import { MATH_EDITOR_CLASS } from '../../../react/utils/create-math-stub'
+import classNames from 'classnames/dedupe' // Removes duplicates in class list
 
 export default function MainTextArea({
   style,
   toolbarRoot,
   questionId,
+  textAreaClassNames,
 }: {
   style: React.CSSProperties
   toolbarRoot?: HTMLElement
   questionId?: number // helper for testing purposes of library users
+  textAreaClassNames?: string
 }) {
   const editor = useEditorState()
 
@@ -131,7 +134,7 @@ export default function MainTextArea({
       {editor.isHelpDialogOpen && <HelpDialog />}
       <Box
         ref={editor.ref}
-        className="rich-text-editor answer"
+        className={classNames('rich-text-editor answer', textAreaClassNames)}
         data-testid="rich-text-editor"
         contentEditable
         spellCheck={false}
