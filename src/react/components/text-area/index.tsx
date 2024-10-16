@@ -8,7 +8,7 @@ import useEditorState from '../../state'
 import Toolbar from '../toolbar'
 import { HelpDialog } from '../help-dialog'
 import { sanitize } from '../../utils/sanitization'
-import { isAddMutation, isBr, isRemoveMutation, isTextNode } from '../../utility'
+import { isAddMutation, isBr, isRemoveMutation, isTextNode, nbsp } from '../../utility'
 import { useKeyboardEventListener } from '../../hooks/use-keyboard-events'
 import useMutationObserver from '../../hooks/use-mutation-observer'
 import { MATH_EDITOR_CLASS } from '../../../react/utils/create-math-stub'
@@ -68,10 +68,10 @@ export default function MainTextArea({
     if (!editorElement) return
 
     if (!isTextNode(editorElement.firstChild)) {
-      editorElement.insertBefore(document.createTextNode('\u00A0'), editorElement.firstChild)
+      editorElement.insertBefore(document.createTextNode(nbsp), editorElement.firstChild)
     }
     if (!isTextNode(editorElement.lastChild)) {
-      editorElement.appendChild(document.createTextNode('\u00A0'))
+      editorElement.appendChild(document.createTextNode(nbsp))
     }
 
     editor.ref.current?.querySelectorAll(`.${MATH_EDITOR_CLASS}`)?.forEach((wrapper) => {
@@ -102,11 +102,11 @@ export default function MainTextArea({
 
       // TODO: Comment explaining the purpose of these
       if (!isTextNode(prev)) {
-        wrapper.parentNode?.insertBefore(document.createTextNode('\u00A0'), wrapper)
+        wrapper.parentNode?.insertBefore(document.createTextNode(nbsp), wrapper)
       }
 
       if (!isTextNode(next)) {
-        wrapper.parentNode?.insertBefore(document.createTextNode('\u00A0'), wrapper.nextSibling)
+        wrapper.parentNode?.insertBefore(document.createTextNode(nbsp), wrapper.nextSibling)
       }
     })
   })

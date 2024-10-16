@@ -114,6 +114,7 @@ export const eventHandlerWithoutFocusLoss = (fn?: () => void) => (e: React.Mouse
   return false
 }
 
+export const nbsp = '\u00A0'
 export const isRemoveMutation = (mut: MutationRecord) => mut.removedNodes.length > 0
 export const isAddMutation = (mut: MutationRecord) => mut.addedNodes.length > 0
 export const isReplaceMutation = (mut: MutationRecord) => isRemoveMutation(mut) && isAddMutation(mut)

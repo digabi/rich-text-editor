@@ -13,7 +13,7 @@ import { createMathStub, MATH_EDITOR_CLASS } from '../utils/create-math-stub'
 import FI from '../../FI'
 import SV from '../../SV'
 import { createPortal } from 'react-dom'
-import { getAnswer } from '../utility'
+import { getAnswer, nbsp } from '../utility'
 
 const findWrapperParent = (currentElement: Element): Element | null => {
   if (currentElement?.classList?.contains(MATH_EDITOR_CLASS)) {
@@ -178,7 +178,17 @@ export function EditorStateProvider({
 
     function onEditorRemoved() {
       mathEditorPortals.delete(stub)
-      ;(stub as HTMLElement).remove()
+      const stubElement = stub as HTMLElement
+
+      // Clean up the non-breaking spaces we put on both sides of the wrapper
+      if (stubElement.previousSibling?.textContent === nbsp) {
+        stubElement.previousSibling.remove()
+      }
+      if (stubElement.nextSibling?.textContent === nbsp) {
+        stubElement.nextSibling.remove()
+      }
+
+      stubElement.remove()
       history.clear()
     }
 
