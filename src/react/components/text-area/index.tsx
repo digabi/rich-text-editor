@@ -17,9 +17,9 @@ export type TextAreaProps = {
   ariaLabelledBy?: string
   questionId?: number // helper for testing purposes of library users
   editorStyle?: React.CSSProperties
-  textAreaClassNames?: string
-  textAreaId?: string // exam engine renders a button that is aria owned by the area div (by id)
-  textAreaLang?: string
+  className?: string
+  id?: string // exam engine renders a button that is aria owned by the area div (by id)
+  lang?: string
   toolbarRoot?: HTMLElement
 }
 
@@ -28,9 +28,9 @@ export default function MainTextArea({
   ariaLabelledBy,
   questionId,
   editorStyle = {},
-  textAreaClassNames,
-  textAreaId,
-  textAreaLang,
+  className,
+  id,
+  lang,
   toolbarRoot,
 }: TextAreaProps) {
   const editor = useEditorState()
@@ -144,15 +144,15 @@ export default function MainTextArea({
       {editor.isHelpDialogOpen && <HelpDialog />}
       <Box
         ref={editor.ref}
-        id={textAreaId}
+        id={id}
         aria-invalid={ariaInvalid}
         aria-labelledby={ariaLabelledBy}
         aria-multiline={true}
-        className={classNames('rich-text-editor answer', textAreaClassNames)}
+        className={classNames('rich-text-editor answer', className)}
         contentEditable
         data-question-id={questionId}
         data-testid="rich-text-editor"
-        lang={textAreaLang}
+        lang={lang}
         onBlur={onBlur}
         onFocus={editor.showToolbar}
         onInput={() => editor.onAnswerChange()}

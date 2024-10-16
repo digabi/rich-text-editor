@@ -6,7 +6,7 @@ import type { Answer } from './utility'
 export type { Answer, TextAreaProps }
 
 export type RichTextEditorProps = {
-  allowedFileTypes: string[]
+  allowedFileTypes?: string[]
   baseUrl: string
   /**
    * Callback that's called when the user pastes an image to the text area.
