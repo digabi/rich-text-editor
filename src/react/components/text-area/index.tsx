@@ -17,12 +17,14 @@ export default function MainTextArea({
   toolbarRoot,
   questionId,
   textAreaClassNames,
+  textAreaId,
   ariaLabelledBy,
 }: {
   style: React.CSSProperties
   toolbarRoot?: HTMLElement
   questionId?: number // helper for testing purposes of library users
   textAreaClassNames?: string
+  textAreaId?: string // exam engine renders a button that is aria owned by the area div (by id)
   ariaLabelledBy?: string
 }) {
   const editor = useEditorState()
@@ -136,6 +138,7 @@ export default function MainTextArea({
       {editor.isHelpDialogOpen && <HelpDialog />}
       <Box
         ref={editor.ref}
+        id={textAreaId}
         className={classNames('rich-text-editor answer', textAreaClassNames)}
         data-testid="rich-text-editor"
         contentEditable
