@@ -1,16 +1,17 @@
 import { ClipboardEvent, FocusEvent, Fragment } from 'react'
 import { createPortal } from 'react-dom'
 import styled from 'styled-components'
+import classNames from 'classnames/dedupe' // Removes duplicates in class list
 
 import useEditorState from '../../state'
 
 import Toolbar from '../toolbar'
 import { HelpDialog } from '../help-dialog'
 import { sanitize } from '../../utils/sanitization'
+import { isAddMutation, isBr, isRemoveMutation, isTextNode } from '../../utility'
 import { useKeyboardEventListener } from '../../hooks/use-keyboard-events'
 import useMutationObserver from '../../hooks/use-mutation-observer'
 import { MATH_EDITOR_CLASS } from '../../../react/utils/create-math-stub'
-import classNames from 'classnames/dedupe' // Removes duplicates in class list
 
 export type TextAreaProps = {
   ariaInvalid?: boolean
@@ -62,9 +63,7 @@ export default function MainTextArea({
    * This is hacky, but necessary. If a wrapper does not have text on both sides,
    * the user cannot place their cursor there
    */
-  useMutationObserver(editor.ref, () => {
-    const isTextNode = (node: Node | null) =>
-      node && node.nodeType === Node.TEXT_NODE /*|| (node as Element).tagName === 'BR'*/
+  useMutationObserver(editor.ref, (muts) => {
     const editorElement = editor.ref.current
     if (!editorElement) return
 
@@ -79,6 +78,29 @@ export default function MainTextArea({
       const next = wrapper.nextSibling
       const prev = wrapper.previousSibling
 
+      // TODO: Add comment explaining the purpose of this (from here to line 86)
+      const removedTextNodesBetweenBrAndWrapper = muts.filter(
+        (mut) =>
+          isRemoveMutation(mut) &&
+          isTextNode(mut.removedNodes[0]) &&
+          mut.nextSibling === wrapper &&
+          isBr(mut.previousSibling),
+      )
+
+      const addedBrBeforeWrapper = muts.find(
+        (mut) => isAddMutation(mut) && mut.nextSibling === wrapper && isBr(mut.previousSibling),
+      )
+
+      if (
+        removedTextNodesBetweenBrAndWrapper.length > 0 &&
+        removedTextNodesBetweenBrAndWrapper[0].previousSibling &&
+        addedBrBeforeWrapper
+      ) {
+        editor.ref.current?.removeChild(removedTextNodesBetweenBrAndWrapper[0].previousSibling)
+        editor.ref.current?.removeChild(addedBrBeforeWrapper.addedNodes[0])
+      }
+
+      // TODO: Comment explaining the purpose of these
       if (!isTextNode(prev)) {
         wrapper.parentNode?.insertBefore(document.createTextNode('\u00A0'), wrapper)
       }

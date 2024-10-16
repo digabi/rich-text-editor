@@ -114,6 +114,12 @@ export const eventHandlerWithoutFocusLoss = (fn?: () => void) => (e: React.Mouse
   return false
 }
 
+export const isRemoveMutation = (mut: MutationRecord) => mut.removedNodes.length > 0
+export const isAddMutation = (mut: MutationRecord) => mut.addedNodes.length > 0
+export const isReplaceMutation = (mut: MutationRecord) => isRemoveMutation(mut) && isAddMutation(mut)
+export const isTextNode = (node: Node | null) => node && node.nodeType === Node.TEXT_NODE
+export const isBr = (node: Node | null) => node && node.nodeName === 'BR'
+
 export function decodeBase64Image(dataString: string) {
   if (!dataString) return null
   const matches = dataString.match(/^data:([A-Za-z-+/]+);base64,(.+)$/)
