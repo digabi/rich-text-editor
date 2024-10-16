@@ -9,10 +9,14 @@ const defaultProps: MakeRichTextProps = {
   baseUrl: '',
   allowedFileTypes: ['image/png', 'image/jpeg'],
   onValueChange: () => {},
+  textAreaProps: {},
 }
 
 export const makeRichText = (props: MakeRichTextProps) => {
-  const { container, initialValue, baseUrl, language, editorStyle, allowedFileTypes } = { ...defaultProps, ...props }
+  const { container, initialValue, baseUrl, language, editorStyle, allowedFileTypes, textAreaProps } = {
+    ...defaultProps,
+    ...props,
+  }
   ReactDOM.createRoot(container).render(
     <RichTextEditor
       language={language}
@@ -21,6 +25,7 @@ export const makeRichText = (props: MakeRichTextProps) => {
       initialValue={initialValue}
       baseUrl={baseUrl}
       allowedFileTypes={allowedFileTypes}
+      textAreaProps={textAreaProps}
     />,
   )
 }

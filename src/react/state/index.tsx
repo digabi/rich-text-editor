@@ -104,7 +104,7 @@ export function EditorStateProvider({
   onValueChange,
   initialValue,
   baseUrl,
-}: PropsWithChildren<RichTextEditorProps>) {
+}: PropsWithChildren<Omit<RichTextEditorProps, 'textAreaProps'>>) {
   const [isToolbarOpen, setIsToolbarOpen] = useState(false)
   const [isMathToolbarOpen, setIsMathToolbarOpen] = useState(false)
   const [isToolbarExpanded, setIsToolbarExpanded] = useState(false)

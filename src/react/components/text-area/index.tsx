@@ -12,6 +12,17 @@ import useMutationObserver from '../../hooks/use-mutation-observer'
 import { MATH_EDITOR_CLASS } from '../../../react/utils/create-math-stub'
 import classNames from 'classnames/dedupe' // Removes duplicates in class list
 
+export type TextAreaProps = {
+  ariaInvalid?: boolean
+  ariaLabelledBy?: string
+  questionId?: number // helper for testing purposes of library users
+  editorStyle?: React.CSSProperties
+  textAreaClassNames?: string
+  textAreaId?: string // exam engine renders a button that is aria owned by the area div (by id)
+  textAreaLang?: string
+  toolbarRoot?: HTMLElement
+}
+
 export default function MainTextArea({
   ariaInvalid,
   ariaLabelledBy,
@@ -21,16 +32,7 @@ export default function MainTextArea({
   textAreaId,
   textAreaLang,
   toolbarRoot,
-}: {
-  ariaInvalid?: boolean
-  ariaLabelledBy?: string
-  questionId?: number // helper for testing purposes of library users
-  editorStyle?: React.CSSProperties
-  textAreaClassNames?: string
-  textAreaId?: string // exam engine renders a button that is aria owned by the area div (by id)
-  textAreaLang?: string
-  toolbarRoot?: HTMLElement
-}) {
+}: TextAreaProps) {
   const editor = useEditorState()
 
   useKeyboardEventListener('e', true, editor.spawnMathEditorAtCursor)

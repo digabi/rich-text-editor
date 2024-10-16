@@ -40,10 +40,10 @@ test.describe('Rich text editor', () => {
       <RichTextEditor
         language="FI"
         baseUrl="http://localhost:5111"
-        editorStyle={{ position: 'absolute', top: '300px', width: '100%' }}
         onValueChange={onAnswerChange}
         allowedFileTypes={['image/png', 'image/jpeg']}
         initialValue=""
+        textAreaProps={{ editorStyle: { position: 'absolute', top: '300px', width: '100%' } }}
       />,
     )
     unmountComponent = unmount
@@ -432,10 +432,10 @@ kaava:\
         <RichTextEditor
           language="FI"
           baseUrl="http://localhost:5111"
-          editorStyle={{ position: 'absolute', top: '300px', width: '100%' }}
           onValueChange={onAnswerChange}
           allowedFileTypes={['image/png', 'image/jpeg']}
           initialValue={initialContent}
+          textAreaProps={{ editorStyle: { position: 'absolute', top: '300px', width: '100%' } }}
         />,
       )
     })
