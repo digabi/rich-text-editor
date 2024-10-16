@@ -16,7 +16,7 @@ export default function MainTextArea({
   ariaInvalid,
   ariaLabelledBy,
   questionId,
-  style = {},
+  editorStyle = {},
   textAreaClassNames,
   textAreaId,
   textAreaLang,
@@ -25,7 +25,7 @@ export default function MainTextArea({
   ariaInvalid?: boolean
   ariaLabelledBy?: string
   questionId?: number // helper for testing purposes of library users
-  style?: React.CSSProperties
+  editorStyle?: React.CSSProperties
   textAreaClassNames?: string
   textAreaId?: string // exam engine renders a button that is aria owned by the area div (by id)
   textAreaLang?: string
@@ -156,7 +156,7 @@ export default function MainTextArea({
         onInput={() => editor.onAnswerChange()}
         onPaste={onPaste}
         spellCheck={false}
-        style={style}
+        style={editorStyle}
       />
 
       {

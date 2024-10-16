@@ -1,6 +1,6 @@
 {
   "name": "rich-text-editor",
-  "version": "8.0.0-alpha9",
+  "version": "8.0.0-alpha10",
   "description": "Rich text editor",
   "homepage": "https://github.com/digabi/rich-text-editor",
   "types": "dist/react/index.d.ts",

@@ -56,7 +56,7 @@ export default function RichTextEditor({
       baseUrl={baseUrl}
     >
       {toolbarRoot ? null : <div ref={toolbarRootRef} className="rich-text-editor-toolbar-root" />}
-      <MainTextArea {...textAreaProps} />
+      <MainTextArea {...textAreaProps} toolbarRoot={toolbarRootElement} />
     </EditorStateProvider>
   )
 }
