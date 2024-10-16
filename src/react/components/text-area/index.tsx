@@ -150,6 +150,7 @@ export default function MainTextArea({
         onInput={() => editor.onAnswerChange()}
         data-question-id={questionId}
         aria-labelledby={ariaLabelledBy}
+        aria-multiline={true}
       />
 
       {
