@@ -27,7 +27,7 @@ export default function MainTextArea({
   ariaInvalid,
   ariaLabelledBy,
   questionId,
-  editorStyle = {},
+  editorStyle,
   className,
   id,
   lang,
