@@ -13,19 +13,23 @@ import { MATH_EDITOR_CLASS } from '../../../react/utils/create-math-stub'
 import classNames from 'classnames/dedupe' // Removes duplicates in class list
 
 export default function MainTextArea({
-  style,
-  toolbarRoot,
+  ariaInvalid,
+  ariaLabelledBy,
   questionId,
+  style = {},
   textAreaClassNames,
   textAreaId,
-  ariaLabelledBy,
+  textAreaLang,
+  toolbarRoot,
 }: {
-  style: React.CSSProperties
-  toolbarRoot?: HTMLElement
+  ariaInvalid?: boolean
+  ariaLabelledBy?: string
   questionId?: number // helper for testing purposes of library users
+  style?: React.CSSProperties
   textAreaClassNames?: string
   textAreaId?: string // exam engine renders a button that is aria owned by the area div (by id)
-  ariaLabelledBy?: string
+  textAreaLang?: string
+  toolbarRoot?: HTMLElement
 }) {
   const editor = useEditorState()
 
@@ -139,18 +143,20 @@ export default function MainTextArea({
       <Box
         ref={editor.ref}
         id={textAreaId}
-        className={classNames('rich-text-editor answer', textAreaClassNames)}
-        data-testid="rich-text-editor"
-        contentEditable
-        spellCheck={false}
-        onFocus={editor.showToolbar}
-        onBlur={onBlur}
-        onPaste={onPaste}
-        style={style}
-        onInput={() => editor.onAnswerChange()}
-        data-question-id={questionId}
+        aria-invalid={ariaInvalid}
         aria-labelledby={ariaLabelledBy}
         aria-multiline={true}
+        className={classNames('rich-text-editor answer', textAreaClassNames)}
+        contentEditable
+        data-question-id={questionId}
+        data-testid="rich-text-editor"
+        lang={textAreaLang}
+        onBlur={onBlur}
+        onFocus={editor.showToolbar}
+        onInput={() => editor.onAnswerChange()}
+        onPaste={onPaste}
+        spellCheck={false}
+        style={style}
       />
 
       {
