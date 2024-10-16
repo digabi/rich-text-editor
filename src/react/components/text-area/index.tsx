@@ -159,6 +159,7 @@ export default function MainTextArea({
         onPaste={onPaste}
         spellCheck={false}
         style={editorStyle}
+        role="textbox"
       />
 
       {
