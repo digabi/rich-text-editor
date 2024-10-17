@@ -29,5 +29,3 @@ export const makeRichText = (props: MakeRichTextProps) => {
     />,
   )
 }
-
-window.makeRichText = makeRichText
