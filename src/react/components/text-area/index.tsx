@@ -74,11 +74,17 @@ export default function MainTextArea({
       editorElement.appendChild(document.createTextNode(nbsp))
     }
 
+    // Iterate through each math editor, as the space around them is the most important and fragile
     editor.ref.current?.querySelectorAll(`.${MATH_EDITOR_CLASS}`)?.forEach((wrapper) => {
       const next = wrapper.nextSibling
       const prev = wrapper.previousSibling
 
-      // TODO: Add comment explaining the purpose of this (from here to line 86)
+      /*
+       * Without special handling, the browser will add line breaks on line's it considers empty.
+       * This includes lines with only a math editor and no white space - this leads to weird behaviour,
+       * like an extra line break being added when the user tries to remove white space before an editor.
+       * We work around that by detecting such mutations, and then removing the line breaks.
+       */
       const removedTextNodesBetweenBrAndWrapper = muts.filter(
         (mut) =>
           isRemoveMutation(mut) &&
@@ -100,7 +106,11 @@ export default function MainTextArea({
         editor.ref.current?.removeChild(addedBrBeforeWrapper.addedNodes[0])
       }
 
-      // TODO: Comment explaining the purpose of these
+      /*
+       * The user can't place their cursor in positions without editable content.
+       * Since the math editors and their wrappers are not editable,
+       * we make sure there's always a text node on both sides of every editor.
+       */
       if (!isTextNode(prev)) {
         wrapper.parentNode?.insertBefore(document.createTextNode(nbsp), wrapper)
       }
