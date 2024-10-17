@@ -26,60 +26,60 @@ const errorResponse = `<?xml version="1.0" encoding="UTF-8" standalone="no"?>
 module.exports = { mathSvgResponse, latexToSvg }
 
 mjAPI.config({
-    extensions: 'TeX/mhchem.js',
-    MathJax: {
-        SVG: {
-            font: 'Latin-Modern',
-        },
+  extensions: 'Safe,TeX/mhchem.js',
+  MathJax: {
+    SVG: {
+      font: 'Latin-Modern',
     },
+  },
 })
 mjAPI.start()
 
 function mathSvgResponse(req, res) {
-    res.type('svg')
-    const latex = req.query.latex
-    latexToSvg(latex, (svg) => res.send(svg))
+  res.type('svg')
+  const latex = req.query.latex
+  latexToSvg(latex, (svg) => res.send(svg))
 }
 
 function latexIsTooLong(latex) {
-    return latex && latex.length > MAX_LENGTH
+  return latex && latex.length > MAX_LENGTH
 }
 
 function nestingIsTooDeep(latex) {
-    let nestingLevel = 0
-    const matches = latex.match(/\\right|\\left|\\begin|\\end|\{|\}/g)
-    if (!matches) {
-        return false
-    }
-    for (var matchedString of matches) {
-        if (nestedContextStartedRegexes.some((startingRegex) => startingRegex === matchedString)) nestingLevel++
-        else if (nestedContextEndingRegexes.some((endingRegex) => endingRegex === matchedString)) nestingLevel--
-        if (nestingLevel > MAX_NESTING_LEVEL) return true
-    }
+  let nestingLevel = 0
+  const matches = latex.match(/\\right|\\left|\\begin|\\end|\{|\}/g)
+  if (!matches) {
     return false
+  }
+  for (var matchedString of matches) {
+    if (nestedContextStartedRegexes.some((startingRegex) => startingRegex === matchedString)) nestingLevel++
+    else if (nestedContextEndingRegexes.some((endingRegex) => endingRegex === matchedString)) nestingLevel--
+    if (nestingLevel > MAX_NESTING_LEVEL) return true
+  }
+  return false
 }
 
 function latexToSvg(latex, cb) {
-    if (latexIsTooLong(latex) || nestingIsTooDeep(latex)) {
-        cb(errorResponse)
-        return
-    }
+  if (latexIsTooLong(latex) || nestingIsTooDeep(latex)) {
+    cb(errorResponse)
+    return
+  }
 
-    mjAPI.typeset(
-        {
-            math: latex,
-            format: 'TeX', // "inline-TeX", "MathML"
-            mml: false,
-            svg: true,
-            linebreaks: true,
-            width: 100,
-        },
-        (data) => {
-            if (data.errors) {
-                cb(errorResponse)
-            } else {
-                cb(data.svg)
-            }
-        },
-    )
+  mjAPI.typeset(
+    {
+      math: latex,
+      format: 'TeX', // "inline-TeX", "MathML"
+      mml: false,
+      svg: true,
+      linebreaks: true,
+      width: 100,
+    },
+    (data) => {
+      if (data.errors) {
+        cb(errorResponse)
+      } else {
+        cb(data.svg)
+      }
+    },
+  )
 }
