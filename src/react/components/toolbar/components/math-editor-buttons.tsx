@@ -1,6 +1,6 @@
 import styled from 'styled-components'
 
-import mathShortcutData from '../math-shortcut-data'
+import mathShortcutData, { Shortcut } from '../math-shortcut-data'
 import useEditorState from '../../../state'
 import { eventHandlerWithoutFocusLoss } from '../../../utility'
 
@@ -10,14 +10,14 @@ import RedoIcon from '../../icons/redo'
 export default function MathEditorButtons() {
   const { isMathToolbarOpen, undo, redo, canUndo, canRedo, activeMathEditor } = useEditorState()
 
-  function onMouseDown(e: React.MouseEvent, shortcut: (typeof mathShortcutData)[number]) {
+  function onMouseDown(e: React.MouseEvent, shortcut: Shortcut) {
     e.preventDefault()
     e.stopPropagation()
     if (activeMathEditor?.mq.el().contains(document.activeElement)) {
       /** Different inputs need to be given to MathQuill differently.
        * Something about inputting a 'LaTeX command' rather than straight text.
        * TODO: Better comment for this */
-      activeMathEditor.mq[shortcut.useWrite ? 'write' : 'cmd'](shortcut.action)
+      activeMathEditor.mq[shortcut.fn ?? 'cmd'](shortcut.action)
     } else {
       window.document.execCommand('insertText', false, shortcut.label)
     }
