@@ -332,7 +332,7 @@ test.describe('Rich text editor', () => {
 
     test('is removed if closed with empty LaTeX', async ({ page }) => {
       await clickOutsideEditor(page)
-      await assertEditorHTMLContent(getEditorLocator(page), '&nbsp;&nbsp;')
+      await assertEditorHTMLContent(getEditorLocator(page), '')
     })
 
     test('opens with hot key', async ({ page }) => {
