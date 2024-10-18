@@ -5,11 +5,6 @@ export type MakeRichTextProps = { container: HTMLElement } & RichTextEditorProps
 
 const defaultProps: MakeRichTextProps = {
   container: document.getElementById('rich-text-editor-root')!,
-  language: 'FI',
-  baseUrl: '',
-  allowedFileTypes: ['image/png', 'image/jpeg'],
-  onValueChange: () => {},
-  textAreaProps: {},
 }
 
 export const makeRichText = (props: MakeRichTextProps) => {

@@ -50,7 +50,6 @@ export type EditorState = {
   expandToolbar: () => void
   collapseToolbar: () => void
 
-  toolbarRoot: RichTextEditorProps['toolbarRoot']
   handlePastedImage: NonNullable<RichTextEditorProps['getPasteSource']>
   allowedFileTypes: NonNullable<RichTextEditorProps['allowedFileTypes']>
 
@@ -95,16 +94,24 @@ const getNextKey = () => {
   return next
 }
 
+const defaultPasteSource = (file: File): Promise<string> =>
+  new Promise((resolve) => {
+    const reader = new FileReader()
+    reader.onload = (evt) => resolve(reader.result as string)
+    reader.readAsDataURL(file)
+  })
+
+type EditorStateProps = PropsWithChildren<Omit<RichTextEditorProps, 'textAreaProps' | 'toolbarRoot'>>
+
 export function EditorStateProvider({
   children,
-  language,
-  toolbarRoot,
-  getPasteSource,
-  allowedFileTypes,
-  onValueChange,
-  initialValue,
-  baseUrl,
-}: PropsWithChildren<Omit<RichTextEditorProps, 'textAreaProps'>>) {
+  language = 'FI',
+  getPasteSource = defaultPasteSource,
+  allowedFileTypes = ['image/png', 'image/jpeg'],
+  onValueChange = () => {},
+  initialValue = '',
+  baseUrl = '',
+}: EditorStateProps) {
   const [isToolbarOpen, setIsToolbarOpen] = useState(false)
   const [isMathToolbarOpen, setIsMathToolbarOpen] = useState(false)
   const [isToolbarExpanded, setIsToolbarExpanded] = useState(false)
@@ -124,8 +131,6 @@ export function EditorStateProvider({
   const mainTextAreaRef = useRef<HTMLDivElement>(null)
 
   const t = { FI, SV }[language]
-
-  const allowedTypes = allowedFileTypes ?? ['image/png', 'image/jpeg']
 
   // When a MathEditor's container element is removed,
   // we need to also remove the ReactPortal it was rendered in.
@@ -316,21 +321,10 @@ export function EditorStateProvider({
         redo: history.redo,
 
         t,
-
-        toolbarRoot,
-
-        handlePastedImage:
-          getPasteSource ??
-          function defaultPasteSource(file) {
-            return new Promise((resolve) => {
-              const reader = new FileReader()
-              reader.onload = (evt) => resolve(reader.result as string)
-              reader.readAsDataURL(file)
-            })
-          },
-        allowedFileTypes: allowedTypes,
+        handlePastedImage: getPasteSource,
+        allowedFileTypes,
         onAnswerChange,
-        initialValue: initialValue ?? '',
+        initialValue,
         baseUrl,
       }}
     >

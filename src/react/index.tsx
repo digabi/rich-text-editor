@@ -7,7 +7,7 @@ export type { Answer, TextAreaProps }
 
 export type RichTextEditorProps = {
   allowedFileTypes?: string[]
-  baseUrl: string
+  baseUrl?: string
   /**
    * Callback that's called when the user pastes an image to the text area.
    * The function is given a `File` Blob and is expected to return a string
@@ -15,10 +15,10 @@ export type RichTextEditorProps = {
    */
   getPasteSource?: (file: File) => Promise<string>
   initialValue?: string
-  language: 'FI' | 'SV'
-  onValueChange: (answer: Answer) => void
+  language?: 'FI' | 'SV'
+  onValueChange?: (answer: Answer) => void
   /** The toolbars will be rendered in this root via a React Portal */
-  textAreaProps: TextAreaProps
+  textAreaProps?: TextAreaProps
   toolbarRoot?: HTMLElement
 } & TextAreaProps
 
@@ -51,7 +51,6 @@ export default function RichTextEditor({
       initialValue={initialValue}
       language={language}
       onValueChange={onValueChange}
-      toolbarRoot={toolbarRoot}
     >
       {toolbarRoot ? null : <div ref={toolbarRootRef} className="rich-text-editor-toolbar-root" />}
       <MainTextArea {...textAreaProps} toolbarRoot={toolbarRootElement} />
