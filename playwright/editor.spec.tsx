@@ -24,7 +24,7 @@ import {
   setClipboardImage,
 } from './test-utils'
 import RichTextEditor from '../src/react'
-import { Answer } from '../src/react/utility'
+import { Answer, nbsp } from '../src/react/utility'
 import fi from '../src/FI'
 
 test.describe('Rich text editor', () => {
@@ -164,6 +164,26 @@ test.describe('Rich text editor', () => {
     await paste(page)
 
     assertAnswerContent(answer, { answerHtml: goodHtml, answerText: 'drop\nbar\nlink text', imageCount: 0 })
+  })
+
+  test('deletes line breaks correctly', async ({ page }) => {
+    const editor = getEditorLocator(page)
+    await editor.click()
+    await page.keyboard.press('Control+e')
+    await repeat(3, async (i) => {
+      await page.keyboard.type(`${i}`)
+      await page.keyboard.press('Enter')
+      await expect(page.locator('span > img')).toHaveCount(i + 1)
+    })
+    await page.keyboard.press('Tab')
+    await page.keyboard.press('Tab')
+    await page.keyboard.press('ArrowDown')
+    //await page.keyboard.press('ArrowLeft')
+    await page.keyboard.press('Backspace')
+    await page.keyboard.press('Backspace')
+    assertAnswerContent(answer, {
+      answerHtml: `<img data-math-svg="true" alt="0">${nbsp}<img data-math-svg="true" alt="1">${nbsp}<br>${nbsp}<img data-math-svg="true" alt="2">`,
+    })
   })
 
   test.describe('toolbar', () => {

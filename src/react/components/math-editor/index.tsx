@@ -83,7 +83,11 @@ export default function MathEditor(props: Props) {
 
   useKeyboardEventListener('z', true, historyHandler(undo))
   useKeyboardEventListener('y', true, historyHandler(redo))
-  useKeyboardEventListener('Escape', false, close)
+  useKeyboardEventListener('Escape', false, (e) => {
+    e?.preventDefault()
+    e?.stopPropagation()
+    close()
+  })
 
   const onChange = (oldValue: string | undefined, newValue: string) => {
     if (oldValue === newValue) return
