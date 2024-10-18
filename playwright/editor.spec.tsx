@@ -386,8 +386,6 @@ test.describe('Rich text editor', () => {
         await page.keyboard.press('B')
         await clickOutsideEditor(page)
         await expect(page.locator('span > img')).toHaveCount(2)
-        console.log(answer.answerHtml)
-        console.log('<img data-math-svg="true" alt="A">  <img data-math-svg="true" alt="B">')
         assertAnswerContent(answer, {
           answerHtml: '<img data-math-svg="true" alt="A">\u00A0\u00A0<img data-math-svg="true" alt="B">',
         })
@@ -442,6 +440,7 @@ kaava:\
 
     test('is editable', async ({ page }) => {
       const equationEditor = getEditorLocator(page)
+      await expect(page.getByRole('img').last()).toBeVisible()
       await page.getByRole('img').last().click()
       await assertEquationEditorLatexContent(equationEditor, '\\sqrt{123}')
       await clickOutsideEditor(page)
