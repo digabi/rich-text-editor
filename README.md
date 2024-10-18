@@ -13,6 +13,57 @@ Since v4.0.0, only ES2017 code with ES modules is provided (in the `dist`
 directory). If you want to use this library, a bundler such as Webpack or
 Rollup is probably needed.
 
+## Usage
+
+### Usage with NPM
+
+Install the package with `npm install rich-text-editor`. 
+Rich text editor can be either used as 
+  - a React component `import RichTextEditor from 'rich-text-editor'`
+  - or as a function in apps that are not using React `import { makeRichText } from 'rich-text-editor/dist/rich-text-editor'` 
+
+Most properties passed to the component or initialization function are described below. More info can be found in the types and/or source code.
+
+### Usage as CDN bundle
+
+Add a script tag to your HTML page whose source is `https://unpkg.com/rich-text-editor/dist/rich-text-editor-bundle.js`, e.g. `<script type="module" src="https://unpkg.com/rich-text-editor/dist/rich-text-editor-bundle.js"></script>`. 
+
+This will add `makeRichText` to window, which can be used to initialize the editor.
+
+The function takes the following parameters as an object:
+
+| Key              | Default                                          |
+|------------------|--------------------------------------------------|
+| container        | document.getElementById('rich-text-editor-root') |
+| language         | 'FI'                                             |
+| baseUrl          | ''                                               |
+| allowedFileTypes | ['image/png', 'image/jpeg']                      |
+| onValueChange    | () => {}                                         |
+| textAreaProps    | {}                                               |
+
+Example:
+```
+{
+  container: document.getElementById('rich-text-editor-root')!,
+  language: 'FI',
+  baseUrl: '',
+  allowedFileTypes: ['image/png', 'image/jpeg'],
+  onValueChange: () => {},
+  textAreaProps: {},
+}
+```
+
+textAreaProps are passed to the underlying div element that is the visible editor element, here are ones that are relevant for configuration of CDN users:  
+
+| Key            | type                | Purpose                                            |
+|----------------|---------------------|----------------------------------------------------|
+| ariaInvalid    | boolean             | Add aria-invalid                                   |
+| ariaLabelledBy | string              | Add aria-labelledby                                |
+| editorStyle    | React.CSSProperties | Direct CSS properties to the editor element        |
+| className      | string              | Additional class name(s) to the editor element     |
+| id             | string              | id-field to the editor element                     |
+| lang           | string              | lang-field to the editor-element for accessibility |
+
 ## Goal (Read this before submitting)
 
 Rich text editor has been developed to allow candidates of Finnish Matriculation
