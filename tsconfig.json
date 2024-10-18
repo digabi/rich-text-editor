@@ -2,15 +2,18 @@
   "compilerOptions": {
     "allowJs": true,
     "esModuleInterop": true,
-    "lib": ["es2017"],
+    "lib": ["dom", "ES2023", "dom.iterable"],
     "module": "commonjs",
     "moduleResolution": "node",
-    "noEmit": true,
     "skipDefaultLibCheck": true,
     "skipLibCheck": true,
-    "sourceMap": true,
+    "sourceMap": false,
     "strict": true,
-    "target": "es2017"
+    "target": "es2017",
+    "jsx": "react-jsx",
+    "outDir": "dist",
+    "declaration": true,
+    "isolatedModules": true
   },
-  "include": ["src/*"]
+  "include": ["src/**/*", "playwright/**/*", "dev-server.ts", "playwright-ct.config.ts"]
 }

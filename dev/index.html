@@ -1,0 +1,28 @@
+<!doctype html>
+<html>
+  <head>
+    <title>Rich text editor example</title>
+    <link rel="stylesheet" type="text/css" href="//unpkg.com/@digabi/mathquill/build/mathquill.css" />
+    <script src="//cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js" id="MathJax-script"></script>
+    <script type="module" src="js/index.js"></script>
+    <script>
+      window.addEventListener('DOMContentLoaded', function () {
+        window.makeRichText({
+          baseUrl: 'http://localhost:5111',
+          initialValue:
+            'testi. <br>kaava: &nbsp;<span class="math-editor-wrapper" id="math-editor-1" style="display: contents;" contenteditable="false"><img src="data:image/svg+xml;utf8," data-math-svg="true" data-latex="\\sqrt{123}" alt="\\sqrt{123}"></span>&nbsp;<br> <br>&nbsp;',
+          textAreaProps: {
+            ariaLabelledBy: "question-label",
+            questionId: "123",
+            editorStyle: {},
+            lang: "fi-FI",
+          }
+        })
+      })
+    </script>
+  </head>
+  <body>
+    <label id="question-label" style="display: block; margin-top: 300px">Sample question</label>
+    <div id="rich-text-editor-root"></div>
+  </body>
+</html>

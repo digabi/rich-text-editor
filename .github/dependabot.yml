@@ -10,13 +10,8 @@ updates:
     schedule:
       interval: 'daily'
       time: '01:00'
-    labels: [ ]
-    open-pull-requests-limit: 1
+    open-pull-requests-limit: 99
     ignore:
-      # chai 5 is pure esm package that cannot be used yet
-      - dependency-name: "chai"
-      # eslint-plugin-import does not support yet eslint 9. Disable update for now
-      - dependency-name: "eslint"
       - dependency-name: "*"
         update-types: [ "version-update:semver-patch", "version-update:semver-minor" ]
   - package-ecosystem: 'github-actions'

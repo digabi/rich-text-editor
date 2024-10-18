@@ -1,9 +1,0 @@
-{
-  "extends": "../tsconfig.json",
-  "compilerOptions": {
-    "lib": ["dom", "es2017"],
-    "module": "es2015",
-    "noEmit": false,
-    "outDir": "../dist"
-  }
-}

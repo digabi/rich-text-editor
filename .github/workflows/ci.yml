@@ -1,34 +1,32 @@
 # This workflow will do a clean install of node dependencies, build the source code and run tests across different versions of node
 # For more information see: https://help.github.com/actions/language-and-framework-guides/using-nodejs-with-github-actions
 
-name: Node.js CI
+name: Rich text editor tests
 
 on:
   push:
     branches: [master]
   pull_request:
     branches: [master]
-  schedule:
-    - cron: '0 5 * * *'
 jobs:
   build:
     runs-on: ubuntu-latest
-
-    strategy:
-      matrix:
-        node-version: [16.x]
-
     steps:
       - uses: actions/checkout@v4
-      - name: Use Node.js ${{ matrix.node-version }}
+      - name: Use Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: ${{ matrix.node-version }}
-      - name: Restore cache
+          node-version-file: '.nvmrc'
+          cache: 'npm'
+      - name: Cache Playwright Browsers
+        id: cache-playwright-browsers
         uses: actions/cache@v4
         with:
-          path: node_modules
-          key: npm-${{ matrix.node-version }}-${{ hashFiles('**/package-lock.json') }}
+          path: ~/.cache/ms-playwright
+          key: ${{ runner.os }}-${{ hashFiles('./package-lock.json') }}
       - run: npm ci
-      - run: npm run test
-      - run: npm run lint
+      - run: npx playwright install --with-deps chromium
+      - name: Run tests
+        env:
+          CI: true
+        run: npm run test

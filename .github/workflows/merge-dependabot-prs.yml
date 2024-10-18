@@ -1,7 +1,7 @@
 name: Merge Dependabot pull requests
 on:
   schedule:
-    - cron: '0 2-4 * * *'
+    - cron: '0 2 * * *'
   workflow_dispatch:
 jobs:
   test:
@@ -11,5 +11,5 @@ jobs:
       - uses: akheron/dependabot-cron-action@main
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
-          merge-method: rebase
+          merge-method: merge
           auto-merge: major
