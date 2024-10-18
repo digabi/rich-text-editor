@@ -219,7 +219,7 @@ const Box = styled.div`
     max-height: 1000px;
   }
 
-  &:focus img {
+  &:focus > img {
     box-shadow: 0 0 3px 1px rgba(0, 0, 0, 0.2);
   }
 
@@ -233,5 +233,9 @@ const Box = styled.div`
     box-shadow: none;
     outline: 1px solid #359bb7;
     z-index: 2;
+  }
+
+  &:focus > span > img {
+    background-color: #edf9ff;
   }
 `
