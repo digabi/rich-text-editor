@@ -96,7 +96,9 @@ export default function MathEditor(props: Props) {
   }
 
   const onEnter = () => {
-    spawnMathEditorInNewLine()
+    if (containerRef.current) {
+      spawnMathEditorInNewLine(containerRef.current)
+    }
     close()
   }
 
