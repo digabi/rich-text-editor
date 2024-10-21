@@ -212,6 +212,7 @@ const Box = styled.div`
   padding: 5px;
   font: 17px Times New Roman;
   white-space: pre;
+  text-wrap: wrap;
 
   & > img {
     margin: 4px;
