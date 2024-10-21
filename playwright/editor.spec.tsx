@@ -191,12 +191,35 @@ test.describe('Rich text editor', () => {
     const editor = getEditorLocator(page)
     await editor.click()
     await page.keyboard.press('Control+e')
-    await editor.click()
     await repeat(20, async (i) => {
       await page.keyboard.type(`${i}`)
       await page.keyboard.press('Enter')
     })
     await page.keyboard.press('Escape')
+    await selectAll(page)
+    await page.keyboard.press('Backspace')
+    await page.keyboard.press('Control+e')
+    await page.keyboard.type('Hello!')
+    await page.keyboard.press('Escape')
+
+    assertAnswerContent(answer, {
+      answerHtml: '<img data-math-svg="true" alt="Hello!">',
+    })
+  })
+
+  test('does not crash when multiple equations are pasted and then deleted at the same time', async ({ page }) => {
+    const editor = getEditorLocator(page)
+    await editor.click()
+    await page.keyboard.press('Control+e')
+    await page.keyboard.type('Hello!')
+    await page.keyboard.press('Escape')
+    await repeat(5, async () => {
+      const html = await (await editor.elementHandle())?.asElement().innerHTML()
+      if (html) {
+        await setClipboardHTML(page, html)
+        await paste(page)
+      }
+    })
     await selectAll(page)
     await page.keyboard.press('Backspace')
     await page.keyboard.press('Control+e')
