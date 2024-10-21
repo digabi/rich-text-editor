@@ -39,7 +39,7 @@ export type EditorState = {
    */
   spawnMathEditor(stub: Container): void
   spawnMathEditorAtCursor(): void
-  spawnMathEditorInNewLine(): void
+  spawnMathEditorInNewLine(afterElement: Element): void
 
   isToolbarOpen: boolean
   isMathToolbarOpen: boolean
@@ -215,11 +215,20 @@ export function EditorStateProvider({
     spawnMathEditor(createMathStub(getNextKey(), true), { initialOpen: true })
   }
 
-  function spawnMathEditorInNewLine() {
-    const stub = createMathStub(getNextKey(), false)
-    mainTextAreaRef.current?.appendChild(document.createElement('br'))
-    mainTextAreaRef.current?.appendChild(stub)
-    spawnMathEditor(stub, { initialOpen: true })
+  function spawnMathEditorInNewLine(afterElement: Element) {
+    const wrapper = afterElement.closest(`.${MATH_EDITOR_CLASS}`)
+    const newStub = createMathStub(getNextKey(), false)
+    const nextSibling = wrapper?.nextSibling
+
+    if (nextSibling) {
+      mainTextAreaRef.current?.insertBefore(newStub, nextSibling)
+      mainTextAreaRef.current?.insertBefore(document.createElement('br'), newStub)
+    } else {
+      mainTextAreaRef.current?.appendChild(document.createElement('br'))
+      mainTextAreaRef.current?.appendChild(newStub)
+    }
+
+    spawnMathEditor(newStub, { initialOpen: true })
   }
 
   function initMathEditors() {
