@@ -20,7 +20,7 @@ export const assertEquationEditorLatexContent = async (equationEditor: Locator, 
 export const getEditorLocator = (page: Page) => page.getByTestId('rich-text-editor')
 
 export const repeat = async (times: number, action: (i: number) => Promise<void>) => {
-  for (const i of Array.from({ length: times }, (_, i) => i)) {
+  for await (const i of Array.from({ length: times }, (_, i) => i)) {
     await action(i)
   }
   return Promise.resolve()
@@ -87,8 +87,9 @@ export const setClipboardImage = async (page: Page, filetype: string, base64: st
   )
 }
 
-export const paste = async (page: Page) =>
-  process.platform === 'darwin' ? page.keyboard.press('Meta+V') : page.keyboard.press('Control+V')
+export const selectAll = async (page: Page) => await page.keyboard.press('ControlOrMeta+A')
+export const copy = async (page: Page) => await page.keyboard.press('ControlOrMeta+C')
+export const paste = async (page: Page) => await page.keyboard.press('ControlOrMeta+V')
 
 export const pasteHtmlImage = async (page: Page, base64: string) => {
   await setClipboardHTML(page, base64)

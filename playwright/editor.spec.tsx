@@ -22,6 +22,8 @@ import {
   specialCharacters,
   inputLatexCommandFromToolbar,
   setClipboardImage,
+  selectAll,
+  copy,
 } from './test-utils'
 import RichTextEditor from '../src/react'
 import { Answer, nbsp } from '../src/react/utility'
@@ -178,11 +180,31 @@ test.describe('Rich text editor', () => {
     await page.keyboard.press('Tab')
     await page.keyboard.press('Tab')
     await page.keyboard.press('ArrowDown')
-    //await page.keyboard.press('ArrowLeft')
     await page.keyboard.press('Backspace')
     await page.keyboard.press('Backspace')
     assertAnswerContent(answer, {
       answerHtml: `<img data-math-svg="true" alt="0">${nbsp}<img data-math-svg="true" alt="1">${nbsp}<br>${nbsp}<img data-math-svg="true" alt="2">`,
+    })
+  })
+
+  test('does not crash when multiple equations are deleted at the same time', async ({ page }) => {
+    const editor = getEditorLocator(page)
+    await editor.click()
+    await page.keyboard.press('Control+e')
+    await editor.click()
+    await repeat(20, async (i) => {
+      await page.keyboard.type(`${i}`)
+      await page.keyboard.press('Enter')
+    })
+    await page.keyboard.press('Escape')
+    await selectAll(page)
+    await page.keyboard.press('Backspace')
+    await page.keyboard.press('Control+e')
+    await page.keyboard.type('Hello!')
+    await page.keyboard.press('Escape')
+
+    assertAnswerContent(answer, {
+      answerHtml: '<img data-math-svg="true" alt="Hello!">',
     })
   })
 
