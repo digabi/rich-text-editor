@@ -395,6 +395,18 @@ test.describe('Rich text editor', () => {
       await page.keyboard.press('Tab')
 
       await expect(page.locator('span.math-editor-wrapper > img')).toHaveCount(2)
+
+      await test.step('opens a new editor after the active equation', async () => {
+        const editor = getEditorLocator(page)
+        await expect(editor.getByRole('img').first()).toBeVisible()
+        await editor.getByRole('img').first().click()
+        await page.keyboard.press('Enter')
+        await page.keyboard.press('3')
+        await page.keyboard.press('Escape')
+
+        await expect(editor.getByRole('img')).toHaveCount(3)
+        await expect(editor.getByRole('img').nth(1)).toHaveAttribute('alt', '3')
+      })
     })
 
     test.describe('when multiple equation editors in answer', () => {
