@@ -34,10 +34,3 @@ dist/
 /playwright-report/
 /blob-report/
 /playwright/.cache/
-
-## Parcel
-.parcel-cache
-/test-results/
-/playwright-report/
-/blob-report/
-/playwright/.cache/
