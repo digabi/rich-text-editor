@@ -11,7 +11,7 @@ import { sanitize } from '../../utils/sanitization'
 import { isAddMutation, isBr, isRemoveMutation, isTextNode, nbsp } from '../../utility'
 import { useKeyboardEventListener } from '../../hooks/use-keyboard-events'
 import useMutationObserver from '../../hooks/use-mutation-observer'
-import { MATH_EDITOR_CLASS } from '../../../react/utils/create-math-stub'
+import { MATH_EDITOR_CLASS } from '../../utils/create-math-stub'
 
 export type TextAreaProps = {
   ariaInvalid?: boolean

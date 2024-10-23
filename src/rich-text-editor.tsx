@@ -1,5 +1,5 @@
 import ReactDOM from 'react-dom/client'
-import RichTextEditor, { RichTextEditorProps } from './react'
+import RichTextEditor, { RichTextEditorProps } from './app'
 
 export type MakeRichTextProps = { container: HTMLElement } & RichTextEditorProps
 

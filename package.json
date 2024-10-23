@@ -3,8 +3,8 @@
   "version": "8.0.2",
   "description": "Rich text editor",
   "homepage": "https://github.com/digabi/rich-text-editor",
-  "types": "dist/react/index.d.ts",
-  "main": "dist/react/index.js",
+  "types": "dist/app/index.d.ts",
+  "main": "dist/app/index.js",
   "files": [
     "dist/*",
     "server/*"
@@ -27,11 +27,11 @@
     "url": "https://github.com/digabi/rich-text-editor.git"
   },
   "devDependencies": {
-    "@digabi/eslint-config": "^3.2.0",
-    "@playwright/experimental-ct-react": "^1.47.2",
-    "@types/node": "^22.7.4",
-    "@types/react": "^18.3.11",
-    "@types/react-dom": "^18.3.0",
+    "@digabi/eslint-config": "^3.3.0",
+    "@playwright/experimental-ct-react": "^1.48.1",
+    "@types/node": "^22.7.9",
+    "@types/react": "^18.3.12",
+    "@types/react-dom": "^18.3.1",
     "@typescript-eslint/eslint-plugin": "^7.2.0",
     "@typescript-eslint/parser": "^7.2.0",
     "buffer": "^6.0.3",
@@ -42,20 +42,20 @@
     "eslint-plugin-import": "^2.31.0",
     "eslint-plugin-prettier": "^5.2.1",
     "eslint-plugin-promise": "^7.1.0",
-    "express": "^4.21.0",
+    "express": "^4.21.1",
     "prettier": "^3.3.3",
     "process": "^0.11.10",
     "sanitize-html": "^2.13.1",
     "ts-loader": "^9.5.1",
     "ts-node": "^10.9.2",
-    "tslib": "^2.7.0",
-    "typescript": "^5.6.2"
+    "tslib": "^2.8.0",
+    "typescript": "^5.6.3"
   },
   "dependencies": {
     "@digabi/mathquill": "^0.10.12",
-    "@playwright/test": "^1.47.2",
+    "@playwright/test": "^1.48.1",
     "@types/express": "^4.17.21",
-    "@types/jquery": "^3.5.31",
+    "@types/jquery": "^3.5.32",
     "@types/sanitize-html": "^2.13.0",
     "classnames": "^2.5.1",
     "jquery": "^3.7.1",

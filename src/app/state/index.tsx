@@ -5,8 +5,6 @@ import useHistory from './history'
 import useMap, { MapHookHandle } from '../hooks/use-map'
 import useMutationObserver from '../hooks/use-mutation-observer'
 
-import { RichTextEditorProps } from '../../react'
-
 import MathEditor, { MathEditorHandle, Props as MathEditorProps } from '../components/math-editor'
 import { createMathStub, MATH_EDITOR_CLASS } from '../utils/create-math-stub'
 
@@ -14,6 +12,7 @@ import FI from '../../FI'
 import SV from '../../SV'
 import { createPortal } from 'react-dom'
 import { getAnswer, nbsp } from '../utility'
+import { RichTextEditorProps } from '../index'
 
 const findWrapperParent = (currentElement: Element): Element | null => {
   if (currentElement?.classList?.contains(MATH_EDITOR_CLASS)) {
