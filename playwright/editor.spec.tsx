@@ -25,8 +25,8 @@ import {
   selectAll,
   copy,
 } from './test-utils'
-import RichTextEditor from '../src/react'
-import { Answer, nbsp } from '../src/react/utility'
+import RichTextEditor from '../src/app'
+import { Answer, nbsp } from '../src/app/utility'
 import fi from '../src/FI'
 
 test.describe('Rich text editor', () => {

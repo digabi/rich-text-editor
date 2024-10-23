@@ -5,7 +5,7 @@ import useHistory from './history'
 import useMap, { MapHookHandle } from '../hooks/use-map'
 import useMutationObserver from '../hooks/use-mutation-observer'
 
-import { RichTextEditorProps } from '../../react'
+import { RichTextEditorProps } from './.'
 
 import MathEditor, { MathEditorHandle, Props as MathEditorProps } from '../components/math-editor'
 import { createMathStub, MATH_EDITOR_CLASS } from '../utils/create-math-stub'

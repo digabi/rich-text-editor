@@ -1,5 +1,5 @@
 import { expect, Page, Locator } from '@playwright/test'
-import { Answer } from '../src/react/utility'
+import { Answer } from '../src/app/utility'
 
 export const assertEditorTextContent = async (editor: Locator, content: string) => {
   expect(await editor.textContent()).toBe(content)

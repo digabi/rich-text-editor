@@ -3,8 +3,8 @@
   "version": "8.0.2",
   "description": "Rich text editor",
   "homepage": "https://github.com/digabi/rich-text-editor",
-  "types": "dist/react/index.d.ts",
-  "main": "dist/react/index.js",
+  "types": "dist/app/index.d.ts",
+  "main": "dist/app/index.js",
   "files": [
     "dist/*",
     "server/*"
