@@ -11,10 +11,6 @@ fi
 
 VERSION=$1
 
-#TODO: test can be removed once passing tests are required by merges
-npm run test
-npm run build
-
 npm version ${VERSION} -m "Release %s"
 
 cat <<EOF

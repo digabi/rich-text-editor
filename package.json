@@ -20,7 +20,8 @@
     "build": "rm -rf dist && npm run build:bundle && npm run build:npm",
     "dev": "esbuild --serve=localhost:1234 src/rich-text-editor-bundle.ts --outfile=dev/js/index.js --bundle --servedir=dev --watch",
     "dev-server": "ts-node dev-server.ts",
-    "watch": "concurrently -n='ESBUILD,DEVSERVER' -c=auto 'npm run dev' 'npm run dev-server'"
+    "watch": "concurrently -n='ESBUILD,DEVSERVER' -c=auto 'npm run dev' 'npm run dev-server'",
+    "prepare": "npm run test && npm run build"
   },
   "repository": {
     "type": "git",
