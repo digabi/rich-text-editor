@@ -1,4 +1,4 @@
-import { ClipboardEvent, FocusEvent, Fragment } from 'react'
+import { ClipboardEvent, FocusEvent, forwardRef, Fragment, useImperativeHandle } from 'react'
 import { createPortal } from 'react-dom'
 import styled from 'styled-components'
 import classNames from 'classnames/dedupe' // Removes duplicates in class list
@@ -12,6 +12,7 @@ import { isAddMutation, isBr, isRemoveMutation, isTextNode, nbsp } from '../../u
 import { useKeyboardEventListener } from '../../hooks/use-keyboard-events'
 import useMutationObserver from '../../hooks/use-mutation-observer'
 import { MATH_EDITOR_CLASS } from '../../utils/create-math-stub'
+import { RichTextEditorHandle } from '../..'
 
 export type TextAreaProps = {
   ariaInvalid?: boolean
@@ -24,17 +25,24 @@ export type TextAreaProps = {
   toolbarRoot?: HTMLElement
 }
 
-export default function MainTextArea({
-  ariaInvalid,
-  ariaLabelledBy,
-  questionId,
-  editorStyle,
-  className,
-  id,
-  lang,
-  toolbarRoot,
-}: TextAreaProps) {
+const MainTextArea = forwardRef<RichTextEditorHandle, TextAreaProps>((props, ref) => {
+  const { toolbarRoot, ariaInvalid, ariaLabelledBy, questionId, editorStyle, className, id, lang } = props
   const editor = useEditorState()
+
+  useImperativeHandle(ref, () => ({
+    setValue: (value: string) => {
+      if (editor.ref.current) {
+        editor.ref.current.innerHTML = value
+      }
+
+      setTimeout(() => {
+        editor.initMathEditors()
+        setTimeout(() => {
+          editor.onAnswerChange()
+        }, 0)
+      }, 0)
+    },
+  }))
 
   useKeyboardEventListener('e', true, editor.spawnMathEditorAtCursor)
 
@@ -203,7 +211,7 @@ export default function MainTextArea({
       }
     </>
   )
-}
+})
 
 const Box = styled.div`
   box-sizing: content-box;
@@ -240,3 +248,5 @@ const Box = styled.div`
     background-color: #edf9ff;
   }
 `
+
+export default MainTextArea
