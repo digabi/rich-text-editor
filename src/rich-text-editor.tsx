@@ -1,5 +1,6 @@
 import ReactDOM from 'react-dom/client'
-import RichTextEditor, { RichTextEditorProps } from './app'
+import RichTextEditor, { RichTextEditorHandle, RichTextEditorProps } from './app'
+import { createRef } from 'react'
 
 export type MakeRichTextProps = { container: HTMLElement } & RichTextEditorProps
 
@@ -8,12 +9,15 @@ const defaultProps: MakeRichTextProps = {
 }
 
 export const makeRichText = (props: MakeRichTextProps) => {
+  const ref = createRef<RichTextEditorHandle>()
+
   const { container, initialValue, baseUrl, language, editorStyle, allowedFileTypes, textAreaProps } = {
     ...defaultProps,
     ...props,
   }
   ReactDOM.createRoot(container).render(
     <RichTextEditor
+      ref={ref}
       language={language}
       editorStyle={editorStyle}
       onValueChange={() => {}}
@@ -23,4 +27,6 @@ export const makeRichText = (props: MakeRichTextProps) => {
       textAreaProps={textAreaProps}
     />,
   )
+
+  return ref
 }
