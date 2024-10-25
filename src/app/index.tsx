@@ -1,9 +1,13 @@
-import { useEffect, useRef, useState } from 'react'
+import { forwardRef, useEffect, useImperativeHandle, useRef, useState } from 'react'
 import MainTextArea, { TextAreaProps } from './components/text-area'
 import { EditorStateProvider } from './state'
 import type { Answer } from './utility'
 
 export type { Answer, TextAreaProps }
+
+export type RichTextEditorHandle = {
+  setValue: (value: string) => void
+}
 
 export type RichTextEditorProps = {
   allowedFileTypes?: string[]
@@ -22,16 +26,17 @@ export type RichTextEditorProps = {
   toolbarRoot?: HTMLElement
 } & TextAreaProps
 
-export default function RichTextEditor({
-  allowedFileTypes,
-  baseUrl,
-  getPasteSource,
-  initialValue,
-  language,
-  onValueChange,
-  textAreaProps,
-  toolbarRoot,
-}: RichTextEditorProps) {
+const RichTextEditor = forwardRef<RichTextEditorHandle, RichTextEditorProps>((props, ref) => {
+  const {
+    allowedFileTypes,
+    baseUrl,
+    getPasteSource,
+    initialValue,
+    language,
+    onValueChange,
+    textAreaProps,
+    toolbarRoot,
+  } = props
   const [toolbarRootElement, setToolbarRootElement] = useState<HTMLElement | undefined>(toolbarRoot)
   const toolbarRootRef = useRef<HTMLDivElement>(null)
 
@@ -53,7 +58,9 @@ export default function RichTextEditor({
       onValueChange={onValueChange}
     >
       {toolbarRoot ? null : <div ref={toolbarRootRef} className="rich-text-editor-toolbar-root" />}
-      <MainTextArea {...textAreaProps} toolbarRoot={toolbarRootElement} />
+      <MainTextArea {...textAreaProps} toolbarRoot={toolbarRootElement} ref={ref} />
     </EditorStateProvider>
   )
-}
+})
+
+export default RichTextEditor
