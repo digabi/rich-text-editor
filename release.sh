@@ -19,6 +19,6 @@ Updated package.json and created the version tag.
 Check your version history, if all is fine, push with :
 
     git push --follow-tags
-    npm publish
+    npm publish --foreground-scripts
 
 EOF
