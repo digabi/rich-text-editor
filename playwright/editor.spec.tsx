@@ -473,6 +473,7 @@ test.describe('Rich text editor', () => {
         await editor.getByRole('img').first().click()
         await page.keyboard.press('2')
         await page.keyboard.press('Escape')
+        await expect(page.locator('span > img')).toHaveCount(2)
         await editor.getByRole('img').last().click()
         await page.keyboard.press('2')
         await page.keyboard.press('Escape')

@@ -26,6 +26,9 @@ export default defineConfig({
 
     /* Port to use for Playwright component endpoint. */
     ctPort: 3100,
+
+    /* Use a tiny amount of slowmo, to try to work around flakyness */
+    launchOptions: { slowMo: 10 },
   },
 
   webServer: {
