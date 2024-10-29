@@ -44,7 +44,12 @@ const MainTextArea = forwardRef<RichTextEditorHandle, TextAreaProps>((props, ref
     },
   }))
 
-  useKeyboardEventListener('e', true, editor.spawnMathEditorAtCursor)
+  useKeyboardEventListener('e', true, (e) => {
+    if (editor.ref.current === document.activeElement) {
+      e?.preventDefault()
+      editor.spawnMathEditorAtCursor()
+    }
+  })
 
   /** We need to capture Enter presses and handle them manually. Otherwise browsers may do weird things that interfere with our
    *  React tomfoolery, leading to behaviours like equations getting deleted if the user enters
@@ -54,12 +59,7 @@ const MainTextArea = forwardRef<RichTextEditorHandle, TextAreaProps>((props, ref
     'Enter',
     false,
     (e) => {
-      const selection = window.getSelection()
-      if (
-        selection?.anchorNode &&
-        !editor.activeMathEditor &&
-        ((selection.anchorNode as Element) === editor.ref.current || editor.ref.current?.contains(selection.anchorNode))
-      ) {
+      if (!editor.activeMathEditor && editor.ref.current === document.activeElement) {
         e?.preventDefault()
         document.execCommand('insertHTML', false, '<br>')
       }

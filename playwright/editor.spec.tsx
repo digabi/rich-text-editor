@@ -364,6 +364,13 @@ test.describe('Rich text editor', () => {
       })
     })
 
+    test('math editor gets focus when opened with ctrl+e', async ({ page }) => {
+      await page.keyboard.press('Escape')
+      await expect(page.getByTestId('equation-editor')).not.toBeVisible()
+      await page.keyboard.press('Control+e')
+      await expect(page.locator('.math-editor-equation-field')).toBeVisible()
+    })
+
     test('can insert LaTeX commands', async ({ page }) => {
       const equationEditor = page.getByTestId('equation-editor')
       await inputLatexCommandFromToolbar(page, specialCharacters.sqrt[0])

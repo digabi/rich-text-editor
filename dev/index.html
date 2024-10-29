@@ -6,8 +6,16 @@
     <script src="//cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js" id="MathJax-script"></script>
     <script type="module" src="js/index.js"></script>
     <script>
-      window.addEventListener('DOMContentLoaded', function () {
-        window.ref = window.makeRichText({
+      window.addRichTextEditor = () => {
+        const label = document.createElement('label')
+        label.innerHTML = 'Another sample question'
+        const container = document.createElement('div')
+        container.setAttribute('id', `rich-text-editor-root-${document.querySelectorAll('div').length + 1}`)
+        document.body.appendChild(label)
+        document.body.appendChild(container)
+
+        window.makeRichText({
+          container: container,
           baseUrl: 'http://localhost:5111',
           initialValue:
             'testi. <br>kaava: &nbsp;<span class="math-editor-wrapper" id="math-editor-1" style="display: contents;" contenteditable="false"><img src="data:image/svg+xml;utf8," data-math-svg="true" data-latex="\\sqrt{123}" alt="\\sqrt{123}"></span>&nbsp;<br> <br>&nbsp;',
@@ -15,14 +23,29 @@
             ariaLabelledBy: 'question-label',
             questionId: '123',
             editorStyle: {},
-            lang: 'fi-FI',
-          },
+            lang: 'fi-FI'
+          }
+        })
+      }
+
+      window.addEventListener('DOMContentLoaded', function() {
+        window.makeRichText({
+          baseUrl: 'http://localhost:5111',
+          initialValue:
+            'testi. <br>kaava: &nbsp;<span class="math-editor-wrapper" id="math-editor-1" style="display: contents;" contenteditable="false"><img src="data:image/svg+xml;utf8," data-math-svg="true" data-latex="\\sqrt{123}" alt="\\sqrt{123}"></span>&nbsp;<br> <br>&nbsp;',
+          textAreaProps: {
+            ariaLabelledBy: 'question-label',
+            questionId: '123',
+            editorStyle: {},
+            lang: 'fi-FI'
+          }
         })
       })
     </script>
   </head>
   <body>
-    <label id="question-label" style="display: block; margin-top: 300px">Sample question</label>
+    <button onclick="window.addRichTextEditor()" style="margin-top: 300px">Add Rich Text Editor</button>
+    <label id="question-label" style="display: block">Sample question</label>
     <div id="rich-text-editor-root"></div>
   </body>
 </html>
