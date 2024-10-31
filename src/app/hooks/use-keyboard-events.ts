@@ -9,7 +9,7 @@ export const useKeyboardEventListener = (
   useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
       if (!ctrl || (ctrl && event.ctrlKey)) {
-        if (event.key === key) {
+        if (event.key.toLowerCase() === key.toLowerCase()) {
           if (preventDefault) {
             event.preventDefault()
           }

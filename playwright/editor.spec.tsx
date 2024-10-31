@@ -364,10 +364,19 @@ test.describe('Rich text editor', () => {
       })
     })
 
-    test('math editor gets focus when opened with ctrl+e', async ({ page }) => {
+    test('math editor gets focus when opened with Ctrl+e', async ({ page }) => {
       await page.keyboard.press('Escape')
       await expect(page.getByTestId('equation-editor')).not.toBeVisible()
       await page.keyboard.press('Control+e')
+      await expect(page.locator('.math-editor-equation-field')).toBeVisible()
+    })
+
+    test('math editor gets focus when opened with Ctrl+E (case insensitive keyboard event handling)', async ({
+      page,
+    }) => {
+      await page.keyboard.press('Escape')
+      await expect(page.getByTestId('equation-editor')).not.toBeVisible()
+      await page.keyboard.press('Control+E')
       await expect(page.locator('.math-editor-equation-field')).toBeVisible()
     })
 
