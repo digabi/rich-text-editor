@@ -18,7 +18,7 @@ export type Props = {
   onOpen?: (handle: MathEditorHandle) => void
   initialLatex?: string
   initialOpen?: boolean
-  onBlur?: () => void
+  onBlur?: (latex: string) => void
   onChange?: (latex: string) => void
   onEditorRemoved?: () => void
 }
@@ -86,7 +86,7 @@ export default function MathEditor(props: Props) {
   useKeyboardEventListener('Escape', false, (e) => {
     e?.preventDefault()
     e?.stopPropagation()
-    close()
+    close(latex)
   })
 
   const onChange = (oldValue: string | undefined, newValue: string) => {
@@ -99,7 +99,7 @@ export default function MathEditor(props: Props) {
     if (containerRef.current) {
       spawnMathEditorInNewLine(containerRef.current)
     }
-    close()
+    close(latex)
   }
 
   const { ref: latexRef, isError, mq } = useMathQuill({ latex, onChange, onEnter })
@@ -120,15 +120,15 @@ export default function MathEditor(props: Props) {
     [isOpen, mq],
   )
 
-  function close() {
-    props.onBlur?.()
+  function close(lastLatex: string) {
+    props.onBlur?.(lastLatex)
     setIsOpen(false)
   }
 
   function onBlur(e: React.FocusEvent) {
     // Only actually lose focus if neither of the two children is focused
     if (!containerRef?.current?.contains(e.relatedTarget)) {
-      close()
+      close(latex)
     }
   }
 

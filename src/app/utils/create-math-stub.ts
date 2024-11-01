@@ -22,28 +22,9 @@ export function createMathStub(id: string | number, atSelection = false) {
   stub.contentEditable = 'false'
 
   if (atSelection) {
-    const selection = window.getSelection()
-    if (!selection || selection.rangeCount === 0) return stub
-
-    const range = selection.getRangeAt(0)
-    range.deleteContents()
-    range.insertNode(stub)
-
-    // If the new equation would be created inside another equations wrapper, move it outside of it
-    const parent = stub.parentNode as Element
-    if (parent.className === MATH_EDITOR_CLASS) {
-      parent.insertAdjacentElement(stub.nextSibling ? 'beforebegin' : 'afterend', stub)
-    }
-
-    // Non-breaking spaces before and after the LaTeX block
-    stub.insertAdjacentText('beforebegin', nbsp)
-    stub.insertAdjacentText('afterend', nbsp)
-
-    selection.removeAllRanges()
-    range.setStartAfter(stub)
-    range.setEndAfter(stub)
-    selection.addRange(range)
+    document.execCommand('insertHTML', false, stub.outerHTML)
+    return document.getElementById(stub.id) as HTMLSpanElement
+  } else {
+    return stub
   }
-
-  return stub
 }

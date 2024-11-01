@@ -153,12 +153,13 @@ export function EditorStateProvider({
       setIsMathToolbarOpen(true)
     }
 
-    function onBlur() {
+    function onBlur(latex: string) {
       setActiveMathEditor(null)
       setIsMathToolbarOpen(false)
       mainTextAreaRef.current?.focus()
 
       history.clear()
+      ;(stub as Element).setAttribute('alt', latex)
       onAnswerChange()
 
       const anchorElement = window.getSelection()?.anchorNode as Element
@@ -194,6 +195,10 @@ export function EditorStateProvider({
 
       stubElement.remove()
       history.clear()
+    }
+
+    if (props?.initialLatex) {
+      ;(stub as Element).setAttribute('alt', props.initialLatex)
     }
 
     const portal = createPortal(
@@ -241,8 +246,10 @@ export function EditorStateProvider({
     const allBoxes = ([] as [elementToInit: Element, initialLatex: string][])
       .concat(
         mathEditors
-          .filter((elem) => !mathEditorPortals.has(elem) && elem.querySelector('img')?.alt)
-          .map((elem) => [elem, elem.querySelector('img')!.alt]),
+          .filter(
+            (elem) => (!mathEditorPortals.has(elem) && elem.querySelector('img')?.alt) || elem.getAttribute('alt'),
+          )
+          .map((elem) => [elem, elem.querySelector('img')?.alt ?? elem.getAttribute('alt') ?? '']), // Because of the filter, this should never fall back to the empty string scenario
       )
       .concat(
         mathImages

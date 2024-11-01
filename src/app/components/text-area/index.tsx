@@ -1,4 +1,4 @@
-import { ClipboardEvent, FocusEvent, forwardRef, Fragment, useImperativeHandle } from 'react'
+import { ClipboardEvent, FocusEvent, FormEvent, forwardRef, Fragment, useImperativeHandle } from 'react'
 import { createPortal } from 'react-dom'
 import styled from 'styled-components'
 import classNames from 'classnames/dedupe' // Removes duplicates in class list
@@ -178,6 +178,14 @@ const MainTextArea = forwardRef<RichTextEditorHandle, TextAreaProps>((props, ref
     }
   }
 
+  function onInput(e: FormEvent<HTMLDivElement>) {
+    const inputType = (e.nativeEvent as InputEvent).inputType
+    if (inputType === 'historyUndo' || inputType === 'historyRedo') {
+      editor.initMathEditors()
+    }
+    editor.onAnswerChange()
+  }
+
   return (
     <>
       {toolbarRoot && editor.isToolbarOpen && createPortal(<Toolbar />, toolbarRoot)}
@@ -195,7 +203,7 @@ const MainTextArea = forwardRef<RichTextEditorHandle, TextAreaProps>((props, ref
         lang={lang}
         onBlur={onBlur}
         onFocus={editor.showToolbar}
-        onInput={() => editor.onAnswerChange()}
+        onInput={onInput}
         onPaste={onPaste}
         spellCheck={false}
         style={editorStyle}
