@@ -36,7 +36,8 @@ const Error = styled.span`
 `
 
 const MathImage = styled.img`
-  padding: 3px 10px;
+  margin: 5px 0;
+  vertical-align: middle;
 `
 
 const MathEditorElement = styled.div`
