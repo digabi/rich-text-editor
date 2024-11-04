@@ -156,7 +156,6 @@ export function EditorStateProvider({
     function onBlur() {
       setActiveMathEditor(null)
       setIsMathToolbarOpen(false)
-      mainTextAreaRef.current?.focus()
 
       history.clear()
       onAnswerChange()
