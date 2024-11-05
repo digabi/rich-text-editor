@@ -52,7 +52,6 @@ test.describe('Rich text editor', () => {
     await page.addStyleTag({
       url: '//unpkg.com/@digabi/mathquill/build/mathquill.css',
     })
-    await page.context().grantPermissions(['clipboard-read', 'clipboard-write'])
     const editor = getEditorLocator(page)
     await editor.click()
   })
@@ -466,7 +465,9 @@ test.describe('Rich text editor', () => {
         await page.keyboard.press('Escape')
 
         await expect(editor.getByRole('img')).toHaveCount(3)
+        await expect(editor.getByRole('img').nth(0)).toHaveAttribute('alt', '1')
         await expect(editor.getByRole('img').nth(1)).toHaveAttribute('alt', '3')
+        await expect(editor.getByRole('img').nth(2)).toHaveAttribute('alt', '2')
       })
     })
 

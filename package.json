@@ -13,7 +13,7 @@
     "generateMathButtons": "scripts/createMathSvg.js && prettier --write src/latexCommandsWithSvg.js",
     "typecheck": "tsc --noEmit",
     "lint": "eslint .",
-    "test:ct": "playwright test -c playwright-ct.config.ts --project=chromium",
+    "test:ct": "playwright test -c playwright-ct.config.ts",
     "test": "npm run typecheck && npm run lint && npm run test:ct",
     "build:bundle": "npx esbuild ./src/rich-text-editor-bundle.ts --outfile=./dist/rich-text-editor-bundle.js --allow-overwrite --bundle --minify",
     "build:npm": "npx tsc -p ./tsconfig.build.json",
