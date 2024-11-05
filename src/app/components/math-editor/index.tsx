@@ -90,6 +90,20 @@ export default function MathEditor(props: Props) {
     close('after')
   })
 
+  const handleMouseDown = (e: MouseEvent) => {
+    e.stopPropagation()
+    if (e.target && !containerRef?.current?.contains(e.target as Node)) {
+      close()
+    }
+  }
+
+  useEffect(() => {
+    document.addEventListener('mousedown', handleMouseDown)
+    return () => {
+      document.removeEventListener('mousedown', handleMouseDown)
+    }
+  }, [isOpen])
+
   const onChange = (oldValue: string | undefined, newValue: string) => {
     if (oldValue === newValue) return
     setLatex(newValue)
@@ -126,13 +140,6 @@ export default function MathEditor(props: Props) {
     setIsOpen(false)
   }
 
-  function onBlur(e: React.FocusEvent) {
-    // Only actually lose focus if neither of the two children is focused
-    if (!containerRef?.current?.contains(e.relatedTarget)) {
-      close()
-    }
-  }
-
   useEffect(() => {
     if (!isOpen && latex === '') {
       props.onEditorRemoved?.()
@@ -153,7 +160,6 @@ export default function MathEditor(props: Props) {
                 close('before')
               }
             }}
-            onBlur={onBlur}
           />
           <MathEditorLatexField
             className="math-editor-latex-field"
@@ -168,7 +174,6 @@ export default function MathEditor(props: Props) {
                 close('after')
               }
             }}
-            onBlur={onBlur}
           />
           {isError && <Error className="render-error">{props.errorText}</Error>}
         </MathEditorElement>
