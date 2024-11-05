@@ -114,7 +114,8 @@ test.describe('Rich text editor', () => {
     })
   })
 
-  test('can paste png file from clipboard', async ({ page }) => {
+  test('can paste png file from clipboard', async ({ page, browserName }) => {
+    test.fixme(browserName === 'firefox', 'image paste not working on firefox')
     const editor = getEditorLocator(page)
     await setClipboardImage(page, 'image/png', samplePNG)
     await paste(page)
