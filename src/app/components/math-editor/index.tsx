@@ -18,7 +18,7 @@ export type Props = {
   onOpen?: (handle: MathEditorHandle) => void
   initialLatex?: string
   initialOpen?: boolean
-  onBlur?: () => void
+  onBlur?: (forceCursorPosition?: 'before' | 'after') => void
   onChange?: (latex: string) => void
   onEditorRemoved?: () => void
 }
@@ -87,7 +87,7 @@ export default function MathEditor(props: Props) {
   useKeyboardEventListener('Escape', false, (e) => {
     e?.preventDefault()
     e?.stopPropagation()
-    close()
+    close('after')
   })
 
   const onChange = (oldValue: string | undefined, newValue: string) => {
@@ -121,8 +121,8 @@ export default function MathEditor(props: Props) {
     [isOpen, mq],
   )
 
-  function close() {
-    props.onBlur?.()
+  function close(forceCursorPosition?: 'before' | 'after') {
+    props.onBlur?.(forceCursorPosition)
     setIsOpen(false)
   }
 
@@ -143,13 +143,31 @@ export default function MathEditor(props: Props) {
     return (
       <div ref={containerRef} data-testid="equation-editor" data-latex={latex}>
         <MathEditorElement className="math-editor">
-          <MathEditorEquationField ref={latexRef} onBlur={onBlur} className="math-editor-equation-field" />
+          <MathEditorEquationField
+            ref={latexRef}
+            className="math-editor-equation-field"
+            onKeyDown={(e) => {
+              if (e.shiftKey && e.key === 'Tab') {
+                e?.preventDefault()
+                e?.stopPropagation()
+                close('before')
+              }
+            }}
+            onBlur={onBlur}
+          />
           <MathEditorLatexField
             className="math-editor-latex-field"
             placeholder="LaTeΧ"
             rows={1}
             value={latex}
             onChange={(e) => onChange(undefined, e.target.value)} // real oldLatex value here?
+            onKeyDown={(e) => {
+              if (e.key === 'Tab') {
+                e?.preventDefault()
+                e?.stopPropagation()
+                close('after')
+              }
+            }}
             onBlur={onBlur}
           />
           {isError && <Error className="render-error">{props.errorText}</Error>}
