@@ -84,11 +84,6 @@ export default function MathEditor(props: Props) {
 
   useKeyboardEventListener('z', true, historyHandler(undo))
   useKeyboardEventListener('y', true, historyHandler(redo))
-  useKeyboardEventListener('Escape', false, (e) => {
-    e?.preventDefault()
-    e?.stopPropagation()
-    close('after')
-  })
 
   const handleMouseDown = (e: MouseEvent) => {
     e.stopPropagation()
@@ -158,6 +153,10 @@ export default function MathEditor(props: Props) {
                 e?.preventDefault()
                 e?.stopPropagation()
                 close('before')
+              } else if (e.key === 'Escape') {
+                e?.preventDefault()
+                e?.stopPropagation()
+                close('after')
               }
             }}
           />
@@ -169,6 +168,10 @@ export default function MathEditor(props: Props) {
             onChange={(e) => onChange(undefined, e.target.value)} // real oldLatex value here?
             onKeyDown={(e) => {
               if (e.key === 'Tab') {
+                e?.preventDefault()
+                e?.stopPropagation()
+                close('after')
+              } else if (e.key === 'Escape') {
                 e?.preventDefault()
                 e?.stopPropagation()
                 close('after')
