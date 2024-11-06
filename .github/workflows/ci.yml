@@ -25,7 +25,7 @@ jobs:
         with:
           path: ~/.cache/ms-playwright
           key: ${{ runner.os }}-${{ hashFiles('./package-lock.json') }}
-      - run: npx playwright install --with-deps chromium
+      - run: npx playwright install --with-deps chromium firefox
       - name: Install deps
         # Don't run prepare step, since it runs tests also.
         run: npm ci --ignore-scripts
