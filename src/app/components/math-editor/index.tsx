@@ -18,7 +18,7 @@ export type Props = {
   onOpen?: (handle: MathEditorHandle) => void
   initialLatex?: string
   initialOpen?: boolean
-  onBlur?: () => void
+  onBlur?: (forceCursorPosition?: 'before' | 'after') => void
   onChange?: (latex: string) => void
   onEditorRemoved?: () => void
 }
@@ -84,11 +84,20 @@ export default function MathEditor(props: Props) {
 
   useKeyboardEventListener('z', true, historyHandler(undo))
   useKeyboardEventListener('y', true, historyHandler(redo))
-  useKeyboardEventListener('Escape', false, (e) => {
-    e?.preventDefault()
-    e?.stopPropagation()
-    close()
-  })
+
+  const handleMouseDown = (e: MouseEvent) => {
+    e.stopPropagation()
+    if (e.target && !containerRef?.current?.contains(e.target as Node)) {
+      close()
+    }
+  }
+
+  useEffect(() => {
+    document.addEventListener('mousedown', handleMouseDown)
+    return () => {
+      document.removeEventListener('mousedown', handleMouseDown)
+    }
+  }, [isOpen])
 
   const onChange = (oldValue: string | undefined, newValue: string) => {
     if (oldValue === newValue) return
@@ -121,16 +130,9 @@ export default function MathEditor(props: Props) {
     [isOpen, mq],
   )
 
-  function close() {
-    props.onBlur?.()
+  function close(forceCursorPosition?: 'before' | 'after') {
+    props.onBlur?.(forceCursorPosition)
     setIsOpen(false)
-  }
-
-  function onBlur(e: React.FocusEvent) {
-    // Only actually lose focus if neither of the two children is focused
-    if (!containerRef?.current?.contains(e.relatedTarget)) {
-      close()
-    }
   }
 
   useEffect(() => {
@@ -143,14 +145,38 @@ export default function MathEditor(props: Props) {
     return (
       <div ref={containerRef} data-testid="equation-editor" data-latex={latex}>
         <MathEditorElement className="math-editor">
-          <MathEditorEquationField ref={latexRef} onBlur={onBlur} className="math-editor-equation-field" />
+          <MathEditorEquationField
+            ref={latexRef}
+            className="math-editor-equation-field"
+            onKeyDown={(e) => {
+              if (e.shiftKey && e.key === 'Tab') {
+                e?.preventDefault()
+                e?.stopPropagation()
+                close('before')
+              } else if (e.key === 'Escape') {
+                e?.preventDefault()
+                e?.stopPropagation()
+                close('after')
+              }
+            }}
+          />
           <MathEditorLatexField
             className="math-editor-latex-field"
             placeholder="LaTeΧ"
             rows={1}
             value={latex}
             onChange={(e) => onChange(undefined, e.target.value)} // real oldLatex value here?
-            onBlur={onBlur}
+            onKeyDown={(e) => {
+              if (e.key === 'Tab') {
+                e?.preventDefault()
+                e?.stopPropagation()
+                close('after')
+              } else if (e.key === 'Escape') {
+                e?.preventDefault()
+                e?.stopPropagation()
+                close('after')
+              }
+            }}
           />
           {isError && <Error className="render-error">{props.errorText}</Error>}
         </MathEditorElement>

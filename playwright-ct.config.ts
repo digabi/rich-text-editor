@@ -39,15 +39,14 @@ export default defineConfig({
     stderr: 'pipe',
   },
 
-  // TODO: fix tests for firefox
   projects: [
     {
       name: 'chromium',
-      use: { ...devices['Desktop Chrome'] },
+      use: { ...devices['Desktop Chrome'], contextOptions: { permissions: ['clipboard-read', 'clipboard-write'] } },
     },
-    // {
-    //   name: 'firefox',
-    //   use: { ...devices['Desktop Firefox'] },
-    // },
+    {
+      name: 'firefox',
+      use: { ...devices['Desktop Firefox'] },
+    },
   ],
 })

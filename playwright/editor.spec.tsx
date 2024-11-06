@@ -52,7 +52,6 @@ test.describe('Rich text editor', () => {
     await page.addStyleTag({
       url: '//unpkg.com/@digabi/mathquill/build/mathquill.css',
     })
-    await page.context().grantPermissions(['clipboard-read', 'clipboard-write'])
     const editor = getEditorLocator(page)
     await editor.click()
   })
@@ -115,7 +114,8 @@ test.describe('Rich text editor', () => {
     })
   })
 
-  test('can paste png file from clipboard', async ({ page }) => {
+  test('can paste png file from clipboard', async ({ page, browserName }) => {
+    test.fixme(browserName === 'firefox', 'image paste not working on firefox')
     const editor = getEditorLocator(page)
     await setClipboardImage(page, 'image/png', samplePNG)
     await paste(page)
@@ -177,9 +177,11 @@ test.describe('Rich text editor', () => {
       await page.keyboard.press('Enter')
       await expect(page.locator('span > img')).toHaveCount(i + 1)
     })
-    await page.keyboard.press('Tab')
-    await page.keyboard.press('Tab')
-    await page.keyboard.press('ArrowDown')
+    await editor.click()
+    await page.keyboard.press('ArrowLeft')
+    await page.keyboard.press('ArrowUp')
+    await page.keyboard.press('ArrowLeft')
+    await page.keyboard.press('ArrowLeft')
     await page.keyboard.press('Backspace')
     await page.keyboard.press('Backspace')
     assertAnswerContent(answer, {
@@ -466,7 +468,9 @@ test.describe('Rich text editor', () => {
         await page.keyboard.press('Escape')
 
         await expect(editor.getByRole('img')).toHaveCount(3)
+        await expect(editor.getByRole('img').nth(0)).toHaveAttribute('alt', '1')
         await expect(editor.getByRole('img').nth(1)).toHaveAttribute('alt', '3')
+        await expect(editor.getByRole('img').nth(2)).toHaveAttribute('alt', '2')
       })
     })
 

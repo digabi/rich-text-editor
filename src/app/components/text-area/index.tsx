@@ -51,22 +51,6 @@ const MainTextArea = forwardRef<RichTextEditorHandle, TextAreaProps>((props, ref
     }
   })
 
-  /** We need to capture Enter presses and handle them manually. Otherwise browsers may do weird things that interfere with our
-   *  React tomfoolery, leading to behaviours like equations getting deleted if the user enters
-   *  a line break on the same line as an Equation
-   */
-  useKeyboardEventListener(
-    'Enter',
-    false,
-    (e) => {
-      if (!editor.activeMathEditor && editor.ref.current === document.activeElement) {
-        e?.preventDefault()
-        document.execCommand('insertHTML', false, '<br>')
-      }
-    },
-    false,
-  )
-
   /**
    * This is hacky, but necessary. If a wrapper does not have text on both sides,
    * the user cannot place their cursor there
@@ -196,6 +180,19 @@ const MainTextArea = forwardRef<RichTextEditorHandle, TextAreaProps>((props, ref
         onBlur={onBlur}
         onFocus={editor.showToolbar}
         onInput={() => editor.onAnswerChange()}
+        onKeyDown={(e) => {
+          if (e.key === 'Enter') {
+            /** We need to capture Enter presses and handle them manually. Otherwise browsers may do weird things that interfere with our
+             *  React tomfoolery, leading to behaviours like equations getting deleted if the user enters
+             *  a line break on the same line as an Equation
+             */
+            if (!editor.activeMathEditor) {
+              e.preventDefault()
+              e.stopPropagation()
+              document.execCommand('insertHTML', false, '<br>')
+            }
+          }
+        }}
         onPaste={onPaste}
         spellCheck={false}
         style={editorStyle}

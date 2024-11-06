@@ -100,6 +100,19 @@ const defaultPasteSource = (file: File): Promise<string> =>
     reader.readAsDataURL(file)
   })
 
+const setCursorAroundElement = (element: Container, position: 'before' | 'after' = 'after') => {
+  const selection = window.getSelection()
+  const range = document.createRange()
+  if (position === 'before') {
+    range.setStartBefore(element)
+  } else {
+    range.setStartAfter(element)
+  }
+  range.collapse(true)
+  selection?.removeAllRanges()
+  selection?.addRange(range)
+}
+
 type EditorStateProps = PropsWithChildren<Omit<RichTextEditorProps, 'textAreaProps' | 'toolbarRoot'>>
 
 export function EditorStateProvider({
@@ -153,7 +166,7 @@ export function EditorStateProvider({
       setIsMathToolbarOpen(true)
     }
 
-    function onBlur() {
+    function onBlur(forceCursorPosition?: 'before' | 'after') {
       setActiveMathEditor(null)
       setIsMathToolbarOpen(false)
 
@@ -161,16 +174,13 @@ export function EditorStateProvider({
       onAnswerChange()
 
       const anchorElement = window.getSelection()?.anchorNode as Element
-      if (anchorElement) {
+      if (forceCursorPosition) {
+        setCursorAroundElement(stub, forceCursorPosition)
+      } else if (anchorElement) {
         const mathEditor = findWrapperParent(anchorElement)
         if (mathEditor) {
           // Move the cursor to after the parent wrapper if one was found
-          const selection = window.getSelection()
-          const range = document.createRange()
-          range.setStartAfter(mathEditor)
-          range.collapse(true)
-          selection?.removeAllRanges()
-          selection?.addRange(range)
+          setCursorAroundElement(mathEditor)
         }
       }
     }
