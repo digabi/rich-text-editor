@@ -510,19 +510,10 @@ test.describe('Rich text editor', () => {
 testi.
 kuva: <img src="data:image/png;base64,${samplePNG}" alt="Hello World!">
 kaava:\
-<span
-  class="math-editor-wrapper"
-  id="math-editor-1"
-  style="display: contents;"
-  contenteditable="false"
->
   <img
-    src="data:image/svg+xml;utf8,this_is_not_relevant"
-    data-math-svg="true"
-    data-latex="\\sqrt{123}"
+    src="http://localhost:5111/math.svg?latex=%5Csqrt%7B123%7D"
     alt="\\sqrt{123}"
-  />
-</span>`
+  />`
       await unmountComponent()
       await mount(
         <RichTextEditor
