@@ -8,7 +8,8 @@ import UndoIcon from '../../icons/undo'
 import RedoIcon from '../../icons/redo'
 
 export default function MathEditorButtons() {
-  const { isMathToolbarOpen, undo, redo, canUndo, canRedo, activeMathEditor } = useEditorState()
+  const { isMathToolbarOpen, undoEquation, redoEquation, canUndoEquation, canRedoEquation, activeMathEditor } =
+    useEditorState()
 
   function onMouseDown(e: React.MouseEvent, shortcut: Shortcut) {
     e.preventDefault()
@@ -23,7 +24,7 @@ export default function MathEditorButtons() {
     }
   }
 
-  const onHistoryEvent = (fn: typeof undo | typeof redo) =>
+  const onHistoryEvent = (fn: typeof undoEquation | typeof redoEquation) =>
     eventHandlerWithoutFocusLoss(() => {
       const newValue = fn()
 
@@ -46,10 +47,10 @@ export default function MathEditorButtons() {
         ))}
       </Grid>
       <ButtonContainer>
-        <HistoryButton onMouseDown={onHistoryEvent(undo)} disabled={!canUndo} data-testid="undo">
+        <HistoryButton onMouseDown={onHistoryEvent(undoEquation)} disabled={!canUndoEquation} data-testid="undo">
           <UndoIcon />
         </HistoryButton>
-        <HistoryButton onMouseDown={onHistoryEvent(redo)} disabled={!canRedo} data-testid="redo">
+        <HistoryButton onMouseDown={onHistoryEvent(redoEquation)} disabled={!canRedoEquation} data-testid="redo">
           <RedoIcon />
         </HistoryButton>
       </ButtonContainer>

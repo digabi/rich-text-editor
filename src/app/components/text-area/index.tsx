@@ -1,4 +1,4 @@
-import { ClipboardEvent, FocusEvent, forwardRef, Fragment, useImperativeHandle } from 'react'
+import { ClipboardEvent, FocusEvent, FormEvent, forwardRef, Fragment, useImperativeHandle } from 'react'
 import { createPortal } from 'react-dom'
 import styled from 'styled-components'
 import classNames from 'classnames/dedupe' // Removes duplicates in class list
@@ -8,6 +8,7 @@ import Toolbar from '../toolbar'
 import { HelpDialog } from '../help-dialog'
 import { sanitize } from '../../utils/sanitization'
 import { RichTextEditorHandle } from '../..'
+import { useKeyboardEventListener } from '../../hooks/use-keyboard-events'
 
 export type TextAreaProps = {
   ariaInvalid?: boolean
@@ -38,6 +39,44 @@ const MainTextArea = forwardRef<RichTextEditorHandle, TextAreaProps>((props, ref
       }, 0)
     },
   }))
+
+  const historyHandler = (fn: typeof editor.undoEditor | typeof editor.redoEditor) => () => {
+    if (editor.ref.current !== document.activeElement) {
+      return
+    }
+
+    const oldValue = editor.ref.current?.innerHTML
+    const newValue = fn() ?? ''
+
+    if (editor.ref.current && newValue !== oldValue) {
+      const selection = window.getSelection()
+      const range = selection?.getRangeAt(0)
+
+      editor.ref.current.innerHTML = newValue
+
+      // TODO: Extract this into a function instead of pasting it all over the place
+      setTimeout(() => {
+        editor.initMathImages()
+        setTimeout(() => {
+          editor.onAnswerChange(true)
+
+          if (range) {
+            selection?.removeAllRanges()
+            selection?.addRange(range)
+          }
+        }, 0)
+      }, 0)
+    }
+  }
+
+  useKeyboardEventListener('z', true, historyHandler(editor.undoEditor))
+  useKeyboardEventListener('y', true, historyHandler(editor.redoEditor))
+  useKeyboardEventListener('e', true, (e) => {
+    if (editor.ref.current === document.activeElement) {
+      e?.preventDefault()
+      editor.spawnMathEditorAtCursor()
+    }
+  })
 
   async function onPaste(e: ClipboardEvent) {
     e.preventDefault()
@@ -104,7 +143,21 @@ const MainTextArea = forwardRef<RichTextEditorHandle, TextAreaProps>((props, ref
         lang={lang}
         onBlur={onBlur}
         onFocus={editor.showToolbar}
-        onInput={() => editor.onAnswerChange()}
+        onInput={(e) => {
+          /*
+          const inputType = (e.nativeEvent as InputEvent).inputType
+          console.log(inputType)
+          if (inputType === 'historyUndo') {
+            historyHandler(editor.undoEditor)()
+          } else if (inputType === 'historyRedo') {
+            historyHandler(editor.redoEditor)()
+          }
+          e.preventDefault()
+          e.stopPropagation()
+          */
+          console.debug('onInput')
+          editor.onAnswerChange()
+        }}
         onKeyDown={(e) => {
           if (e.key.toLowerCase() === 'e' && e.ctrlKey) {
             e.preventDefault()

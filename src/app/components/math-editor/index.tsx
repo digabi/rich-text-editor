@@ -64,9 +64,9 @@ export default function MathEditor(props: Props) {
   const containerRef = useRef<HTMLDivElement>(null)
   const [latex, setLatex] = useState(props.initialLatex ?? '')
 
-  const { undo, redo } = useEditorState()
+  const { undoEquation, redoEquation } = useEditorState()
 
-  const historyHandler = (fn: typeof undo | typeof redo) => () => {
+  const historyHandler = (fn: typeof undoEquation | typeof redoEquation) => () => {
     const oldValue = latex
     const newValue = fn() ?? ''
 
@@ -75,8 +75,8 @@ export default function MathEditor(props: Props) {
     }
   }
 
-  useKeyboardEventListener('z', true, historyHandler(undo))
-  useKeyboardEventListener('y', true, historyHandler(redo))
+  useKeyboardEventListener('z', true, historyHandler(undoEquation))
+  useKeyboardEventListener('y', true, historyHandler(redoEquation))
 
   const onChange = (oldValue: string | undefined, newValue: string) => {
     if (oldValue === newValue) return

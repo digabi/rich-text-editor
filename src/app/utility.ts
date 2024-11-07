@@ -9,6 +9,19 @@ export const eventHandlerWithoutFocusLoss = (fn?: () => void) => (e: React.Mouse
   return false
 }
 
+export function debounce<T extends (...args: any[]) => void>(func: T, timeout: number) {
+  // setTimeout returns a number in a browser and an object in Node
+  let timer: ReturnType<typeof setTimeout> | null = null
+  return function <U>(this: U, ...args: Parameters<typeof func>) {
+    if (timer && typeof timeout === 'number') {
+      clearTimeout(timer)
+    }
+    timer = setTimeout(() => {
+      func(...args)
+    }, timeout)
+  }
+}
+
 export type Answer = {
   answerHtml: string
   answerText: string

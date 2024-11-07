@@ -10,7 +10,7 @@ import { createMathStub } from '../utils/create-math-stub'
 import FI from '../../FI'
 import SV from '../../SV'
 import { createPortal } from 'react-dom'
-import { getAnswer } from '../utility'
+import { debounce, getAnswer } from '../utility'
 import { RichTextEditorProps } from '../index'
 
 export type EditorState = {
@@ -54,10 +54,20 @@ export type EditorState = {
    * do not trigger the main text area's `onInput` event so we need a mechanism to
    * trigger this from multiple places
    */
-  onAnswerChange: () => void
+  onAnswerChange: (isHistoryAction?: boolean) => void
   initialValue?: string
   baseUrl: string
-} & Pick<ReturnType<typeof useHistory>, 'undo' | 'redo' | 'canUndo' | 'canRedo'>
+
+  undoEquation: () => void
+  redoEquation: () => void
+  canUndoEquation: boolean
+  canRedoEquation: boolean
+
+  undoEditor: () => void
+  redoEditor: () => void
+  canUndoEditor: boolean
+  canRedoEditor: boolean
+}
 
 const editorCtx = createContext<EditorState>(null!)
 
@@ -121,7 +131,8 @@ export function EditorStateProvider({
   const forceToolbarsOpen = new URL(window.location.href).searchParams.get('forceToolbars') ?? '0'
 
   const [mathEditorPortal, setMathEditorPortal] = useState<[portalRoot: Node, portal: ReactPortal] | null>(null)
-  const history = useHistory()
+  const equationEditorHistory = useHistory()
+  const mainTextAreaHistory = useHistory()
   const mainTextAreaRef = useRef<HTMLDivElement>(null)
 
   const t = { FI, SV }[language]
@@ -129,7 +140,7 @@ export function EditorStateProvider({
   function spawnMathEditor(stub: Container, image: Element, props?: Partial<MathEditorProps>) {
     // This is called both on the creation of the component and each time the equation is opened after that
     function onOpen(handle: MathEditorHandle) {
-      history.clear()
+      equationEditorHistory.clear()
       setActiveMathEditor(handle)
       setIsToolbarOpen(true)
       setIsMathToolbarOpen(true)
@@ -139,7 +150,7 @@ export function EditorStateProvider({
       setActiveMathEditor(null)
       setIsMathToolbarOpen(false)
 
-      history.clear()
+      equationEditorHistory.clear()
       onAnswerChange()
 
       if (forceCursorPosition) {
@@ -148,7 +159,7 @@ export function EditorStateProvider({
     }
 
     function onChange(latex: string) {
-      history.write(latex)
+      equationEditorHistory.write(latex)
     }
 
     function onEditorRemoved(latex: string) {
@@ -158,7 +169,7 @@ export function EditorStateProvider({
       if (!latex) {
         image.remove()
       }
-      history.clear()
+      equationEditorHistory.clear()
     }
 
     function onEnter() {
@@ -249,7 +260,9 @@ export function EditorStateProvider({
     }
   }
 
-  function onAnswerChange() {
+  const updateAnswerHistory = debounce((content: string) => mainTextAreaHistory.write(content), 500)
+
+  function onAnswerChange(isHistoryAction = false) {
     /** This 0ms timeout is crucial - it essentially moves the callback into the next event loop,
      * after pending DOM changes have been made in the current loop (in practice,
      * this is needed because closing a math editor changes the HTML of the answer,
@@ -260,23 +273,29 @@ export function EditorStateProvider({
       const content = mainTextAreaRef.current?.innerHTML
       if (content) {
         onValueChange(getAnswer(content))
+        if (!isHistoryAction) {
+          updateAnswerHistory(content)
+        }
       }
     }
     setTimeout(fn, 0)
   }
 
-  /** This will initialize any equations present in the initial content */
+  /** Initialization */
   useEffect(() => {
-    if (!hasBeenInitialized && mainTextAreaRef.current) {
+    if (!hasBeenInitialized && mainTextAreaRef.current !== null) {
       if (initialValue) {
         mainTextAreaRef.current.innerHTML = initialValue
       }
       setTimeout(() => {
         initMathImages()
         setHasBeenInitialized(true)
+        if (mainTextAreaRef.current) {
+          mainTextAreaHistory.write(mainTextAreaRef.current.innerHTML)
+        }
       }, 0)
     }
-  }, [hasBeenInitialized, initialValue, mainTextAreaRef.current])
+  }, [hasBeenInitialized, initialValue, mainTextAreaRef.current, mainTextAreaHistory])
 
   return (
     <editorCtx.Provider
@@ -305,10 +324,15 @@ export function EditorStateProvider({
         spawnMathEditorInNewLine: spawnMathEditorInNewLine,
         initMathImages,
 
-        canUndo: history.canUndo,
-        canRedo: history.canRedo,
-        undo: history.undo,
-        redo: history.redo,
+        canUndoEquation: equationEditorHistory.canUndo,
+        canRedoEquation: equationEditorHistory.canRedo,
+        undoEquation: equationEditorHistory.undo,
+        redoEquation: equationEditorHistory.redo,
+
+        canUndoEditor: mainTextAreaHistory.canUndo,
+        canRedoEditor: mainTextAreaHistory.canRedo,
+        undoEditor: mainTextAreaHistory.undo,
+        redoEditor: mainTextAreaHistory.redo,
 
         t,
         handlePastedImage: getPasteSource,

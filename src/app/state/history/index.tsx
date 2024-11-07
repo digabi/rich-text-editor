@@ -21,6 +21,18 @@ export default function useHistory() {
   const stackRef = useRef(stack)
   const pointerRef = useRef(pointer)
 
+  // TODO: Remove this debug helper before merge
+  const logStackDebugInfo = (sourceAction: string) => {
+    console.debug(
+      [
+        sourceAction,
+        'Undo stack state:',
+        ...stackRef.current.map((x, i) => (i === pointerRef.current ? `> ${x}` : `  ${x}`)),
+        `\nStack length: ${stackRef.current.length},\nPointer at: ${pointerRef.current}`,
+      ].join('\n'),
+    )
+  }
+
   const setStack = (newStack: string[]) => {
     stackRef.current = newStack
     _setStack(newStack)
@@ -48,6 +60,7 @@ export default function useHistory() {
 
     setStack(newStack)
     setPointer(newStack.length - 1)
+    logStackDebugInfo('write')
   }
 
   const undo = () => {
@@ -56,6 +69,7 @@ export default function useHistory() {
     const newValue = stackRef.current.at(newPointer)
 
     setPointer(newPointer)
+    logStackDebugInfo('undo')
     return newValue
   }
 
@@ -65,6 +79,7 @@ export default function useHistory() {
     const newValue = stackRef.current.at(newPointer)
 
     setPointer(newPointer)
+    logStackDebugInfo('redo')
     return newValue
   }
 
