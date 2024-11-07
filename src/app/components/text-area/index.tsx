@@ -219,10 +219,11 @@ const Box = styled.div`
   white-space: pre;
   text-wrap: wrap;
 
-  & > img {
-    margin: 4px;
+  & img {
+    padding: 5px;
     max-width: 100%;
     max-height: 1000px;
+    vertical-align: middle;
   }
 
   &:focus > img {

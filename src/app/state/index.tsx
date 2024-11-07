@@ -245,7 +245,7 @@ export function EditorStateProvider({
     // These are existing and copy-pasted math editors
     const mathEditors = Array.from(mainTextAreaRef.current.querySelectorAll(`span.${MATH_EDITOR_CLASS}`))
     // These are math images copied from cheat, 'marked' to be replaced with math editors
-    const mathImages = Array.from(mainTextAreaRef.current.querySelectorAll('[data-math-svg="true"]'))
+    const mathImages = Array.from(mainTextAreaRef.current.querySelectorAll('img[src*="/math.svg?"]'))
 
     const allBoxes = ([] as [elementToInit: Element, initialLatex: string][])
       .concat(
