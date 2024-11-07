@@ -38,7 +38,7 @@ const Error = styled.span`
 const MathEditorElement = styled.div`
   box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.2);
   display: flex;
-  margin: 10px 5px 0;
+  margin: 10px 0 0;
   position: relative;
   width: 100%;
   z-index: 1;
