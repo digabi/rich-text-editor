@@ -1,109 +1,4 @@
-import sanitizeHtml, { Attributes } from 'sanitize-html'
-import fi from '../FI'
 import { sanitizeForExport } from './utils/sanitization'
-
-export type Language = 'FI' | 'SV'
-export type Translation = typeof fi
-export interface SpecialCharacter {
-  character: string
-  latexCommand?: string
-  popular?: boolean
-  noWrite?: boolean
-}
-export interface SpecialCharacterGroup {
-  label: string
-  characters: SpecialCharacter[]
-}
-export interface Options {
-  locale: Language
-  screenshotSaver: (file: File) => Promise<string>
-  baseUrl: string
-  ignoreSaveObject: boolean
-  screenshotImageSelector: string
-  invalidImageSelector: string
-  fileTypes: string[]
-  sanitize: (html: string) => string
-  updateMathImg?: (latex: string) => void
-  forceInit: boolean
-}
-
-export const defaults: Options = {
-  locale: 'FI',
-  screenshotSaver: (file: File) => Promise.resolve(''),
-  baseUrl: '',
-  ignoreSaveObject: false,
-  screenshotImageSelector:
-    'img[src^="/screenshot/"], img[src^="data:image/png"], img[src^="data:image/gif"], img[src^="data:image/jpeg"]',
-  invalidImageSelector: 'img:not(img[src^="data"], img[src^="/math.svg?latex="], img[src^="/screenshot/"])',
-  fileTypes: ['image/png', 'image/jpeg'],
-  sanitize: defaultSanitize,
-  updateMathImg: undefined,
-  forceInit: false,
-}
-
-export const sanitizeOpts = {
-  allowedTags: ['img', 'br', 'span'],
-  allowedAttributes: {
-    img: ['src', 'alt', 'data-math-svg'],
-    span: ['class'],
-  },
-  allowedSchemes: ['data'],
-  allowedClasses: {
-    span: ['math-editor-wrapper'],
-  },
-  transformTags: {
-    img: (tagName: string, attribs: Attributes) => ({
-      tagName,
-      attribs: attribs.src?.includes('math.svg') ? { ...attribs, 'data-math-svg': 'true' } : attribs,
-    }),
-    span: (tagName: string, attribs: Attributes) =>
-      attribs.class === 'math-editor-wrapper' ? { tagName, attribs } : { tagName: '', attribs: { text: '' } },
-  },
-}
-
-function defaultSanitize(html: string) {
-  return sanitizeHtml(
-    stripDivsFromRichTextAnswer(
-      sanitizeHtml(convertLinksToRelative(html), {
-        ...sanitizeOpts,
-        allowedTags: [...sanitizeOpts.allowedTags, 'div', 'p'],
-        allowedSchemes: ['data', 'http', 'https'],
-      }),
-    ),
-    sanitizeOpts,
-  )
-}
-
-// TODO: Clean this up, preferably replace with proper config for sanitize-html
-function stripDivsFromRichTextAnswer(answerContentValue: string) {
-  const parent = document.createElement('div')
-  parent.innerHTML = answerContentValue
-
-  do {
-    let lastNode: Node | undefined = undefined
-    for (let i = 0; i < parent.childNodes.length; i++) {
-      const node = parent.childNodes[i]
-      if (isBlockElement(node)) {
-        if (lastNode !== undefined && lastNode.nodeType === Node.TEXT_NODE && /\S/.test(lastNode.textContent ?? ''))
-          parent.insertBefore(document.createElement('br'), node)
-        if (node.lastChild && node.lastChild.nodeName !== 'BR') node.insertBefore(document.createElement('br'), null)
-        while (node.childNodes.length && node.firstChild !== null) parent.insertBefore(node.firstChild, node)
-        parent.removeChild(node)
-      }
-      lastNode = node
-    }
-  } while (Array.prototype.some.call(parent.childNodes, (node: ChildNode) => isBlockElement(node)))
-
-  return parent.innerHTML
-}
-
-function convertLinksToRelative(html: string) {
-  return html.replace(new RegExp(document.location.origin, 'g'), '')
-}
-
-function isBlockElement(node: Node) {
-  return node.nodeName === 'DIV' || node.nodeName === 'P'
-}
 
 export const eventHandlerWithoutFocusLoss = (fn?: () => void) => (e: React.MouseEvent) => {
   if (fn) {
@@ -117,26 +12,8 @@ export const eventHandlerWithoutFocusLoss = (fn?: () => void) => (e: React.Mouse
 export const nbsp = '\u00A0'
 export const isRemoveMutation = (mut: MutationRecord) => mut.removedNodes.length > 0
 export const isAddMutation = (mut: MutationRecord) => mut.addedNodes.length > 0
-export const isReplaceMutation = (mut: MutationRecord) => isRemoveMutation(mut) && isAddMutation(mut)
 export const isTextNode = (node: Node | null) => node && node.nodeType === Node.TEXT_NODE
 export const isBr = (node: Node | null) => node && node.nodeName === 'BR'
-
-export function decodeBase64Image(dataString: string) {
-  if (!dataString) return null
-  const matches = dataString.match(/^data:([A-Za-z-+/]+);base64,(.+)$/)
-  if (!matches || matches.length !== 3) {
-    return null
-  }
-  const byteCharacters = atob(matches[2])
-  const byteNumbers = new Array(byteCharacters.length)
-  for (let i = 0; i < byteCharacters.length; i++) {
-    byteNumbers[i] = byteCharacters.charCodeAt(i)
-  }
-  return {
-    type: matches[1],
-    data: new Uint8Array(byteNumbers),
-  }
-}
 
 export type Answer = {
   answerHtml: string
