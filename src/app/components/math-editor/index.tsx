@@ -35,11 +35,6 @@ const Error = styled.span`
   z-index: 2;
 `
 
-const MathImage = styled.img`
-  margin: 5px 0;
-  vertical-align: middle;
-`
-
 const MathEditorElement = styled.div`
   box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.2);
   display: flex;
@@ -192,7 +187,7 @@ export default function MathEditor(props: Props) {
     )
   } else if (latex !== '') {
     return (
-      <MathImage
+      <img
         src={`${baseUrl}/math.svg?latex=${encodeURIComponent(latex)}`}
         data-math-svg={true}
         data-latex={latex}
