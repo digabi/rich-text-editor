@@ -54,7 +54,7 @@ export type EditorState = {
    * do not trigger the main text area's `onInput` event so we need a mechanism to
    * trigger this from multiple places
    */
-  onAnswerChange: (isHistoryAction?: boolean) => void
+  onAnswerChange: (shouldUpdateHistory?: boolean) => void
   initialValue?: string
   baseUrl: string
 
@@ -262,7 +262,7 @@ export function EditorStateProvider({
 
   const updateAnswerHistory = debounce((content: string) => mainTextAreaHistory.write(content), 500)
 
-  function onAnswerChange(isHistoryAction = false) {
+  function onAnswerChange(shouldUpdateHistory = true) {
     /** This 0ms timeout is crucial - it essentially moves the callback into the next event loop,
      * after pending DOM changes have been made in the current loop (in practice,
      * this is needed because closing a math editor changes the HTML of the answer,
@@ -273,7 +273,7 @@ export function EditorStateProvider({
       const content = mainTextAreaRef.current?.innerHTML
       if (content) {
         onValueChange(getAnswer(content))
-        if (!isHistoryAction) {
+        if (shouldUpdateHistory) {
           updateAnswerHistory(content)
         }
       }

@@ -22,6 +22,55 @@ export function debounce<T extends (...args: any[]) => void>(func: T, timeout: n
   }
 }
 
+interface CursorPosition {
+  path: number[]
+  offset: number
+}
+
+export function getCursorPosition(container: HTMLElement): CursorPosition | null {
+  const selection = window.getSelection()
+  if (!selection || selection.rangeCount === 0) return null
+
+  const range = selection.getRangeAt(0)
+  const path: number[] = []
+  let currentNode: Node | null = range.startContainer
+
+  while (currentNode && currentNode !== container) {
+    const parent: Node | null = currentNode.parentNode
+    if (!parent) break
+
+    // Cast currentNode to ChildNode before indexing
+    path.push(Array.from(parent.childNodes).indexOf(currentNode as ChildNode))
+    currentNode = parent
+  }
+
+  return { path, offset: range.startOffset }
+}
+
+export function restoreCursorPosition(container: HTMLElement, savedPosition: CursorPosition | null): void {
+  if (!savedPosition) return
+
+  const range = document.createRange()
+  let currentNode: Node | null = container
+
+  for (const index of savedPosition.path) {
+    if (!currentNode || !(currentNode.childNodes[index] instanceof Node)) return
+    currentNode = currentNode.childNodes[index]
+  }
+
+  const maxOffset = currentNode?.textContent?.length ?? 0
+  const safeOffset = Math.min(savedPosition.offset, maxOffset)
+
+  range.setStart(currentNode, safeOffset)
+  range.collapse(true)
+
+  const selection = window.getSelection()
+  if (selection) {
+    selection.removeAllRanges()
+    selection.addRange(range)
+  }
+}
+
 export type Answer = {
   answerHtml: string
   answerText: string

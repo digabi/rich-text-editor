@@ -7,6 +7,7 @@ import useEditorState from '../../state'
 import Toolbar from '../toolbar'
 import { HelpDialog } from '../help-dialog'
 import { sanitize } from '../../utils/sanitization'
+import { getCursorPosition, restoreCursorPosition } from '../../utility'
 import { RichTextEditorHandle } from '../..'
 import { useKeyboardEventListener } from '../../hooks/use-keyboard-events'
 
@@ -49,21 +50,16 @@ const MainTextArea = forwardRef<RichTextEditorHandle, TextAreaProps>((props, ref
     const newValue = fn() ?? ''
 
     if (editor.ref.current && newValue !== oldValue) {
-      const selection = window.getSelection()
-      const range = selection?.getRangeAt(0)
-
+      const savedCursorPosition = getCursorPosition(editor.ref.current)
       editor.ref.current.innerHTML = newValue
 
       // TODO: Extract this into a function instead of pasting it all over the place
       setTimeout(() => {
         editor.initMathImages()
         setTimeout(() => {
-          editor.onAnswerChange(true)
+          editor.onAnswerChange(false)
 
-          if (range) {
-            selection?.removeAllRanges()
-            selection?.addRange(range)
-          }
+          restoreCursorPosition(editor.ref.current!, savedCursorPosition)
         }, 0)
       }, 0)
     }
