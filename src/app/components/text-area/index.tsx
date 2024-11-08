@@ -110,6 +110,18 @@ const MainTextArea = forwardRef<RichTextEditorHandle, TextAreaProps>((props, ref
       if (!isTextNode(next)) {
         wrapper.parentNode?.insertBefore(document.createTextNode(nbsp), wrapper.nextSibling)
       }
+
+      /* Chrome fix: when deleting whitespace after math editor, the cursor stays in place. Move it to the left side of
+       * the deleted whitespace, which was re-added in the previous if-statement. This part runs on the next mutationObserver
+       * invocation after the previous if-statement. */
+      if (wrapper === muts[0].previousSibling && muts[0]?.addedNodes[0]?.textContent === nbsp) {
+        const selection = window.getSelection()
+        const range = document.createRange()
+        range.setStartBefore(muts[0]?.addedNodes[0])
+        range.collapse(true)
+        selection?.removeAllRanges()
+        selection?.addRange(range)
+      }
     })
   })
 
@@ -182,7 +194,7 @@ const MainTextArea = forwardRef<RichTextEditorHandle, TextAreaProps>((props, ref
         onInput={() => editor.onAnswerChange()}
         onKeyDown={(e) => {
           if (e.key === 'Enter') {
-            /** We need to capture Enter presses and handle them manually. Otherwise browsers may do weird things that interfere with our
+            /** We need to capture Enter presses and handle them manually. Otherwise, browsers may do weird things that interfere with our
              *  React tomfoolery, leading to behaviours like equations getting deleted if the user enters
              *  a line break on the same line as an Equation
              */

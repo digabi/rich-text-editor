@@ -75,6 +75,19 @@ test.describe('Rich text editor', () => {
     })
     await assertEditorHTMLContent(editor, 'Hello')
     await assertEditorTextContent(editor, 'Hello')
+    await page.keyboard.press('Control+E')
+    await page.keyboard.type('x^2')
+    await page.keyboard.press('Escape')
+    await assertEditorHTMLContent(
+      editor,
+      'Hello&nbsp;<span class="math-editor-wrapper" id="math-editor-0" contenteditable="false" style="display: contents;"><img src="http://localhost:5111/math.svg?latex=x%5E2" data-math-svg="true" data-latex="x^2" alt="x^2"></span>&nbsp;',
+    )
+    // assertEditorTextContent doesn't work with nbsp whitespaces
+    expect(await editor.textContent()).toMatch(/Hello\s\s/)
+    await page.keyboard.press('Backspace')
+    await page.keyboard.press('Backspace')
+    await assertEditorHTMLContent(editor, 'Hello&nbsp;')
+    expect(await editor.textContent()).toMatch(/Hello\s/)
   })
 
   test('can input special characters from toolbar', async ({ page }) => {
