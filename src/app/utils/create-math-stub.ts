@@ -16,10 +16,11 @@ export const MATH_EDITOR_CLASS = 'math-editor-wrapper'
  */
 export function createMathStub(id: string | number, atSelection = false) {
   const stub = document.createElement('span')
+  // attribute order matters for playwright test. Chrome and Firefox give html content in different (alphabetic) orders
   stub.className = MATH_EDITOR_CLASS
   stub.id = `math-editor-${id}`
-  stub.style.display = 'contents'
   stub.contentEditable = 'false'
+  stub.style.display = 'contents'
 
   if (atSelection) {
     const selection = window.getSelection()
