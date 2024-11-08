@@ -47,7 +47,13 @@ const MainTextArea = forwardRef<RichTextEditorHandle, TextAreaProps>((props, ref
     }
 
     const oldValue = editor.ref.current?.innerHTML
-    const newValue = fn() ?? ''
+    const newValue = fn()
+
+    if (newValue === undefined) {
+      return
+    }
+
+    console.debug(`replacing editor content with "${newValue}"`)
 
     if (editor.ref.current && newValue !== oldValue) {
       const savedCursorPosition = getCursorPosition(editor.ref.current)
@@ -151,7 +157,6 @@ const MainTextArea = forwardRef<RichTextEditorHandle, TextAreaProps>((props, ref
           e.preventDefault()
           e.stopPropagation()
           */
-          console.debug('onInput')
           editor.onAnswerChange()
         }}
         onKeyDown={(e) => {

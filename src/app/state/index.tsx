@@ -58,13 +58,13 @@ export type EditorState = {
   initialValue?: string
   baseUrl: string
 
-  undoEquation: () => void
-  redoEquation: () => void
+  undoEquation: () => string | undefined
+  redoEquation: () => string | undefined
   canUndoEquation: boolean
   canRedoEquation: boolean
 
-  undoEditor: () => void
-  redoEditor: () => void
+  undoEditor: () => string | undefined
+  redoEditor: () => string | undefined
   canUndoEditor: boolean
   canRedoEditor: boolean
 }
