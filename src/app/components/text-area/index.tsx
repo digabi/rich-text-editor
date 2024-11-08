@@ -44,13 +44,6 @@ const MainTextArea = forwardRef<RichTextEditorHandle, TextAreaProps>((props, ref
     },
   }))
 
-  useKeyboardEventListener('e', true, (e) => {
-    if (editor.ref.current === document.activeElement) {
-      e?.preventDefault()
-      editor.spawnMathEditorAtCursor()
-    }
-  })
-
   /**
    * This is hacky, but necessary. If a wrapper does not have text on both sides,
    * the user cannot place their cursor there
@@ -203,6 +196,10 @@ const MainTextArea = forwardRef<RichTextEditorHandle, TextAreaProps>((props, ref
               e.stopPropagation()
               document.execCommand('insertHTML', false, '<br>')
             }
+          } else if (e.key.toLowerCase() === 'e' && e.ctrlKey) {
+            e.preventDefault()
+            e.stopPropagation()
+            editor.spawnMathEditorAtCursor()
           }
         }}
         onPaste={onPaste}
