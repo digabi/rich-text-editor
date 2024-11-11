@@ -9,7 +9,6 @@ import styled from 'styled-components'
 
 export type MathEditorHandle = {
   mq: MathQuill.MathField
-  close: () => void
   setLatex: (latex: string) => void
 }
 
@@ -115,7 +114,6 @@ export default function MathEditor(props: Props) {
         mq.focus()
         props.onOpen?.({
           mq,
-          close: () => setIsOpen(false),
           setLatex: (latex: string) => {
             onChange(undefined, latex)
           },
