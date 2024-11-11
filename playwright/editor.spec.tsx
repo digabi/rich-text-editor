@@ -23,7 +23,7 @@ import {
   inputLatexCommandFromToolbar,
   setClipboardImage,
   selectAll,
-  copy,
+  getSelection,
 } from './test-utils'
 import RichTextEditor from '../src/app'
 import { Answer, nbsp } from '../src/app/utility'
@@ -517,9 +517,87 @@ test.describe('Rich text editor', () => {
     })
   })
 
+  test.describe('blurEvents', () => {
+    test.beforeEach(async ({ mount }) => {
+      const initialContent = `kaava: <img src="http://localhost:5111/math.svg?latex=%5Csqrt%7B123%7D" alt="\\sqrt{123}"/> ja tekstiä`
+      await unmountComponent()
+      await mount(
+        <RichTextEditor
+          language="FI"
+          baseUrl="http://localhost:5111"
+          onValueChange={onAnswerChange}
+          allowedFileTypes={['image/png', 'image/jpeg']}
+          initialValue={initialContent}
+          textAreaProps={{ editorStyle: { position: 'absolute', top: '300px', width: '100%' } }}
+        />,
+      )
+    })
+
+    test('sets cursor before math editor with Esc', async ({ page }) => {
+      await expect(page.getByRole('img').last()).toBeVisible()
+      await page.getByRole('img').last().click()
+      await page.keyboard.press('Escape')
+      await page.keyboard.down('Shift')
+      await page.keyboard.press('ArrowRight')
+      await page.keyboard.press('ArrowRight')
+      await page.keyboard.press('ArrowRight')
+      await page.keyboard.up('Shift')
+      const selectedText = await getSelection(page)
+
+      expect(selectedText).toBe(' ja')
+    })
+
+    test('sets cursor before math editor with Shift+Tab', async ({ page }) => {
+      await expect(page.getByRole('img').last()).toBeVisible()
+      await page.getByRole('img').last().click()
+      await page.keyboard.press('Shift+Tab')
+      await page.keyboard.down('Shift')
+      await page.keyboard.press('ArrowLeft')
+      await page.keyboard.press('ArrowLeft')
+      await page.keyboard.press('ArrowLeft')
+      await page.keyboard.up('Shift')
+      const selectedText = await getSelection(page)
+
+      expect(selectedText).toBe('a: ')
+    })
+
+    test('sets cursor before after editor with Tab', async ({ page }) => {
+      await expect(page.getByRole('img').last()).toBeVisible()
+      await page.getByRole('img').last().click()
+      await page.keyboard.press('Tab')
+      await page.keyboard.press('Tab')
+      await page.keyboard.down('Shift')
+      await page.keyboard.press('ArrowRight')
+      await page.keyboard.press('ArrowRight')
+      await page.keyboard.press('ArrowRight')
+      await page.keyboard.up('Shift')
+      const selectedText = await getSelection(page)
+
+      expect(selectedText).toBe(' ja')
+    })
+
+    test('sets cursor within text on mouse click', async ({ page, browserName }) => {
+      test.fixme(
+        browserName === 'chromium',
+        'clicking into text from focused math editor sets cursor after editor, not within the text',
+      )
+      await expect(page.getByRole('img').last()).toBeVisible()
+      await page.getByRole('img').last().click()
+      await page.mouse.click(28, 320)
+      await page.keyboard.down('Shift')
+      await page.keyboard.press('ArrowRight')
+      await page.keyboard.press('ArrowRight')
+      await page.keyboard.press('ArrowRight')
+      await page.keyboard.up('Shift')
+      const selectedText = await getSelection(page)
+
+      expect(selectedText).toBe('ava')
+    })
+  })
+
   test.describe('initial value', () => {
-    test.beforeEach(async ({ page, mount }) => {
-      const initialContent = `\
+    test.beforeEach(async ({ mount }) => {
+      const initialContent = `
 testi.
 kuva: <img src="data:image/png;base64,${samplePNG}" alt="Hello World!">
 kaava:\

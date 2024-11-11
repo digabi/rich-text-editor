@@ -1,4 +1,4 @@
-import { createContext, PropsWithChildren, ReactPortal, useContext, useEffect, useMemo, useRef, useState } from 'react'
+import { createContext, PropsWithChildren, ReactPortal, useContext, useEffect, useRef, useState } from 'react'
 import { Container } from 'react-dom/client'
 
 import useHistory from './history'

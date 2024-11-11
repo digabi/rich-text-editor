@@ -165,3 +165,5 @@ export const specialCharacters = {
   cos: ['\\cos'],
   sqrt: ['\\sqrt'],
 }
+
+export const getSelection = async (page: Page) => await page.evaluate(() => document.getSelection()?.toString())
