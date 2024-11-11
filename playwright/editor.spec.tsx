@@ -23,7 +23,6 @@ import {
   inputLatexCommandFromToolbar,
   setClipboardImage,
   selectAll,
-  copy,
 } from './test-utils'
 import RichTextEditor from '../src/app'
 import { Answer, nbsp } from '../src/app/utility'
@@ -45,7 +44,7 @@ test.describe('Rich text editor', () => {
         onValueChange={onAnswerChange}
         allowedFileTypes={['image/png', 'image/jpeg']}
         initialValue=""
-        textAreaProps={{ editorStyle: { position: 'absolute', top: '300px', width: '100%' } }}
+        textAreaProps={{ editorStyle: { marginTop: '300px' } }}
       />,
     )
     unmountComponent = unmount
@@ -517,9 +516,76 @@ test.describe('Rich text editor', () => {
     })
   })
 
+  test.describe('blurEvents', () => {
+    test.beforeEach(async ({ mount }) => {
+      const initialContent = `kaava: <img src="http://localhost:5111/math.svg?latex=%5Csqrt%7B123%7D" alt="\\sqrt{123}"/> ja tekstiä`
+      await unmountComponent()
+      await mount(
+        <RichTextEditor
+          language="FI"
+          baseUrl="http://localhost:5111"
+          onValueChange={onAnswerChange}
+          allowedFileTypes={['image/png', 'image/jpeg']}
+          initialValue={initialContent}
+          textAreaProps={{ editorStyle: { marginTop: '300px' } }}
+        />,
+      )
+    })
+
+    test('sets cursor after math editor with Esc', async ({ page }) => {
+      await expect(page.getByRole('img').last()).toBeVisible()
+      await page.getByRole('img').last().click()
+      await page.keyboard.press('Escape')
+      await page.keyboard.type('XX')
+
+      assertAnswerContent(answer, {
+        answerHtml: 'kaava: <img data-math-svg="true" alt="\\sqrt{123}">XX ja tekstiä',
+        answerText: 'kaava: XX ja tekstiä',
+      })
+    })
+
+    test('sets cursor before math editor with Shift+Tab', async ({ page }) => {
+      await expect(page.getByRole('img').last()).toBeVisible()
+      await page.getByRole('img').last().click()
+      await page.keyboard.press('Shift+Tab')
+      await page.keyboard.type('XX')
+
+      assertAnswerContent(answer, {
+        answerHtml: 'kaava: XX<img data-math-svg="true" alt="\\sqrt{123}"> ja tekstiä',
+        answerText: 'kaava: XX ja tekstiä',
+      })
+    })
+
+    test('sets cursor after after editor with Tab in Latex field', async ({ page }) => {
+      await expect(page.getByRole('img').last()).toBeVisible()
+      await page.getByRole('img').last().click()
+      // first TAb to focus latex-field
+      await page.keyboard.press('Tab')
+      await page.keyboard.press('Tab')
+      await page.keyboard.type('XX')
+
+      assertAnswerContent(answer, {
+        answerHtml: 'kaava: <img data-math-svg="true" alt="\\sqrt{123}">XX ja tekstiä',
+        answerText: 'kaava: XX ja tekstiä',
+      })
+    })
+
+    test('sets cursor within text on mouse click', async ({ page, browserName }) => {
+      await expect(page.getByRole('img').last()).toBeVisible()
+      await page.getByRole('img').last().click()
+      await page.mouse.click(33, 320)
+      await page.keyboard.type('XX')
+
+      assertAnswerContent(answer, {
+        answerHtml: 'kaXXava: <img data-math-svg="true" alt="\\sqrt{123}"> ja tekstiä',
+        answerText: 'kaXXava:  ja tekstiä',
+      })
+    })
+  })
+
   test.describe('initial value', () => {
-    test.beforeEach(async ({ page, mount }) => {
-      const initialContent = `\
+    test.beforeEach(async ({ mount }) => {
+      const initialContent = `
 testi.
 kuva: <img src="data:image/png;base64,${samplePNG}" alt="Hello World!">
 kaava:\
@@ -535,7 +601,7 @@ kaava:\
           onValueChange={onAnswerChange}
           allowedFileTypes={['image/png', 'image/jpeg']}
           initialValue={initialContent}
-          textAreaProps={{ editorStyle: { position: 'absolute', top: '300px', width: '100%' } }}
+          textAreaProps={{ editorStyle: { marginTop: '300px' } }}
         />,
       )
     })

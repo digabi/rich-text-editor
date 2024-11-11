@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useRef, useState, FocusEvent } from 'react'
 import * as MathQuill from '@digabi/mathquill'
 
 import useMathQuill from '../../hooks/use-mathquill'
@@ -9,7 +9,6 @@ import styled from 'styled-components'
 
 export type MathEditorHandle = {
   mq: MathQuill.MathField
-  close: () => void
   setLatex: (latex: string) => void
 }
 
@@ -80,20 +79,6 @@ export default function MathEditor(props: Props) {
   useKeyboardEventListener('z', true, historyHandler(undo))
   useKeyboardEventListener('y', true, historyHandler(redo))
 
-  const handleMouseDown = (e: MouseEvent) => {
-    e.stopPropagation()
-    if (e.target && !containerRef?.current?.contains(e.target as Node)) {
-      close()
-    }
-  }
-
-  useEffect(() => {
-    document.addEventListener('mousedown', handleMouseDown)
-    return () => {
-      document.removeEventListener('mousedown', handleMouseDown)
-    }
-  }, [isOpen])
-
   const onChange = (oldValue: string | undefined, newValue: string) => {
     if (oldValue === newValue) return
     setLatex(newValue)
@@ -115,7 +100,6 @@ export default function MathEditor(props: Props) {
         mq.focus()
         props.onOpen?.({
           mq,
-          close: () => setIsOpen(false),
           setLatex: (latex: string) => {
             onChange(undefined, latex)
           },
@@ -124,6 +108,15 @@ export default function MathEditor(props: Props) {
     },
     [isOpen, mq],
   )
+
+  const handleBlur = (e: FocusEvent<HTMLDivElement | HTMLTextAreaElement>) => {
+    e.stopPropagation()
+    e.preventDefault()
+    // Don't trigger close event if clicked another element inside MathEditor
+    if (e.target && !containerRef?.current?.contains(e.relatedTarget as Node)) {
+      close()
+    }
+  }
 
   function close(forceCursorPosition?: 'before' | 'after') {
     props.onBlur?.(forceCursorPosition)
@@ -139,12 +132,12 @@ export default function MathEditor(props: Props) {
   if (isOpen) {
     return (
       <div ref={containerRef} data-testid="equation-editor" data-latex={latex}>
-        <MathEditorElement className="math-editor">
+        <MathEditorElement className="math-editor" onBlur={handleBlur}>
           <MathEditorEquationField
             ref={latexRef}
             className="math-editor-equation-field"
             onKeyDown={(e) => {
-              if (e.shiftKey && e.key === 'Tab') {
+              if (e.key === 'Tab' && e.shiftKey) {
                 e?.preventDefault()
                 e?.stopPropagation()
                 close('before')
@@ -162,7 +155,7 @@ export default function MathEditor(props: Props) {
             value={latex}
             onChange={(e) => onChange(undefined, e.target.value)} // real oldLatex value here?
             onKeyDown={(e) => {
-              if (e.key === 'Tab') {
+              if (e.key === 'Tab' && !e.shiftKey) {
                 e?.preventDefault()
                 e?.stopPropagation()
                 close('after')

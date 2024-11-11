@@ -1,4 +1,4 @@
-import { createContext, PropsWithChildren, ReactPortal, useContext, useEffect, useMemo, useRef, useState } from 'react'
+import { createContext, PropsWithChildren, ReactPortal, useContext, useEffect, useRef, useState } from 'react'
 import { Container } from 'react-dom/client'
 
 import useHistory from './history'
@@ -13,16 +13,6 @@ import SV from '../../SV'
 import { createPortal } from 'react-dom'
 import { getAnswer, nbsp } from '../utility'
 import { RichTextEditorProps } from '../index'
-
-const findWrapperParent = (currentElement: Element): Element | null => {
-  if (currentElement?.classList?.contains(MATH_EDITOR_CLASS)) {
-    return currentElement
-  } else if (currentElement.parentElement) {
-    return findWrapperParent(currentElement.parentElement)
-  } else {
-    return null
-  }
-}
 
 export type EditorState = {
   /** Ref to the main text-area (which is a `contenteditable` `<div />`) */
@@ -173,15 +163,8 @@ export function EditorStateProvider({
       history.clear()
       onAnswerChange()
 
-      const anchorElement = window.getSelection()?.anchorNode as Element
       if (forceCursorPosition) {
         setCursorAroundElement(stub, forceCursorPosition)
-      } else if (anchorElement) {
-        const mathEditor = findWrapperParent(anchorElement)
-        if (mathEditor) {
-          // Move the cursor to after the parent wrapper if one was found
-          setCursorAroundElement(mathEditor)
-        }
       }
     }
 
