@@ -23,7 +23,6 @@ import {
   inputLatexCommandFromToolbar,
   setClipboardImage,
   selectAll,
-  getSelection,
 } from './test-utils'
 import RichTextEditor from '../src/app'
 import { Answer, nbsp } from '../src/app/utility'
@@ -533,61 +532,54 @@ test.describe('Rich text editor', () => {
       )
     })
 
-    test('sets cursor before math editor with Esc', async ({ page }) => {
+    test('sets cursor after math editor with Esc', async ({ page }) => {
       await expect(page.getByRole('img').last()).toBeVisible()
       await page.getByRole('img').last().click()
       await page.keyboard.press('Escape')
-      await page.keyboard.down('Shift')
-      await page.keyboard.press('ArrowRight')
-      await page.keyboard.press('ArrowRight')
-      await page.keyboard.press('ArrowRight')
-      await page.keyboard.up('Shift')
-      const selectedText = await getSelection(page)
+      await page.keyboard.type('XX')
 
-      expect(selectedText).toBe(' ja')
+      assertAnswerContent(answer, {
+        answerHtml: 'kaava: <img data-math-svg="true" alt="\\sqrt{123}">XX ja tekstiä',
+        answerText: 'kaava: XX ja tekstiä',
+      })
     })
 
     test('sets cursor before math editor with Shift+Tab', async ({ page }) => {
       await expect(page.getByRole('img').last()).toBeVisible()
       await page.getByRole('img').last().click()
       await page.keyboard.press('Shift+Tab')
-      await page.keyboard.down('Shift')
-      await page.keyboard.press('ArrowLeft')
-      await page.keyboard.press('ArrowLeft')
-      await page.keyboard.press('ArrowLeft')
-      await page.keyboard.up('Shift')
-      const selectedText = await getSelection(page)
+      await page.keyboard.type('XX')
 
-      expect(selectedText).toBe('a: ')
+      assertAnswerContent(answer, {
+        answerHtml: 'kaava: XX<img data-math-svg="true" alt="\\sqrt{123}"> ja tekstiä',
+        answerText: 'kaava: XX ja tekstiä',
+      })
     })
 
-    test('sets cursor before after editor with Tab', async ({ page }) => {
+    test('sets cursor after after editor with Tab in Latex field', async ({ page }) => {
       await expect(page.getByRole('img').last()).toBeVisible()
       await page.getByRole('img').last().click()
+      // first TAb to focus latex-field
       await page.keyboard.press('Tab')
       await page.keyboard.press('Tab')
-      await page.keyboard.down('Shift')
-      await page.keyboard.press('ArrowRight')
-      await page.keyboard.press('ArrowRight')
-      await page.keyboard.press('ArrowRight')
-      await page.keyboard.up('Shift')
-      const selectedText = await getSelection(page)
+      await page.keyboard.type('XX')
 
-      expect(selectedText).toBe(' ja')
+      assertAnswerContent(answer, {
+        answerHtml: 'kaava: <img data-math-svg="true" alt="\\sqrt{123}">XX ja tekstiä',
+        answerText: 'kaava: XX ja tekstiä',
+      })
     })
 
     test('sets cursor within text on mouse click', async ({ page, browserName }) => {
       await expect(page.getByRole('img').last()).toBeVisible()
       await page.getByRole('img').last().click()
       await page.mouse.click(33, 320)
-      await page.keyboard.down('Shift')
-      await page.keyboard.press('ArrowRight')
-      await page.keyboard.press('ArrowRight')
-      await page.keyboard.press('ArrowRight')
-      await page.keyboard.up('Shift')
-      const selectedText = await getSelection(page)
+      await page.keyboard.type('XX')
 
-      expect(selectedText).toBe('ava')
+      assertAnswerContent(answer, {
+        answerHtml: 'kaXXava: <img data-math-svg="true" alt="\\sqrt{123}"> ja tekstiä',
+        answerText: 'kaXXava:  ja tekstiä',
+      })
     })
   })
 
