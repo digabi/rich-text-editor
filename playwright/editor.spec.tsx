@@ -577,13 +577,9 @@ test.describe('Rich text editor', () => {
     })
 
     test('sets cursor within text on mouse click', async ({ page, browserName }) => {
-      test.fixme(
-        browserName === 'chromium',
-        'clicking into text from focused math editor sets cursor after editor, not within the text',
-      )
       await expect(page.getByRole('img').last()).toBeVisible()
       await page.getByRole('img').last().click()
-      await page.mouse.click(28, 320)
+      await page.mouse.click(33, 320)
       await page.keyboard.down('Shift')
       await page.keyboard.press('ArrowRight')
       await page.keyboard.press('ArrowRight')

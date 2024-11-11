@@ -220,7 +220,7 @@ const MainTextArea = forwardRef<RichTextEditorHandle, TextAreaProps>((props, ref
 })
 
 const Box = styled.div`
-  box-sizing: content-box;
+  box-sizing: border-box;
   border: 1px solid #aaa;
   min-height: 100px;
   padding: 5px;
