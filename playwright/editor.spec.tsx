@@ -45,7 +45,7 @@ test.describe('Rich text editor', () => {
         onValueChange={onAnswerChange}
         allowedFileTypes={['image/png', 'image/jpeg']}
         initialValue=""
-        textAreaProps={{ editorStyle: { position: 'absolute', top: '300px', width: '100%' } }}
+        textAreaProps={{ editorStyle: { marginTop: '300px' } }}
       />,
     )
     unmountComponent = unmount
@@ -528,7 +528,7 @@ test.describe('Rich text editor', () => {
           onValueChange={onAnswerChange}
           allowedFileTypes={['image/png', 'image/jpeg']}
           initialValue={initialContent}
-          textAreaProps={{ editorStyle: { position: 'absolute', top: '300px', width: '100%' } }}
+          textAreaProps={{ editorStyle: { marginTop: '300px' } }}
         />,
       )
     })
@@ -609,7 +609,7 @@ kaava:\
           onValueChange={onAnswerChange}
           allowedFileTypes={['image/png', 'image/jpeg']}
           initialValue={initialContent}
-          textAreaProps={{ editorStyle: { position: 'absolute', top: '300px', width: '100%' } }}
+          textAreaProps={{ editorStyle: { marginTop: '300px' } }}
         />,
       )
     })
