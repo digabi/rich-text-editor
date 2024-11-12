@@ -6,12 +6,12 @@ import useMap, { MapHookHandle } from '../hooks/use-map'
 import useMutationObserver from '../hooks/use-mutation-observer'
 
 import MathEditor, { MathEditorHandle, Props as MathEditorProps } from '../components/math-editor'
-import { createMathStub, MATH_EDITOR_CLASS } from '../utils/create-math-stub'
+import { createMathStub } from '../utils/create-math-stub'
 
 import FI from '../../FI'
 import SV from '../../SV'
 import { createPortal } from 'react-dom'
-import { getAnswer, nbsp } from '../utility'
+import { getAnswer } from '../utility'
 import { RichTextEditorProps } from '../index'
 
 export type EditorState = {
@@ -21,12 +21,6 @@ export type EditorState = {
   /** An ES6 `Map` of DOM `Node`s to the React `Portal`s mounted in them */
   mathEditorPortals: MapHookHandle<Node, ReactPortal>
 
-  /**
-   * Spawns a new Math/LaTeX editing box at the given node.
-   * The created React `Root` will be associated with the given node in the
-   * {@link EditorState.mathEditorPortals} Map.
-   */
-  spawnMathEditor(stub: Container): void
   spawnMathEditorAtCursor(): void
   spawnMathEditorInNewLine(afterElement: Element): void
 
@@ -247,6 +241,13 @@ export function EditorStateProvider({
     if (mainTextAreaRef.current) {
       Array.from(mainTextAreaRef.current.querySelectorAll('img[src*="/math.svg?"]:not([initialized])')).forEach(
         (img) => {
+          const src = img.getAttribute('src')
+          if (src) {
+            const { origin, pathname, search } = new URL(src)
+            if (origin !== baseUrl) {
+              img.setAttribute('src', `${baseUrl}${pathname}${search}`)
+            }
+          }
           img.addEventListener('click', (e) => imgListener(img, e))
           img.setAttribute('initialized', '')
         },
@@ -306,7 +307,6 @@ export function EditorStateProvider({
 
         mathEditorPortals: mathEditorPortals,
 
-        spawnMathEditor: spawnMathEditor,
         spawnMathEditorAtCursor: spawnMathEditorAtCursor,
         spawnMathEditorInNewLine: spawnMathEditorInNewLine,
         initMathImages,
