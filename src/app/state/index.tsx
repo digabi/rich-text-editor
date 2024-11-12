@@ -181,64 +181,62 @@ export function EditorStateProvider({
     mathEditorPortals.set(stub, portal)
   }
 
-  function spawnMathEditorAtCursor() {
+  const onLatexUpdate = (img: Element) => (latex: string) => {
+    img.setAttribute('src', `${baseUrl}/math.svg?latex=${encodeURIComponent(latex)}`)
+    img.setAttribute('alt', latex)
+  }
+
+  function mathImageOnclick(img: Element, e: Event) {
+    e.stopPropagation()
+    e.preventDefault()
+    const stub = createMathStub(getNextKey())
+    mainTextAreaRef.current?.insertBefore(stub, img.nextSibling)
+
+    spawnMathEditor(stub, img, { initialLatex: img.getAttribute('alt'), onLatexUpdate: onLatexUpdate(img) })
+  }
+
+  function createMathImage() {
     const mathImage = document.createElement('img')
-    mathImage.addEventListener('click', (e) => imgListener(mathImage, e))
+    mathImage.addEventListener('click', (e) => mathImageOnclick(mathImage, e))
     mathImage.setAttribute('initialized', '')
+    return mathImage
+  }
 
-    const onLatexUpdate = (latex: string) => {
-      mathImage.setAttribute('src', `${baseUrl}/math.svg?latex=${encodeURIComponent(latex)}`)
-      mathImage.setAttribute('alt', latex)
-    }
-
-    spawnMathEditor(createMathStub(getNextKey(), true, mathImage), mathImage, { onLatexUpdate })
+  function spawnMathEditorAtCursor() {
+    const mathImage = createMathImage()
+    spawnMathEditor(createMathStub(getNextKey(), true, mathImage), mathImage, {
+      onLatexUpdate: onLatexUpdate(mathImage),
+    })
   }
 
   function spawnMathEditorInNewLine(afterElement: Element) {
-    const mathImage = document.createElement('img')
-    mathImage.addEventListener('click', (e) => imgListener(mathImage, e))
-    mathImage.setAttribute('initialized', '')
+    const mathImage = createMathImage()
 
-    const onLatexUpdate = (latex: string) => {
-      mathImage.setAttribute('src', `${baseUrl}/math.svg?latex=${encodeURIComponent(latex)}`)
-      mathImage.setAttribute('alt', latex)
-    }
     const newStub = createMathStub(getNextKey(), false, mathImage)
     const nextSibling = afterElement.nextSibling
 
     mainTextAreaRef.current?.insertBefore(document.createElement('br'), nextSibling)
     mainTextAreaRef.current?.insertBefore(mathImage, nextSibling)
     mainTextAreaRef.current?.insertBefore(newStub, nextSibling)
-    spawnMathEditor(newStub, mathImage, { onLatexUpdate })
-  }
-
-  function imgListener(img: Element, e: Event) {
-    e.stopPropagation()
-    e.preventDefault()
-    const stub = createMathStub(getNextKey())
-    mainTextAreaRef.current?.insertBefore(stub, img.nextSibling)
-
-    const onLatexUpdate = (latex: string) => {
-      img.setAttribute('src', `${baseUrl}/math.svg?latex=${encodeURIComponent(latex)}`)
-      img.setAttribute('alt', latex)
-    }
-
-    spawnMathEditor(stub, img, { initialLatex: img.getAttribute('alt'), onLatexUpdate })
+    spawnMathEditor(newStub, mathImage, { onLatexUpdate: onLatexUpdate(mathImage) })
   }
 
   function initMathImages() {
     if (mainTextAreaRef.current) {
-      Array.from(mainTextAreaRef.current.querySelectorAll('img[src*="/math.svg?"]:not([initialized])')).forEach(
+      Array.from(mainTextAreaRef.current.querySelectorAll('img[src*="/math.svg?"][alt]:not([initialized])')).forEach(
         (img) => {
+          const mathImage = createMathImage()
           const src = img.getAttribute('src')
           if (src) {
             const { origin, pathname, search } = new URL(src)
             if (origin !== baseUrl) {
-              img.setAttribute('src', `${baseUrl}${pathname}${search}`)
+              mathImage.setAttribute('src', `${baseUrl}${pathname}${search}`)
+            } else {
+              mathImage.setAttribute('src', src)
             }
           }
-          img.addEventListener('click', (e) => imgListener(img, e))
-          img.setAttribute('initialized', '')
+          mathImage.setAttribute('alt', img.getAttribute('alt') ?? '')
+          img.replaceWith(mathImage)
         },
       )
     }
