@@ -147,7 +147,7 @@ export function EditorStateProvider({
       })
   })
 
-  function spawnMathEditor(stub: Container, props?: Partial<MathEditorProps>) {
+  function spawnMathEditor(stub: Container, image: Element, props?: Partial<MathEditorProps>) {
     // This is called both on the creation of the component and each time the equation is opened after that
     function onOpen(handle: MathEditorHandle) {
       history.clear()
@@ -175,17 +175,12 @@ export function EditorStateProvider({
     function onEditorRemoved() {
       mathEditorPortals.delete(stub)
       const stubElement = stub as HTMLElement
-
-      // Clean up the non-breaking spaces we put on both sides of the wrapper
-      // if (stubElement.previousSibling?.textContent === nbsp) {
-      //   stubElement.previousSibling.remove()
-      // }
-      // if (stubElement.nextSibling?.textContent === nbsp) {
-      //   stubElement.nextSibling.remove()
-      // }
-
       stubElement.remove()
       history.clear()
+    }
+
+    function onEnter() {
+      if (image) spawnMathEditorInNewLine(image)
     }
 
     const portal = createPortal(
@@ -194,6 +189,7 @@ export function EditorStateProvider({
         onBlur={onBlur}
         onChange={onChange}
         onEditorRemoved={onEditorRemoved}
+        onEnter={onEnter}
         errorText={t.editor.render_error}
         {...props}
       />,
@@ -212,23 +208,25 @@ export function EditorStateProvider({
       mathImage.setAttribute('alt', latex)
     }
 
-    spawnMathEditor(createMathStub(getNextKey(), true, mathImage), { initialOpen: true, onLatexUpdate })
+    spawnMathEditor(createMathStub(getNextKey(), true, mathImage), mathImage, { initialOpen: true, onLatexUpdate })
   }
 
   function spawnMathEditorInNewLine(afterElement: Element) {
-    const wrapper = afterElement.closest(`.${MATH_EDITOR_CLASS}`)
-    const newStub = createMathStub(getNextKey(), false)
-    const nextSibling = wrapper?.nextSibling
+    const mathImage = document.createElement('img')
+    mathImage.addEventListener('click', (e) => imgListener(mathImage, e))
+    mathImage.setAttribute('initialized', '')
 
-    if (nextSibling) {
-      mainTextAreaRef.current?.insertBefore(newStub, nextSibling)
-      mainTextAreaRef.current?.insertBefore(document.createElement('br'), newStub)
-    } else {
-      mainTextAreaRef.current?.appendChild(document.createElement('br'))
-      mainTextAreaRef.current?.appendChild(newStub)
+    const onLatexUpdate = (latex: string) => {
+      mathImage.setAttribute('src', `${baseUrl}/math.svg?latex=${encodeURIComponent(latex)}`)
+      mathImage.setAttribute('alt', latex)
     }
+    const newStub = createMathStub(getNextKey(), false, mathImage)
+    const nextSibling = afterElement.nextSibling
 
-    spawnMathEditor(newStub, { initialOpen: true })
+    mainTextAreaRef.current?.insertBefore(document.createElement('br'), nextSibling)
+    mainTextAreaRef.current?.insertBefore(mathImage, nextSibling)
+    mainTextAreaRef.current?.insertBefore(newStub, nextSibling)
+    spawnMathEditor(newStub, mathImage, { initialOpen: true, onLatexUpdate })
   }
 
   function imgListener(img: Element, e: Event) {
@@ -242,7 +240,7 @@ export function EditorStateProvider({
       img.setAttribute('alt', latex)
     }
 
-    spawnMathEditor(stub, { initialLatex: img.getAttribute('alt'), initialOpen: true, onLatexUpdate })
+    spawnMathEditor(stub, img, { initialLatex: img.getAttribute('alt'), initialOpen: true, onLatexUpdate })
   }
 
   function initMathImages() {

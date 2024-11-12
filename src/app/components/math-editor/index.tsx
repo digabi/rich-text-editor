@@ -21,6 +21,7 @@ export type Props = {
   onChange?: (latex: string) => void
   onLatexUpdate?: (latex: string) => void
   onEditorRemoved?: () => void
+  onEnter: () => void
 }
 
 const Error = styled.span`
@@ -66,7 +67,7 @@ export default function MathEditor(props: Props) {
   const [isOpen, setIsOpen] = useState(props.initialOpen ?? false)
   const [latex, setLatex] = useState(props.initialLatex ?? '')
 
-  const { baseUrl, undo, redo, spawnMathEditorInNewLine } = useEditorState()
+  const { baseUrl, undo, redo } = useEditorState()
 
   const historyHandler = (fn: typeof undo | typeof redo) => () => {
     const oldValue = latex
@@ -144,7 +145,7 @@ export default function MathEditor(props: Props) {
               } else if (e.key === 'Enter' && containerRef.current) {
                 e.preventDefault()
                 e.stopPropagation()
-                spawnMathEditorInNewLine(containerRef.current)
+                props.onEnter()
               }
             }}
           />
