@@ -36,24 +36,6 @@ export function sanitize(html: string, opts?: sanitizeHtml.IOptions) {
   ).reduce((value, fn) => fn(value), html)
 }
 
-export function sanitizeForExport(html: string) {
-  return (
-    [
-      (v) =>
-        sanitize(v, {
-          ...sanitizeOpts,
-          transformTags: {
-            // if the span is a math editor wrapper, we just take the image out of it and remove the wrapper
-            span: (tagName: string, attribs: sanitizeHtml.Attributes) =>
-              attribs.class === 'math-editor-wrapper' ? { tagName: '', attribs: {} } : { tagName, attribs },
-          },
-        }),
-      (v) => v.trim(),
-      (v) => v.replace(/&nbsp;/g, ''),
-    ] as Array<(html: string) => string>
-  ).reduce((value, fn) => fn(value), html)
-}
-
 function convertLinksToRelative(html: string) {
   return html.replace(new RegExp(document.location.origin, 'g'), '')
 }

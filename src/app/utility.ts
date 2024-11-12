@@ -1,4 +1,4 @@
-import { sanitizeForExport } from './utils/sanitization'
+import { sanitize } from './utils/sanitization'
 
 export const eventHandlerWithoutFocusLoss = (fn?: () => void) => (e: React.MouseEvent) => {
   if (fn) {
@@ -16,7 +16,7 @@ export type Answer = {
 }
 
 export const getAnswer = (html: string) => {
-  const answerHtml = sanitizeForExport(html)
+  const answerHtml = sanitize(html)
   const answer = new DOMParser().parseFromString(answerHtml, 'text/html').body
   const answerText = new DOMParser().parseFromString(answerHtml.replaceAll('<br />', '\n'), 'text/html').body.innerText
 
