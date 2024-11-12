@@ -3,27 +3,14 @@ import sanitizeHtml from 'sanitize-html'
 const sanitizeOpts = {
   allowedTags: ['img', 'br', 'span'],
   allowedAttributes: {
-    img: ['src', 'alt', 'data-math-svg'],
-    span: ['class'],
+    img: ['src', 'alt'],
   },
   allowedSchemes: ['data'],
-  allowedClasses: {
-    span: ['math-editor-wrapper'],
-  },
-  transformTags: {
-    img: (tagName: string, attribs: sanitizeHtml.Attributes) => ({
-      tagName,
-      attribs: attribs.src?.includes('math.svg') ? { ...attribs, 'data-math-svg': 'true' } : attribs,
-    }),
-    span: (tagName: string, attribs: sanitizeHtml.Attributes) =>
-      attribs.class === 'math-editor-wrapper' ? { tagName, attribs } : { tagName: '', attribs: { text: '' } },
-  },
 }
 
 export function sanitize(html: string, opts?: sanitizeHtml.IOptions) {
   return (
     [
-      (v) => convertLinksToRelative(v),
       (v) =>
         sanitizeHtml(v, {
           ...sanitizeOpts,
@@ -31,12 +18,14 @@ export function sanitize(html: string, opts?: sanitizeHtml.IOptions) {
           allowedSchemes: ['data', 'http', 'https'],
           ...opts,
         }),
+      (v) => convertLinksToRelative(v),
       (v) => stripBlockElements(v),
     ] as Array<(html: string) => string>
   ).reduce((value, fn) => fn(value), html)
 }
 
 function convertLinksToRelative(html: string) {
+  console.log(html, document.location.origin)
   return html.replace(new RegExp(document.location.origin, 'g'), '')
 }
 
