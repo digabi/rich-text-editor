@@ -58,60 +58,66 @@ test.describe('Rich text editor', () => {
   test('can type in the editor', async ({ page }) => {
     const editor = getEditorLocator(page)
     await page.keyboard.type('Hello World!')
-    await assertEditorHTMLContent(editor, 'Hello World!')
-    await assertEditorTextContent(editor, 'Hello World!')
 
-    assertAnswerContent(answer, { answerHtml: 'Hello World!', answerText: 'Hello World!', imageCount: 0 })
+    assertAnswerContent(answer, { answerHtml: 'Hello World!', answerText: 'Hello World!' })
   })
 
-  test('can erase in the editor', async ({ page }) => {
-    const editor = getEditorLocator(page)
-    await page.keyboard.type('Hello World!')
-    await assertEditorHTMLContent(editor, 'Hello World!')
-    await assertEditorTextContent(editor, 'Hello World!')
-    await repeat(7, async () => {
-      await page.keyboard.press('Backspace')
+  test('can erase', async ({ page }) => {
+    await test.step('text', async () => {
+      await page.keyboard.type('Hello World!')
+      assertAnswerContent(answer, { answerHtml: 'Hello World!', answerText: 'Hello World!' })
+      await repeat(7, async () => {
+        await page.keyboard.press('Backspace')
+      })
+      assertAnswerContent(answer, { answerHtml: 'Hello', answerText: 'Hello' })
     })
-    await assertEditorHTMLContent(editor, 'Hello')
-    await assertEditorTextContent(editor, 'Hello')
-    await page.keyboard.press('Control+E')
-    await page.keyboard.type('x^2')
-    await page.keyboard.press('Escape')
-    await assertEditorHTMLContent(
-      editor,
-      'Hello<span class="math-editor-wrapper" id="math-editor-0" contenteditable="false" style="display: contents;"><img src="http://localhost:5111/math.svg?latex=x%5E2" data-math-svg="true" data-latex="x^2" alt="x^2"></span>',
-    )
-    expect(await editor.textContent()).toMatch('Hello  ')
-    await page.keyboard.press('Backspace')
-    await page.keyboard.press('Backspace')
-    await assertEditorHTMLContent(editor, 'HelloinitMathImages')
-    expect(await editor.textContent()).toMatch('Hello ')
+
+    await test.step('equations', async () => {
+      await page.keyboard.press('Control+E')
+      await page.keyboard.type('x^2')
+      await page.keyboard.press('Escape')
+      assertAnswerContent(answer, {
+        answerHtml: 'Hello<img src="http://localhost:5111/math.svg?latex=x%5E2" data-latex="x^2" alt="x^2">',
+        answerText: 'Hello',
+      })
+      await page.keyboard.press('Backspace')
+      await page.keyboard.press('Backspace')
+      assertAnswerContent(answer, {
+        answerHtml: 'Hello',
+        answerText: 'Hello',
+      })
+    })
   })
 
   test('can input special characters from toolbar', async ({ page }) => {
-    const editor = getEditorLocator(page)
-
     await inputSpecialCharacterFromToolbar(page, specialCharacters.alpha[1])
-    await assertEditorTextContent(editor, specialCharacters.alpha[1])
+    assertAnswerContent(answer, {
+      answerText: specialCharacters.alpha[1],
+    })
 
     await page.getByTestId('toggle-all-special-characters').click()
 
     await inputSpecialCharacterFromToolbar(page, specialCharacters.delta[1])
-    await assertEditorTextContent(editor, specialCharacters.alpha[1] + specialCharacters.delta[1])
+    assertAnswerContent(answer, {
+      answerText: specialCharacters.alpha[1] + specialCharacters.delta[1],
+    })
   })
 
   test('can paste text from clipboard', async ({ page }) => {
-    const editor = getEditorLocator(page)
     await setClipboardText(page, 'Hello World!')
     await paste(page)
-    await assertEditorTextContent(editor, 'Hello World!')
+    assertAnswerContent(answer, {
+      answerText: 'Hello World!',
+    })
   })
 
   test('can paste HTML from clipboard', async ({ page }) => {
-    const editor = getEditorLocator(page)
     await setClipboardHTML(page, '<p>Hello World!</p>')
     await paste(page)
-    assertAnswerContent(answer, { answerText: 'Hello World!', answerHtml: 'Hello World!', imageCount: 0 })
+    assertAnswerContent(answer, {
+      answerText: 'Hello World!',
+      answerHtml: 'Hello World!',
+    })
   })
 
   test('can paste png <img> from clipboard', async ({ page }) => {
@@ -186,17 +192,14 @@ test.describe('Rich text editor', () => {
     await repeat(3, async (i) => {
       await page.keyboard.type(`${i}`)
       await page.keyboard.press('Enter')
-      await expect(page.locator('span > img')).toHaveCount(i + 1)
     })
     await editor.click()
+    await expect(page.locator('.answer > img')).toHaveCount(3)
     await page.keyboard.press('ArrowLeft')
     await page.keyboard.press('ArrowUp')
-    await page.keyboard.press('ArrowLeft')
-    await page.keyboard.press('ArrowLeft')
-    await page.keyboard.press('Backspace')
     await page.keyboard.press('Backspace')
     assertAnswerContent(answer, {
-      answerHtml: `<img data-math-svg="true" alt="0"><img data-math-svg="true" alt="1"><br><img data-math-svg="true" alt="2">`,
+      answerHtml: `<img alt="0"><img alt="1"><br><img alt="2">`,
     })
   })
 
@@ -216,7 +219,7 @@ test.describe('Rich text editor', () => {
     await page.keyboard.press('Escape')
 
     assertAnswerContent(answer, {
-      answerHtml: '<img data-math-svg="true" alt="Hello!">',
+      answerHtml: '<img alt="Hello!">',
     })
   })
 
@@ -240,7 +243,7 @@ test.describe('Rich text editor', () => {
     await page.keyboard.press('Escape')
 
     assertAnswerContent(answer, {
-      answerHtml: '<img data-math-svg="true" alt="Hello!">',
+      answerHtml: '<img alt="Hello!">',
     })
   })
 
@@ -317,7 +320,7 @@ test.describe('Rich text editor', () => {
         await inputLatexCommandFromToolbar(page, specialCharacters.cos[0])
         await clickOutsideEditor(page)
 
-        assertAnswerContent(answer, { answerText: 'H\u00A0\u00A0ld!' })
+        assertAnswerContent(answer, { answerText: 'Hld!' })
       })
 
       test('with a pasted image', async ({ page }) => {
@@ -408,14 +411,14 @@ test.describe('Rich text editor', () => {
       await inputLatexCommandFromToolbar(page, specialCharacters.sqrt[0])
       await assertEquationEditorTextContent(equationEditor, '√​')
       await clickOutsideEditor(page)
-      await expect(getEditorLocator(page).locator('span > img')).toBeVisible()
-      await getEditorLocator(page).locator('span.math-editor-wrapper').click()
+      await expect(getEditorLocator(page).locator('img')).toBeVisible()
+      await getEditorLocator(page).locator('img').click()
     })
 
     test('closes on Esc press', async ({ page }) => {
       await page.keyboard.press('A')
       await page.keyboard.press('Escape')
-      await expect(getEditorLocator(page).locator('span > img')).toBeVisible()
+      await expect(getEditorLocator(page).locator('img')).toBeVisible()
 
       await test.step(' and places cursor after equation image', async () => {
         await page.keyboard.press('B')
@@ -468,7 +471,7 @@ test.describe('Rich text editor', () => {
       await page.keyboard.press('Tab')
       await page.keyboard.press('Tab')
 
-      await expect(page.locator('span.math-editor-wrapper > img')).toHaveCount(2)
+      await expect(page.locator('.answer > img')).toHaveCount(2)
 
       await test.step('opens a new editor after the active equation', async () => {
         const editor = getEditorLocator(page)
@@ -493,9 +496,9 @@ test.describe('Rich text editor', () => {
         await page.getByRole('button', { name: 'Lisää kaava' }).click()
         await page.keyboard.press('B')
         await clickOutsideEditor(page)
-        await expect(page.locator('span > img')).toHaveCount(2)
+        await expect(page.locator('.answer > img')).toHaveCount(2)
         assertAnswerContent(answer, {
-          answerHtml: '<img data-math-svg="true" alt="A">\u00A0\u00A0<img data-math-svg="true" alt="B">',
+          answerHtml: '<img alt="A"><img alt="B">',
         })
       })
 
@@ -504,12 +507,12 @@ test.describe('Rich text editor', () => {
         await editor.getByRole('img').first().click()
         await page.keyboard.press('2')
         await page.keyboard.press('Escape')
-        await expect(page.locator('span > img')).toHaveCount(2)
+        await expect(page.locator('.answer > img')).toHaveCount(2)
         await editor.getByRole('img').last().click()
         await page.keyboard.press('2')
         await page.keyboard.press('Escape')
         assertAnswerContent(answer, {
-          answerHtml: '<img data-math-svg="true" alt="A2">\u00A0\u00A0<img data-math-svg="true" alt="B2">',
+          answerHtml: '<img alt="A2"><img alt="B2">',
         })
       })
     })
@@ -538,7 +541,7 @@ test.describe('Rich text editor', () => {
       await page.keyboard.type('XX')
 
       assertAnswerContent(answer, {
-        answerHtml: 'kaava: <img data-math-svg="true" alt="\\sqrt{123}">XX ja tekstiä',
+        answerHtml: 'kaava: <img alt="\\sqrt{123}">XX ja tekstiä',
         answerText: 'kaava: XX ja tekstiä',
       })
     })
@@ -550,7 +553,7 @@ test.describe('Rich text editor', () => {
       await page.keyboard.type('XX')
 
       assertAnswerContent(answer, {
-        answerHtml: 'kaava: XX<img data-math-svg="true" alt="\\sqrt{123}"> ja tekstiä',
+        answerHtml: 'kaava: XX<img alt="\\sqrt{123}"> ja tekstiä',
         answerText: 'kaava: XX ja tekstiä',
       })
     })
@@ -564,7 +567,7 @@ test.describe('Rich text editor', () => {
       await page.keyboard.type('XX')
 
       assertAnswerContent(answer, {
-        answerHtml: 'kaava: <img data-math-svg="true" alt="\\sqrt{123}">XX ja tekstiä',
+        answerHtml: 'kaava: <img alt="\\sqrt{123}">XX ja tekstiä',
         answerText: 'kaava: XX ja tekstiä',
       })
     })
@@ -576,7 +579,7 @@ test.describe('Rich text editor', () => {
       await page.keyboard.type('XX')
 
       assertAnswerContent(answer, {
-        answerHtml: 'kaXXava: <img data-math-svg="true" alt="\\sqrt{123}"> ja tekstiä',
+        answerHtml: 'kaXXava: <img alt="\\sqrt{123}"> ja tekstiä',
         answerText: 'kaXXava:  ja tekstiä',
       })
     })

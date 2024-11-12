@@ -15,14 +15,12 @@ export type Answer = {
   imageCount: number
 }
 
-// TODO: Finishing touches, make sure this is cross compatible with the old version
 export const getAnswer = (html: string) => {
   const answerHtml = sanitizeForExport(html)
   const answer = new DOMParser().parseFromString(answerHtml, 'text/html').body
   const answerText = new DOMParser().parseFromString(answerHtml.replaceAll('<br />', '\n'), 'text/html').body.innerText
 
-  // All images that are direct children of the answer are "screenshots"
-  const screenshots = answer.querySelectorAll(':scope > img:not([data-math-svg])')
+  const screenshots = answer.querySelectorAll(':scope > img:not([src*="/math.svg?"])')
 
   const equationCount = answer.querySelectorAll('span.math-editor-wrapper').length
 
