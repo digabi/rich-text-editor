@@ -3,7 +3,6 @@ import { Container } from 'react-dom/client'
 
 import useHistory from './history'
 import useMap, { MapHookHandle } from '../hooks/use-map'
-import useMutationObserver from '../hooks/use-mutation-observer'
 
 import MathEditor, { MathEditorHandle, Props as MathEditorProps } from '../components/math-editor'
 import { createMathStub } from '../utils/create-math-stub'
@@ -128,19 +127,6 @@ export function EditorStateProvider({
 
   const t = { FI, SV }[language]
 
-  // When a MathEditor's container element is removed,
-  // we need to also remove the ReactPortal it was rendered in.
-  // This is done by removing the portal from the map, as this means it will no
-  // longer be rendered.
-  useMutationObserver(mainTextAreaRef, function removeDanglingPortals(muts) {
-    muts
-      .flatMap((m) => Array.from(m.removedNodes))
-      .filter((node) => mathEditorPortals.has(node))
-      .forEach((node) => {
-        mathEditorPortals.delete(node)
-      })
-  })
-
   function spawnMathEditor(stub: Container, image: Element, props?: Partial<MathEditorProps>) {
     // This is called both on the creation of the component and each time the equation is opened after that
     function onOpen(handle: MathEditorHandle) {
@@ -202,7 +188,7 @@ export function EditorStateProvider({
       mathImage.setAttribute('alt', latex)
     }
 
-    spawnMathEditor(createMathStub(getNextKey(), true, mathImage), mathImage, { initialOpen: true, onLatexUpdate })
+    spawnMathEditor(createMathStub(getNextKey(), true, mathImage), mathImage, { onLatexUpdate })
   }
 
   function spawnMathEditorInNewLine(afterElement: Element) {
@@ -220,7 +206,7 @@ export function EditorStateProvider({
     mainTextAreaRef.current?.insertBefore(document.createElement('br'), nextSibling)
     mainTextAreaRef.current?.insertBefore(mathImage, nextSibling)
     mainTextAreaRef.current?.insertBefore(newStub, nextSibling)
-    spawnMathEditor(newStub, mathImage, { initialOpen: true, onLatexUpdate })
+    spawnMathEditor(newStub, mathImage, { onLatexUpdate })
   }
 
   function imgListener(img: Element, e: Event) {
@@ -234,7 +220,7 @@ export function EditorStateProvider({
       img.setAttribute('alt', latex)
     }
 
-    spawnMathEditor(stub, img, { initialLatex: img.getAttribute('alt'), initialOpen: true, onLatexUpdate })
+    spawnMathEditor(stub, img, { initialLatex: img.getAttribute('alt'), onLatexUpdate })
   }
 
   function initMathImages() {

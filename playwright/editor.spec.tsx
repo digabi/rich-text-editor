@@ -25,7 +25,7 @@ import {
   selectAll,
 } from './test-utils'
 import RichTextEditor from '../src/app'
-import { Answer, nbsp } from '../src/app/utility'
+import { Answer } from '../src/app/utility'
 import fi from '../src/FI'
 
 test.describe('Rich text editor', () => {
@@ -79,14 +79,13 @@ test.describe('Rich text editor', () => {
     await page.keyboard.press('Escape')
     await assertEditorHTMLContent(
       editor,
-      'Hello&nbsp;<span class="math-editor-wrapper" id="math-editor-0" contenteditable="false" style="display: contents;"><img src="http://localhost:5111/math.svg?latex=x%5E2" data-math-svg="true" data-latex="x^2" alt="x^2"></span>&nbsp;',
+      'Hello<span class="math-editor-wrapper" id="math-editor-0" contenteditable="false" style="display: contents;"><img src="http://localhost:5111/math.svg?latex=x%5E2" data-math-svg="true" data-latex="x^2" alt="x^2"></span>',
     )
-    // assertEditorTextContent doesn't work with nbsp whitespaces
-    expect(await editor.textContent()).toMatch(/Hello\s\s/)
+    expect(await editor.textContent()).toMatch('Hello  ')
     await page.keyboard.press('Backspace')
     await page.keyboard.press('Backspace')
-    await assertEditorHTMLContent(editor, 'Hello&nbsp;')
-    expect(await editor.textContent()).toMatch(/Hello\s/)
+    await assertEditorHTMLContent(editor, 'HelloinitMathImages')
+    expect(await editor.textContent()).toMatch('Hello ')
   })
 
   test('can input special characters from toolbar', async ({ page }) => {
@@ -197,7 +196,7 @@ test.describe('Rich text editor', () => {
     await page.keyboard.press('Backspace')
     await page.keyboard.press('Backspace')
     assertAnswerContent(answer, {
-      answerHtml: `<img data-math-svg="true" alt="0">${nbsp}<img data-math-svg="true" alt="1">${nbsp}<br>${nbsp}<img data-math-svg="true" alt="2">`,
+      answerHtml: `<img data-math-svg="true" alt="0"><img data-math-svg="true" alt="1"><br><img data-math-svg="true" alt="2">`,
     })
   })
 

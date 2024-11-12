@@ -16,7 +16,6 @@ export type Props = {
   errorText: string
   onOpen?: (handle: MathEditorHandle) => void
   initialLatex?: string | null
-  initialOpen?: boolean
   onBlur?: (forceCursorPosition?: 'before' | 'after') => void
   onChange?: (latex: string) => void
   onLatexUpdate?: (latex: string) => void
@@ -64,10 +63,9 @@ const MathEditorLatexField = styled.textarea`
 
 export default function MathEditor(props: Props) {
   const containerRef = useRef<HTMLDivElement>(null)
-  const [isOpen, setIsOpen] = useState(props.initialOpen ?? false)
   const [latex, setLatex] = useState(props.initialLatex ?? '')
 
-  const { baseUrl, undo, redo } = useEditorState()
+  const { undo, redo } = useEditorState()
 
   const historyHandler = (fn: typeof undo | typeof redo) => () => {
     const oldValue = latex
@@ -92,7 +90,7 @@ export default function MathEditor(props: Props) {
 
   useEffect(
     function signalOpenedMathEditor() {
-      if (isOpen && mq) {
+      if (mq) {
         mq.focus()
         props.onOpen?.({
           mq,
@@ -102,7 +100,7 @@ export default function MathEditor(props: Props) {
         })
       }
     },
-    [isOpen, mq],
+    [mq],
   )
 
   const handleBlur = (e: FocusEvent<HTMLDivElement | HTMLTextAreaElement>) => {
@@ -116,80 +114,57 @@ export default function MathEditor(props: Props) {
 
   function close(forceCursorPosition?: 'before' | 'after') {
     props.onBlur?.(forceCursorPosition)
-    setIsOpen(false)
     props.onEditorRemoved?.()
   }
 
   useEffect(() => {
-    if (!isOpen && latex === '') {
+    if (latex === '') {
       props.onEditorRemoved?.()
     }
-  }, [isOpen, latex])
+  }, [latex])
 
-  if (isOpen) {
-    return (
-      <div ref={containerRef} data-testid="equation-editor" data-latex={latex}>
-        <MathEditorElement className="math-editor" onBlur={handleBlur}>
-          <MathEditorEquationField
-            ref={latexRef}
-            className="math-editor-equation-field"
-            onKeyDown={(e) => {
-              if (e.key === 'Tab' && e.shiftKey) {
-                e.preventDefault()
-                e.stopPropagation()
-                close('before')
-              } else if (e.key === 'Escape') {
-                e.preventDefault()
-                e.stopPropagation()
-                close('after')
-              } else if (e.key === 'Enter' && containerRef.current) {
-                e.preventDefault()
-                e.stopPropagation()
-                props.onEnter()
-              }
-            }}
-          />
-          <MathEditorLatexField
-            className="math-editor-latex-field"
-            placeholder="LaTeΧ"
-            rows={1}
-            value={latex}
-            onChange={(e) => onChange(undefined, e.target.value)} // real oldLatex value here?
-            onKeyDown={(e) => {
-              if (e.key === 'Tab' && !e.shiftKey) {
-                e?.preventDefault()
-                e?.stopPropagation()
-                close('after')
-              } else if (e.key === 'Escape') {
-                e?.preventDefault()
-                e?.stopPropagation()
-                close('after')
-              }
-            }}
-          />
-          {isError && <Error className="render-error">{props.errorText}</Error>}
-        </MathEditorElement>
-      </div>
-    )
-  } else if (isError) {
-    return (
-      <LatexError
-        title="Virhe LaTeX-koodissa / Fel i LaTeX-koden"
-        latex={latex}
-        onClick={() => setIsOpen(true) /* TODO Fix this */}
-      />
-    )
-  } else if (latex !== '') {
-    return (
-      <img
-        src={`${baseUrl}/math.svg?latex=${encodeURIComponent(latex)}`}
-        data-math-svg={true}
-        data-latex={latex}
-        alt={latex}
-        onClick={() => setIsOpen(true) /* TODO Fix this */}
-      />
-    )
-  } else {
-    return null
-  }
+  return (
+    <div ref={containerRef} data-testid="equation-editor" data-latex={latex}>
+      <MathEditorElement className="math-editor" onBlur={handleBlur}>
+        <MathEditorEquationField
+          ref={latexRef}
+          className="math-editor-equation-field"
+          onKeyDown={(e) => {
+            if (e.key === 'Tab' && e.shiftKey) {
+              e.preventDefault()
+              e.stopPropagation()
+              close('before')
+            } else if (e.key === 'Escape') {
+              e.preventDefault()
+              e.stopPropagation()
+              close('after')
+            } else if (e.key === 'Enter' && containerRef.current) {
+              e.preventDefault()
+              e.stopPropagation()
+              props.onEnter()
+            }
+          }}
+        />
+        <MathEditorLatexField
+          className="math-editor-latex-field"
+          placeholder="LaTeΧ"
+          rows={1}
+          value={latex}
+          onChange={(e) => onChange(undefined, e.target.value)} // real oldLatex value here?
+          onKeyDown={(e) => {
+            if (e.key === 'Tab' && !e.shiftKey) {
+              e?.preventDefault()
+              e?.stopPropagation()
+              close('after')
+            } else if (e.key === 'Escape') {
+              e?.preventDefault()
+              e?.stopPropagation()
+              close('after')
+            }
+          }}
+        />
+        {isError && <Error className="render-error">{props.errorText}</Error>}
+      </MathEditorElement>
+    </div>
+  )
 }

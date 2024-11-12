@@ -9,12 +9,6 @@ export const eventHandlerWithoutFocusLoss = (fn?: () => void) => (e: React.Mouse
   return false
 }
 
-export const nbsp = '\u00A0'
-export const isRemoveMutation = (mut: MutationRecord) => mut.removedNodes.length > 0
-export const isAddMutation = (mut: MutationRecord) => mut.addedNodes.length > 0
-export const isTextNode = (node: Node | null) => node && node.nodeType === Node.TEXT_NODE
-export const isBr = (node: Node | null) => node && node.nodeName === 'BR'
-
 export type Answer = {
   answerHtml: string
   answerText: string

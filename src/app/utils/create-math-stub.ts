@@ -1,6 +1,3 @@
-import MathEditor from '../components/math-editor'
-import { nbsp } from '../utility'
-
 export const MATH_EDITOR_CLASS = 'math-editor-wrapper'
 
 /**
@@ -36,10 +33,6 @@ export function createMathStub(id: string | number, atSelection = false, img?: E
     if (parent.className === MATH_EDITOR_CLASS) {
       parent.insertAdjacentElement(stub.nextSibling ? 'beforebegin' : 'afterend', stub)
     }
-
-    // Non-breaking spaces before and after the LaTeX block
-    stub.insertAdjacentText('beforebegin', nbsp)
-    stub.insertAdjacentText('afterend', nbsp)
 
     selection.removeAllRanges()
     range.setStartAfter(stub)
