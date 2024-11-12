@@ -53,7 +53,7 @@ export type EditorState = {
    * Finds all math-editor boxes in the text area and makes them interactive.
    * Should be called after e.g. pasting in new content.
    */
-  initMathEditors: () => void
+  initMathImages: () => void
 
   t: typeof FI
 
@@ -177,12 +177,12 @@ export function EditorStateProvider({
       const stubElement = stub as HTMLElement
 
       // Clean up the non-breaking spaces we put on both sides of the wrapper
-      if (stubElement.previousSibling?.textContent === nbsp) {
-        stubElement.previousSibling.remove()
-      }
-      if (stubElement.nextSibling?.textContent === nbsp) {
-        stubElement.nextSibling.remove()
-      }
+      // if (stubElement.previousSibling?.textContent === nbsp) {
+      //   stubElement.previousSibling.remove()
+      // }
+      // if (stubElement.nextSibling?.textContent === nbsp) {
+      //   stubElement.nextSibling.remove()
+      // }
 
       stubElement.remove()
       history.clear()
@@ -222,39 +222,29 @@ export function EditorStateProvider({
     spawnMathEditor(newStub, { initialOpen: true })
   }
 
-  function initMathEditors() {
-    if (!mainTextAreaRef.current) return
+  function imgListener(img: Element, e: Event) {
+    e.stopPropagation()
+    e.preventDefault()
+    const stub = createMathStub(getNextKey())
+    // box.replaceWith(stub)
+    mainTextAreaRef.current?.insertBefore(stub, img.nextSibling)
 
-    // These are existing and copy-pasted math editors
-    const mathEditors = Array.from(mainTextAreaRef.current.querySelectorAll(`span.${MATH_EDITOR_CLASS}`))
-    // These are math images copied from cheat, 'marked' to be replaced with math editors
-    const mathImages = Array.from(mainTextAreaRef.current.querySelectorAll('img[src*="/math.svg?"]'))
+    const onLatexUpdate = (latex: string) => {
+      img.setAttribute('src', `${baseUrl}/math.svg?latex=${encodeURIComponent(latex)}`)
+      img.setAttribute('alt', latex)
+    }
 
-    const allBoxes = ([] as [elementToInit: Element, initialLatex: string][])
-      .concat(
-        mathEditors
-          .filter((elem) => !mathEditorPortals.has(elem) && elem.querySelector('img')?.alt)
-          .map((elem) => [elem, elem.querySelector('img')!.alt]),
+    spawnMathEditor(stub, { initialLatex: img.getAttribute('alt'), initialOpen: true, onLatexUpdate })
+  }
+
+  function initMathImages() {
+    if (mainTextAreaRef.current) {
+      Array.from(mainTextAreaRef.current.querySelectorAll('img[src*="/math.svg?"]:not([initialized])')).forEach(
+        (img) => {
+          img.addEventListener('click', (e) => imgListener(img, e))
+          img.setAttribute('initialized', '')
+        },
       )
-      .concat(
-        mathImages
-          .filter(
-            (elem) =>
-              !mathEditorPortals.has(elem) &&
-              elem instanceof HTMLImageElement &&
-              elem.alt &&
-              // This is important! We need to make sure we don't include images that are already in wrapper,
-              // as they are already handled by the previous list - including them here as well results in components
-              // being nested inside each other in the DOM, and very obscure crashes when they are removed from the answer.
-              elem.closest(`span.${MATH_EDITOR_CLASS}`) === null,
-          )
-          .map((elem) => [elem, (elem as HTMLImageElement).alt]),
-      )
-
-    for (const [box, initialLatex] of allBoxes) {
-      const stub = createMathStub(getNextKey())
-      box.replaceWith(stub)
-      spawnMathEditor(stub, { initialLatex })
     }
   }
 
@@ -281,7 +271,7 @@ export function EditorStateProvider({
         mainTextAreaRef.current.innerHTML = initialValue
       }
       setTimeout(() => {
-        initMathEditors()
+        initMathImages()
         setHasBeenInitialized(true)
       }, 0)
     }
@@ -313,7 +303,7 @@ export function EditorStateProvider({
         spawnMathEditor: spawnMathEditor,
         spawnMathEditorAtCursor: spawnMathEditorAtCursor,
         spawnMathEditorInNewLine: spawnMathEditorInNewLine,
-        initMathEditors,
+        initMathImages,
 
         canUndo: history.canUndo,
         canRedo: history.canRedo,

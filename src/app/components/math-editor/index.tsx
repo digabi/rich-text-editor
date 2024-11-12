@@ -15,10 +15,11 @@ export type MathEditorHandle = {
 export type Props = {
   errorText: string
   onOpen?: (handle: MathEditorHandle) => void
-  initialLatex?: string
+  initialLatex?: string | null
   initialOpen?: boolean
   onBlur?: (forceCursorPosition?: 'before' | 'after') => void
   onChange?: (latex: string) => void
+  onLatexUpdate?: (latex: string) => void
   onEditorRemoved?: () => void
 }
 
@@ -83,6 +84,7 @@ export default function MathEditor(props: Props) {
     if (oldValue === newValue) return
     setLatex(newValue)
     props.onChange?.(newValue)
+    props.onLatexUpdate?.(newValue)
   }
 
   const { ref: latexRef, isError, mq } = useMathQuill({ latex, onChange })
@@ -114,6 +116,7 @@ export default function MathEditor(props: Props) {
   function close(forceCursorPosition?: 'before' | 'after') {
     props.onBlur?.(forceCursorPosition)
     setIsOpen(false)
+    props.onEditorRemoved?.()
   }
 
   useEffect(() => {

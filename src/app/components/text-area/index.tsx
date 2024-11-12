@@ -36,7 +36,7 @@ const MainTextArea = forwardRef<RichTextEditorHandle, TextAreaProps>((props, ref
       }
 
       setTimeout(() => {
-        editor.initMathEditors()
+        editor.initMathImages()
         setTimeout(() => {
           editor.onAnswerChange()
         }, 0)
@@ -152,7 +152,7 @@ const MainTextArea = forwardRef<RichTextEditorHandle, TextAreaProps>((props, ref
      * the innerHtml of the text field has already been updated
      */
     setTimeout(() => {
-      editor.initMathEditors()
+      editor.initMathImages()
       setTimeout(() => {
         editor.onAnswerChange()
       }, 0)
