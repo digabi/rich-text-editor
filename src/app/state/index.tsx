@@ -186,7 +186,7 @@ export function EditorStateProvider({
     img.setAttribute('alt', latex)
   }
 
-  function mathImageOnclick(img: Element, e: Event) {
+  function onMathImageClick(img: Element, e: Event) {
     e.stopPropagation()
     e.preventDefault()
     const stub = createMathStub(getNextKey())
@@ -197,7 +197,7 @@ export function EditorStateProvider({
 
   function createMathImage() {
     const mathImage = document.createElement('img')
-    mathImage.addEventListener('click', (e) => mathImageOnclick(mathImage, e))
+    mathImage.addEventListener('click', (e) => onMathImageClick(mathImage, e))
     mathImage.setAttribute('initialized', '')
     return mathImage
   }
@@ -224,9 +224,9 @@ export function EditorStateProvider({
   function initMathImages() {
     if (mainTextAreaRef.current) {
       Array.from(mainTextAreaRef.current.querySelectorAll('img[src*="/math.svg?"][alt]:not([initialized])')).forEach(
-        (img) => {
+        (oldImage) => {
           const mathImage = createMathImage()
-          const src = img.getAttribute('src')
+          const src = oldImage.getAttribute('src')
           if (src) {
             const { origin, pathname, search } = new URL(src)
             if (origin !== baseUrl) {
@@ -235,8 +235,8 @@ export function EditorStateProvider({
               mathImage.setAttribute('src', src)
             }
           }
-          mathImage.setAttribute('alt', img.getAttribute('alt') ?? '')
-          img.replaceWith(mathImage)
+          mathImage.setAttribute('alt', oldImage.getAttribute('alt') ?? '')
+          oldImage.replaceWith(mathImage)
         },
       )
     }
