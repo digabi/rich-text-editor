@@ -85,14 +85,7 @@ export default function MathEditor(props: Props) {
     props.onChange?.(newValue)
   }
 
-  const onEnter = () => {
-    if (containerRef.current) {
-      spawnMathEditorInNewLine(containerRef.current)
-    }
-    close()
-  }
-
-  const { ref: latexRef, isError, mq } = useMathQuill({ latex, onChange, onEnter })
+  const { ref: latexRef, isError, mq } = useMathQuill({ latex, onChange })
 
   useEffect(
     function signalOpenedMathEditor() {
@@ -138,13 +131,17 @@ export default function MathEditor(props: Props) {
             className="math-editor-equation-field"
             onKeyDown={(e) => {
               if (e.key === 'Tab' && e.shiftKey) {
-                e?.preventDefault()
-                e?.stopPropagation()
+                e.preventDefault()
+                e.stopPropagation()
                 close('before')
               } else if (e.key === 'Escape') {
-                e?.preventDefault()
-                e?.stopPropagation()
+                e.preventDefault()
+                e.stopPropagation()
                 close('after')
+              } else if (e.key === 'Enter' && containerRef.current) {
+                e.preventDefault()
+                e.stopPropagation()
+                spawnMathEditorInNewLine(containerRef.current)
               }
             }}
           />

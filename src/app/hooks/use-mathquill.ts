@@ -8,7 +8,6 @@ const MQ = MathQuill.getInterface(2)
 type Opts = {
   latex: string
   onChange?: (oldLatex: string | undefined, newLatex: string) => void
-  onEnter?: () => void
 }
 
 export default function useMathQuill(opts: Opts) {
@@ -49,11 +48,7 @@ export default function useMathQuill(opts: Opts) {
       }
     }
 
-    function enter() {
-      opts.onEnter?.()
-    }
-
-    const field = MQ.MathField(node, { handlers: { edit, enter } })
+    const field = MQ.MathField(node, { handlers: { edit } })
     field.latex(opts.latex)
     setMqHandle(field)
     mqRef.current = field

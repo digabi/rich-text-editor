@@ -19,7 +19,6 @@ declare module '@digabi/mathquill' {
       downOutOf?: (mathField: MathField) => void
       upOutOf?: (mathField: MathField) => void
       edit?: (mathField: MathField) => void
-      enter?: (mathField: MathField) => void
     }
   }
 
