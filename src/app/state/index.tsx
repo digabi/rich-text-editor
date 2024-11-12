@@ -203,7 +203,16 @@ export function EditorStateProvider({
   }
 
   function spawnMathEditorAtCursor() {
-    spawnMathEditor(createMathStub(getNextKey(), true), { initialOpen: true })
+    const mathImage = document.createElement('img')
+    mathImage.addEventListener('click', (e) => imgListener(mathImage, e))
+    mathImage.setAttribute('initialized', '')
+
+    const onLatexUpdate = (latex: string) => {
+      mathImage.setAttribute('src', `${baseUrl}/math.svg?latex=${encodeURIComponent(latex)}`)
+      mathImage.setAttribute('alt', latex)
+    }
+
+    spawnMathEditor(createMathStub(getNextKey(), true, mathImage), { initialOpen: true, onLatexUpdate })
   }
 
   function spawnMathEditorInNewLine(afterElement: Element) {
@@ -226,7 +235,6 @@ export function EditorStateProvider({
     e.stopPropagation()
     e.preventDefault()
     const stub = createMathStub(getNextKey())
-    // box.replaceWith(stub)
     mainTextAreaRef.current?.insertBefore(stub, img.nextSibling)
 
     const onLatexUpdate = (latex: string) => {
