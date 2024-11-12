@@ -152,10 +152,13 @@ export function EditorStateProvider({
       history.write(latex)
     }
 
-    function onEditorRemoved() {
+    function onEditorRemoved(latex: string) {
       mathEditorPortals.delete(stub)
       const stubElement = stub as HTMLElement
       stubElement.remove()
+      if (!latex) {
+        image.remove()
+      }
       history.clear()
     }
 

@@ -40,7 +40,7 @@ export default function useMathQuill(opts: Opts) {
       // textbox inside `field.el()` so we need to use the `.contains()` method.
       if (field.el().contains(document.activeElement)) {
         const newValue = mqRef.current?.latex()
-        if (newValue) {
+        if (newValue !== undefined) {
           opts.onChange?.(lastLatexRef.current, newValue)
           setLastLatex(newValue)
           lastLatexRef.current = newValue

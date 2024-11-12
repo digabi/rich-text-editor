@@ -2,7 +2,6 @@ import { useEffect, useRef, useState, FocusEvent } from 'react'
 import * as MathQuill from '@digabi/mathquill'
 
 import useMathQuill from '../../hooks/use-mathquill'
-import LatexError from '../icons/latex-error'
 import useEditorState from '../../state'
 import { useKeyboardEventListener } from '../../hooks/use-keyboard-events'
 import styled from 'styled-components'
@@ -19,7 +18,7 @@ export type Props = {
   onBlur?: (forceCursorPosition?: 'before' | 'after') => void
   onChange?: (latex: string) => void
   onLatexUpdate?: (latex: string) => void
-  onEditorRemoved?: () => void
+  onEditorRemoved?: (latex: string) => void
   onEnter: () => void
 }
 
@@ -108,20 +107,14 @@ export default function MathEditor(props: Props) {
     e.preventDefault()
     // Don't trigger close event if clicked another element inside MathEditor
     if (e.target && !containerRef?.current?.contains(e.relatedTarget as Node)) {
+      props.onEditorRemoved?.(latex)
       close()
     }
   }
 
   function close(forceCursorPosition?: 'before' | 'after') {
     props.onBlur?.(forceCursorPosition)
-    props.onEditorRemoved?.()
   }
-
-  useEffect(() => {
-    if (latex === '') {
-      props.onEditorRemoved?.()
-    }
-  }, [latex])
 
   return (
     <div ref={containerRef} data-testid="equation-editor" data-latex={latex}>
