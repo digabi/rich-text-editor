@@ -122,9 +122,7 @@ const MainTextArea = forwardRef<RichTextEditorHandle, TextAreaProps>((props, ref
       {
         // NOTE: Be careful to not mess up the keys here, as that will definitively
         // result in the editor behaving in weird and confusing ways
-        Array.from(editor.mathEditorPortals.raw).map(([node, portal]) => (
-          <Fragment key={(node as Element).id}>{portal}</Fragment>
-        ))
+        editor.mathEditorPortal !== null ? <Fragment>{editor.mathEditorPortal[1]}</Fragment> : null
       }
     </>
   )

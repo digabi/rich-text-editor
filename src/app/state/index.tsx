@@ -17,8 +17,7 @@ export type EditorState = {
   /** Ref to the main text-area (which is a `contenteditable` `<div />`) */
   ref: React.RefObject<HTMLDivElement>
 
-  /** An ES6 `Map` of DOM `Node`s to the React `Portal`s mounted in them */
-  mathEditorPortals: MapHookHandle<Node, ReactPortal>
+  mathEditorPortal: [portalRoot: Node, portal: ReactPortal] | null
 
   spawnMathEditorAtCursor(): void
   spawnMathEditorInNewLine(afterElement: Element): void
@@ -121,7 +120,7 @@ export function EditorStateProvider({
    * */
   const forceToolbarsOpen = new URL(window.location.href).searchParams.get('forceToolbars') ?? '0'
 
-  const mathEditorPortals = useMap<Node, ReactPortal>()
+  const [mathEditorPortal, setMathEditorPortal] = useState<[portalRoot: Node, portal: ReactPortal] | null>(null)
   const history = useHistory()
   const mainTextAreaRef = useRef<HTMLDivElement>(null)
 
@@ -153,7 +152,7 @@ export function EditorStateProvider({
     }
 
     function onEditorRemoved(latex: string) {
-      mathEditorPortals.delete(stub)
+      setMathEditorPortal(null)
       const stubElement = stub as HTMLElement
       stubElement.remove()
       if (!latex) {
@@ -178,7 +177,7 @@ export function EditorStateProvider({
       />,
       stub,
     )
-    mathEditorPortals.set(stub, portal)
+    setMathEditorPortal([stub, portal])
   }
 
   const onLatexUpdate = (img: Element) => (latex: string) => {
@@ -292,7 +291,7 @@ export function EditorStateProvider({
 
         ref: mainTextAreaRef,
 
-        mathEditorPortals: mathEditorPortals,
+        mathEditorPortal: mathEditorPortal,
 
         spawnMathEditorAtCursor: spawnMathEditorAtCursor,
         spawnMathEditorInNewLine: spawnMathEditorInNewLine,
