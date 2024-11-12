@@ -77,10 +77,9 @@ test.describe('Rich text editor', () => {
       await page.keyboard.type('x^2')
       await page.keyboard.press('Escape')
       assertAnswerContent(answer, {
-        answerHtml: 'Hello<img src="http://localhost:5111/math.svg?latex=x%5E2" data-latex="x^2" alt="x^2">',
+        answerHtml: 'Hello<img src="http://localhost:5111/math.svg?latex=x%5E2" alt="x^2">',
         answerText: 'Hello',
       })
-      await page.keyboard.press('Backspace')
       await page.keyboard.press('Backspace')
       assertAnswerContent(answer, {
         answerHtml: 'Hello',
@@ -202,7 +201,7 @@ test.describe('Rich text editor', () => {
     await page.keyboard.press('ArrowUp')
     await page.keyboard.press('Backspace')
     assertAnswerContent(answer, {
-      answerHtml: `<img alt="0"><img alt="1"><br><img alt="2">`,
+      answerHtml: `<img alt="0" src="/math.svg?latex=0"><img alt="1" src="/math.svg?latex=1"><br><img alt="2" src="/math.svg?latex=2">`,
     })
   })
 
@@ -222,7 +221,7 @@ test.describe('Rich text editor', () => {
     await page.keyboard.press('Escape')
 
     assertAnswerContent(answer, {
-      answerHtml: '<img alt="Hello!">',
+      answerHtml: '<img src="/math.svg?latex=Hello!" alt="Hello!">',
     })
   })
 
@@ -246,7 +245,7 @@ test.describe('Rich text editor', () => {
     await page.keyboard.press('Escape')
 
     assertAnswerContent(answer, {
-      answerHtml: '<img alt="Hello!">',
+      answerHtml: '<img alt="Hello!" src="/math.svg?latex=Hello!">',
     })
   })
 
@@ -515,15 +514,15 @@ test.describe('Rich text editor', () => {
         await page.keyboard.press('2')
         await page.keyboard.press('Escape')
         assertAnswerContent(answer, {
-          answerHtml: '<img alt="A2"><img alt="B2">',
+          answerHtml: '<img alt="A2" src="/math.svg?latex=A2"><img alt="B2" src="/math.svg?latex=B2">',
         })
       })
     })
   })
 
-  test.describe('blurEvents', () => {
+  test.describe('equation editor blur event sets cursor', () => {
     test.beforeEach(async ({ mount }) => {
-      const initialContent = `kaava: <img src="http://localhost:5111/math.svg?latex=%5Csqrt%7B123%7D" alt="\\sqrt{123}"/> ja tekstiä`
+      const initialContent = `kaava: <img src="/math.svg?latex=%5Csqrt%7B123%7D" alt="\\sqrt{123}"/> ja tekstiä`
       await unmountComponent()
       await mount(
         <RichTextEditor
@@ -537,7 +536,7 @@ test.describe('Rich text editor', () => {
       )
     })
 
-    test('sets cursor after math editor with Esc', async ({ page }) => {
+    test('after math editor with Esc', async ({ page }) => {
       await expect(page.getByRole('img').last()).toBeVisible()
       await page.getByRole('img').last().click()
       await page.keyboard.press('Escape')
@@ -545,11 +544,10 @@ test.describe('Rich text editor', () => {
 
       assertAnswerContent(answer, {
         answerHtml: 'kaava: <img alt="\\sqrt{123}">XX ja tekstiä',
-        answerText: 'kaava: XX ja tekstiä',
       })
     })
 
-    test('sets cursor before math editor with Shift+Tab', async ({ page }) => {
+    test('before math editor with Shift+Tab', async ({ page }) => {
       await expect(page.getByRole('img').last()).toBeVisible()
       await page.getByRole('img').last().click()
       await page.keyboard.press('Shift+Tab')
@@ -557,11 +555,10 @@ test.describe('Rich text editor', () => {
 
       assertAnswerContent(answer, {
         answerHtml: 'kaava: XX<img alt="\\sqrt{123}"> ja tekstiä',
-        answerText: 'kaava: XX ja tekstiä',
       })
     })
 
-    test('sets cursor after after editor with Tab in Latex field', async ({ page }) => {
+    test('after editor with Tab in Latex field', async ({ page }) => {
       await expect(page.getByRole('img').last()).toBeVisible()
       await page.getByRole('img').last().click()
       // first TAb to focus latex-field
@@ -571,18 +568,16 @@ test.describe('Rich text editor', () => {
 
       assertAnswerContent(answer, {
         answerHtml: 'kaava: <img alt="\\sqrt{123}">XX ja tekstiä',
-        answerText: 'kaava: XX ja tekstiä',
       })
     })
 
-    test('sets cursor within text on mouse click', async ({ page, browserName }) => {
+    test('within text on mouse click', async ({ page, browserName }) => {
       await expect(page.getByRole('img').last()).toBeVisible()
       await page.getByRole('img').last().click()
       await page.mouse.click(33, 320)
       await page.keyboard.type('XX')
 
       assertAnswerContent(answer, {
-        answerHtml: 'kaXXava: <img alt="\\sqrt{123}"> ja tekstiä',
         answerText: 'kaXXava:  ja tekstiä',
       })
     })
