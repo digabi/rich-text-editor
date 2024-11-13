@@ -18,19 +18,16 @@ export type Answer = {
 export const getAnswer = (html: string) => {
   const answerHtml = sanitize(html)
   const answer = new DOMParser().parseFromString(answerHtml, 'text/html').body
-  const answerText = new DOMParser().parseFromString(answerHtml.replaceAll('<br />', '\n'), 'text/html').body.innerText
+  const answerText = Array.from(answer.childNodes)
+    .map((node) => {
+      if (node.nodeName === 'BR') return '\n'
+      return node.textContent
+    })
+    .join('')
 
   const screenshots = answer.querySelectorAll(':scope > img:not([src*="/math.svg?"])')
 
   const equationCount = answer.querySelectorAll('span.math-editor-wrapper').length
-
-  // Remove equation wrappers
-  answer.querySelectorAll('span.math-editor-wrapper').forEach((wrapper) => {
-    const img = wrapper.querySelector('img')
-    if (img) {
-      wrapper.replaceWith(img)
-    }
-  })
 
   const isEmpty = answerText?.trim().length === 0 && screenshots.length === 0 && equationCount > 0
 
