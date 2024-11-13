@@ -55,7 +55,6 @@ export const getRedoButton = (page: Page) => page.getByTestId('redo')
 
 export const setClipboardText = async (page: Page, text: string) => {
   await page.evaluate(async (text) => {
-    console.log(text)
     await navigator.clipboard.writeText(text)
   }, text)
 }

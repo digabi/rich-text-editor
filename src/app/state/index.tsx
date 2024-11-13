@@ -209,15 +209,23 @@ export function EditorStateProvider({
   }
 
   function spawnMathEditorInNewLine(afterElement: Element) {
-    const mathImage = createMathImage()
+    // Find the closest div. This is necessary because the browser sometimes wraps lines in <div>s automatically,
+    // so we don't know whether the parent is the main text area or a random div inserted by the browser.
+    const parent = afterElement.closest('div')
 
+    const mathImage = createMathImage()
     const newStub = createMathStub(getNextKey(), false, mathImage)
     const nextSibling = afterElement.nextSibling
 
-    mainTextAreaRef.current?.insertBefore(document.createElement('br'), nextSibling)
-    mainTextAreaRef.current?.insertBefore(mathImage, nextSibling)
-    mainTextAreaRef.current?.insertBefore(newStub, nextSibling)
-    spawnMathEditor(newStub, mathImage, { onLatexUpdate: onLatexUpdate(mathImage) })
+    // Ensure mainTextAreaRef exists before inserting
+    if (parent) {
+      parent.insertBefore(document.createElement('br'), nextSibling)
+      parent.insertBefore(mathImage, nextSibling)
+      parent.insertBefore(newStub, nextSibling)
+      spawnMathEditor(newStub, mathImage, { onLatexUpdate: onLatexUpdate(mathImage) })
+    } else {
+      console.error('parent element not found for math editor')
+    }
   }
 
   function initMathImages() {

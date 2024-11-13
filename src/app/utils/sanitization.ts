@@ -25,7 +25,6 @@ export function sanitize(html: string, opts?: sanitizeHtml.IOptions) {
 }
 
 function convertLinksToRelative(html: string) {
-  console.log(html, document.location.origin)
   return html.replace(new RegExp(document.location.origin, 'g'), '')
 }
 
