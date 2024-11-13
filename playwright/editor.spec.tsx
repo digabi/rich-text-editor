@@ -213,7 +213,7 @@ test.describe('Rich text editor', () => {
       await page.keyboard.type(`${i}`)
       await page.keyboard.press('Enter')
     })
-    await page.keyboard.press('Escape')
+    await getEditorLocator(page).click()
     await selectAll(page)
     await page.keyboard.press('Backspace')
     await page.keyboard.press('Control+e')
@@ -382,7 +382,8 @@ test.describe('Rich text editor', () => {
       })
     })
 
-    test('math editor gets focus when opened with Ctrl+e', async ({ page }) => {
+    test('math editor gets focus when opened with Ctrl+e', async ({ page, browserName }) => {
+      test.fixme(browserName === 'chromium', 'focus events do not work correctly in Chromium tests as of writing this')
       await page.keyboard.press('Escape')
       await expect(page.getByTestId('equation-editor')).not.toBeVisible()
       await page.keyboard.press('Control+e')
@@ -391,7 +392,9 @@ test.describe('Rich text editor', () => {
 
     test('math editor gets focus when opened with Ctrl+E (case insensitive keyboard event handling)', async ({
       page,
+      browserName,
     }) => {
+      test.fixme(browserName === 'chromium', 'focus events do not work correctly in Chromium tests as of writing this')
       await page.keyboard.press('Escape')
       await expect(page.getByTestId('equation-editor')).not.toBeVisible()
       await page.keyboard.press('Control+E')
