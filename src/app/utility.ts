@@ -1,3 +1,4 @@
+import { Attributes } from 'sanitize-html'
 import { sanitize } from './utils/sanitization'
 
 export const eventHandlerWithoutFocusLoss = (fn?: () => void) => (e: React.MouseEvent) => {
@@ -84,7 +85,14 @@ export type Answer = {
 }
 
 export const getAnswer = (html: string) => {
-  const answerHtml = sanitize(html)
+  const answerHtml = sanitize(html, {
+    transformTags: {
+      img: (tagName: string, attribs: Attributes) =>
+        attribs.src ? { tagName, attribs } : { tagName: '', attribs: {} },
+      span: (tagName: string, attribs: Attributes) =>
+        attribs.class !== 'math-editor-wrapper' ? { tagName, attribs } : { tagName: '', attribs: {} },
+    },
+  })
   const answer = new DOMParser().parseFromString(answerHtml, 'text/html').body
   const answerText = Array.from(answer.childNodes)
     .map((node) => {
