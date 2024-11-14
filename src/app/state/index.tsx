@@ -151,7 +151,7 @@ export function EditorStateProvider({
       setIsMathToolbarOpen(false)
 
       equationEditorHistory.clear()
-      onAnswerChange()
+      onAnswerChange(true, true)
 
       if (forceCursorPosition) {
         setCursorAroundElement(stub, forceCursorPosition)
@@ -173,7 +173,10 @@ export function EditorStateProvider({
     }
 
     function onEnter() {
-      if (image) spawnMathEditorInNewLine(image)
+      onBlur()
+      if (image) {
+        spawnMathEditorInNewLine(image)
+      }
     }
 
     const portal = createPortal(
@@ -260,9 +263,13 @@ export function EditorStateProvider({
     }
   }
 
-  const updateAnswerHistory = debounce((content: string) => mainTextAreaHistory.write(content), 500)
+  const updateAnswerHistoryDebounced = debounce((content: string) => mainTextAreaHistory.write(content), 500)
 
-  function onAnswerChange(shouldUpdateHistory = true) {
+  /**
+   * @param shouldUpdateHistory - Whether to update the answer history (defaults to true)
+   * @param shouldUpdateHistoryImmediately - Whether to update the answer history immediately, without debouncing (defaults to false)
+   */
+  function onAnswerChange(shouldUpdateHistory: boolean = true, shouldUpdateHistoryImmediately: boolean = false) {
     /** This 0ms timeout is crucial - it essentially moves the callback into the next event loop,
      * after pending DOM changes have been made in the current loop (in practice,
      * this is needed because closing a math editor changes the HTML of the answer,
@@ -272,9 +279,15 @@ export function EditorStateProvider({
     const fn = () => {
       const content = mainTextAreaRef.current?.innerHTML
       if (content) {
-        onValueChange(getAnswer(content))
+        const answer = getAnswer(content)
+        onValueChange(answer)
+
         if (shouldUpdateHistory) {
-          updateAnswerHistory(content)
+          if (shouldUpdateHistoryImmediately) {
+            mainTextAreaHistory.write(answer.answerHtml)
+          } else {
+            updateAnswerHistoryDebounced(answer.answerHtml)
+          }
         }
       }
     }

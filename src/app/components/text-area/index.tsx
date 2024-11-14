@@ -53,8 +53,6 @@ const MainTextArea = forwardRef<RichTextEditorHandle, TextAreaProps>((props, ref
       return
     }
 
-    console.debug(`replacing editor content with "${newValue}"`)
-
     if (editor.ref.current && newValue !== oldValue) {
       const savedCursorPosition = getCursorPosition(editor.ref.current)
       editor.ref.current.innerHTML = newValue
@@ -146,17 +144,17 @@ const MainTextArea = forwardRef<RichTextEditorHandle, TextAreaProps>((props, ref
         onBlur={onBlur}
         onFocus={editor.showToolbar}
         onInput={(e) => {
-          /*
           const inputType = (e.nativeEvent as InputEvent).inputType
-          console.log(inputType)
           if (inputType === 'historyUndo') {
             historyHandler(editor.undoEditor)()
+            e.preventDefault()
+            e.stopPropagation()
           } else if (inputType === 'historyRedo') {
             historyHandler(editor.redoEditor)()
+            e.preventDefault()
+            e.stopPropagation()
           }
-          e.preventDefault()
-          e.stopPropagation()
-          */
+
           editor.onAnswerChange()
         }}
         onKeyDown={(e) => {

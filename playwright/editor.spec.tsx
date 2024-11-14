@@ -28,6 +28,7 @@ import {
 import RichTextEditor from '../src/app'
 import { Answer } from '../src/app/utility'
 import fi from '../src/FI'
+import { Page } from '@playwright/test'
 
 test.describe('Rich text editor', () => {
   let answer: Answer = { answerHtml: '', answerText: '', imageCount: 0 }
@@ -45,7 +46,7 @@ test.describe('Rich text editor', () => {
         onValueChange={onAnswerChange}
         allowedFileTypes={['image/png', 'image/jpeg']}
         initialValue=""
-        textAreaProps={{ editorStyle: { marginTop: '300px' } }}
+        textAreaProps={{ editorStyle: { marginTop: '300px', minHeight: '200px' } }}
       />,
     )
     unmountComponent = unmount
@@ -268,6 +269,100 @@ test.describe('Rich text editor', () => {
         await inputLatexCommandFromToolbar(page, specialCharacters.sqrt[0])
         await page.keyboard.press('Escape')
         await expect(page.getByTestId('math-toolbar')).not.toBeVisible()
+      })
+    })
+  })
+
+  test.describe('Editor history', () => {
+    const historyTimeout = 550 // History updates have a 500ms debounce
+    const writeAndWaitForTimeout = async (page: Page, text: string) => {
+      await page.keyboard.type(text)
+      await page.waitForTimeout(historyTimeout)
+    }
+
+    test.beforeEach(async ({ page }) => {
+      const editor = getEditorLocator(page)
+      await editor.click()
+    })
+
+    test('can undo and redo changes', async ({ page, browserName }) => {
+      await test.step('Ctrl+Z undoes changes', async () => {
+        await writeAndWaitForTimeout(page, 'aa')
+        assertAnswerContent(answer, { answerText: 'aa' })
+        await writeAndWaitForTimeout(page, 'bb')
+        assertAnswerContent(answer, { answerText: 'aabb' })
+        await page.keyboard.press('Control+z')
+        assertAnswerContent(answer, { answerText: 'aa' })
+      })
+
+      await test.step('undo at earlies change does nothing', async () => {
+        await page.keyboard.press('Control+z')
+        assertAnswerContent(answer, { answerText: '' })
+        await page.keyboard.press('Control+z')
+        assertAnswerContent(answer, { answerText: '' })
+      })
+
+      await test.step('Ctrl+Y redoes changes', async () => {
+        await page.keyboard.press('Control+y')
+        assertAnswerContent(answer, { answerText: 'aa' })
+        await page.keyboard.press('Control+y')
+        assertAnswerContent(answer, { answerText: 'aabb' })
+      })
+
+      await test.step('typing clears changes', async () => {
+        await page.keyboard.press('Control+z')
+        assertAnswerContent(answer, { answerText: 'aa' })
+        await page.keyboard.press('Control+z')
+        assertAnswerContent(answer, { answerText: '' })
+        await writeAndWaitForTimeout(page, 'cc')
+        assertAnswerContent(answer, { answerText: 'cc' })
+      })
+
+      await test.step('redo at latest change does nothing', async () => {
+        await page.keyboard.press('Control+y')
+        assertAnswerContent(answer, { answerText: 'cc' })
+      })
+
+      await test.step('equations can be undone', async () => {
+        await page.keyboard.press('Control+e')
+        await page.keyboard.type('xxx')
+        //await page.keyboard.press('Escape')
+        await getEditorLocator(page).click()
+        assertAnswerContent(answer, { answerHtml: `cc${getLatexImgTag('xxx')}` })
+        await page.waitForTimeout(historyTimeout)
+        await page.keyboard.press('Control+z')
+        assertAnswerContent(answer, { answerHtml: 'cc' })
+      })
+
+      await test.step('equations can be redone', async () => {
+        await page.keyboard.press('Control+y')
+        assertAnswerContent(answer, { answerHtml: `cc${getLatexImgTag('xxx')}` })
+        await getEditorLocator(page).getByRole('img').click()
+        await page.keyboard.type('yyy')
+        await page.keyboard.press('Escape')
+        assertAnswerContent(answer, { answerHtml: `cc${getLatexImgTag('xxxyyy')}` })
+      })
+
+      await test.step('pasting images can be undone', async () => {
+        test.fixme(browserName === 'firefox', 'image paste not working on firefox')
+        await page.waitForTimeout(historyTimeout)
+        await page.keyboard.press('Control+z')
+        await page.keyboard.press('Control+z')
+        assertAnswerContent(answer, { answerHtml: 'cc' })
+        await getEditorLocator(page).click()
+        await page.keyboard.type('halooooooo')
+        await setClipboardImage(page, 'image/png', samplePNG)
+        await paste(page)
+        await expect(getEditorLocator(page).getByRole('img')).toBeVisible()
+        await page.waitForTimeout(historyTimeout)
+        await page.keyboard.press('Control+z')
+        await expect(getEditorLocator(page).getByRole('img')).not.toBeVisible()
+      })
+
+      await test.step('pasting images can be redone', async () => {
+        test.fixme(browserName === 'firefox', 'image paste not working on firefox')
+        await page.keyboard.press('Control+y')
+        await expect(getEditorLocator(page).getByRole('img')).toBeVisible()
       })
     })
   })

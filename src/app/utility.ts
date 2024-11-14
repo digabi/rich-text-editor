@@ -48,21 +48,27 @@ export function getCursorPosition(container: HTMLElement): CursorPosition | null
 }
 
 export function restoreCursorPosition(container: HTMLElement, savedPosition: CursorPosition | null): void {
-  if (!savedPosition) return
-
   const range = document.createRange()
-  let currentNode: Node | null = container
+  try {
+    if (!savedPosition) return
 
-  for (const index of savedPosition.path) {
-    if (!currentNode || !(currentNode.childNodes[index] instanceof Node)) return
-    currentNode = currentNode.childNodes[index]
+    let currentNode: Node | null = container
+
+    for (const index of savedPosition.path) {
+      if (!currentNode || !(currentNode.childNodes[index] instanceof Node)) return
+      currentNode = currentNode.childNodes[index]
+    }
+
+    const maxOffset = currentNode?.textContent?.length ?? 0
+    const safeOffset = Math.min(savedPosition.offset, maxOffset)
+
+    range.setStart(currentNode, safeOffset)
+    range.collapse(true)
+  } catch (e) {
+    console.log(e)
+    range.selectNodeContents(container)
+    range.collapse(false)
   }
-
-  const maxOffset = currentNode?.textContent?.length ?? 0
-  const safeOffset = Math.min(savedPosition.offset, maxOffset)
-
-  range.setStart(currentNode, safeOffset)
-  range.collapse(true)
 
   const selection = window.getSelection()
   if (selection) {

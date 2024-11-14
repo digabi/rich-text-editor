@@ -14,8 +14,8 @@
           ariaLabelledBy: 'question-label',
           questionId: '123',
           editorStyle: {},
-          lang: 'fi-FI'
-        }
+          lang: 'fi-FI',
+        },
       }
 
       window.addRichTextEditor = () => {
@@ -29,11 +29,29 @@
         window.makeRichText({
           ...baseOpts,
           container: container,
+          baseUrl: 'http://localhost:5111',
+          initialValue:
+            'testi. <br>kaava: &nbsp;<span class="math-editor-wrapper" id="math-editor-1" style="display: contents;" contenteditable="false"><img src="data:image/svg+xml;utf8," data-math-svg="true" data-latex="\\sqrt{123}" alt="\\sqrt{123}"></span>&nbsp;<br> <br>&nbsp;',
+          textAreaProps: {
+            ariaLabelledBy: 'question-label',
+            questionId: '123',
+            editorStyle: {},
+            lang: 'fi-FI',
+          },
         })
       }
 
-      window.addEventListener('DOMContentLoaded', function() {
-        window.makeRichText(baseOpts)
+      window.addEventListener('DOMContentLoaded', function () {
+        window.makeRichText({
+          baseUrl: 'http://localhost:5111',
+          initialValue: '', //'testi. <br>kaava: &nbsp;<span class="math-editor-wrapper" id="math-editor-1" style="display: contents;" contenteditable="false"><img src="data:image/svg+xml;utf8," data-math-svg="true" data-latex="\\sqrt{123}" alt="\\sqrt{123}"></span>&nbsp;<br> <br>&nbsp;',
+          textAreaProps: {
+            ariaLabelledBy: 'question-label',
+            questionId: '123',
+            editorStyle: {},
+            lang: 'fi-FI',
+          },
+        })
       })
     </script>
   </head>
