@@ -200,10 +200,16 @@ export function EditorStateProvider({
   }
 
   function onMathImageClick(img: Element, e: Event) {
+    const parent = img.parentElement
     e.stopPropagation()
     e.preventDefault()
     const stub = createMathStub(getNextKey())
-    mainTextAreaRef.current?.insertBefore(stub, img.nextSibling)
+
+    if (parent) {
+      parent.insertBefore(stub, img.nextSibling)
+    } else {
+      mainTextAreaRef.current?.appendChild(stub)
+    }
 
     spawnMathEditor(stub, img, { initialLatex: img.getAttribute('alt'), onLatexUpdate: onLatexUpdate(img) })
   }
