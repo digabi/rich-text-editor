@@ -146,15 +146,22 @@ export function EditorStateProvider({
       setIsMathToolbarOpen(true)
     }
 
-    function onBlur(forceCursorPosition?: 'before' | 'after') {
+    function onBlur(latex: string, forceCursorPosition?: 'before' | 'after') {
+      equationEditorHistory.clear()
+
       setActiveMathEditor(null)
       setIsMathToolbarOpen(false)
 
-      equationEditorHistory.clear()
       onAnswerChange(true, true)
 
       if (forceCursorPosition) {
         setCursorAroundElement(stub, forceCursorPosition)
+      }
+
+      const stubElement = stub as HTMLElement
+      stubElement.remove()
+      if (!latex) {
+        image.remove()
       }
     }
 
@@ -162,21 +169,11 @@ export function EditorStateProvider({
       equationEditorHistory.write(latex)
     }
 
-    function onEditorRemoved(latex: string) {
-      setMathEditorPortal(null)
-      const stubElement = stub as HTMLElement
-      stubElement.remove()
-      if (!latex) {
-        image.remove()
-      }
-      equationEditorHistory.clear()
-    }
-
-    function onEnter() {
-      onBlur()
+    function onEnter(latex: string) {
       if (image) {
         spawnMathEditorInNewLine(image)
       }
+      onBlur(latex)
     }
 
     const portal = createPortal(
@@ -184,7 +181,6 @@ export function EditorStateProvider({
         onOpen={onOpen}
         onBlur={onBlur}
         onChange={onChange}
-        onEditorRemoved={onEditorRemoved}
         onEnter={onEnter}
         errorText={t.editor.render_error}
         {...props}

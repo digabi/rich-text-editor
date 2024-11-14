@@ -15,11 +15,10 @@ export type Props = {
   errorText: string
   onOpen?: (handle: MathEditorHandle) => void
   initialLatex?: string | null
-  onBlur?: (forceCursorPosition?: 'before' | 'after') => void
+  onBlur?: (latex: string, forceCursorPosition?: 'before' | 'after') => void
   onChange?: (latex: string) => void
   onLatexUpdate?: (latex: string) => void
-  onEditorRemoved?: (latex: string) => void
-  onEnter: () => void
+  onEnter: (latex: string) => void
 }
 
 const Error = styled.span`
@@ -107,13 +106,12 @@ export default function MathEditor(props: Props) {
     e.preventDefault()
     // Don't trigger close event if clicked another element inside MathEditor
     if (e.target && !containerRef?.current?.contains(e.relatedTarget as Node)) {
-      props.onEditorRemoved?.(latex)
       close()
     }
   }
 
   function close(forceCursorPosition?: 'before' | 'after') {
-    props.onBlur?.(forceCursorPosition)
+    props.onBlur?.(latex, forceCursorPosition)
   }
 
   return (
@@ -134,7 +132,7 @@ export default function MathEditor(props: Props) {
             } else if (e.key === 'Enter' && containerRef.current) {
               e.preventDefault()
               e.stopPropagation()
-              props.onEnter()
+              props.onEnter(latex)
             }
           }}
         />

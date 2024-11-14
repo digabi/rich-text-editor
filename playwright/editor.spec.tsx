@@ -338,6 +338,7 @@ test.describe('Rich text editor', () => {
         await page.keyboard.press('Control+y')
         assertAnswerContent(answer, { answerHtml: `cc${getLatexImgTag('xxx')}` })
         await getEditorLocator(page).getByRole('img').click()
+        await page.waitForTimeout(historyTimeout)
         await page.keyboard.type('yyy')
         await page.keyboard.press('Escape')
         assertAnswerContent(answer, { answerHtml: `cc${getLatexImgTag('xxxyyy')}` })
@@ -345,12 +346,11 @@ test.describe('Rich text editor', () => {
 
       await test.step('pasting images can be undone', async () => {
         test.fixme(browserName === 'firefox', 'image paste not working on firefox')
+        await getEditorLocator(page).click()
         await page.waitForTimeout(historyTimeout)
         await page.keyboard.press('Control+z')
         await page.keyboard.press('Control+z')
         assertAnswerContent(answer, { answerHtml: 'cc' })
-        await getEditorLocator(page).click()
-        await page.keyboard.type('halooooooo')
         await setClipboardImage(page, 'image/png', samplePNG)
         await paste(page)
         await expect(getEditorLocator(page).getByRole('img')).toBeVisible()
