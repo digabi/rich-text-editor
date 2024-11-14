@@ -478,6 +478,17 @@ test.describe('Rich text editor', () => {
       })
     })
 
+    test('redo when on latest change does nothing', async ({ page }) => {
+      await page.keyboard.press('1')
+      await page.keyboard.press('2')
+      await assertEquationEditorLatexContent(page.getByTestId('equation-editor'), '12')
+      await page.keyboard.press('Control+z')
+      await assertEquationEditorLatexContent(page.getByTestId('equation-editor'), '1')
+      await page.keyboard.press('Control+y')
+      await page.keyboard.press('Control+y')
+      await assertEquationEditorLatexContent(page.getByTestId('equation-editor'), '12')
+    })
+
     test('math editor gets focus when opened with Ctrl+e', async ({ page, browserName }) => {
       test.fixme(browserName === 'chromium', 'focus events do not work correctly in Chromium tests as of writing this')
       await page.keyboard.press('Escape')

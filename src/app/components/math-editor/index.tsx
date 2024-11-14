@@ -67,9 +67,9 @@ export default function MathEditor(props: Props) {
 
   const historyHandler = (fn: typeof undoEquation | typeof redoEquation) => () => {
     const oldValue = latex
-    const newValue = fn() ?? ''
+    const newValue = fn()
 
-    if (newValue !== latex) {
+    if (newValue !== undefined && newValue !== latex) {
       onChange(oldValue, newValue)
     }
   }
