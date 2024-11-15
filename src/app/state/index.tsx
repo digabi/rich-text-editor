@@ -256,7 +256,7 @@ export function EditorStateProvider({
           const mathImage = createMathImage()
           const src = oldImage.getAttribute('src')
           if (src) {
-            const { origin, pathname, search } = new URL(src, baseUrl ?? document.location)
+            const { origin, pathname, search } = new URL(src, baseUrl || document.location.toString())
             if (origin !== baseUrl) {
               mathImage.setAttribute('src', `${baseUrl}${pathname}${search}`)
             } else {
