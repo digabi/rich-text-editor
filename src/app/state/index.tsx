@@ -3,30 +3,22 @@ import { Container } from 'react-dom/client'
 
 import useHistory from './history'
 import useMap, { MapHookHandle } from '../hooks/use-map'
-import useMutationObserver from '../hooks/use-mutation-observer'
 
 import MathEditor, { MathEditorHandle, Props as MathEditorProps } from '../components/math-editor'
-import { createMathStub, MATH_EDITOR_CLASS } from '../utils/create-math-stub'
+import { createMathStub } from '../utils/create-math-stub'
 
 import FI from '../../FI'
 import SV from '../../SV'
 import { createPortal } from 'react-dom'
-import { getAnswer, nbsp } from '../utility'
+import { getAnswer } from '../utility'
 import { RichTextEditorProps } from '../index'
 
 export type EditorState = {
   /** Ref to the main text-area (which is a `contenteditable` `<div />`) */
   ref: React.RefObject<HTMLDivElement>
 
-  /** An ES6 `Map` of DOM `Node`s to the React `Portal`s mounted in them */
-  mathEditorPortals: MapHookHandle<Node, ReactPortal>
+  mathEditorPortal: [portalRoot: Node, portal: ReactPortal] | null
 
-  /**
-   * Spawns a new Math/LaTeX editing box at the given node.
-   * The created React `Root` will be associated with the given node in the
-   * {@link EditorState.mathEditorPortals} Map.
-   */
-  spawnMathEditor(stub: Container): void
   spawnMathEditorAtCursor(): void
   spawnMathEditorInNewLine(afterElement: Element): void
 
@@ -53,7 +45,7 @@ export type EditorState = {
    * Finds all math-editor boxes in the text area and makes them interactive.
    * Should be called after e.g. pasting in new content.
    */
-  initMathEditors: () => void
+  initMathImages: () => void
 
   t: typeof FI
 
@@ -128,26 +120,13 @@ export function EditorStateProvider({
    * */
   const forceToolbarsOpen = new URL(window.location.href).searchParams.get('forceToolbars') ?? '0'
 
-  const mathEditorPortals = useMap<Node, ReactPortal>()
+  const [mathEditorPortal, setMathEditorPortal] = useState<[portalRoot: Node, portal: ReactPortal] | null>(null)
   const history = useHistory()
   const mainTextAreaRef = useRef<HTMLDivElement>(null)
 
   const t = { FI, SV }[language]
 
-  // When a MathEditor's container element is removed,
-  // we need to also remove the ReactPortal it was rendered in.
-  // This is done by removing the portal from the map, as this means it will no
-  // longer be rendered.
-  useMutationObserver(mainTextAreaRef, function removeDanglingPortals(muts) {
-    muts
-      .flatMap((m) => Array.from(m.removedNodes))
-      .filter((node) => mathEditorPortals.has(node))
-      .forEach((node) => {
-        mathEditorPortals.delete(node)
-      })
-  })
-
-  function spawnMathEditor(stub: Container, props?: Partial<MathEditorProps>) {
+  function spawnMathEditor(stub: Container, image: Element, props?: Partial<MathEditorProps>) {
     // This is called both on the creation of the component and each time the equation is opened after that
     function onOpen(handle: MathEditorHandle) {
       history.clear()
@@ -172,20 +151,18 @@ export function EditorStateProvider({
       history.write(latex)
     }
 
-    function onEditorRemoved() {
-      mathEditorPortals.delete(stub)
+    function onEditorRemoved(latex: string) {
+      setMathEditorPortal(null)
       const stubElement = stub as HTMLElement
-
-      // Clean up the non-breaking spaces we put on both sides of the wrapper
-      if (stubElement.previousSibling?.textContent === nbsp) {
-        stubElement.previousSibling.remove()
-      }
-      if (stubElement.nextSibling?.textContent === nbsp) {
-        stubElement.nextSibling.remove()
-      }
-
       stubElement.remove()
+      if (!latex) {
+        image.remove()
+      }
       history.clear()
+    }
+
+    function onEnter() {
+      if (image) spawnMathEditorInNewLine(image)
     }
 
     const portal = createPortal(
@@ -194,67 +171,81 @@ export function EditorStateProvider({
         onBlur={onBlur}
         onChange={onChange}
         onEditorRemoved={onEditorRemoved}
+        onEnter={onEnter}
         errorText={t.editor.render_error}
         {...props}
       />,
       stub,
     )
-    mathEditorPortals.set(stub, portal)
+    setMathEditorPortal([stub, portal])
+  }
+
+  const onLatexUpdate = (img: Element) => (latex: string) => {
+    img.setAttribute('src', `${baseUrl}/math.svg?latex=${encodeURIComponent(latex)}`)
+    img.setAttribute('alt', latex)
+  }
+
+  function onMathImageClick(img: Element, e: Event) {
+    e.stopPropagation()
+    e.preventDefault()
+    const stub = createMathStub(getNextKey())
+    mainTextAreaRef.current?.insertBefore(stub, img.nextSibling)
+
+    spawnMathEditor(stub, img, { initialLatex: img.getAttribute('alt'), onLatexUpdate: onLatexUpdate(img) })
+  }
+
+  function createMathImage() {
+    const mathImage = document.createElement('img')
+    mathImage.addEventListener('click', (e) => onMathImageClick(mathImage, e))
+    mathImage.setAttribute('initialized', '')
+    return mathImage
   }
 
   function spawnMathEditorAtCursor() {
-    spawnMathEditor(createMathStub(getNextKey(), true), { initialOpen: true })
+    const mathImage = createMathImage()
+    spawnMathEditor(createMathStub(getNextKey(), true, mathImage), mathImage, {
+      onLatexUpdate: onLatexUpdate(mathImage),
+    })
   }
 
   function spawnMathEditorInNewLine(afterElement: Element) {
-    const wrapper = afterElement.closest(`.${MATH_EDITOR_CLASS}`)
-    const newStub = createMathStub(getNextKey(), false)
-    const nextSibling = wrapper?.nextSibling
+    // Find the closest div. This is necessary because the browser sometimes wraps lines in <div>s automatically,
+    // so we don't know whether the parent is the main text area or a random div inserted by the browser.
+    const parent = afterElement.closest('div')
 
-    if (nextSibling) {
-      mainTextAreaRef.current?.insertBefore(newStub, nextSibling)
-      mainTextAreaRef.current?.insertBefore(document.createElement('br'), newStub)
+    const mathImage = createMathImage()
+    const newStub = createMathStub(getNextKey(), false, mathImage)
+    const nextSibling = afterElement.nextSibling
+
+    // Ensure mainTextAreaRef exists before inserting
+    if (parent) {
+      parent.insertBefore(document.createElement('br'), nextSibling)
+      parent.insertBefore(mathImage, nextSibling)
+      parent.insertBefore(newStub, nextSibling)
+      spawnMathEditor(newStub, mathImage, { onLatexUpdate: onLatexUpdate(mathImage) })
     } else {
-      mainTextAreaRef.current?.appendChild(document.createElement('br'))
-      mainTextAreaRef.current?.appendChild(newStub)
+      console.error('parent element not found for math editor')
     }
-
-    spawnMathEditor(newStub, { initialOpen: true })
   }
 
-  function initMathEditors() {
-    if (!mainTextAreaRef.current) return
-
-    // These are existing and copy-pasted math editors
-    const mathEditors = Array.from(mainTextAreaRef.current.querySelectorAll(`span.${MATH_EDITOR_CLASS}`))
-    // These are math images copied from cheat, 'marked' to be replaced with math editors
-    const mathImages = Array.from(mainTextAreaRef.current.querySelectorAll('img[src*="/math.svg?"]'))
-
-    const allBoxes = ([] as [elementToInit: Element, initialLatex: string][])
-      .concat(
-        mathEditors
-          .filter((elem) => !mathEditorPortals.has(elem) && elem.querySelector('img')?.alt)
-          .map((elem) => [elem, elem.querySelector('img')!.alt]),
+  function initMathImages() {
+    if (mainTextAreaRef.current) {
+      Array.from(mainTextAreaRef.current.querySelectorAll('img[src*="/math.svg?"][alt]:not([initialized])')).forEach(
+        (oldImage) => {
+          const mathImage = createMathImage()
+          const src = oldImage.getAttribute('src')
+          if (src) {
+            const { origin, pathname, search } = new URL(src)
+            if (origin !== baseUrl) {
+              mathImage.setAttribute('src', `${baseUrl}${pathname}${search}`)
+            } else {
+              mathImage.setAttribute('src', src)
+            }
+          }
+          mathImage.setAttribute('alt', oldImage.getAttribute('alt') ?? '')
+          oldImage.replaceWith(mathImage)
+        },
       )
-      .concat(
-        mathImages
-          .filter(
-            (elem) =>
-              !mathEditorPortals.has(elem) &&
-              elem instanceof HTMLImageElement &&
-              elem.alt &&
-              // This is important! We need to make sure we don't include images that are already in wrapper,
-              // as they are already handled by the previous list - including them here as well results in components
-              // being nested inside each other in the DOM, and very obscure crashes when they are removed from the answer.
-              elem.closest(`span.${MATH_EDITOR_CLASS}`) === null,
-          )
-          .map((elem) => [elem, (elem as HTMLImageElement).alt]),
-      )
-
-    for (const [box, initialLatex] of allBoxes) {
-      const stub = createMathStub(getNextKey())
-      box.replaceWith(stub)
-      spawnMathEditor(stub, { initialLatex })
     }
   }
 
@@ -281,7 +272,7 @@ export function EditorStateProvider({
         mainTextAreaRef.current.innerHTML = initialValue
       }
       setTimeout(() => {
-        initMathEditors()
+        initMathImages()
         setHasBeenInitialized(true)
       }, 0)
     }
@@ -308,12 +299,11 @@ export function EditorStateProvider({
 
         ref: mainTextAreaRef,
 
-        mathEditorPortals: mathEditorPortals,
+        mathEditorPortal: mathEditorPortal,
 
-        spawnMathEditor: spawnMathEditor,
         spawnMathEditorAtCursor: spawnMathEditorAtCursor,
         spawnMathEditorInNewLine: spawnMathEditorInNewLine,
-        initMathEditors,
+        initMathImages,
 
         canUndo: history.canUndo,
         canRedo: history.canRedo,

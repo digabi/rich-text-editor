@@ -1,4 +1,4 @@
-import { sanitizeForExport } from './utils/sanitization'
+import { sanitize } from './utils/sanitization'
 
 export const eventHandlerWithoutFocusLoss = (fn?: () => void) => (e: React.MouseEvent) => {
   if (fn) {
@@ -9,36 +9,25 @@ export const eventHandlerWithoutFocusLoss = (fn?: () => void) => (e: React.Mouse
   return false
 }
 
-export const nbsp = '\u00A0'
-export const isRemoveMutation = (mut: MutationRecord) => mut.removedNodes.length > 0
-export const isAddMutation = (mut: MutationRecord) => mut.addedNodes.length > 0
-export const isTextNode = (node: Node | null) => node && node.nodeType === Node.TEXT_NODE
-export const isBr = (node: Node | null) => node && node.nodeName === 'BR'
-
 export type Answer = {
   answerHtml: string
   answerText: string
   imageCount: number
 }
 
-// TODO: Finishing touches, make sure this is cross compatible with the old version
 export const getAnswer = (html: string) => {
-  const answerHtml = sanitizeForExport(html)
+  const answerHtml = sanitize(html)
   const answer = new DOMParser().parseFromString(answerHtml, 'text/html').body
-  const answerText = new DOMParser().parseFromString(answerHtml.replaceAll('<br />', '\n'), 'text/html').body.innerText
+  const answerText = Array.from(answer.childNodes)
+    .map((node) => {
+      if (node.nodeName === 'BR') return '\n'
+      return node.textContent
+    })
+    .join('')
 
-  // All images that are direct children of the answer are "screenshots"
-  const screenshots = answer.querySelectorAll(':scope > img:not([data-math-svg])')
+  const screenshots = answer.querySelectorAll(':scope > img:not([src*="/math.svg?"])')
 
   const equationCount = answer.querySelectorAll('span.math-editor-wrapper').length
-
-  // Remove equation wrappers
-  answer.querySelectorAll('span.math-editor-wrapper').forEach((wrapper) => {
-    const img = wrapper.querySelector('img')
-    if (img) {
-      wrapper.replaceWith(img)
-    }
-  })
 
   const isEmpty = answerText?.trim().length === 0 && screenshots.length === 0 && equationCount > 0
 

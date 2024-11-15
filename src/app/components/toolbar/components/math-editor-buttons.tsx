@@ -16,7 +16,7 @@ export default function MathEditorButtons() {
     if (activeMathEditor?.mq.el().contains(document.activeElement)) {
       /** Different inputs need to be given to MathQuill differently.
        * Something about inputting a 'LaTeX command' rather than straight text.
-       * TODO: Better comment for this */
+       */
       activeMathEditor.mq[shortcut.fn ?? 'cmd'](shortcut.action)
     } else {
       window.document.execCommand('insertText', false, shortcut.label)

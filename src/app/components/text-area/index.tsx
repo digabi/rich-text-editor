@@ -2,16 +2,11 @@ import { ClipboardEvent, FocusEvent, forwardRef, Fragment, useImperativeHandle }
 import { createPortal } from 'react-dom'
 import styled from 'styled-components'
 import classNames from 'classnames/dedupe' // Removes duplicates in class list
-
 import useEditorState from '../../state'
 
 import Toolbar from '../toolbar'
 import { HelpDialog } from '../help-dialog'
 import { sanitize } from '../../utils/sanitization'
-import { isAddMutation, isBr, isRemoveMutation, isTextNode, nbsp } from '../../utility'
-import { useKeyboardEventListener } from '../../hooks/use-keyboard-events'
-import useMutationObserver from '../../hooks/use-mutation-observer'
-import { MATH_EDITOR_CLASS } from '../../utils/create-math-stub'
 import { RichTextEditorHandle } from '../..'
 
 export type TextAreaProps = {
@@ -36,87 +31,13 @@ const MainTextArea = forwardRef<RichTextEditorHandle, TextAreaProps>((props, ref
       }
 
       setTimeout(() => {
-        editor.initMathEditors()
+        editor.initMathImages()
         setTimeout(() => {
           editor.onAnswerChange()
         }, 0)
       }, 0)
     },
   }))
-
-  /**
-   * This is hacky, but necessary. If a wrapper does not have text on both sides,
-   * the user cannot place their cursor there
-   */
-  useMutationObserver(editor.ref, (muts) => {
-    const editorElement = editor.ref.current
-    if (!editorElement) return
-
-    if (!isTextNode(editorElement.firstChild)) {
-      editorElement.insertBefore(document.createTextNode(nbsp), editorElement.firstChild)
-    }
-    if (!isTextNode(editorElement.lastChild)) {
-      editorElement.appendChild(document.createTextNode(nbsp))
-    }
-
-    // Iterate through each math editor, as the space around them is the most important and fragile
-    editor.ref.current?.querySelectorAll(`.${MATH_EDITOR_CLASS}`)?.forEach((wrapper) => {
-      const next = wrapper.nextSibling
-      const prev = wrapper.previousSibling
-
-      /*
-       * Without special handling, the browser will add line breaks on line's it considers empty.
-       * This includes lines with only a math editor and no white space - this leads to weird behaviour,
-       * like an extra line break being added when the user tries to remove white space before an editor.
-       * We work around that by detecting such mutations, and then removing the line breaks.
-       */
-      const removedTextNodesBetweenBrAndWrapper = muts.filter(
-        (mut) =>
-          isRemoveMutation(mut) &&
-          isTextNode(mut.removedNodes[0]) &&
-          mut.nextSibling === wrapper &&
-          isBr(mut.previousSibling),
-      )
-
-      const addedBrBeforeWrapper = muts.find(
-        (mut) => isAddMutation(mut) && mut.nextSibling === wrapper && isBr(mut.previousSibling),
-      )
-
-      if (
-        removedTextNodesBetweenBrAndWrapper.length > 0 &&
-        removedTextNodesBetweenBrAndWrapper[0].previousSibling &&
-        addedBrBeforeWrapper
-      ) {
-        editor.ref.current?.removeChild(removedTextNodesBetweenBrAndWrapper[0].previousSibling)
-        editor.ref.current?.removeChild(addedBrBeforeWrapper.addedNodes[0])
-      }
-
-      /*
-       * The user can't place their cursor in positions without editable content.
-       * Since the math editors and their wrappers are not editable,
-       * we make sure there's always a text node on both sides of every editor.
-       */
-      if (!isTextNode(prev)) {
-        wrapper.parentNode?.insertBefore(document.createTextNode(nbsp), wrapper)
-      }
-
-      if (!isTextNode(next)) {
-        wrapper.parentNode?.insertBefore(document.createTextNode(nbsp), wrapper.nextSibling)
-      }
-
-      /* Chrome fix: when deleting whitespace after math editor, the cursor stays in place. Move it to the left side of
-       * the deleted whitespace, which was re-added in the previous if-statement. This part runs on the next mutationObserver
-       * invocation after the previous if-statement. */
-      if (wrapper === muts[0].previousSibling && muts[0]?.addedNodes[0]?.textContent === nbsp) {
-        const selection = window.getSelection()
-        const range = document.createRange()
-        range.setStartBefore(muts[0]?.addedNodes[0])
-        range.collapse(true)
-        selection?.removeAllRanges()
-        selection?.addRange(range)
-      }
-    })
-  })
 
   async function onPaste(e: ClipboardEvent) {
     e.preventDefault()
@@ -141,7 +62,6 @@ const MainTextArea = forwardRef<RichTextEditorHandle, TextAreaProps>((props, ref
         console.error(e)
       }
     } else if (html) {
-      // TODO: Are img urls handled correctly?
       document.execCommand('insertHTML', false, sanitize(html))
     } else if (text) {
       document.execCommand('insertHTML', false, text)
@@ -152,7 +72,7 @@ const MainTextArea = forwardRef<RichTextEditorHandle, TextAreaProps>((props, ref
      * the innerHtml of the text field has already been updated
      */
     setTimeout(() => {
-      editor.initMathEditors()
+      editor.initMathImages()
       setTimeout(() => {
         editor.onAnswerChange()
       }, 0)
@@ -186,17 +106,7 @@ const MainTextArea = forwardRef<RichTextEditorHandle, TextAreaProps>((props, ref
         onFocus={editor.showToolbar}
         onInput={() => editor.onAnswerChange()}
         onKeyDown={(e) => {
-          if (e.key === 'Enter') {
-            /** We need to capture Enter presses and handle them manually. Otherwise, browsers may do weird things that interfere with our
-             *  React tomfoolery, leading to behaviours like equations getting deleted if the user enters
-             *  a line break on the same line as an Equation
-             */
-            if (!editor.activeMathEditor) {
-              e.preventDefault()
-              e.stopPropagation()
-              document.execCommand('insertHTML', false, '<br>')
-            }
-          } else if (e.key.toLowerCase() === 'e' && e.ctrlKey) {
+          if (e.key.toLowerCase() === 'e' && e.ctrlKey) {
             e.preventDefault()
             e.stopPropagation()
             editor.spawnMathEditorAtCursor()
@@ -208,13 +118,7 @@ const MainTextArea = forwardRef<RichTextEditorHandle, TextAreaProps>((props, ref
         role="textbox"
       />
 
-      {
-        // NOTE: Be careful to not mess up the keys here, as that will definitively
-        // result in the editor behaving in weird and confusing ways
-        Array.from(editor.mathEditorPortals.raw).map(([node, portal]) => (
-          <Fragment key={(node as Element).id}>{portal}</Fragment>
-        ))
-      }
+      {editor.mathEditorPortal !== null ? <Fragment>{editor.mathEditorPortal[1]}</Fragment> : null}
     </>
   )
 })

@@ -44,8 +44,8 @@ const Container = styled.div`
 `
 
 const Button = styled.button`
-  width: 35px; // TODO: Move this to a constant
-  height: 35px; // TODO: Move this to a constant
+  width: 35px;
+  height: 35px;
 
   cursor: pointer;
 

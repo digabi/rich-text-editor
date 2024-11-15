@@ -3,57 +3,23 @@ import sanitizeHtml from 'sanitize-html'
 const sanitizeOpts = {
   allowedTags: ['img', 'br', 'span'],
   allowedAttributes: {
-    img: ['src', 'alt', 'data-math-svg'],
-    span: ['class'],
+    img: ['src', 'alt'],
   },
   allowedSchemes: ['data'],
-  allowedClasses: {
-    span: ['math-editor-wrapper'],
-  },
-  transformTags: {
-    img: (tagName: string, attribs: sanitizeHtml.Attributes) => ({
-      tagName,
-      attribs: attribs.src?.includes('math.svg') ? { ...attribs, 'data-math-svg': 'true' } : attribs,
-    }),
-    span: (tagName: string, attribs: sanitizeHtml.Attributes) =>
-      attribs.class === 'math-editor-wrapper' ? { tagName, attribs } : { tagName: '', attribs: { text: '' } },
-  },
 }
 
 export function sanitize(html: string, opts?: sanitizeHtml.IOptions) {
   return (
     [
-      (v) => convertLinksToRelative(v),
       (v) =>
         sanitizeHtml(v, {
           ...sanitizeOpts,
           allowedTags: [...sanitizeOpts.allowedTags, 'div', 'p'],
           allowedSchemes: ['data', 'http', 'https'],
-        }),
-      (v) => stripBlockElements(v),
-      (v) =>
-        sanitizeHtml(v, {
-          ...sanitizeOpts,
           ...opts,
         }),
-    ] as Array<(html: string) => string>
-  ).reduce((value, fn) => fn(value), html)
-}
-
-export function sanitizeForExport(html: string) {
-  return (
-    [
-      (v) =>
-        sanitize(v, {
-          ...sanitizeOpts,
-          transformTags: {
-            // if the span is a math editor wrapper, we just take the image out of it and remove the wrapper
-            span: (tagName: string, attribs: sanitizeHtml.Attributes) =>
-              attribs.class === 'math-editor-wrapper' ? { tagName: '', attribs: {} } : { tagName, attribs },
-          },
-        }),
-      (v) => v.trim(),
-      (v) => v.replace(/&nbsp;/g, ''),
+      (v) => convertLinksToRelative(v),
+      (v) => stripBlockElements(v),
     ] as Array<(html: string) => string>
   ).reduce((value, fn) => fn(value), html)
 }
@@ -66,7 +32,6 @@ function isBlockElement(node: Node) {
   return node.nodeName === 'DIV' || node.nodeName === 'P'
 }
 
-// TODO: Change this to e.g. a DFS-algorithm or a html-sanitize transformTags rule
 // This is copied pretty much as-is from the legacy jQuery version;
 // it's difficult to say *what exactly* it does but it attempts to
 // change block-elements (namely `div` and `p`) into `br`s.

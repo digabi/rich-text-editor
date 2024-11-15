@@ -55,7 +55,6 @@ export const getRedoButton = (page: Page) => page.getByTestId('redo')
 
 export const setClipboardText = async (page: Page, text: string) => {
   await page.evaluate(async (text) => {
-    console.log(text)
     await navigator.clipboard.writeText(text)
   }, text)
 }
@@ -165,3 +164,6 @@ export const specialCharacters = {
   cos: ['\\cos'],
   sqrt: ['\\sqrt'],
 }
+
+export const getLatexImgTag = (latex: string) =>
+  `<img src="http://localhost:5111/math.svg?latex=${encodeURIComponent(latex)}" alt="${latex}">`

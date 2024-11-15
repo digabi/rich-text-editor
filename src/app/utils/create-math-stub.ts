@@ -1,6 +1,3 @@
-import MathEditor from '../components/math-editor'
-import { nbsp } from '../utility'
-
 export const MATH_EDITOR_CLASS = 'math-editor-wrapper'
 
 /**
@@ -14,7 +11,7 @@ export const MATH_EDITOR_CLASS = 'math-editor-wrapper'
  * in the document. It is the caller's responsibility to check if the current
  * cursor position/selection is legal.
  */
-export function createMathStub(id: string | number, atSelection = false) {
+export function createMathStub(id: string | number, atSelection = false, img?: Element) {
   const stub = document.createElement('span')
   // attribute order matters for playwright test. Chrome and Firefox give html content in different (alphabetic) orders
   stub.className = MATH_EDITOR_CLASS
@@ -29,16 +26,13 @@ export function createMathStub(id: string | number, atSelection = false) {
     const range = selection.getRangeAt(0)
     range.deleteContents()
     range.insertNode(stub)
+    if (img) range.insertNode(img)
 
     // If the new equation would be created inside another equations wrapper, move it outside of it
     const parent = stub.parentNode as Element
     if (parent.className === MATH_EDITOR_CLASS) {
       parent.insertAdjacentElement(stub.nextSibling ? 'beforebegin' : 'afterend', stub)
     }
-
-    // Non-breaking spaces before and after the LaTeX block
-    stub.insertAdjacentText('beforebegin', nbsp)
-    stub.insertAdjacentText('afterend', nbsp)
 
     selection.removeAllRanges()
     range.setStartAfter(stub)
