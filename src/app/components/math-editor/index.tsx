@@ -41,21 +41,6 @@ const MathEditorElement = styled.div`
   width: 100%;
   z-index: 1;
   border-top: 3px solid #caedff;
-
-  &::after {
-    content: '';
-    position: absolute;
-    width: 0;
-    height: 0;
-    border-left: 10px solid transparent;
-    border-right: 10px solid transparent;
-    border-bottom: 10px solid #caedff;
-    top: -10px;
-    left: var(--arrow-position);
-    transform: translateX(-100%);
-    z-index: -1;
-    transition: left 0.1s ease;
-  }
 `
 
 const MathEditorEquationField = styled.div`

@@ -139,23 +139,12 @@ export function EditorStateProvider({
   const t = { FI, SV }[language]
 
   function spawnMathEditor(stub: HTMLElement, image: HTMLImageElement, props?: Partial<MathEditorProps>) {
-    function updateIndicatorPosition() {
-      const imageRect = image.getBoundingClientRect()
-      const boxRect = stub.getBoundingClientRect()
-      const imageCenter = imageRect.left + imageRect.width / 2
-      const boxLeft = boxRect.left
-      const relativePosition = imageCenter - boxLeft
-      // Set arrow position using CSS custom property
-      stub.style.setProperty('--arrow-position', `${relativePosition}px`)
-    }
-
     // This is called both on the creation of the component and each time the equation is opened after that
     function onOpen(handle: MathEditorHandle) {
       equationEditorHistory.clear()
       setActiveMathEditor(handle)
       setIsToolbarOpen(true)
       setIsMathToolbarOpen(true)
-      updateIndicatorPosition()
       image.classList.add('active')
     }
 
@@ -181,7 +170,6 @@ export function EditorStateProvider({
 
     function onChange(latex: string) {
       equationEditorHistory.write(latex)
-      updateIndicatorPosition()
     }
 
     function onEnter(latex: string) {
@@ -268,7 +256,7 @@ export function EditorStateProvider({
           const mathImage = createMathImage()
           const src = oldImage.getAttribute('src')
           if (src) {
-            const { origin, pathname, search } = new URL(src)
+            const { origin, pathname, search } = new URL(src, baseUrl ?? document.location)
             if (origin !== baseUrl) {
               mathImage.setAttribute('src', `${baseUrl}${pathname}${search}`)
             } else {
