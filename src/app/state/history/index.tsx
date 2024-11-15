@@ -48,7 +48,6 @@ export default function useHistory() {
 
     setStack(newStack)
     setPointer(newStack.length - 1)
-    logStackDebugInfo('write')
   }
 
   const undo = () => {
@@ -57,7 +56,6 @@ export default function useHistory() {
     const newValue = stackRef.current.at(newPointer)
 
     setPointer(newPointer)
-    logStackDebugInfo('undo')
     return newValue
   }
 
@@ -67,7 +65,6 @@ export default function useHistory() {
     const newValue = stackRef.current.at(newPointer)
 
     setPointer(newPointer)
-    logStackDebugInfo('redo')
     return newValue
   }
 
