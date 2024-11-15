@@ -47,7 +47,7 @@ export default function ButtonGroup({ cols, chars, isExpanded, span = 1 }: Props
 }
 
 const Container = styled.div<{ cols: number; span: number }>`
-  width: ${(props) => props.cols * 35}px; // TODO: Move this to a constant
+  width: ${(props) => props.cols * 35}px;
   grid-column: auto / span ${(props) => props.span};
 
   display: inline-grid;
@@ -57,8 +57,8 @@ const Container = styled.div<{ cols: number; span: number }>`
 const Button = styled.button`
   position: relative;
 
-  width: 35px; // TODO: Move this to a constant
-  height: 35px; // TODO: Move this to a constant
+  width: 35px;
+  height: 35px;
 
   background: none;
   border: none;

@@ -32,7 +32,7 @@ const Container = styled.div`
 `
 
 const Button = styled.button`
-  height: 35px; // TODO: Move this to a constant
+  height: 35px;
 
   padding: 5px 10px;
   background: none;

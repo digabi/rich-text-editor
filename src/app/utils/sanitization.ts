@@ -32,7 +32,6 @@ function isBlockElement(node: Node) {
   return node.nodeName === 'DIV' || node.nodeName === 'P'
 }
 
-// TODO: Change this to e.g. a DFS-algorithm or a html-sanitize transformTags rule
 // This is copied pretty much as-is from the legacy jQuery version;
 // it's difficult to say *what exactly* it does but it attempts to
 // change block-elements (namely `div` and `p`) into `br`s.

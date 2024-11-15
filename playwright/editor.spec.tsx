@@ -333,7 +333,7 @@ test.describe('Rich text editor', () => {
         await assertEditorHTMLContent(editor, `H${img}ld!`)
 
         assertAnswerContent(answer, {
-          answerHtml: `H${img}ld!`, //TODO: Does not work, not important
+          answerHtml: `H${img}ld!`,
           answerText: 'Hld!',
           imageCount: 1,
         })

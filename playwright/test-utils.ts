@@ -165,7 +165,5 @@ export const specialCharacters = {
   sqrt: ['\\sqrt'],
 }
 
-// TODO: This needs a bit of further inspection to make sure it works as expected
-// i.e. should the src be relative?
 export const getLatexImgTag = (latex: string) =>
   `<img src="http://localhost:5111/math.svg?latex=${encodeURIComponent(latex)}" alt="${latex}">`

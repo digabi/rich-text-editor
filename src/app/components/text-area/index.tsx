@@ -62,7 +62,6 @@ const MainTextArea = forwardRef<RichTextEditorHandle, TextAreaProps>((props, ref
         console.error(e)
       }
     } else if (html) {
-      // TODO: Are img urls handled correctly?
       document.execCommand('insertHTML', false, sanitize(html))
     } else if (text) {
       document.execCommand('insertHTML', false, text)
@@ -119,11 +118,7 @@ const MainTextArea = forwardRef<RichTextEditorHandle, TextAreaProps>((props, ref
         role="textbox"
       />
 
-      {
-        // NOTE: Be careful to not mess up the keys here, as that will definitively
-        // result in the editor behaving in weird and confusing ways
-        editor.mathEditorPortal !== null ? <Fragment>{editor.mathEditorPortal[1]}</Fragment> : null
-      }
+      {editor.mathEditorPortal !== null ? <Fragment>{editor.mathEditorPortal[1]}</Fragment> : null}
     </>
   )
 })
