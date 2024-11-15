@@ -93,6 +93,7 @@ const defaultPasteSource = (file: File): Promise<string> =>
   })
 
 const setCursorAroundElement = (element: Container, position: 'before' | 'after' = 'after') => {
+  console.log({ position })
   const selection = window.getSelection()
   const range = document.createRange()
   if (position === 'before') {
@@ -137,13 +138,25 @@ export function EditorStateProvider({
 
   const t = { FI, SV }[language]
 
-  function spawnMathEditor(stub: Container, image: Element, props?: Partial<MathEditorProps>) {
+  function spawnMathEditor(stub: HTMLElement, image: HTMLImageElement, props?: Partial<MathEditorProps>) {
+    function updateIndicatorPosition() {
+      const imageRect = image.getBoundingClientRect()
+      const boxRect = stub.getBoundingClientRect()
+      const imageCenter = imageRect.left + imageRect.width / 2
+      const boxLeft = boxRect.left
+      const relativePosition = imageCenter - boxLeft
+      // Set arrow position using CSS custom property
+      stub.style.setProperty('--arrow-position', `${relativePosition}px`)
+    }
+
     // This is called both on the creation of the component and each time the equation is opened after that
     function onOpen(handle: MathEditorHandle) {
       equationEditorHistory.clear()
       setActiveMathEditor(handle)
       setIsToolbarOpen(true)
       setIsMathToolbarOpen(true)
+      updateIndicatorPosition()
+      image.classList.add('active')
     }
 
     function onBlur(latex: string, forceCursorPosition?: 'before' | 'after') {
@@ -157,8 +170,9 @@ export function EditorStateProvider({
       if (forceCursorPosition) {
         setCursorAroundElement(stub, forceCursorPosition)
       }
+      image.classList.remove('active')
 
-      const stubElement = stub as HTMLElement
+      const stubElement = stub
       stubElement.remove()
       if (!latex) {
         image.remove()
@@ -167,6 +181,7 @@ export function EditorStateProvider({
 
     function onChange(latex: string) {
       equationEditorHistory.write(latex)
+      updateIndicatorPosition()
     }
 
     function onEnter(latex: string) {
@@ -190,12 +205,12 @@ export function EditorStateProvider({
     setMathEditorPortal([stub, portal])
   }
 
-  const onLatexUpdate = (img: Element) => (latex: string) => {
+  const onLatexUpdate = (img: HTMLImageElement) => (latex: string) => {
     img.setAttribute('src', `${baseUrl}/math.svg?latex=${encodeURIComponent(latex)}`)
     img.setAttribute('alt', latex)
   }
 
-  function onMathImageClick(img: Element, e: Event) {
+  function onMathImageClick(img: HTMLImageElement, e: Event) {
     const parent = img.parentElement
     e.stopPropagation()
     e.preventDefault()
@@ -214,6 +229,8 @@ export function EditorStateProvider({
     const mathImage = document.createElement('img')
     mathImage.addEventListener('click', (e) => onMathImageClick(mathImage, e))
     mathImage.setAttribute('initialized', '')
+    mathImage.setAttribute('src', '') // Browsers add a border to images without a source attribute
+    mathImage.classList.add('equation')
     return mathImage
   }
 

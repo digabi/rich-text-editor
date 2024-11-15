@@ -220,8 +220,19 @@ const Box = styled.div`
     z-index: 2;
   }
 
-  &:focus > span > img {
+  & img.equation {
+    min-height: 20px;
+    min-width: 20px;
+    box-shadow: none;
+  }
+
+  &:focus img.equation {
     background-color: #edf9ff;
+  }
+
+  & img.equation.active {
+    border: 2px solid #caedff;
+    border-radius: 3px;
   }
 `
 

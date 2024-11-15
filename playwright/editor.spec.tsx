@@ -531,7 +531,7 @@ test.describe('Rich text editor', () => {
       test.fixme(browserName === 'chromium', 'blur on Esc not working on Chromium in test, works in real browser')
       await page.keyboard.press('A')
       await page.keyboard.press('Escape')
-      await expect(getEditorLocator(page).locator('img')).toBeVisible()
+      await expect(page.getByTestId('equation-editor')).not.toBeVisible()
 
       await test.step(' and places cursor after equation image', async () => {
         await page.keyboard.press('B')
