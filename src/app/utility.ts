@@ -66,7 +66,6 @@ export function restoreCursorPosition(container: HTMLElement, savedPosition: Cur
     range.setStart(currentNode, safeOffset)
     range.collapse(true)
   } catch (e) {
-    console.log(e)
     range.selectNodeContents(container)
     range.collapse(false)
   }

@@ -93,7 +93,6 @@ const defaultPasteSource = (file: File): Promise<string> =>
   })
 
 const setCursorAroundElement = (element: Container, position: 'before' | 'after' = 'after') => {
-  console.log({ position })
   const selection = window.getSelection()
   const range = document.createRange()
   if (position === 'before') {

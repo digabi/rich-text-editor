@@ -21,18 +21,6 @@ export default function useHistory() {
   const stackRef = useRef(stack)
   const pointerRef = useRef(pointer)
 
-  // TODO: Remove this debug helper before merge
-  const logStackDebugInfo = (sourceAction: string) => {
-    console.debug(
-      [
-        sourceAction,
-        'Undo stack state:',
-        ...stackRef.current.map((x, i) => (i === pointerRef.current ? `> ${x}` : `  ${x}`)),
-        `\nStack length: ${stackRef.current.length},\nPointer at: ${pointerRef.current}`,
-      ].join('\n'),
-    )
-  }
-
   const setStack = (newStack: string[]) => {
     stackRef.current = newStack
     _setStack(newStack)
