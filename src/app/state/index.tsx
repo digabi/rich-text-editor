@@ -284,7 +284,7 @@ export function EditorStateProvider({
      */
     const fn = () => {
       const content = mainTextAreaRef.current?.innerHTML
-      if (content) {
+      if (content !== undefined) {
         const answer = getAnswer(content)
         onValueChange(answer)
 
