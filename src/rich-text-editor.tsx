@@ -11,7 +11,7 @@ const defaultProps: MakeRichTextProps = {
 export const makeRichText = (props: MakeRichTextProps) => {
   const ref = createRef<RichTextEditorHandle>()
 
-  const { container, initialValue, baseUrl, language, editorStyle, allowedFileTypes, textAreaProps } = {
+  const { container, initialValue, baseUrl, language, editorStyle, allowedFileTypes, textAreaProps, onValueChange } = {
     ...defaultProps,
     ...props,
   }
@@ -20,7 +20,7 @@ export const makeRichText = (props: MakeRichTextProps) => {
       ref={ref}
       language={language}
       editorStyle={editorStyle}
-      onValueChange={() => {}}
+      onValueChange={onValueChange}
       initialValue={initialValue}
       baseUrl={baseUrl}
       allowedFileTypes={allowedFileTypes}
