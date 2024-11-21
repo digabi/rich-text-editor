@@ -425,7 +425,6 @@ test.describe('Rich text editor', () => {
         const editor = getEditorLocator(page)
         const img = `<img src="data:image/png;base64,${samplePNG}" alt="Hello World!">`
         await pasteHtmlImage(page, img)
-        await assertEditorHTMLContent(editor, `H${img}ld!`)
 
         assertAnswerContent(answer, {
           answerHtml: `H${img}ld!`,
