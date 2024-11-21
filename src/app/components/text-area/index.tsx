@@ -194,8 +194,6 @@ const Box = styled.div`
   min-height: 100px;
   padding: 5px;
   font: 17px Times New Roman;
-  white-space: pre;
-  text-wrap: wrap;
 
   & img {
     padding: 5px;
