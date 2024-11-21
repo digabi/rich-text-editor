@@ -85,7 +85,7 @@ export default function MathEditor(props: Props) {
     props.onLatexUpdate?.(newValue)
   }
 
-  const { ref: latexRef, isError, mq } = useMathQuill({ latex, onChange })
+  const { ref: latexRef, isError, mq } = useMathQuill({ latex, onChange, onEnter: props.onEnter })
 
   useEffect(
     function signalOpenedMathEditor() {
@@ -130,10 +130,6 @@ export default function MathEditor(props: Props) {
               e.preventDefault()
               e.stopPropagation()
               close('after')
-            } else if (e.key === 'Enter' && containerRef.current) {
-              e.preventDefault()
-              e.stopPropagation()
-              props.onEnter(latex)
             }
           }}
         />
