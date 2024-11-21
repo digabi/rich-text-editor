@@ -6,11 +6,11 @@ This will give you time to develop your systems to accommodate to the new versio
 
 [![Node.js CI](https://github.com/digabi/rich-text-editor/actions/workflows/ci.yml/badge.svg)](https://github.com/digabi/rich-text-editor/actions/workflows/ci.yml)
 
-[![Abitti.dev](https://abitti.dev/images/abittidev_logo.svg)](https://abitti.dev/)
+[![Abitti.net](https://abitti.net/images/abittidev_logo.svg)](https://abitti.net/)
 
-[Abitti.dev](https://abitti.dev)
+[Abitti.net](https://abitti.net)
 
-[Use of Abitti Trademark policy](https://abitti.dev/abitti-trademark.html)
+[Use of Abitti Trademark policy](https://abitti.net/abitti-trademark.html)
 
 Rich text editor with math support for Finnish Matriculation Examination Board.
 Live demo can be found at [https://math-demo.abitti.fi/](https://math-demo.abitti.fi/)
