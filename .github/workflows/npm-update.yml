@@ -17,6 +17,6 @@ jobs:
           npm update --save
           git config user.name npm-update
           git config user.email npm-update@ylioppilastutkinto.fi
-          git add package-lock.json
+          git add package.json package-lock.json
           git commit -m "Update npm dependencies" || echo "No changes to commit"
           git push
