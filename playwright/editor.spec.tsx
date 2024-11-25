@@ -265,11 +265,21 @@ test.describe('Rich text editor', () => {
         await expect(page.getByTestId('math-toolbar')).toBeVisible()
       })
 
-      await test.step('hides math commands when math editor closes', async () => {
+      await test.step('hides math commands when math editor closes via Esc press', async () => {
         await inputLatexCommandFromToolbar(page, specialCharacters.sqrt[0])
         await page.keyboard.press('Escape')
         await expect(page.getByTestId('math-toolbar')).not.toBeVisible()
       })
+    })
+
+    test('closes both bars when user clicks outside editor text area when equation editor is open', async ({
+      page,
+    }) => {
+      await page.keyboard.press('Control+e')
+      await page.keyboard.type('123')
+      await clickOutsideEditor(page)
+      await expect(page.getByTestId('toolbar')).not.toBeVisible()
+      await expect(page.getByTestId('math-toolbar')).not.toBeVisible()
     })
   })
 

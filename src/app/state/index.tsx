@@ -152,6 +152,7 @@ export function EditorStateProvider({
 
       setActiveMathEditor(null)
       setIsMathToolbarOpen(false)
+      setIsToolbarOpen(false)
 
       onAnswerChange(true, true)
 
