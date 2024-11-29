@@ -110,8 +110,9 @@ const MainTextArea = forwardRef<RichTextEditorHandle, TextAreaProps>((props, ref
         const img = document.createElement('img')
         img.src = src
         document.execCommand('insertHTML', false, sanitize(img.outerHTML))
-      } catch (e) {
-        console.error(e)
+      } catch (error) {
+        console.error('Error while pasting a file', error)
+        return
       }
     } else if (html) {
       document.execCommand('insertHTML', false, sanitize(html))
