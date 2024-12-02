@@ -2,7 +2,6 @@ import { createContext, PropsWithChildren, ReactPortal, useContext, useEffect, u
 import { Container } from 'react-dom/client'
 
 import useHistory from './history'
-import useMap, { MapHookHandle } from '../hooks/use-map'
 
 import MathEditor, { MathEditorHandle, Props as MathEditorProps } from '../components/math-editor'
 import { createMathStub } from '../utils/create-math-stub'

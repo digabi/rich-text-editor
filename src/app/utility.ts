@@ -1,5 +1,6 @@
 import { Attributes } from 'sanitize-html'
 import { sanitize } from './utils/sanitization'
+import { MATH_EDITOR_CLASS } from './utils/create-math-stub'
 
 export const eventHandlerWithoutFocusLoss = (fn?: () => void) => (e: React.MouseEvent) => {
   if (fn) {
@@ -89,7 +90,7 @@ export const getAnswer = (html: string) => {
       img: (tagName: string, attribs: Attributes) =>
         attribs.src ? { tagName, attribs } : { tagName: '', attribs: {} },
       span: (tagName: string, attribs: Attributes) =>
-        attribs.class !== 'math-editor-wrapper' ? { tagName, attribs } : { tagName: '', attribs: {} },
+        attribs.class !== MATH_EDITOR_CLASS ? { tagName, attribs } : { tagName: '', attribs: {} },
     },
   })
   const answer = new DOMParser().parseFromString(answerHtml, 'text/html').body
