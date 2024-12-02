@@ -169,6 +169,7 @@ export function EditorStateProvider({
 
     function onChange(latex: string) {
       equationEditorHistory.write(latex)
+      onAnswerChange(false, false)
     }
 
     function onEnter(latex: string) {
@@ -276,12 +277,6 @@ export function EditorStateProvider({
    * @param shouldUpdateHistoryImmediately - Whether to update the answer history immediately, without debouncing (defaults to false)
    */
   function onAnswerChange(shouldUpdateHistory: boolean = true, shouldUpdateHistoryImmediately: boolean = false) {
-    /** This 0ms timeout is crucial - it essentially moves the callback into the next event loop,
-     * after pending DOM changes have been made in the current loop (in practice,
-     * this is needed because closing a math editor changes the HTML of the answer,
-     * but doesn't trigger the text area's onInput event. With this hack we can get the answer HTML with
-     * the changes already included.)
-     */
     const fn = () => {
       const content = mainTextAreaRef.current?.innerHTML
       if (content !== undefined) {
@@ -297,6 +292,12 @@ export function EditorStateProvider({
         }
       }
     }
+    /** This 0ms timeout is crucial - it essentially moves the callback into the next event loop,
+     * after pending DOM changes have been made in the current loop (in practice,
+     * this is needed because closing a math editor changes the HTML of the answer,
+     * but doesn't trigger the text area's onInput event. With this hack we can get the answer HTML with
+     * the changes already included.)
+     */
     setTimeout(fn, 0)
   }
 
