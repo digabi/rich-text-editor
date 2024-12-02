@@ -100,16 +100,15 @@ export const getAnswer = (html: string) => {
     })
     .join('')
 
-  const screenshots = answer.querySelectorAll(':scope > img:not([src*="/math.svg?"])')
+  const screenshotCount = answer.querySelectorAll(':scope > img:not([src*="/math.svg?"])').length
+  const equationCount = answer.querySelectorAll(':scope > img[src*="/math.svg?"]').length
 
-  const equationCount = answer.querySelectorAll('span.math-editor-wrapper').length
-
-  const isEmpty = answerText?.trim().length === 0 && screenshots.length === 0 && equationCount > 0
+  const isEmpty = answerText?.trim().length === 0 && screenshotCount === 0 && equationCount === 0
 
   return {
     answerHtml: isEmpty ? '' : stripBrsAndTrimFromEnd(answerHtml),
     answerText: stripNewLinesFromStartAndWhiteSpacesFromEnd(answerText ?? ''),
-    imageCount: screenshots.length,
+    imageCount: screenshotCount,
   }
 }
 
