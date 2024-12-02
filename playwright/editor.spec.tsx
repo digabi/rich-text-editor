@@ -615,10 +615,38 @@ test.describe('Rich text editor', () => {
       assertAnswerContent(answer, { answerHtml: getLatexImgTag('1') })
       await page.keyboard.press('2')
       assertAnswerContent(answer, { answerHtml: getLatexImgTag('12') })
-      await page.keyboard.press('Control+z')
-      assertAnswerContent(answer, { answerHtml: getLatexImgTag('1') })
-      await page.keyboard.press('Escape')
-      assertAnswerContent(answer, { answerHtml: getLatexImgTag('1') })
+
+      await test.step('updates on undo', async () => {
+        await page.keyboard.press('Control+z')
+        assertAnswerContent(answer, { answerHtml: getLatexImgTag('1') })
+      })
+
+      await test.step('updates with long text', async () => {
+        await page.keyboard.type('testing that this works when there is a lot of text as well')
+        assertAnswerContent(answer, {
+          answerHtml: getLatexImgTag(
+            '1testing\\ that\\ this\\ works\\ when\\ there\\ is\\ a\\ lot\\ of\\ text\\ as\\ well',
+          ),
+        })
+        await selectAll(page)
+        await page.keyboard.press('Backspace')
+        assertAnswerContent(answer, { answerHtml: getLatexImgTag('') })
+      })
+
+      await test.step('updates when latex command is inserted', async () => {
+        await inputLatexCommandFromToolbar(page, specialCharacters.sqrt[0])
+        assertAnswerContent(answer, { answerHtml: getLatexImgTag('\\sqrt{ }') })
+        await page.keyboard.type('123')
+        assertAnswerContent(answer, { answerHtml: getLatexImgTag('\\sqrt{123}') })
+      })
+
+      await test.step('updates when re-opnening an equation', async () => {
+        await page.keyboard.press('Escape')
+        assertAnswerContent(answer, { answerHtml: getLatexImgTag('\\sqrt{123}') })
+        await getEditorLocator(page).getByRole('img').first().click()
+        await page.keyboard.type('abc')
+        assertAnswerContent(answer, { answerHtml: getLatexImgTag('\\sqrt{123}abc') })
+      })
     })
 
     test.describe('when multiple equation editors in answer', () => {
