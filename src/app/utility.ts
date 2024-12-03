@@ -89,9 +89,8 @@ export const getAnswer = (html: string) => {
     transformTags: {
       img: (tagName: string, attribs: Attributes) =>
         attribs.src ? { tagName, attribs } : { tagName: '', attribs: {} },
-      span: (tagName: string, attribs: Attributes) =>
-        attribs.class !== MATH_EDITOR_CLASS ? { tagName, attribs } : { tagName: '', attribs: {} },
     },
+    exclusiveFilter: (frame) => frame.tag === 'span' && frame.attribs?.class === MATH_EDITOR_CLASS,
   })
   const answer = new DOMParser().parseFromString(answerHtml, 'text/html').body
   const answerText = Array.from(answer.childNodes)
