@@ -136,6 +136,16 @@ export function EditorStateProvider({
 
   const t = { FI, SV }[language]
 
+  /* Sometimes blur events cause multiple onBlur calls (at least in Chrome). Removing elements can then
+   * cause uncaught errors, which require no actions to be taken.*/
+  function safeRemove(e?: HTMLElement) {
+    try {
+      e?.remove()
+    } catch (_) {
+      /* No action needed.*/
+    }
+  }
+
   function spawnMathEditor(stub: HTMLElement, image: HTMLImageElement, props?: Partial<MathEditorProps>) {
     // This is called both on the creation of the component and each time the equation is opened after that
     function onOpen(handle: MathEditorHandle) {
@@ -160,10 +170,9 @@ export function EditorStateProvider({
       }
       image.classList.remove('active')
 
-      const stubElement = stub
-      stubElement.remove()
+      safeRemove(stub)
       if (!latex) {
-        image.remove()
+        safeRemove(image)
       }
     }
 
