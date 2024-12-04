@@ -166,7 +166,7 @@ export function EditorStateProvider({
       onAnswerChange(true, true)
 
       if (forceCursorPosition) {
-        setCursorAroundElement(stub, forceCursorPosition)
+        setCursorAroundElement(image, forceCursorPosition)
       }
       image.classList.remove('active')
 
