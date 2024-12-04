@@ -168,12 +168,11 @@ export function EditorStateProvider({
       if (forceCursorPosition) {
         setCursorAroundElement(image, forceCursorPosition)
       }
-      image.classList.remove('active')
 
       safeRemove(stub)
       if (!latex) {
         safeRemove(image)
-      }
+      } else image.classList.remove('active')
     }
 
     function onChange(latex: string) {
