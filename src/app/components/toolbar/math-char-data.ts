@@ -66,7 +66,7 @@ export const GEOMETRY = [
   { label: '∢', latex: '\\sphericalangle' },
   { label: '|', latex: '\\mid' },
   { label: '‖', latex: '\\parallel' },
-  { label: '⇌', latex: '\\xrightleftharpoons' },
+  { label: '⇌', latex: '\\xrightleftharpoons', useCommand: true },
   { label: '⇅' },
   { label: '∠', latex: '\\angle' },
   { label: '↑', latex: '\\uparrow' },

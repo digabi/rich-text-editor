@@ -1,7 +1,7 @@
 import styled from 'styled-components'
 import useEditorState from '../../../state'
 
-type CharData = { label: string; latex?: string }
+type CharData = { label: string; latex?: string; useCommand?: boolean }
 
 type Props = {
   /**
@@ -29,9 +29,13 @@ export default function ButtonGroup({ cols, chars, isExpanded, span = 1 }: Props
     e.preventDefault()
     e.stopPropagation()
     if (editor.activeMathEditor?.mq.el().contains(document.activeElement)) {
-      editor.activeMathEditor.mq.write(char.latex ?? char.label)
+      if (char.useCommand) {
+        editor.activeMathEditor.mq.cmd(char.latex ?? char.label)
+      } else {
+        editor.activeMathEditor.mq.write(char.latex ?? char.label)
+      }
     } else {
-      window.document.execCommand('insertText', false, char.label)
+      window.document.execCommand('insertText', false, char.useCommand ? char.latex : char.label)
     }
   }
 
