@@ -1,8 +1,6 @@
-# 🚨🚨 Upcoming breaking change warning 🚨🚨
+# 🚨🚨 18.10.2024 Breaking change warning 🚨🚨
 
-On 18.10. we will release a new major version (v8) of the rich text editor, which is a re-write of the old codebase. This warning is not critical to users of NPM packages using versioning, but users of the unpkg bundle (http://unpkg.com/rich-text-editor/dist/rich-text-editor-bundle.js) will notice that the latest bundle of the code will not work as expected anymore. To avoid a breaking change in your system, you can set the version of the unpkg package explicitly to the last stable version of v7 as follows: http://unpkg.com/rich-text-editor@7.3.0/dist/rich-text-editor-bundle.js
-
-This will give you time to develop your systems to accommodate to the new version once it is released.
+On 18.10.2024 we released a new major version (v8) of the rich text editor, which was a re-write of the old codebase. This warning is not critical to users of NPM packages using versioning, but users of the unpkg bundle (http://unpkg.com/rich-text-editor/dist/rich-text-editor-bundle.js) will notice that the latest bundle of the code will not work as expected anymore. To avoid a breaking change in your system, you can set the version of the unpkg package explicitly to the last stable version of v7 as follows: http://unpkg.com/rich-text-editor@7.3.0/dist/rich-text-editor-bundle.js
 
 [![Node.js CI](https://github.com/digabi/rich-text-editor/actions/workflows/ci.yml/badge.svg)](https://github.com/digabi/rich-text-editor/actions/workflows/ci.yml)
 
