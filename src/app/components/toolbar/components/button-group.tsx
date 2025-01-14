@@ -34,15 +34,22 @@ export default function ButtonGroup({ cols, chars, isExpanded, span = 1 }: Props
       } else {
         editor.activeMathEditor.mq.write(char.latex ?? char.label)
       }
-    } else {
+    } else if (document.activeElement?.closest('.math-editor-latex-field')) {
       window.document.execCommand('insertText', false, char.useCommand ? char.latex : char.label)
+    } else {
+      window.document.execCommand('insertText', false, char.label)
     }
   }
 
   return (
     <Container cols={cols} span={span}>
       {charsToShow.map((char) => (
-        <Button key={char.label} onMouseDown={(e) => onMouseDown(e, char)} data-latex={char.latex ?? char.label}>
+        <Button
+          data-testid="special-character"
+          key={char.label}
+          onMouseDown={(e) => onMouseDown(e, char)}
+          data-latex={char.latex ?? char.label}
+        >
           {char.label}
         </Button>
       ))}
