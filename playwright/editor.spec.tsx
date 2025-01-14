@@ -1,5 +1,6 @@
 import React from 'react'
 import { test, expect } from '@playwright/experimental-ct-react'
+import { Page } from '@playwright/test'
 import {
   getEditorLocator,
   assertEditorHTMLContent,
@@ -28,7 +29,7 @@ import {
 import RichTextEditor from '../src/app'
 import { Answer } from '../src/app/utility'
 import fi from '../src/FI'
-import { Page } from '@playwright/test'
+import { BASIC, ALGEBRA, GEOMETRY, SET_THEORY } from '../src/app/components/toolbar/math-char-data'
 
 test.describe('Rich text editor', () => {
   let answer: Answer = { answerHtml: '', answerText: '', imageCount: 0 }
@@ -280,6 +281,40 @@ test.describe('Rich text editor', () => {
       await clickOutsideEditor(page)
       await expect(page.getByTestId('toolbar')).not.toBeVisible()
       await expect(page.getByTestId('math-toolbar')).not.toBeVisible()
+    })
+
+    test('special character buttons output correct unicode in the main text area', async ({ page }) => {
+      await getEditorLocator(page).click()
+      await page.getByTestId('toggle-all-special-characters').click()
+      const specialCharacters = await page.getByTestId('special-character').all()
+
+      for (const char of specialCharacters) {
+        await char.click()
+      }
+
+      assertAnswerContent(answer, {
+        answerText: [BASIC, ALGEBRA, GEOMETRY, SET_THEORY]
+          .flat()
+          .map((char) => char.label)
+          .join(''),
+      })
+    })
+
+    test('special character buttons output correct unicode in an equation', async ({ page }) => {
+      await getEditorLocator(page).click()
+      await page.keyboard.press('Control+e')
+      await page.getByTestId('toggle-all-special-characters').click()
+      const specialCharacters = await page.getByTestId('special-character').all()
+
+      for (const char of specialCharacters) {
+        await char.click()
+      }
+
+      await page.keyboard.press('Escape')
+
+      assertAnswerContent(answer, {
+        answerHtml: `${getLatexImgTag('°\\cdot\\times\\pm\\infty^{23}\\frac{1}{2}\\frac{1}{3}\\pi‰\\alpha\\beta\\Gamma\\gamma\\Delta\\delta\\varepsilon\\zeta\\eta\\theta\\vartheta\\iota\\kappa\\Lambda\\lambda\\mu\\nu\\Xi\\xi\\Pi\\rho\\Sigma\\sigma\\tau\\Upsilon\\upsilon\\Phi\\phi\\chi\\Psi\\psi\\Omega\\omega\\partial\\varphi\\ne\\approx\\le\\ge<>\\sim\\equiv\\not\\equiv\\circ\\ldots\\propto\\sphericalangle\\mid\\parallel\\xrightleftharpoons[⇅\\angle\\uparrow\\nearrow\\searrow\\downarrow\\leftrightarrow\\perp\\rightarrow\\Rightarrow\\Leftrightarrow\\in\\mathbb{Z}\\mathbb{R}\\exists\\forall\\mathbb{N}\\mathbb{Q}\\cap\\cup\\setminus\\subset\\not\\subset\\notin\\varnothing\\wedge\\vee\\neg\\nabla]{}')}`,
+      })
     })
   })
 
