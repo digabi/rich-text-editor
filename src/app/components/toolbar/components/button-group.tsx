@@ -35,7 +35,7 @@ export default function ButtonGroup({ cols, chars, isExpanded, span = 1 }: Props
         editor.activeMathEditor.mq.write(char.latex ?? char.label)
       }
     } else if (document.activeElement?.closest('.math-editor-latex-field')) {
-      window.document.execCommand('insertText', false, char.useCommand ? char.latex : char.label)
+      window.document.execCommand('insertText', false, char.latex ?? char.label)
     } else {
       window.document.execCommand('insertText', false, char.label)
     }
