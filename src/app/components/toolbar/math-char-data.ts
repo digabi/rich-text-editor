@@ -1,5 +1,5 @@
 export const BASIC = [
-  { label: '°', latex: '\\degree' },
+  { label: '°' },
   { label: '·', latex: '\\cdot' },
   { label: '×', latex: '\\times' },
   { label: '±', latex: '\\pm' },
