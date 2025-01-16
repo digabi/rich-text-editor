@@ -94,7 +94,7 @@ export const SET_THEORY = [
   { label: '⊂', latex: '\\subset' },
   { label: '⊄', latex: '\\not\\subset' },
   { label: '∉', latex: '\\notin' },
-  { label: '∅', latex: '\\empty' },
+  { label: '∅', latex: '\\varnothing' },
   { label: '∧', latex: '\\and' },
   { label: '∨', latex: '\\or' },
   { label: '¬', latex: '\\neg' },
