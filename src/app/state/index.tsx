@@ -14,7 +14,7 @@ import { RichTextEditorProps } from '../index'
 
 export type EditorState = {
   /** Ref to the main text-area (which is a `contenteditable` `<div />`) */
-  ref: React.RefObject<HTMLDivElement>
+  ref: React.RefObject<HTMLDivElement | null>
 
   mathEditorPortal: [portalRoot: Node, portal: ReactPortal] | null
 
