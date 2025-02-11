@@ -150,6 +150,11 @@ test.describe('Rich text editor', () => {
     await expect(editor.locator('img')).not.toBeVisible()
   })
 
+  test('missing latex returns 400', async ({ page }) => {
+    const response = await page.request.get('http://localhost:5111/math.svg?%3Cspan%20class')
+    expect(response.status()).toBe(400)
+  })
+
   test('can paste equation SVG from clipboard', async ({ page }) => {
     const latex = '\\varepsilon=\\frac{Q_2}{Q_1-Q_2}=\\frac{1}{eta}-1'
     const url = new URL(
