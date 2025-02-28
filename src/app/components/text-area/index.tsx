@@ -52,49 +52,6 @@ const MainTextArea = forwardRef<RichTextEditorHandle, TextAreaProps>((props, ref
     },
   }))
 
-  const historyHandler = (fn: typeof editor.undoEditor | typeof editor.redoEditor) => () => {
-    if (editor.ref.current !== document.activeElement) {
-      return
-    }
-
-    const oldValue = editor.ref.current?.innerHTML
-    const newValue = fn()
-
-    if (newValue === undefined) {
-      return
-    }
-
-    if (editor.ref.current && newValue !== oldValue) {
-      const savedCursorPosition = getCursorPosition(editor.ref.current)
-      editor.ref.current.innerHTML = newValue
-
-      // TODO: Extract this into a function instead of pasting it all over the place
-      setTimeout(() => {
-        editor.initMathImages()
-        setTimeout(() => {
-          editor.onAnswerChange(false)
-
-          restoreCursorPosition(editor.ref.current!, savedCursorPosition)
-        }, 0)
-      }, 0)
-    }
-  }
-
-  // Prevent browser's native undo/redo history use on MacOS,
-  // as it would cause strange behaviour especially when mixed with our own implementation
-  useKeyboardEventListener(
-    'z',
-    false,
-    (e) => {
-      if (e?.metaKey) {
-        e.preventDefault()
-        e.stopPropagation()
-      }
-    },
-    false,
-  )
-  useKeyboardEventListener('z', true, historyHandler(editor.undoEditor))
-  useKeyboardEventListener('y', true, historyHandler(editor.redoEditor))
   useKeyboardEventListener('e', true, (e) => {
     if (editor.ref.current === document.activeElement) {
       e?.preventDefault()
@@ -168,20 +125,7 @@ const MainTextArea = forwardRef<RichTextEditorHandle, TextAreaProps>((props, ref
         lang={lang}
         onBlur={onBlur}
         onFocus={editor.showToolbar}
-        onInput={(e) => {
-          const inputType = (e.nativeEvent as InputEvent).inputType
-          if (inputType === 'historyUndo') {
-            historyHandler(editor.undoEditor)()
-            e.preventDefault()
-            e.stopPropagation()
-          } else if (inputType === 'historyRedo') {
-            historyHandler(editor.redoEditor)()
-            e.preventDefault()
-            e.stopPropagation()
-          }
-
-          editor.onAnswerChange()
-        }}
+        onInput={() => editor.onAnswerChange()}
         onKeyDown={(e) => {
           if (e.key.toLowerCase() === 'e' && e.ctrlKey) {
             e.preventDefault()

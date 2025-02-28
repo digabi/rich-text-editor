@@ -61,11 +61,6 @@ export type EditorState = {
   redoEquation: () => string | undefined
   canUndoEquation: boolean
   canRedoEquation: boolean
-
-  undoEditor: () => string | undefined
-  redoEditor: () => string | undefined
-  canUndoEditor: boolean
-  canRedoEditor: boolean
 }
 
 const editorCtx = createContext<EditorState>(null!)
@@ -356,11 +351,6 @@ export function EditorStateProvider({
         canRedoEquation: equationEditorHistory.canRedo,
         undoEquation: equationEditorHistory.undo,
         redoEquation: equationEditorHistory.redo,
-
-        canUndoEditor: mainTextAreaHistory.canUndo,
-        canRedoEditor: mainTextAreaHistory.canRedo,
-        undoEditor: mainTextAreaHistory.undo,
-        redoEditor: mainTextAreaHistory.redo,
 
         t,
         handlePastedImage: getPasteSource,
