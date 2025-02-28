@@ -78,11 +78,17 @@ export default function MathEditor(props: Props) {
   useKeyboardEventListener('z', true, historyHandler(undoEquation))
   useKeyboardEventListener('y', true, historyHandler(redoEquation))
 
+  const textAreaRef = useRef<HTMLTextAreaElement>(null)
+
   const onChange = (oldValue: string | undefined, newValue: string) => {
     if (oldValue === newValue) return
     setLatex(newValue)
     props.onChange?.(newValue)
     props.onLatexUpdate?.(newValue)
+    if (textAreaRef.current) {
+      textAreaRef.current.style.height = 'auto'
+      textAreaRef.current.style.height = `${textAreaRef.current.scrollHeight}px`
+    }
   }
 
   const { ref: latexRef, isError, mq } = useMathQuill({ latex, onChange, onEnter: props.onEnter })
@@ -134,6 +140,7 @@ export default function MathEditor(props: Props) {
           }}
         />
         <MathEditorLatexField
+          ref={textAreaRef}
           className="math-editor-latex-field"
           placeholder="LaTeΧ"
           rows={1}
