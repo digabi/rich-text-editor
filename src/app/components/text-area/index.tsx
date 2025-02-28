@@ -1,4 +1,4 @@
-import { ClipboardEvent, FocusEvent, FormEvent, forwardRef, Fragment, useImperativeHandle } from 'react'
+import { ClipboardEvent, FocusEvent, forwardRef, Fragment, useImperativeHandle } from 'react'
 import { createPortal } from 'react-dom'
 import styled from 'styled-components'
 import classNames from 'classnames/dedupe' // Removes duplicates in class list
@@ -20,10 +20,21 @@ export type TextAreaProps = {
   id?: string // exam engine renders a button that is aria owned by the area div (by id)
   lang?: string
   toolbarRoot?: HTMLElement
+  contentEditable?: 'inherit' | boolean | 'plaintext-only'
 }
 
 const MainTextArea = forwardRef<RichTextEditorHandle, TextAreaProps>((props, ref) => {
-  const { toolbarRoot, ariaInvalid, ariaLabelledBy, questionId, editorStyle, className, id, lang } = props
+  const {
+    toolbarRoot,
+    ariaInvalid,
+    ariaLabelledBy,
+    questionId,
+    editorStyle,
+    className,
+    id,
+    lang,
+    contentEditable = true,
+  } = props
   const editor = useEditorState()
 
   useImperativeHandle(ref, () => ({
@@ -41,49 +52,6 @@ const MainTextArea = forwardRef<RichTextEditorHandle, TextAreaProps>((props, ref
     },
   }))
 
-  const historyHandler = (fn: typeof editor.undoEditor | typeof editor.redoEditor) => () => {
-    if (editor.ref.current !== document.activeElement) {
-      return
-    }
-
-    const oldValue = editor.ref.current?.innerHTML
-    const newValue = fn()
-
-    if (newValue === undefined) {
-      return
-    }
-
-    if (editor.ref.current && newValue !== oldValue) {
-      const savedCursorPosition = getCursorPosition(editor.ref.current)
-      editor.ref.current.innerHTML = newValue
-
-      // TODO: Extract this into a function instead of pasting it all over the place
-      setTimeout(() => {
-        editor.initMathImages()
-        setTimeout(() => {
-          editor.onAnswerChange(false)
-
-          restoreCursorPosition(editor.ref.current!, savedCursorPosition)
-        }, 0)
-      }, 0)
-    }
-  }
-
-  // Prevent browser's native undo/redo history use on MacOS,
-  // as it would cause strange behaviour especially when mixed with our own implementation
-  useKeyboardEventListener(
-    'z',
-    false,
-    (e) => {
-      if (e?.metaKey) {
-        e.preventDefault()
-        e.stopPropagation()
-      }
-    },
-    false,
-  )
-  useKeyboardEventListener('z', true, historyHandler(editor.undoEditor))
-  useKeyboardEventListener('y', true, historyHandler(editor.redoEditor))
   useKeyboardEventListener('e', true, (e) => {
     if (editor.ref.current === document.activeElement) {
       e?.preventDefault()
@@ -144,33 +112,20 @@ const MainTextArea = forwardRef<RichTextEditorHandle, TextAreaProps>((props, ref
     <>
       {toolbarRoot && editor.isToolbarOpen && createPortal(<Toolbar />, toolbarRoot)}
       {editor.isHelpDialogOpen && <HelpDialog />}
-      <Box
+      <div
         ref={editor.ref}
         id={id}
         aria-invalid={ariaInvalid}
         aria-labelledby={ariaLabelledBy}
         aria-multiline={true}
         className={classNames('rich-text-editor answer', className)}
-        contentEditable
+        contentEditable={contentEditable}
         data-question-id={questionId}
         data-testid="rich-text-editor"
         lang={lang}
         onBlur={onBlur}
         onFocus={editor.showToolbar}
-        onInput={(e) => {
-          const inputType = (e.nativeEvent as InputEvent).inputType
-          if (inputType === 'historyUndo') {
-            historyHandler(editor.undoEditor)()
-            e.preventDefault()
-            e.stopPropagation()
-          } else if (inputType === 'historyRedo') {
-            historyHandler(editor.redoEditor)()
-            e.preventDefault()
-            e.stopPropagation()
-          }
-
-          editor.onAnswerChange()
-        }}
+        onInput={() => editor.onAnswerChange()}
         onKeyDown={(e) => {
           if (e.key.toLowerCase() === 'e' && e.ctrlKey) {
             e.preventDefault()
@@ -188,51 +143,5 @@ const MainTextArea = forwardRef<RichTextEditorHandle, TextAreaProps>((props, ref
     </>
   )
 })
-
-const Box = styled.div`
-  box-sizing: border-box;
-  border: 1px solid #aaa;
-  min-height: 100px;
-  padding: 5px;
-  font: 17px Times New Roman;
-
-  & img {
-    padding: 5px;
-    max-width: 100%;
-    max-height: 1000px;
-    vertical-align: middle;
-  }
-
-  &:focus > img {
-    box-shadow: 0 0 3px 1px rgba(0, 0, 0, 0.2);
-  }
-
-  & .mq-math-mode .mq-root-block {
-    white-space: nowrap;
-  }
-
-  &:focus,
-  & .mq-editable-field.mq-focused,
-  & textarea:focus {
-    box-shadow: none;
-    outline: 1px solid #359bb7;
-    z-index: 2;
-  }
-
-  & img.equation {
-    min-height: 20px;
-    min-width: 20px;
-    box-shadow: none;
-  }
-
-  &:focus img.equation {
-    background-color: #edf9ff;
-  }
-
-  & img.equation.active {
-    border: 2px solid #caedff;
-    border-radius: 3px;
-  }
-`
 
 export default MainTextArea
