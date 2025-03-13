@@ -32,6 +32,7 @@ export type EditorState = {
 
   handlePastedImage: NonNullable<RichTextEditorProps['getPasteSource']>
   allowedFileTypes: NonNullable<RichTextEditorProps['allowedFileTypes']>
+  invalidImageSelector: NonNullable<RichTextEditorProps['invalidImageSelector']>
 
   isHelpDialogOpen: boolean
   showHelpDialog: () => void
@@ -111,6 +112,7 @@ export function EditorStateProvider({
   language = 'FI',
   getPasteSource = defaultPasteSource,
   allowedFileTypes = ['image/png', 'image/jpeg'],
+  invalidImageSelector = 'img:not(img[src^="data"], img[src^="/math.svg?latex="], img[src^="/screenshot/"])',
   onValueChange = () => {},
   initialValue = '',
   baseUrl = '',
@@ -365,6 +367,7 @@ export function EditorStateProvider({
         t,
         handlePastedImage: getPasteSource,
         allowedFileTypes,
+        invalidImageSelector,
         onAnswerChange,
         initialValue,
         baseUrl,

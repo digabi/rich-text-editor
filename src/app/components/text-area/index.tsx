@@ -7,7 +7,13 @@ import useEditorState from '../../state'
 import Toolbar from '../toolbar'
 import { HelpDialog } from '../help-dialog'
 import { sanitize } from '../../utils/sanitization'
-import { getCursorPosition, restoreCursorPosition } from '../../utility'
+import {
+  decodeBase64Image,
+  getCursorPosition,
+  isForbiddenInlineImage,
+  restoreCursorPosition,
+  loadingImage,
+} from '../../utility'
 import { RichTextEditorHandle } from '../..'
 import { useKeyboardEventListener } from '../../hooks/use-keyboard-events'
 
@@ -103,6 +109,7 @@ const MainTextArea = forwardRef<RichTextEditorHandle, TextAreaProps>((props, ref
     const file = Array.from(content.items).at(-1)?.getAsFile()
     const html = content.getData('text/html')
     const text = content.getData('text/plain')
+    const pasteType = file ? 'file' : html ? 'html' : 'text'
 
     if (file && editor.allowedFileTypes.includes(file.type)) {
       try {
@@ -126,6 +133,38 @@ const MainTextArea = forwardRef<RichTextEditorHandle, TextAreaProps>((props, ref
      */
     setTimeout(() => {
       editor.initMathImages()
+
+      if (pasteType === 'html') {
+        editor.ref.current
+          // Remove all images that do match to given selector
+          ?.querySelectorAll(editor.invalidImageSelector)
+          .forEach((e) => e.remove())
+        const images = Array.from(editor.ref.current?.querySelectorAll('img[src^="data:image/') ?? [])
+        const imagesWithFile = images.flatMap((e) => {
+          const src = e.getAttribute('src')
+          if (src) {
+            const file = decodeBase64Image(src)
+            if (file) {
+              return [{ file, element: e }]
+            }
+          }
+          return []
+        })
+
+        imagesWithFile.forEach(async (img) => {
+          if (
+            img.element instanceof HTMLImageElement &&
+            isForbiddenInlineImage(img.file.type, img.element, editor.allowedFileTypes)
+          ) {
+            img.element.remove()
+          }
+
+          img.element.setAttribute('src', loadingImage)
+          const url = await editor.handlePastedImage(new File([img.file.data], 'image', { type: img.file.type }))
+          img.element.setAttribute('src', url)
+        })
+      }
+
       setTimeout(() => {
         editor.onAnswerChange()
       }, 0)
