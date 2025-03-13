@@ -16,7 +16,10 @@
           editorStyle: {},
           lang: 'fi-FI',
         },
-        onValueChange: console.log
+        onValueChange: console.log,
+        // Slightly different from the selector we use in exams and as the default - since math SVGs are served from a different port,
+        // we can't check that the src starts with `/math.svg?`, so we check that it is anywhere in the src
+        invalidImageSelector: 'img:not(img[src^="data"], img[src*="/math.svg?latex="], img[src^="/screenshot/"])',
       }
 
       window.addRichTextEditor = () => {
@@ -29,7 +32,7 @@
 
         window.makeRichText({
           ...baseOpts,
-          container: container
+          container: container,
         })
       }
 

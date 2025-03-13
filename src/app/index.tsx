@@ -24,6 +24,7 @@ export type RichTextEditorProps = {
   /** The toolbars will be rendered in this root via a React Portal */
   textAreaProps?: TextAreaProps
   toolbarRoot?: HTMLElement
+  invalidImageSelector?: string
 } & TextAreaProps
 
 const RichTextEditor = forwardRef<RichTextEditorHandle, RichTextEditorProps>((props, ref) => {
@@ -36,6 +37,7 @@ const RichTextEditor = forwardRef<RichTextEditorHandle, RichTextEditorProps>((pr
     onValueChange,
     textAreaProps,
     toolbarRoot,
+    invalidImageSelector,
   } = props
   const [toolbarRootElement, setToolbarRootElement] = useState<HTMLElement | undefined>(toolbarRoot)
   const toolbarRootRef = useRef<HTMLDivElement>(null)
@@ -56,6 +58,7 @@ const RichTextEditor = forwardRef<RichTextEditorHandle, RichTextEditorProps>((pr
       initialValue={initialValue}
       language={language}
       onValueChange={onValueChange}
+      invalidImageSelector={invalidImageSelector}
     >
       {toolbarRoot ? null : <div ref={toolbarRootRef} className="rich-text-editor-toolbar-root" />}
       <MainTextArea {...textAreaProps} toolbarRoot={toolbarRootElement} ref={ref} />
