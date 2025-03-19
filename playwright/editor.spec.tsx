@@ -128,18 +128,6 @@ test.describe('Rich text editor', () => {
     await paste(page)
 
     await assertEditorHTMLContent(getEditorLocator(page), img)
-    /*
-    await page.waitForFunction(
-      async ([page, img]) => {
-        await assertEditorHTMLContent(getEditorLocator(page), img)
-      },
-      [page, img] as [page: Page, img: string],
-    ) */
-    /*
-    assertAnswerContent(answer, {
-      answerHtml: img,
-      imageCount: 1,
-      }) */
   })
 
   test('can paste png file from clipboard', async ({ page, browserName }) => {
@@ -482,7 +470,6 @@ test.describe('Rich text editor', () => {
         const img = `<img src="data:image/png;base64,${samplePNG}" alt="Hello World!">`
         await pasteHtmlImage(page, img)
 
-        //await assertEditorHTMLContent(editor, `H${img}ld!`)
         expect(await editor.innerHTML()).toContain(`H${img}ld!`)
         assertAnswerContent(answer, {
           answerText: 'Hld!',
