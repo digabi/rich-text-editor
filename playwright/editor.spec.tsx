@@ -122,6 +122,17 @@ test.describe('Rich text editor', () => {
     })
   })
 
+  test('images with sources pointing outside are removed from pasted HTML', async ({ page }) => {
+    await setClipboardHTML(page, `Hello <img src="www.test.com/test/pic.png" alt="test">World`)
+
+    await paste(page)
+
+    assertAnswerContent(answer, {
+      answerText: 'Hello World',
+      answerHtml: 'Hello World',
+    })
+  })
+
   test('can paste png <img> from clipboard', async ({ page }) => {
     const img = `<img src="data:image/png;base64,${samplePNG}" alt="Hello World!">`
     await setClipboardHTML(page, img)
@@ -370,7 +381,6 @@ test.describe('Rich text editor', () => {
       await test.step('equations can be undone', async () => {
         await page.keyboard.press('Control+e')
         await page.keyboard.type('xxx')
-        //await page.keyboard.press('Escape')
         await getEditorLocator(page).click()
         assertAnswerContent(answer, { answerHtml: `cc${getLatexImgTag('xxx')}` })
         await page.waitForTimeout(historyTimeout)
