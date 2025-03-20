@@ -98,6 +98,8 @@ const isAnswerKey = (key: string, answer: Answer): key is keyof Answer => key in
 
 /** Assert that selected fields of Answer are as expected. Allows specifying just the fields to test,
  *   for convenience.
+ *
+ *  NOTE: The `expected` value is compared as a pattern, i.e. substrings will match
  */
 export const assertAnswerContent = (answer: Answer, expected: Partial<Answer>) => {
   Object.entries(expected).forEach(([key, value]) => {

@@ -122,15 +122,23 @@ test.describe('Rich text editor', () => {
     })
   })
 
+  test('images with sources pointing outside are removed from pasted HTML', async ({ page }) => {
+    await setClipboardHTML(page, `Hello <img src="www.test.com/test/pic.png" alt="test">World`)
+
+    await paste(page)
+
+    assertAnswerContent(answer, {
+      answerText: 'Hello World',
+      answerHtml: 'Hello World',
+    })
+  })
+
   test('can paste png <img> from clipboard', async ({ page }) => {
     const img = `<img src="data:image/png;base64,${samplePNG}" alt="Hello World!">`
     await setClipboardHTML(page, img)
     await paste(page)
 
-    assertAnswerContent(answer, {
-      answerHtml: img,
-      imageCount: 1,
-    })
+    await assertEditorHTMLContent(getEditorLocator(page), img)
   })
 
   test('can paste png file from clipboard', async ({ page, browserName }) => {
@@ -157,10 +165,7 @@ test.describe('Rich text editor', () => {
 
   test('can paste equation SVG from clipboard', async ({ page }) => {
     const latex = '\\varepsilon=\\frac{Q_2}{Q_1-Q_2}=\\frac{1}{eta}-1'
-    const url = new URL(
-      `/math.svg?latex=${encodeURIComponent(latex)}`,
-      'http://www.this.should.not.matter.com',
-    ).toString()
+    const url = `/math.svg?latex=${encodeURIComponent(latex)}`
     const img = `<img src="${url}" alt="${latex}">`
 
     await setClipboardHTML(page, img)
@@ -376,7 +381,6 @@ test.describe('Rich text editor', () => {
       await test.step('equations can be undone', async () => {
         await page.keyboard.press('Control+e')
         await page.keyboard.type('xxx')
-        //await page.keyboard.press('Escape')
         await getEditorLocator(page).click()
         assertAnswerContent(answer, { answerHtml: `cc${getLatexImgTag('xxx')}` })
         await page.waitForTimeout(historyTimeout)
@@ -476,8 +480,8 @@ test.describe('Rich text editor', () => {
         const img = `<img src="data:image/png;base64,${samplePNG}" alt="Hello World!">`
         await pasteHtmlImage(page, img)
 
+        expect(await editor.innerHTML()).toContain(`H${img}ld!`)
         assertAnswerContent(answer, {
-          answerHtml: `H${img}ld!`,
           answerText: 'Hld!',
           imageCount: 1,
         })

@@ -24,7 +24,7 @@ export function sanitize(html: string, opts?: sanitizeHtml.IOptions) {
   ).reduce((value, fn) => fn(value), html)
 }
 
-function convertLinksToRelative(html: string) {
+export function convertLinksToRelative(html: string) {
   return html.replace(new RegExp(document.location.origin, 'g'), '')
 }
 

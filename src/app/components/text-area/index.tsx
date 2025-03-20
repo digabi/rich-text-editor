@@ -7,7 +7,13 @@ import useEditorState from '../../state'
 import Toolbar from '../toolbar'
 import { HelpDialog } from '../help-dialog'
 import { sanitize } from '../../utils/sanitization'
-import { getCursorPosition, restoreCursorPosition } from '../../utility'
+import {
+  decodeBase64Image,
+  getCursorPosition,
+  isForbiddenInlineImage,
+  restoreCursorPosition,
+  loadingImage,
+} from '../../utility'
 import { RichTextEditorHandle } from '../..'
 import { useKeyboardEventListener } from '../../hooks/use-keyboard-events'
 
@@ -103,6 +109,7 @@ const MainTextArea = forwardRef<RichTextEditorHandle, TextAreaProps>((props, ref
     const file = Array.from(content.items).at(-1)?.getAsFile()
     const html = content.getData('text/html')
     const text = content.getData('text/plain')
+    const pasteType = file ? 'file' : html ? 'html' : 'text'
 
     if (file && editor.allowedFileTypes.includes(file.type)) {
       try {
@@ -126,6 +133,11 @@ const MainTextArea = forwardRef<RichTextEditorHandle, TextAreaProps>((props, ref
      */
     setTimeout(() => {
       editor.initMathImages()
+
+      if (pasteType === 'html') {
+        editor.persistValidImages()
+      }
+
       setTimeout(() => {
         editor.onAnswerChange()
       }, 0)
