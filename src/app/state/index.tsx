@@ -9,8 +9,9 @@ import { createMathStub } from '../utils/create-math-stub'
 import FI from '../../FI'
 import SV from '../../SV'
 import { createPortal } from 'react-dom'
-import { debounce, getAnswer } from '../utility'
+import { debounce, decodeBase64Image, getAnswer, isForbiddenInlineImage, loadingImage } from '../utility'
 import { RichTextEditorProps } from '../index'
+import MainTextArea from '../components/text-area'
 
 export type EditorState = {
   /** Ref to the main text-area (which is a `contenteditable` `<div />`) */
@@ -30,6 +31,7 @@ export type EditorState = {
   expandToolbar: () => void
   collapseToolbar: () => void
 
+  persistValidImages: () => void
   handlePastedImage: NonNullable<RichTextEditorProps['getPasteSource']>
   allowedFileTypes: NonNullable<RichTextEditorProps['allowedFileTypes']>
   invalidImageSelector: NonNullable<RichTextEditorProps['invalidImageSelector']>
@@ -280,6 +282,34 @@ export function EditorStateProvider({
     }
   }
 
+  function persistValidImages() {
+    mainTextAreaRef.current?.querySelectorAll(invalidImageSelector).forEach((e) => e.remove())
+    const images = Array.from(mainTextAreaRef.current?.querySelectorAll('img[src^="data:image/') ?? [])
+    const imagesWithFile = images.flatMap((e) => {
+      const src = e.getAttribute('src')
+      if (src) {
+        const file = decodeBase64Image(src)
+        if (file) {
+          return [{ file, element: e }]
+        }
+      }
+      return []
+    })
+
+    imagesWithFile.forEach(async (img) => {
+      if (
+        img.element instanceof HTMLImageElement &&
+        isForbiddenInlineImage(img.file.type, img.element, allowedFileTypes)
+      ) {
+        img.element.remove()
+      }
+
+      img.element.setAttribute('src', loadingImage)
+      const url = await getPasteSource(new File([img.file.data], 'image', { type: img.file.type }))
+      img.element.setAttribute('src', url)
+    })
+  }
+
   const updateAnswerHistoryDebounced = debounce((content: string) => mainTextAreaHistory.write(content), 500)
 
   /**
@@ -353,6 +383,8 @@ export function EditorStateProvider({
         spawnMathEditorAtCursor: spawnMathEditorAtCursor,
         spawnMathEditorInNewLine: spawnMathEditorInNewLine,
         initMathImages,
+
+        persistValidImages,
 
         canUndoEquation: equationEditorHistory.canUndo,
         canRedoEquation: equationEditorHistory.canRedo,

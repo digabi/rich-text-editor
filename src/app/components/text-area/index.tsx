@@ -135,34 +135,7 @@ const MainTextArea = forwardRef<RichTextEditorHandle, TextAreaProps>((props, ref
       editor.initMathImages()
 
       if (pasteType === 'html') {
-        editor.ref.current
-          // Remove all images that do match to given selector
-          ?.querySelectorAll(editor.invalidImageSelector)
-          .forEach((e) => e.remove())
-        const images = Array.from(editor.ref.current?.querySelectorAll('img[src^="data:image/') ?? [])
-        const imagesWithFile = images.flatMap((e) => {
-          const src = e.getAttribute('src')
-          if (src) {
-            const file = decodeBase64Image(src)
-            if (file) {
-              return [{ file, element: e }]
-            }
-          }
-          return []
-        })
-
-        imagesWithFile.forEach(async (img) => {
-          if (
-            img.element instanceof HTMLImageElement &&
-            isForbiddenInlineImage(img.file.type, img.element, editor.allowedFileTypes)
-          ) {
-            img.element.remove()
-          }
-
-          img.element.setAttribute('src', loadingImage)
-          const url = await editor.handlePastedImage(new File([img.file.data], 'image', { type: img.file.type }))
-          img.element.setAttribute('src', url)
-        })
+        editor.persistValidImages()
       }
 
       setTimeout(() => {
