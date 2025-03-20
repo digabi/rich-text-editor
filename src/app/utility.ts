@@ -119,7 +119,6 @@ const stripNewLinesFromStartAndWhiteSpacesFromEnd = (answerHtml: string) =>
   answerHtml.replace(/^(\n)*/g, '').replace(/(\s)*$/g, '')
 
 export function decodeBase64Image(dataString: string) {
-  if (!dataString) return null
   const matches = dataString.match(/^data:([A-Za-z-+/]+);base64,(.+)$/)
   if (!matches || matches.length !== 3) {
     return null
