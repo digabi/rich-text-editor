@@ -158,6 +158,11 @@ test.describe('Rich text editor', () => {
     await expect(editor.locator('img')).not.toBeVisible()
   })
 
+  test('empty latex returns 200', async ({ page }) => {
+    const response = await page.request.get('http://localhost:5111/math.svg?latex=')
+    expect(response.status()).toBe(200)
+  })
+
   test('missing latex returns 400', async ({ page }) => {
     const response = await page.request.get('http://localhost:5111/math.svg?%3Cspan%20class')
     expect(response.status()).toBe(400)
