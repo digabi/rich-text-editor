@@ -38,7 +38,7 @@ mjAPI.start()
 function mathSvgResponse(req, res) {
   res.type('svg')
   const latex = req.query.latex
-  if (!latex) {
+  if (latex === undefined) {
     res.sendStatus(400)
     return
   }
