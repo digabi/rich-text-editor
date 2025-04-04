@@ -68,7 +68,7 @@ const MainTextArea = forwardRef<RichTextEditorHandle, TextAreaProps>((props, ref
         setTimeout(() => {
           //restoreCursorPosition(savedCursorPosition)
           //restoreCaret(editor.ref?.current)
-          if (editor.ref.current) {
+          if (editor.ref.current && caretPosition) {
             setCaretPosition(editor.ref.current, caretPosition)
           }
 
