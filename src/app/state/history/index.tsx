@@ -1,4 +1,10 @@
 import { useRef, useState } from 'react'
+import { CaretPosition } from '../../utility'
+
+export interface HistoryEntry {
+  content: string
+  caretPosition?: CaretPosition
+}
 
 export default function useHistory() {
   /** `stack` is an array with all the current history in order.
@@ -9,7 +15,7 @@ export default function useHistory() {
    * Writing anything always clears the history stack above the pointer, adds a new value
    * and moves the pointer to the top of the stack.
    * */
-  const [stack, _setStack] = useState<string[]>([])
+  const [stack, _setStack] = useState<HistoryEntry[]>([])
   const [pointer, _setPointer] = useState(0)
 
   /** Refs are needed to make the current value always accessible
@@ -21,9 +27,10 @@ export default function useHistory() {
   const stackRef = useRef(stack)
   const pointerRef = useRef(pointer)
 
-  const setStack = (newStack: string[]) => {
+  const setStack = (newStack: HistoryEntry[]) => {
     stackRef.current = newStack
     _setStack(newStack)
+    console.debug({ newStack })
   }
 
   const setPointer = (newPointer: number) => {
@@ -35,16 +42,18 @@ export default function useHistory() {
   const canRedo = pointer < stack.length - 1
 
   const clear = () => {
-    setStack([''])
+    setStack([{ content: '' }])
     setPointer(0)
   }
 
-  const write = (value: string) => {
+  const write = (value: string, caretPosition?: CaretPosition) => {
+    const currentValue = stackRef.current.at(pointerRef.current)
     // If the pointer is at a value that's equal to the new value,
     // we don't do anything so we don't get duplicate values in the history
-    if (value === stackRef.current.at(pointerRef.current)) return
+    if (value === currentValue?.content) return
 
-    const newStack = [...stackRef.current.slice(0, pointerRef.current + 1), value]
+    const newEntry: HistoryEntry = { content: value, caretPosition: caretPosition ?? undefined }
+    const newStack = [...stackRef.current.slice(0, pointerRef.current + 1), newEntry]
 
     setStack(newStack)
     setPointer(newStack.length - 1)

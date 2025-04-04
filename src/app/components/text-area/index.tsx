@@ -7,13 +7,7 @@ import useEditorState from '../../state'
 import Toolbar from '../toolbar'
 import { HelpDialog } from '../help-dialog'
 import { sanitize } from '../../utils/sanitization'
-import {
-  decodeBase64Image,
-  getCursorPosition,
-  isForbiddenInlineImage,
-  restoreCursorPosition,
-  loadingImage,
-} from '../../utility'
+import { decodeBase64Image, isForbiddenInlineImage, loadingImage, setCaretPosition } from '../../utility'
 import { RichTextEditorHandle } from '../..'
 import { useKeyboardEventListener } from '../../hooks/use-keyboard-events'
 
@@ -53,23 +47,32 @@ const MainTextArea = forwardRef<RichTextEditorHandle, TextAreaProps>((props, ref
     }
 
     const oldValue = editor.ref.current?.innerHTML
-    const newValue = fn()
+    const fromHistory = fn()
 
-    if (newValue === undefined) {
+    console.debug({ fromHistory })
+
+    if (fromHistory === undefined) {
       return
     }
 
+    const { content: newValue, caretPosition } = fromHistory
+
     if (editor.ref.current && newValue !== oldValue) {
-      const savedCursorPosition = getCursorPosition(editor.ref.current)
+      //const savedCursorPosition = getCursorPosition(editor.ref.current)
+      //createCaretMarker()
       editor.ref.current.innerHTML = newValue
 
       // TODO: Extract this into a function instead of pasting it all over the place
       setTimeout(() => {
         editor.initMathImages()
         setTimeout(() => {
-          editor.onAnswerChange(false)
+          //restoreCursorPosition(savedCursorPosition)
+          //restoreCaret(editor.ref?.current)
+          if (editor.ref.current) {
+            setCaretPosition(editor.ref.current, caretPosition)
+          }
 
-          restoreCursorPosition(editor.ref.current!, savedCursorPosition)
+          editor.onAnswerChange(false)
         }, 0)
       }, 0)
     }
