@@ -11,7 +11,7 @@ import SV from '../../SV'
 import { createPortal } from 'react-dom'
 import { debounce, decodeBase64Image, getAnswer, isForbiddenInlineImage, loadingImage } from '../utility'
 import { RichTextEditorProps } from '../index'
-import MainTextArea from '../components/text-area'
+import { deleteElement, insertAfter, refreshElement, replaceElement } from './dom-helpers'
 
 export type EditorState = {
   /** Ref to the main text-area (which is a `contenteditable` `<div />`) */
@@ -21,6 +21,7 @@ export type EditorState = {
 
   spawnMathEditorAtCursor(): void
   spawnMathEditorInNewLine(afterElement: Element): void
+  onMathImageClick(event: Event): void
 
   isToolbarOpen: boolean
   isMathToolbarOpen: boolean
@@ -151,13 +152,15 @@ export function EditorStateProvider({
   }
 
   function spawnMathEditor(stub: HTMLElement, image: HTMLImageElement, props?: Partial<MathEditorProps>) {
+    const getImageElement = () => document.getElementById(image.id)
+
     // This is called both on the creation of the component and each time the equation is opened after that
     function onOpen(handle: MathEditorHandle) {
       equationEditorHistory.clear()
       setActiveMathEditor(handle)
       setIsToolbarOpen(true)
       setIsMathToolbarOpen(true)
-      image.classList.add('active')
+      getImageElement()!.classList.add('active')
     }
 
     function onBlur(latex: string, forceCursorPosition?: 'before' | 'after') {
@@ -170,13 +173,19 @@ export function EditorStateProvider({
       onAnswerChange(true, true)
 
       if (forceCursorPosition) {
-        setCursorAroundElement(image, forceCursorPosition)
+        setCursorAroundElement(getImageElement()!, forceCursorPosition)
       }
 
       safeRemove(stub)
+      if (!getImageElement()) {
+        return
+      }
       if (!latex) {
-        safeRemove(image)
-      } else image.classList.remove('active')
+        deleteElement(getImageElement()!)
+      } else {
+        refreshElement(getImageElement()!)
+        getImageElement()!.classList.remove('active')
+      }
     }
 
     function onChange(latex: string) {
@@ -185,8 +194,9 @@ export function EditorStateProvider({
     }
 
     function onEnter(latex: string) {
-      if (image) {
-        spawnMathEditorInNewLine(image)
+      const imageElement = getImageElement()
+      if (imageElement) {
+        spawnMathEditorInNewLine(imageElement)
       }
       onBlur(latex)
     }
@@ -205,13 +215,20 @@ export function EditorStateProvider({
     setMathEditorPortal([stub, portal])
   }
 
-  const onLatexUpdate = (img: HTMLImageElement) => (latex: string) => {
+  const onLatexUpdate = (imageId: string) => (latex: string) => {
+    const img = document.getElementById(imageId) as HTMLImageElement
+    console.log('Updating', imageId, img, latex)
     img.setAttribute('src', `${baseUrl}/math.svg?latex=${encodeURIComponent(latex)}`)
     img.setAttribute('alt', latex)
   }
 
-  function onMathImageClick(img: HTMLImageElement, e: Event) {
+  function onMathImageClick(e: Event) {
+    if (!(e.target instanceof HTMLImageElement)) {
+      return
+    }
+    const img = e.target
     const parent = img.parentElement
+
     e.stopPropagation()
     e.preventDefault()
     const stub = createMathStub(getNextKey())
@@ -222,42 +239,39 @@ export function EditorStateProvider({
       mainTextAreaRef.current?.appendChild(stub)
     }
 
-    spawnMathEditor(stub, img, { initialLatex: img.getAttribute('alt'), onLatexUpdate: onLatexUpdate(img) })
+    spawnMathEditor(stub, img, { initialLatex: img.getAttribute('alt'), onLatexUpdate: onLatexUpdate(img.id) })
   }
 
   function createMathImage() {
     const mathImage = document.createElement('img')
-    mathImage.addEventListener('click', (e) => onMathImageClick(mathImage, e))
-    mathImage.setAttribute('initialized', '')
-    mathImage.setAttribute('src', '') // Browsers add a border to images without a source attribute
+    mathImage.setAttribute('src', '')
     mathImage.classList.add('equation')
+    mathImage.id = `equation-${getNextKey()}`
     return mathImage
   }
 
   function spawnMathEditorAtCursor() {
     const mathImage = createMathImage()
     spawnMathEditor(createMathStub(getNextKey(), true, mathImage), mathImage, {
-      onLatexUpdate: onLatexUpdate(mathImage),
+      onLatexUpdate: onLatexUpdate(mathImage.id),
     })
   }
 
   function spawnMathEditorInNewLine(afterElement: Element) {
-    // Find the closest div. This is necessary because the browser sometimes wraps lines in <div>s automatically,
-    // so we don't know whether the parent is the main text area or a random div inserted by the browser.
-    const parent = afterElement.closest('div')
-
     const mathImage = createMathImage()
+    const newMathImageId = mathImage.id
     const newStub = createMathStub(getNextKey(), false, mathImage)
-    const nextSibling = afterElement.nextSibling
 
-    // Ensure mainTextAreaRef exists before inserting
-    if (parent) {
-      parent.insertBefore(document.createElement('br'), nextSibling)
-      parent.insertBefore(mathImage, nextSibling)
-      parent.insertBefore(newStub, nextSibling)
-      spawnMathEditor(newStub, mathImage, { onLatexUpdate: onLatexUpdate(mathImage) })
+    const newHtml = document.createElement('div')
+    newHtml.appendChild(document.createElement('br'))
+    newHtml.appendChild(mathImage)
+    const after = document.getElementById(afterElement.id)
+    insertAfter(after!, newHtml.innerHTML)
+    const mathImageInAnswer = document.getElementById(newMathImageId)
+    if (mathImageInAnswer && mathImageInAnswer instanceof HTMLImageElement) {
+      spawnMathEditor(newStub, mathImageInAnswer, { onLatexUpdate: onLatexUpdate(newMathImageId) })
     } else {
-      console.error('parent element not found for math editor')
+      console.error('Failed to create equation on next line')
     }
   }
 
@@ -382,6 +396,7 @@ export function EditorStateProvider({
 
         spawnMathEditorAtCursor: spawnMathEditorAtCursor,
         spawnMathEditorInNewLine: spawnMathEditorInNewLine,
+        onMathImageClick,
         initMathImages,
 
         persistValidImages,
