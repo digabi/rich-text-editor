@@ -23,159 +23,54 @@ export function debounce<T extends (...args: any[]) => void>(func: T, timeout: n
     }, timeout)
   }
 }
-/*
-const getCharacterOffsetWithin = (parent: HTMLElement, range: Range): number => {
-  const preCaretRange = range.cloneRange()
-  preCaretRange.selectNodeContents(parent)
-  preCaretRange.setEnd(range.startContainer, range.startOffset)
-  return preCaretRange.toString().length
-}
 
-interface CursorPosition {
-  parent: Node
-  offset: number
-}
+export type CaretPosition = number
 
-export function getCursorPosition(mainTextField: HTMLElement): CursorPosition {
+export const getCaretPosition = (textField: HTMLElement) => {
+  let caretOffset = 0
   const selection = window.getSelection()
-  if (!selection || selection.rangeCount === 0) {
-    return { parent: mainTextField, offset: 0 }
+  if (!selection) return caretOffset
+  if (selection.rangeCount > 0) {
+    const range = selection.getRangeAt(0)
+    const preCaretRange = range.cloneRange()
+    preCaretRange.selectNodeContents(textField)
+    preCaretRange.setEnd(range.endContainer, range.endOffset)
+    caretOffset = preCaretRange.toString().length
   }
-
-  const range = selection.getRangeAt(0)
-  const parent =
-    (range.startContainer.nodeType === Node.TEXT_NODE
-      ? range.startContainer
-      : Array.from(range.startContainer.childNodes).find((child) => child.nodeType === Node.TEXT_NODE)) ?? mainTextField
-
-  const preCaretRange = range.cloneRange()
-  preCaretRange.selectNodeContents(parent)
-  preCaretRange.setEnd(range.startContainer, range.startOffset)
-  const offset = preCaretRange.toString().length
-
-  return { parent, offset }
+  return caretOffset
 }
 
-export function restoreCursorPosition(savedPosition: CursorPosition): void {
+export const setCaretPosition = (textField: HTMLElement, targetOffset: number) => {
   const range = document.createRange()
-  const { parent, offset } = savedPosition
+  let currentOffset = 0
+  let found = false
 
-  if (!offset || (parent.textContent && offset >= parent.textContent?.length)) {
-    range.selectNodeContents(parent)
-    range.collapse(false)
-  } else {
-    range.setStart(parent, offset)
+  function traverseNodes(node: Node) {
+    if (found) return
+    if (node.nodeType === Node.TEXT_NODE) {
+      const nextOffset = currentOffset + node.textContent!.length
+      if (nextOffset >= targetOffset) {
+        range.setStart(node, targetOffset - currentOffset)
+        range.collapse(true)
+        found = true
+      }
+      currentOffset = nextOffset
+    } else {
+      // for non-text (divs and images in our case), traverse their children
+      for (const child of node.childNodes) {
+        traverseNodes(child)
+        if (found) break
+      }
+    }
   }
 
-  const selection = window.getSelection()
-  if (selection) {
-    selection.removeAllRanges()
-    selection.addRange(range)
-  }
-}
+  traverseNodes(textField)
 
-const CARET_MARKER_ID = 'caret-marker'
-
-export const createCaretMarker = () => {
-  const selection = window.getSelection()
-  if (!selection || selection.rangeCount === 0) {
-    return null
-  }
-
-  // Just in case
-  document.querySelectorAll(`#${CARET_MARKER_ID}`).forEach((marker) => marker.remove())
-
-  const range = selection.getRangeAt(0)
-  range.collapse(false)
-  const marker = document.createElement('span')
-  marker.id = CARET_MARKER_ID
-  range.insertNode(marker)
-  return marker
-}
-
-export const restoreCaret = (textField: HTMLElement | null) => {
-  const marker = document.getElementById(CARET_MARKER_ID)
-  const range = document.createRange()
-
-  if (!marker) {
-    console.error('Caret marker not found, moving caret to end of field')
-    if (!textField) return // should never happen, appeasing TS
+  // If the old caret position is not found, default to the end of the field
+  if (!found) {
     range.selectNodeContents(textField)
     range.collapse(false)
-  } else {
-    range.setStartBefore(marker)
-    range.setEndAfter(marker)
-    marker.remove()
   }
-
-  const selection = window.getSelection()
-  if (selection) {
-    selection.removeAllRanges()
-    selection.addRange(range)
-  }
-}
-*/
-
-export interface CaretPosition {
-  path: number[]
-  offset: number
-}
-
-export const getCaretPosition = (container: HTMLElement) => {
-  const selection = window.getSelection()
-  if (!selection || selection.rangeCount === 0) return null
-
-  const range = selection.getRangeAt(0)
-  const caretContainer = range.endContainer
-  const offset = range.endOffset
-
-  console.debug('/////////////')
-  console.debug('saving caret position')
-  console.debug('caret is in', caretContainer)
-  console.debug('offset is', offset)
-
-  // Build the path outwards, starting from the caret's closest node
-  const path: number[] = []
-  let nextNode: Node | null = caretContainer as ChildNode
-  console.debug('starting from node', nextNode)
-
-  while (nextNode && nextNode !== container) {
-    const parent: ParentNode | null = nextNode.parentNode
-    if (!parent) break
-
-    const children = Array.from(parent.childNodes)
-    const index = children.indexOf(nextNode as ChildNode)
-    console.debug('this node is index number', index)
-    console.debug('next node', nextNode)
-    path.unshift(index)
-    nextNode = parent
-  }
-
-  console.debug(nextNode === container ? { path, offset } : null)
-  return nextNode === container ? { path, offset } : null
-}
-
-// Set the caret position in the container
-export const setCaretPosition = (container: HTMLElement, position?: CaretPosition): void => {
-  if (!position) return
-  console.debug('/////////////')
-  console.debug('Restoring caret position')
-
-  // Find the node by following the path
-  let node: Node = container
-  console.debug('starting from node', node)
-  for (const index of position.path) {
-    if (node.childNodes.length <= index) return
-    node = node.childNodes[index]
-    console.debug('found node', node)
-    console.debug(node)
-  }
-
-  console.debug('setting offset to', position.offset)
-  // Create a range and set it as the selection
-  const range = document.createRange()
-  range.setStart(node, position.offset)
-  range.setEnd(node, position.offset)
 
   const selection = window.getSelection()
   if (selection) {
