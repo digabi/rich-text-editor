@@ -1,4 +1,4 @@
-import { ClipboardEvent, FocusEvent, FormEvent, forwardRef, Fragment, useImperativeHandle } from 'react'
+import { ClipboardEvent, FocusEvent, FormEvent, forwardRef, Fragment, useEffect, useImperativeHandle } from 'react'
 import { createPortal } from 'react-dom'
 import styled from 'styled-components'
 import classNames from 'classnames/dedupe' // Removes duplicates in class list
@@ -75,21 +75,6 @@ const MainTextArea = forwardRef<RichTextEditorHandle, TextAreaProps>((props, ref
     }
   }
 
-  // Prevent browser's native undo/redo history use on MacOS,
-  // as it would cause strange behaviour especially when mixed with our own implementation
-  useKeyboardEventListener(
-    'z',
-    false,
-    (e) => {
-      if (e?.metaKey) {
-        e.preventDefault()
-        e.stopPropagation()
-      }
-    },
-    false,
-  )
-  useKeyboardEventListener('z', true, historyHandler(editor.undoEditor))
-  useKeyboardEventListener('y', true, historyHandler(editor.redoEditor))
   useKeyboardEventListener('e', true, (e) => {
     if (editor.ref.current === document.activeElement) {
       e?.preventDefault()
@@ -152,6 +137,22 @@ const MainTextArea = forwardRef<RichTextEditorHandle, TextAreaProps>((props, ref
     }
   }
 
+  useEffect(() => {
+    if (!editor.ref.current) return
+
+    const equationClickHandler = (e: Event) => {
+      if ((e.target as HTMLElement).classList.contains('equation')) {
+        editor.onMathImageClick(e)
+      }
+    }
+
+    editor.ref.current.addEventListener('click', equationClickHandler)
+
+    return () => {
+      editor.ref.current && editor.ref.current.removeEventListener('click', equationClickHandler)
+    }
+  }, [editor.ref.current])
+
   return (
     <>
       {toolbarRoot && editor.isToolbarOpen && createPortal(<Toolbar />, toolbarRoot)}
@@ -170,17 +171,6 @@ const MainTextArea = forwardRef<RichTextEditorHandle, TextAreaProps>((props, ref
         onBlur={onBlur}
         onFocus={editor.showToolbar}
         onInput={(e) => {
-          const inputType = (e.nativeEvent as InputEvent).inputType
-          if (inputType === 'historyUndo') {
-            historyHandler(editor.undoEditor)()
-            e.preventDefault()
-            e.stopPropagation()
-          } else if (inputType === 'historyRedo') {
-            historyHandler(editor.redoEditor)()
-            e.preventDefault()
-            e.stopPropagation()
-          }
-
           editor.onAnswerChange()
         }}
         onKeyDown={(e) => {

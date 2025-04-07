@@ -1,9 +1,6 @@
 export const MATH_EDITOR_CLASS = 'math-editor-wrapper'
 
 /**
- * Creates a new `HTMLSpanElement` that can be initialised into a new {@link MathEditor}.
- * The element will have the `MATH_EDITOR_CLASS` class name.
- *
  * By default the created `HTMLSpanElement` is *not* attached to the DOM. It is the
  * caller's responsibility to actually mount the element to the document. *However*,
  * if the `atSelection` argument is set to `true`, the box **will** be placed at the
@@ -26,7 +23,8 @@ export function createMathStub(id: string | number, atSelection = false, img?: E
     const range = selection.getRangeAt(0)
     range.deleteContents()
     range.insertNode(stub)
-    if (img) range.insertNode(img)
+    range.collapse(true)
+    if (img) document.execCommand('insertHTML', false, img.outerHTML)
 
     // If the new equation would be created inside another equations wrapper, move it outside of it
     const parent = stub.parentNode as Element

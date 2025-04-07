@@ -25,6 +25,8 @@ import {
   setClipboardImage,
   selectAll,
   getLatexImgTag,
+  undo,
+  redo,
 } from './test-utils'
 import RichTextEditor from '../src/app'
 import { Answer } from '../src/app/utility'
@@ -347,60 +349,50 @@ test.describe('Rich text editor', () => {
 
     test('can undo and redo changes', async ({ page, browserName }) => {
       await test.step('Ctrl+Z undoes changes', async () => {
-        await writeAndWaitForTimeout(page, 'aa')
-        assertAnswerContent(answer, { answerText: 'aa' })
-        await writeAndWaitForTimeout(page, 'bb')
-        assertAnswerContent(answer, { answerText: 'aabb' })
-        await page.keyboard.press('Control+z')
-        assertAnswerContent(answer, { answerText: 'aa' })
+        await page.keyboard.type('123')
+        await undo(page)
+        await assertEditorTextContent(getEditorLocator(page), '')
+        await page.keyboard.type('123')
+        await page.keyboard.press('Backspace')
+        await page.keyboard.type('c')
+        await assertEditorTextContent(getEditorLocator(page), '12c')
+        await undo(page)
+        await assertEditorTextContent(getEditorLocator(page), '123')
       })
 
       await test.step('undo at earlies change does nothing', async () => {
-        await page.keyboard.press('Control+z')
-        assertAnswerContent(answer, { answerText: '' })
-        await page.keyboard.press('Control+z')
-        assertAnswerContent(answer, { answerText: '' })
+        await undo(page)
+        await assertEditorTextContent(getEditorLocator(page), '')
       })
 
       await test.step('Ctrl+Y redoes changes', async () => {
-        await page.keyboard.press('Control+y')
-        assertAnswerContent(answer, { answerText: 'aa' })
-        await page.keyboard.press('Control+y')
-        assertAnswerContent(answer, { answerText: 'aabb' })
+        await redo(page)
+        await assertEditorTextContent(getEditorLocator(page), '12')
       })
 
       await test.step('typing clears changes', async () => {
-        await page.keyboard.press('Control+z')
-        assertAnswerContent(answer, { answerText: 'aa' })
-        await page.keyboard.press('Control+z')
-        assertAnswerContent(answer, { answerText: '' })
-        await writeAndWaitForTimeout(page, 'cc')
-        assertAnswerContent(answer, { answerText: 'cc' })
-      })
-
-      await test.step('redo at latest change does nothing', async () => {
-        await page.keyboard.press('Control+y')
-        assertAnswerContent(answer, { answerText: 'cc' })
+        await page.keyboard.type('345')
+        assertAnswerContent(answer, { answerText: '12345' })
+        await redo(page)
+        assertAnswerContent(answer, { answerText: '12345' })
       })
 
       await test.step('equations can be undone', async () => {
         await page.keyboard.press('Control+e')
         await page.keyboard.type('xxx')
         await getEditorLocator(page).click()
-        assertAnswerContent(answer, { answerHtml: `cc${getLatexImgTag('xxx')}` })
-        await page.waitForTimeout(historyTimeout)
+        assertAnswerContent(answer, { answerHtml: `12345${getLatexImgTag('xxx')}` })
         await page.keyboard.press('Control+z')
-        assertAnswerContent(answer, { answerHtml: 'cc' })
+        assertAnswerContent(answer, { answerHtml: '12345' })
       })
 
       await test.step('equations can be redone', async () => {
         await page.keyboard.press('Control+y')
-        assertAnswerContent(answer, { answerHtml: `cc${getLatexImgTag('xxx')}` })
+        assertAnswerContent(answer, { answerHtml: `12345${getLatexImgTag('xxx')}` })
         await getEditorLocator(page).getByRole('img').click()
-        await page.waitForTimeout(historyTimeout)
         await page.keyboard.type('yyy')
         await page.keyboard.press('Escape')
-        assertAnswerContent(answer, { answerHtml: `cc${getLatexImgTag('xxxyyy')}` })
+        assertAnswerContent(answer, { answerHtml: `12345${getLatexImgTag('xxxyyy')}` })
       })
 
       await test.step('pasting images can be undone', async () => {
@@ -600,7 +592,8 @@ test.describe('Rich text editor', () => {
 
     test('is removed if closed with empty LaTeX', async ({ page }) => {
       await clickOutsideEditor(page)
-      await assertEditorHTMLContent(getEditorLocator(page), '')
+      await expect(getEditorLocator(page).locator('img')).toHaveCount(0)
+      assertAnswerContent(answer, { answerHtml: '' })
     })
 
     test('opens with hot key', async ({ page }) => {

@@ -169,3 +169,13 @@ export const specialCharacters = {
 
 export const getLatexImgTag = (latex: string) =>
   `<img src="http://localhost:5111/math.svg?latex=${encodeURIComponent(latex)}" alt="${latex}">`
+
+export const undo = async (page: Page) => {
+  process.platform === 'darwin' ? await page.keyboard.press('Meta+z') : await page.keyboard.press('Control+z')
+}
+
+export const redo = async (page: Page) => {
+  process.platform === 'darwin'
+    ? await page.keyboard.press('Meta+Shift+z')
+    : await page.keyboard.press('Control+Shift+z')
+}
