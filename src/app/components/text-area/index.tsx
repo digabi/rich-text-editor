@@ -191,6 +191,14 @@ const MainTextArea = forwardRef<RichTextEditorHandle, TextAreaProps>((props, ref
           }
         }}
         onPaste={onPaste}
+        onDragOver={(e) => {
+          e.preventDefault()
+          e.stopPropagation()
+        }}
+        onDrop={(e) => {
+          e.preventDefault()
+          e.stopPropagation()
+        }}
         spellCheck={false}
         style={editorStyle}
         role="textbox"
