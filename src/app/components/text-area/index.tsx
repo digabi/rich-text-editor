@@ -55,21 +55,17 @@ const MainTextArea = forwardRef<RichTextEditorHandle, TextAreaProps>((props, ref
       return
     }
 
-    const { content: newValue, caretPosition } = fromHistory
+    const { content: newValue, newCaretPosition } = fromHistory
 
     if (editor.ref.current && newValue !== oldValue) {
-      //const savedCursorPosition = getCursorPosition(editor.ref.current)
-      //createCaretMarker()
-      editor.ref.current.innerHTML = newValue
+      editor.ref.current.innerHTML = newValue ?? ''
 
       // TODO: Extract this into a function instead of pasting it all over the place
       setTimeout(() => {
         editor.initMathImages()
         setTimeout(() => {
-          //restoreCursorPosition(savedCursorPosition)
-          //restoreCaret(editor.ref?.current)
-          if (editor.ref.current && caretPosition) {
-            setCaretPosition(editor.ref.current, caretPosition)
+          if (editor.ref.current && newCaretPosition) {
+            setCaretPosition(editor.ref.current, newCaretPosition)
           }
 
           editor.onAnswerChange(false)
