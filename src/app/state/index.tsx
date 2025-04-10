@@ -1,7 +1,7 @@
 import { createContext, PropsWithChildren, ReactPortal, useContext, useEffect, useRef, useState } from 'react'
 import { Container } from 'react-dom/client'
 
-import useHistory, { HistoryEntry } from './history'
+import useHistory, { HistoryActionResult } from './history'
 
 import MathEditor, { MathEditorHandle, Props as MathEditorProps } from '../components/math-editor'
 import { createMathStub } from '../utils/create-math-stub'
@@ -11,7 +11,7 @@ import SV from '../../SV'
 import { createPortal } from 'react-dom'
 import {
   CaretPosition,
-  debounce,
+  debounceAnswerSave,
   decodeBase64Image,
   getAnswer,
   getCaretPosition,
@@ -73,8 +73,8 @@ export type EditorState = {
   canUndoEquation: boolean
   canRedoEquation: boolean
 
-  undoEditor: () => HistoryEntry | undefined
-  redoEditor: () => HistoryEntry | undefined
+  undoEditor: () => HistoryActionResult | undefined
+  redoEditor: () => HistoryActionResult | undefined
   canUndoEditor: boolean
   canRedoEditor: boolean
 }
@@ -318,11 +318,11 @@ export function EditorStateProvider({
     })
   }
 
-  const updateAnswerHistory = (content: string, caretPosition: CaretPosition) => {
-    mainTextAreaHistory.write(content, caretPosition)
+  const updateAnswerHistory = (content: string, caretPositionBefore: CaretPosition) => {
+    mainTextAreaHistory.write(content, caretPositionBefore, getCaretPosition(mainTextAreaRef.current!))
   }
 
-  const updateAnswerHistoryDebounced = debounce(
+  const updateAnswerHistoryDebounced = debounceAnswerSave(
     (content: string, caretPosition: CaretPosition) => updateAnswerHistory(content, caretPosition),
     500,
   )
@@ -339,7 +339,7 @@ export function EditorStateProvider({
         onValueChange(answer)
 
         if (shouldUpdateHistory) {
-          const caretPosition = getCaretPosition(mainTextAreaRef.current!) ?? { path: [], offset: 0 }
+          const caretPosition = getCaretPosition(mainTextAreaRef.current!)
           if (shouldUpdateHistoryImmediately) {
             updateAnswerHistory(answer.answerHtml, caretPosition)
             //mainTextAreaHistory.write(answer.answerHtml)

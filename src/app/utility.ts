@@ -11,15 +11,24 @@ export const eventHandlerWithoutFocusLoss = (fn?: () => void) => (e: React.Mouse
   return false
 }
 
-export function debounce<T extends (...args: any[]) => void>(func: T, timeout: number) {
-  // setTimeout returns a number in a browser and an object in Node
+export function debounceAnswerSave(func: (content: string, caretPosition: CaretPosition) => void, timeout: number) {
   let timer: ReturnType<typeof setTimeout> | null = null
+  let initialCaretPosition: CaretPosition | null = null
+
   return function <U>(this: U, ...args: Parameters<typeof func>) {
+    const [content, caretPosition] = args as [string, CaretPosition]
+
+    if (initialCaretPosition === null) {
+      initialCaretPosition = caretPosition
+    }
+
     if (timer && typeof timeout === 'number') {
       clearTimeout(timer)
     }
+
     timer = setTimeout(() => {
-      func(...args)
+      func(content, initialCaretPosition ?? caretPosition)
+      initialCaretPosition = null
     }, timeout)
   }
 }
@@ -37,7 +46,7 @@ export const getCaretPosition = (textField: HTMLElement) => {
     preCaretRange.setEnd(range.endContainer, range.endOffset)
     caretOffset = preCaretRange.toString().length
   }
-  return caretOffset
+  return caretOffset - 1
 }
 
 export const setCaretPosition = (textField: HTMLElement, targetOffset: number) => {
