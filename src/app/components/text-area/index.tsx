@@ -49,8 +49,6 @@ const MainTextArea = forwardRef<RichTextEditorHandle, TextAreaProps>((props, ref
     const oldValue = editor.ref.current?.innerHTML
     const fromHistory = fn()
 
-    console.debug({ fromHistory })
-
     if (fromHistory === undefined) {
       return
     }
