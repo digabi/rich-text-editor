@@ -339,10 +339,11 @@ export function EditorStateProvider({
         onValueChange(answer)
 
         if (shouldUpdateHistory) {
-          const caretPosition = getCaretPosition(mainTextAreaRef.current!)
+          // The magic '-1' is needed because the position will already be after
+          // the first inserted character at this point
+          const caretPosition = getCaretPosition(mainTextAreaRef.current!) - 1
           if (shouldUpdateHistoryImmediately) {
             updateAnswerHistory(answer.answerHtml, caretPosition)
-            //mainTextAreaHistory.write(answer.answerHtml)
           } else {
             updateAnswerHistoryDebounced(answer.answerHtml, caretPosition)
           }

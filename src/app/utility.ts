@@ -46,7 +46,7 @@ export const getCaretPosition = (textField: HTMLElement) => {
     preCaretRange.setEnd(range.endContainer, range.endOffset)
     caretOffset = preCaretRange.toString().length
   }
-  return caretOffset - 1
+  return caretOffset
 }
 
 export const setCaretPosition = (textField: HTMLElement, targetOffset: number) => {
