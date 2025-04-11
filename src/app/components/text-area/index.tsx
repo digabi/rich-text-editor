@@ -7,7 +7,7 @@ import useEditorState from '../../state'
 import Toolbar from '../toolbar'
 import { HelpDialog } from '../help-dialog'
 import { sanitize } from '../../utils/sanitization'
-import { decodeBase64Image, isForbiddenInlineImage, loadingImage, setCaretPosition } from '../../utility'
+import { setCaretPosition } from '../../utility'
 import { RichTextEditorHandle } from '../..'
 import { useKeyboardEventListener } from '../../hooks/use-keyboard-events'
 
@@ -103,8 +103,7 @@ const MainTextArea = forwardRef<RichTextEditorHandle, TextAreaProps>((props, ref
     const content = e.nativeEvent.clipboardData
     if (!content) return
 
-    // The old editor always picked the last picture so we do that too,
-    // the reason's lost to history though.
+    // We only allow pasting one image at a time, so we pick the last one
     const file = Array.from(content.items).at(-1)?.getAsFile()
     const html = content.getData('text/html')
     const text = content.getData('text/plain')
