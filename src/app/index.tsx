@@ -25,6 +25,19 @@ export type RichTextEditorProps = {
   textAreaProps?: TextAreaProps
   toolbarRoot?: HTMLElement
   invalidImageSelector?: string
+  /**
+   * Overrides the default latex update handler.
+   *
+   * By default the handler sets the alt and src attributes on the <img>
+   * element `img`:
+   * ```
+   * (img: HTMLImageElement, latex: string) => {
+   *   img.setAttribute('src', `${baseUrl}/math.svg?latex=${encodeURIComponent(latex)}`)
+   *   img.setAttribute('alt', latex)
+   * }
+   * ```
+   */
+  onLatexUpdate?: (img: HTMLImageElement, latex: string) => void
 } & TextAreaProps
 
 const RichTextEditor = forwardRef<RichTextEditorHandle, RichTextEditorProps>((props, ref) => {
@@ -38,6 +51,7 @@ const RichTextEditor = forwardRef<RichTextEditorHandle, RichTextEditorProps>((pr
     textAreaProps,
     toolbarRoot,
     invalidImageSelector,
+    onLatexUpdate,
   } = props
   const [toolbarRootElement, setToolbarRootElement] = useState<HTMLElement | undefined>(toolbarRoot)
   const toolbarRootRef = useRef<HTMLDivElement>(null)
@@ -59,6 +73,7 @@ const RichTextEditor = forwardRef<RichTextEditorHandle, RichTextEditorProps>((pr
       language={language}
       onValueChange={onValueChange}
       invalidImageSelector={invalidImageSelector}
+      onLatexUpdate={onLatexUpdate}
     >
       {toolbarRoot ? null : <div ref={toolbarRootRef} className="rich-text-editor-toolbar-root" />}
       <MainTextArea {...textAreaProps} toolbarRoot={toolbarRootElement} ref={ref} />
