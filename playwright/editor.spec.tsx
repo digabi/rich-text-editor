@@ -454,6 +454,75 @@ test.describe('Rich text editor', () => {
         await expect(getEditorLocator(page).getByRole('img')).toBeVisible()
       })
     })
+
+    test('cursor is returned to the correct position', async ({ page }) => {
+      await test.step('on undo', async () => {
+        await page.keyboard.type('This is a test')
+
+        await page.waitForTimeout(historyTimeout)
+        await repeat(4, async () => {
+          await page.keyboard.press('ArrowLeft')
+        })
+
+        await page.keyboard.type('component ')
+        assertAnswerContent(answer, { answerHtml: 'This is a component test' })
+
+        await repeat(4, async () => {
+          await page.keyboard.press('ArrowRight')
+        })
+
+        await page.waitForTimeout(historyTimeout)
+        await page.keyboard.press('Control+z')
+        await page.keyboard.type('(1) ')
+        assertAnswerContent(answer, { answerHtml: 'This is a (1) test' })
+      })
+
+      await test.step('on redo', async () => {
+        await page.waitForTimeout(historyTimeout)
+        await page.keyboard.press('Control+z')
+        await repeat(6, async () => {
+          await page.keyboard.press('ArrowLeft')
+        })
+
+        await page.keyboard.press('Control+y')
+        await page.keyboard.type('(2) ')
+        assertAnswerContent(answer, { answerHtml: 'This is a (1) (2) test' })
+      })
+
+      await test.step('on undo across different lines', async () => {
+        await page.waitForTimeout(historyTimeout)
+        await repeat(4, async () => {
+          await page.keyboard.press('ArrowRight')
+        })
+
+        await page.keyboard.press('Enter')
+        const secondLine = 'This is a second line'
+        await page.keyboard.type(secondLine)
+        await page.waitForTimeout(historyTimeout)
+
+        await repeat(secondLine.length, async () => {
+          await page.keyboard.press('ArrowLeft')
+        })
+        await page.keyboard.press('ArrowUp')
+        await repeat(4, async () => {
+          await page.keyboard.press('ArrowRight')
+        })
+
+        await page.keyboard.type(' (3)')
+        await page.waitForTimeout(historyTimeout)
+        assertAnswerContent(answer, { answerText: 'This (3) is a (1) (2) test\nThis is a second line' })
+
+        await page.keyboard.press('ArrowDown')
+        await page.keyboard.press('ArrowDown')
+        await page.keyboard.type(' (4)')
+        assertAnswerContent(answer, { answerText: 'This (3) is a (1) (2) test\nThis is a second line (4)' })
+        await page.waitForTimeout(historyTimeout)
+        await page.keyboard.press('Control+z')
+        await page.keyboard.press('Control+z')
+        await page.keyboard.type(' (5)')
+        assertAnswerContent(answer, { answerText: 'This (5) is a (1) (2) test\nThis is a second line' })
+      })
+    })
   })
 
   test.describe('selecting text', () => {
