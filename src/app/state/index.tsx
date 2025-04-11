@@ -1,7 +1,7 @@
 import { createContext, PropsWithChildren, ReactPortal, useContext, useEffect, useRef, useState } from 'react'
 import { Container } from 'react-dom/client'
 
-import useHistory from './history'
+import useHistory, { HistoryActionResult } from './history'
 
 import MathEditor, { MathEditorHandle, Props as MathEditorProps } from '../components/math-editor'
 import { createMathStub } from '../utils/create-math-stub'
@@ -9,7 +9,15 @@ import { createMathStub } from '../utils/create-math-stub'
 import FI from '../../FI'
 import SV from '../../SV'
 import { createPortal } from 'react-dom'
-import { debounce, decodeBase64Image, getAnswer, isForbiddenInlineImage, loadingImage } from '../utility'
+import {
+  CaretPosition,
+  debounceAnswerSave,
+  decodeBase64Image,
+  getAnswer,
+  getCaretPosition,
+  isForbiddenInlineImage,
+  loadingImage,
+} from '../utility'
 import { RichTextEditorProps } from '../index'
 import MainTextArea from '../components/text-area'
 
@@ -65,8 +73,8 @@ export type EditorState = {
   canUndoEquation: boolean
   canRedoEquation: boolean
 
-  undoEditor: () => string | undefined
-  redoEditor: () => string | undefined
+  undoEditor: () => HistoryActionResult | undefined
+  redoEditor: () => HistoryActionResult | undefined
   canUndoEditor: boolean
   canRedoEditor: boolean
 }
@@ -310,7 +318,14 @@ export function EditorStateProvider({
     })
   }
 
-  const updateAnswerHistoryDebounced = debounce((content: string) => mainTextAreaHistory.write(content), 500)
+  const updateAnswerHistory = (content: string, caretPositionBefore: CaretPosition) => {
+    mainTextAreaHistory.write(content, caretPositionBefore, getCaretPosition(mainTextAreaRef.current!))
+  }
+
+  const updateAnswerHistoryDebounced = debounceAnswerSave(
+    (content: string, caretPosition: CaretPosition) => updateAnswerHistory(content, caretPosition),
+    500,
+  )
 
   /**
    * @param shouldUpdateHistory - Whether to update the answer history (defaults to true)
@@ -324,10 +339,13 @@ export function EditorStateProvider({
         onValueChange(answer)
 
         if (shouldUpdateHistory) {
+          // The magic '-1' is needed because the position will already be after
+          // the first inserted character at this point
+          const caretPosition = getCaretPosition(mainTextAreaRef.current!) - 1
           if (shouldUpdateHistoryImmediately) {
-            mainTextAreaHistory.write(answer.answerHtml)
+            updateAnswerHistory(answer.answerHtml, caretPosition)
           } else {
-            updateAnswerHistoryDebounced(answer.answerHtml)
+            updateAnswerHistoryDebounced(answer.answerHtml, caretPosition)
           }
         }
       }
@@ -388,8 +406,8 @@ export function EditorStateProvider({
 
         canUndoEquation: equationEditorHistory.canUndo,
         canRedoEquation: equationEditorHistory.canRedo,
-        undoEquation: equationEditorHistory.undo,
-        redoEquation: equationEditorHistory.redo,
+        undoEquation: () => equationEditorHistory.undo()?.content,
+        redoEquation: () => equationEditorHistory.redo()?.content,
 
         canUndoEditor: mainTextAreaHistory.canUndo,
         canRedoEditor: mainTextAreaHistory.canRedo,

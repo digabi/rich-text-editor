@@ -7,13 +7,7 @@ import useEditorState from '../../state'
 import Toolbar from '../toolbar'
 import { HelpDialog } from '../help-dialog'
 import { sanitize } from '../../utils/sanitization'
-import {
-  decodeBase64Image,
-  getCursorPosition,
-  isForbiddenInlineImage,
-  restoreCursorPosition,
-  loadingImage,
-} from '../../utility'
+import { setCaretPosition } from '../../utility'
 import { RichTextEditorHandle } from '../..'
 import { useKeyboardEventListener } from '../../hooks/use-keyboard-events'
 
@@ -53,23 +47,26 @@ const MainTextArea = forwardRef<RichTextEditorHandle, TextAreaProps>((props, ref
     }
 
     const oldValue = editor.ref.current?.innerHTML
-    const newValue = fn()
+    const fromHistory = fn()
 
-    if (newValue === undefined) {
+    if (fromHistory === undefined) {
       return
     }
 
+    const { content: newValue, newCaretPosition } = fromHistory
+
     if (editor.ref.current && newValue !== oldValue) {
-      const savedCursorPosition = getCursorPosition(editor.ref.current)
-      editor.ref.current.innerHTML = newValue
+      editor.ref.current.innerHTML = newValue ?? ''
 
       // TODO: Extract this into a function instead of pasting it all over the place
       setTimeout(() => {
         editor.initMathImages()
         setTimeout(() => {
-          editor.onAnswerChange(false)
+          if (editor.ref.current && newCaretPosition) {
+            setCaretPosition(editor.ref.current, newCaretPosition)
+          }
 
-          restoreCursorPosition(editor.ref.current!, savedCursorPosition)
+          editor.onAnswerChange(false)
         }, 0)
       }, 0)
     }
@@ -104,8 +101,7 @@ const MainTextArea = forwardRef<RichTextEditorHandle, TextAreaProps>((props, ref
     const content = e.nativeEvent.clipboardData
     if (!content) return
 
-    // The old editor always picked the last picture so we do that too,
-    // the reason's lost to history though.
+    // We only allow pasting one image at a time, so we pick the last one
     const file = Array.from(content.items).at(-1)?.getAsFile()
     const html = content.getData('text/html')
     const text = content.getData('text/plain')
