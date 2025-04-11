@@ -21,6 +21,7 @@ export const makeRichText = (props: MakeRichTextProps) => {
     textAreaProps,
     onValueChange,
     invalidImageSelector,
+    onLatexUpdate,
   } = {
     ...defaultProps,
     ...props,
@@ -36,6 +37,7 @@ export const makeRichText = (props: MakeRichTextProps) => {
       allowedFileTypes={allowedFileTypes}
       textAreaProps={textAreaProps}
       invalidImageSelector={invalidImageSelector}
+      onLatexUpdate={onLatexUpdate}
     />,
   )
 
