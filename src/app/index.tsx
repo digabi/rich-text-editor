@@ -21,8 +21,8 @@ export type RichTextEditorProps = {
   initialValue?: string
   language?: 'FI' | 'SV'
   onValueChange?: (answer: Answer) => void
-  /** The toolbars will be rendered in this root via a React Portal */
   textAreaProps?: TextAreaProps
+  /** The toolbars will be rendered in this root via a React Portal */
   toolbarRoot?: HTMLElement
   invalidImageSelector?: string
   /**
