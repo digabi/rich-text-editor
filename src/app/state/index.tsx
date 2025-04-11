@@ -94,6 +94,11 @@ const defaultPasteSource = (file: File): Promise<string> =>
     reader.readAsDataURL(file)
   })
 
+const defaultOnLatexUpdate = (baseUrl: string) => (img: HTMLImageElement, latex: string) => {
+  img.setAttribute('src', `${baseUrl}/math.svg?latex=${encodeURIComponent(latex)}`)
+  img.setAttribute('alt', latex)
+}
+
 const setCursorAroundElement = (element: Container, position: 'before' | 'after' = 'after') => {
   const selection = window.getSelection()
   const range = document.createRange()
@@ -118,6 +123,7 @@ export function EditorStateProvider({
   onValueChange = () => {},
   initialValue = '',
   baseUrl = '',
+  onLatexUpdate = defaultOnLatexUpdate(baseUrl),
 }: EditorStateProps) {
   const [isToolbarOpen, setIsToolbarOpen] = useState(false)
   const [isMathToolbarOpen, setIsMathToolbarOpen] = useState(false)
@@ -205,11 +211,6 @@ export function EditorStateProvider({
     setMathEditorPortal([stub, portal])
   }
 
-  const onLatexUpdate = (img: HTMLImageElement) => (latex: string) => {
-    img.setAttribute('src', `${baseUrl}/math.svg?latex=${encodeURIComponent(latex)}`)
-    img.setAttribute('alt', latex)
-  }
-
   function onMathImageClick(img: HTMLImageElement, e: Event) {
     const parent = img.parentElement
     e.stopPropagation()
@@ -222,7 +223,10 @@ export function EditorStateProvider({
       mainTextAreaRef.current?.appendChild(stub)
     }
 
-    spawnMathEditor(stub, img, { initialLatex: img.getAttribute('alt'), onLatexUpdate: onLatexUpdate(img) })
+    spawnMathEditor(stub, img, {
+      initialLatex: img.getAttribute('alt'),
+      onLatexUpdate: (latex) => onLatexUpdate(img, latex),
+    })
   }
 
   function createMathImage() {
@@ -237,7 +241,7 @@ export function EditorStateProvider({
   function spawnMathEditorAtCursor() {
     const mathImage = createMathImage()
     spawnMathEditor(createMathStub(getNextKey(), true, mathImage), mathImage, {
-      onLatexUpdate: onLatexUpdate(mathImage),
+      onLatexUpdate: (latex) => onLatexUpdate(mathImage, latex),
     })
   }
 
@@ -255,7 +259,7 @@ export function EditorStateProvider({
       parent.insertBefore(document.createElement('br'), nextSibling)
       parent.insertBefore(mathImage, nextSibling)
       parent.insertBefore(newStub, nextSibling)
-      spawnMathEditor(newStub, mathImage, { onLatexUpdate: onLatexUpdate(mathImage) })
+      spawnMathEditor(newStub, mathImage, { onLatexUpdate: (latex) => onLatexUpdate(mathImage, latex) })
     } else {
       console.error('parent element not found for math editor')
     }
