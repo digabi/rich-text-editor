@@ -1,4 +1,4 @@
-import { ClipboardEvent, FocusEvent, forwardRef, Fragment, useImperativeHandle, useState } from 'react'
+import { ClipboardEvent, FocusEvent, forwardRef, Fragment, useImperativeHandle, useRef } from 'react'
 import { createPortal } from 'react-dom'
 import styled from 'styled-components'
 import classNames from 'classnames/dedupe' // Removes duplicates in class list
@@ -25,7 +25,7 @@ export type TextAreaProps = {
 const MainTextArea = forwardRef<RichTextEditorHandle, TextAreaProps>((props, ref) => {
   const { toolbarRoot, ariaInvalid, ariaLabelledBy, questionId, editorStyle, className, id, lang } = props
   const editor = useEditorState()
-  const [storedCaretPosition, setStoredCaretPosition] = useState<CaretPosition>(0)
+  const storedCaretPosition = useRef<CaretPosition>(0)
 
   useImperativeHandle(ref, () => ({
     setValue: (value: string) => {
@@ -36,7 +36,7 @@ const MainTextArea = forwardRef<RichTextEditorHandle, TextAreaProps>((props, ref
       setTimeout(() => {
         editor.initMathImages()
         setTimeout(() => {
-          editor.onAnswerChange(storedCaretPosition)
+          editor.onAnswerChange(storedCaretPosition.current)
         }, 0)
       }, 0)
     },
@@ -136,7 +136,7 @@ const MainTextArea = forwardRef<RichTextEditorHandle, TextAreaProps>((props, ref
       }
 
       setTimeout(() => {
-        editor.onAnswerChange(storedCaretPosition)
+        editor.onAnswerChange(storedCaretPosition.current)
       }, 0)
     }, 0)
   }
@@ -178,10 +178,10 @@ const MainTextArea = forwardRef<RichTextEditorHandle, TextAreaProps>((props, ref
             e.stopPropagation()
           }
 
-          editor.onAnswerChange(storedCaretPosition)
+          editor.onAnswerChange(storedCaretPosition.current)
         }}
         onKeyDown={(e) => {
-          setStoredCaretPosition(getCaretPosition(editor.ref.current!))
+          storedCaretPosition.current = getCaretPosition(editor.ref.current!)
 
           if (e.key.toLowerCase() === 'e' && e.ctrlKey) {
             e.preventDefault()
@@ -190,7 +190,7 @@ const MainTextArea = forwardRef<RichTextEditorHandle, TextAreaProps>((props, ref
           }
         }}
         onMouseDown={(_e) => {
-          setStoredCaretPosition(getCaretPosition(editor.ref.current!))
+          storedCaretPosition.current = getCaretPosition(editor.ref.current!)
         }}
         onPaste={onPaste}
         onDragOver={(e) => {
