@@ -15,6 +15,7 @@ import {
   decodeBase64Image,
   getAnswer,
   getCaretPosition,
+  getCaretPositionAfterElement,
   isForbiddenInlineImage,
   loadingImage,
 } from '../utility'
@@ -175,7 +176,7 @@ export function EditorStateProvider({
       setIsMathToolbarOpen(false)
       setIsToolbarOpen(false)
 
-      onAnswerChange(0, true, true)
+      onAnswerChange(getCaretPositionAfterElement(mainTextAreaRef.current!, image), true, true)
 
       if (forceCursorPosition) {
         setCursorAroundElement(image, forceCursorPosition)
@@ -189,7 +190,7 @@ export function EditorStateProvider({
 
     function onChange(latex: string) {
       equationEditorHistory.write(latex)
-      onAnswerChange(0, false, false)
+      onAnswerChange(getCaretPositionAfterElement(mainTextAreaRef.current!, image), false, false)
     }
 
     function onEnter(latex: string) {
