@@ -1,7 +1,7 @@
 import { createContext, PropsWithChildren, ReactPortal, useContext, useEffect, useRef, useState } from 'react'
 import { Container } from 'react-dom/client'
 
-import useHistory from './history'
+import useHistory, { HistoryActionResult } from './history'
 
 import MathEditor, { MathEditorHandle, Props as MathEditorProps } from '../components/math-editor'
 import { createMathStub } from '../utils/create-math-stub'
@@ -9,7 +9,16 @@ import { createMathStub } from '../utils/create-math-stub'
 import FI from '../../FI'
 import SV from '../../SV'
 import { createPortal } from 'react-dom'
-import { debounce, decodeBase64Image, getAnswer, isForbiddenInlineImage, loadingImage } from '../utility'
+import {
+  CaretPosition,
+  debounceAnswerSave,
+  decodeBase64Image,
+  getAnswer,
+  getCaretPosition,
+  getCaretPositionAfterElement,
+  isForbiddenInlineImage,
+  loadingImage,
+} from '../utility'
 import { RichTextEditorProps } from '../index'
 import MainTextArea from '../components/text-area'
 
@@ -56,7 +65,7 @@ export type EditorState = {
    * do not trigger the main text area's `onInput` event so we need a mechanism to
    * trigger this from multiple places
    */
-  onAnswerChange: (shouldUpdateHistory?: boolean) => void
+  onAnswerChange: (caretPosition?: CaretPosition, shouldUpdateHistory?: boolean) => void
   initialValue?: string
   baseUrl: string
 
@@ -65,8 +74,8 @@ export type EditorState = {
   canUndoEquation: boolean
   canRedoEquation: boolean
 
-  undoEditor: () => string | undefined
-  redoEditor: () => string | undefined
+  undoEditor: () => HistoryActionResult | undefined
+  redoEditor: () => HistoryActionResult | undefined
   canUndoEditor: boolean
   canRedoEditor: boolean
 }
@@ -167,7 +176,7 @@ export function EditorStateProvider({
       setIsMathToolbarOpen(false)
       setIsToolbarOpen(false)
 
-      onAnswerChange(true, true)
+      onAnswerChange(getCaretPositionAfterElement(mainTextAreaRef.current!, image), true, true)
 
       if (forceCursorPosition) {
         setCursorAroundElement(image, forceCursorPosition)
@@ -181,7 +190,7 @@ export function EditorStateProvider({
 
     function onChange(latex: string) {
       equationEditorHistory.write(latex)
-      onAnswerChange(false, false)
+      onAnswerChange(getCaretPositionAfterElement(mainTextAreaRef.current!, image), false, false)
     }
 
     function onEnter(latex: string) {
@@ -310,13 +319,24 @@ export function EditorStateProvider({
     })
   }
 
-  const updateAnswerHistoryDebounced = debounce((content: string) => mainTextAreaHistory.write(content), 500)
+  const updateAnswerHistory = (content: string, caretPositionBefore: CaretPosition) => {
+    mainTextAreaHistory.write(content, caretPositionBefore, getCaretPosition(mainTextAreaRef.current!))
+  }
+
+  const updateAnswerHistoryDebounced = debounceAnswerSave(
+    (content: string, caretPositionBefore: CaretPosition) => updateAnswerHistory(content, caretPositionBefore),
+    500,
+  )
 
   /**
    * @param shouldUpdateHistory - Whether to update the answer history (defaults to true)
    * @param shouldUpdateHistoryImmediately - Whether to update the answer history immediately, without debouncing (defaults to false)
    */
-  function onAnswerChange(shouldUpdateHistory: boolean = true, shouldUpdateHistoryImmediately: boolean = false) {
+  function onAnswerChange(
+    caretPosition: CaretPosition = 0,
+    shouldUpdateHistory: boolean = true,
+    shouldUpdateHistoryImmediately: boolean = false,
+  ) {
     const fn = () => {
       const content = mainTextAreaRef.current?.innerHTML
       if (content !== undefined) {
@@ -325,13 +345,14 @@ export function EditorStateProvider({
 
         if (shouldUpdateHistory) {
           if (shouldUpdateHistoryImmediately) {
-            mainTextAreaHistory.write(answer.answerHtml)
+            updateAnswerHistory(answer.answerHtml, caretPosition)
           } else {
-            updateAnswerHistoryDebounced(answer.answerHtml)
+            updateAnswerHistoryDebounced(answer.answerHtml, caretPosition)
           }
         }
       }
     }
+
     /** This 0ms timeout is crucial - it essentially moves the callback into the next event loop,
      * after pending DOM changes have been made in the current loop (in practice,
      * this is needed because closing a math editor changes the HTML of the answer,
@@ -388,8 +409,8 @@ export function EditorStateProvider({
 
         canUndoEquation: equationEditorHistory.canUndo,
         canRedoEquation: equationEditorHistory.canRedo,
-        undoEquation: equationEditorHistory.undo,
-        redoEquation: equationEditorHistory.redo,
+        undoEquation: () => equationEditorHistory.undo()?.content,
+        redoEquation: () => equationEditorHistory.redo()?.content,
 
         canUndoEditor: mainTextAreaHistory.canUndo,
         canRedoEditor: mainTextAreaHistory.canRedo,

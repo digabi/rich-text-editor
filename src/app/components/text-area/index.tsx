@@ -1,4 +1,4 @@
-import { ClipboardEvent, FocusEvent, FormEvent, forwardRef, Fragment, useImperativeHandle } from 'react'
+import { ClipboardEvent, FocusEvent, forwardRef, Fragment, useImperativeHandle, useRef } from 'react'
 import { createPortal } from 'react-dom'
 import styled from 'styled-components'
 import classNames from 'classnames/dedupe' // Removes duplicates in class list
@@ -7,13 +7,7 @@ import useEditorState from '../../state'
 import Toolbar from '../toolbar'
 import { HelpDialog } from '../help-dialog'
 import { sanitize } from '../../utils/sanitization'
-import {
-  decodeBase64Image,
-  getCursorPosition,
-  isForbiddenInlineImage,
-  restoreCursorPosition,
-  loadingImage,
-} from '../../utility'
+import { CaretPosition, getCaretPosition, setCaretPosition } from '../../utility'
 import { RichTextEditorHandle } from '../..'
 import { useKeyboardEventListener } from '../../hooks/use-keyboard-events'
 
@@ -31,6 +25,7 @@ export type TextAreaProps = {
 const MainTextArea = forwardRef<RichTextEditorHandle, TextAreaProps>((props, ref) => {
   const { toolbarRoot, ariaInvalid, ariaLabelledBy, questionId, editorStyle, className, id, lang } = props
   const editor = useEditorState()
+  const storedCaretPosition = useRef<CaretPosition>(0)
 
   useImperativeHandle(ref, () => ({
     setValue: (value: string) => {
@@ -41,7 +36,7 @@ const MainTextArea = forwardRef<RichTextEditorHandle, TextAreaProps>((props, ref
       setTimeout(() => {
         editor.initMathImages()
         setTimeout(() => {
-          editor.onAnswerChange()
+          editor.onAnswerChange(storedCaretPosition.current)
         }, 0)
       }, 0)
     },
@@ -53,23 +48,26 @@ const MainTextArea = forwardRef<RichTextEditorHandle, TextAreaProps>((props, ref
     }
 
     const oldValue = editor.ref.current?.innerHTML
-    const newValue = fn()
+    const fromHistory = fn()
 
-    if (newValue === undefined) {
+    if (fromHistory === undefined) {
       return
     }
 
+    const { content: newValue, newCaretPosition } = fromHistory
+
     if (editor.ref.current && newValue !== oldValue) {
-      const savedCursorPosition = getCursorPosition(editor.ref.current)
-      editor.ref.current.innerHTML = newValue
+      editor.ref.current.innerHTML = newValue ?? ''
 
       // TODO: Extract this into a function instead of pasting it all over the place
       setTimeout(() => {
         editor.initMathImages()
         setTimeout(() => {
-          editor.onAnswerChange(false)
+          if (editor.ref.current && newCaretPosition) {
+            setCaretPosition(editor.ref.current, newCaretPosition)
+          }
 
-          restoreCursorPosition(editor.ref.current!, savedCursorPosition)
+          editor.onAnswerChange(newCaretPosition, false)
         }, 0)
       }, 0)
     }
@@ -104,8 +102,7 @@ const MainTextArea = forwardRef<RichTextEditorHandle, TextAreaProps>((props, ref
     const content = e.nativeEvent.clipboardData
     if (!content) return
 
-    // The old editor always picked the last picture so we do that too,
-    // the reason's lost to history though.
+    // We only allow pasting one image at a time, so we pick the last one
     const file = Array.from(content.items).at(-1)?.getAsFile()
     const html = content.getData('text/html')
     const text = content.getData('text/plain')
@@ -139,7 +136,7 @@ const MainTextArea = forwardRef<RichTextEditorHandle, TextAreaProps>((props, ref
       }
 
       setTimeout(() => {
-        editor.onAnswerChange()
+        editor.onAnswerChange(storedCaretPosition.current)
       }, 0)
     }, 0)
   }
@@ -181,14 +178,19 @@ const MainTextArea = forwardRef<RichTextEditorHandle, TextAreaProps>((props, ref
             e.stopPropagation()
           }
 
-          editor.onAnswerChange()
+          editor.onAnswerChange(storedCaretPosition.current)
         }}
         onKeyDown={(e) => {
+          storedCaretPosition.current = getCaretPosition(editor.ref.current!)
+
           if (e.key.toLowerCase() === 'e' && e.ctrlKey) {
             e.preventDefault()
             e.stopPropagation()
             editor.spawnMathEditorAtCursor()
           }
+        }}
+        onMouseDown={(_e) => {
+          storedCaretPosition.current = getCaretPosition(editor.ref.current!)
         }}
         onPaste={onPaste}
         onDragOver={(e) => {

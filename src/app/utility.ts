@@ -11,63 +11,80 @@ export const eventHandlerWithoutFocusLoss = (fn?: () => void) => (e: React.Mouse
   return false
 }
 
-export function debounce<T extends (...args: any[]) => void>(func: T, timeout: number) {
-  // setTimeout returns a number in a browser and an object in Node
+export function debounceAnswerSave(func: (content: string, caretPosition: CaretPosition) => void, timeout: number) {
   let timer: ReturnType<typeof setTimeout> | null = null
+  let initialCaretPosition: CaretPosition | null = null
+
   return function <U>(this: U, ...args: Parameters<typeof func>) {
+    const [content, caretPosition] = args as [string, CaretPosition]
+
+    if (initialCaretPosition === null) {
+      initialCaretPosition = caretPosition
+    }
+
     if (timer && typeof timeout === 'number') {
       clearTimeout(timer)
     }
+
     timer = setTimeout(() => {
-      func(...args)
+      func(content, initialCaretPosition ?? caretPosition)
+      initialCaretPosition = null
     }, timeout)
   }
 }
 
-interface CursorPosition {
-  path: number[]
-  offset: number
+export type CaretPosition = number
+
+export const getCaretPosition = (textField: HTMLElement) => {
+  let caretOffset = 0
+  const selection = window.getSelection()
+  if (!selection) return caretOffset
+  if (selection.rangeCount > 0) {
+    const range = selection.getRangeAt(0)
+    const preCaretRange = range.cloneRange()
+    preCaretRange.selectNodeContents(textField)
+    preCaretRange.setEnd(range.endContainer, range.endOffset)
+    caretOffset = preCaretRange.toString().length
+  }
+  return caretOffset
 }
 
-export function getCursorPosition(container: HTMLElement): CursorPosition | null {
-  const selection = window.getSelection()
-  if (!selection || selection.rangeCount === 0) return null
+export const getCaretPositionAfterElement = (textField: HTMLElement, element: HTMLElement) => {
+  const range = document.createRange()
+  range.selectNodeContents(textField)
+  range.setEndAfter(element)
+  return range.toString().length
+}
 
-  const range = selection.getRangeAt(0)
-  const path: number[] = []
-  let currentNode: Node | null = range.startContainer
+export const setCaretPosition = (textField: HTMLElement, targetOffset: number) => {
+  const range = document.createRange()
+  let currentOffset = 0
+  let found = false
 
-  while (currentNode && currentNode !== container) {
-    const parent: Node | null = currentNode.parentNode
-    if (!parent) break
-
-    // Cast currentNode to ChildNode before indexing
-    path.push(Array.from(parent.childNodes).indexOf(currentNode as ChildNode))
-    currentNode = parent
+  function traverseNodes(node: Node) {
+    if (found) return
+    if (node.nodeType === Node.TEXT_NODE) {
+      const nextOffset = currentOffset + node.textContent!.length
+      if (nextOffset >= targetOffset) {
+        range.setStart(node, targetOffset - currentOffset)
+        range.collapse(true)
+        found = true
+      }
+      currentOffset = nextOffset
+    } else {
+      // for non-text (divs and images in our case), traverse their children
+      for (const child of node.childNodes) {
+        traverseNodes(child)
+        if (found) break
+      }
+    }
   }
 
-  return { path, offset: range.startOffset }
-}
+  traverseNodes(textField)
 
-export function restoreCursorPosition(container: HTMLElement, savedPosition: CursorPosition | null): void {
-  const range = document.createRange()
-  try {
-    if (!savedPosition) return
-
-    let currentNode: Node | null = container
-
-    for (const index of savedPosition.path) {
-      if (!currentNode || !(currentNode.childNodes[index] instanceof Node)) return
-      currentNode = currentNode.childNodes[index]
-    }
-
-    const maxOffset = currentNode?.textContent?.length ?? 0
-    const safeOffset = Math.min(savedPosition.offset, maxOffset)
-
-    range.setStart(currentNode, safeOffset)
-    range.collapse(true)
-  } catch (e) {
-    range.selectNodeContents(container)
+  // If the old caret position is not found, default to the end of the field
+  if (!found) {
+    range.selectNodeContents(textField)
     range.collapse(false)
   }
 
