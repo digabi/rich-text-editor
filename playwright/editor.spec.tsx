@@ -267,6 +267,36 @@ test.describe('Rich text editor', () => {
     })
   })
 
+  test('prevents dragging and dropping content', async ({ page }) => {
+    const editor = getEditorLocator(page)
+
+    await page.evaluate(() => {
+      const source = document.createElement('div')
+      source.id = 'drag-source'
+      source.textContent = 'Drag me'
+      source.draggable = true
+      document.body.appendChild(source)
+    })
+
+    await test.step('prevents text drag and drop', async () => {
+      await page.dragAndDrop('#drag-source', '[data-testid="rich-text-editor"]')
+      await assertEditorHTMLContent(editor, '')
+    })
+
+    await test.step('prevents image drag and drop', async () => {
+      await page.evaluate((imageData) => {
+        const img = document.createElement('img')
+        img.id = 'drag-image'
+        img.src = `data:image/png;base64,${imageData}`
+        img.draggable = true
+        document.body.appendChild(img)
+      }, samplePNG)
+
+      await page.dragAndDrop('#drag-image', '[data-testid="rich-text-editor"]')
+      await assertEditorHTMLContent(editor, '')
+    })
+  })
+
   test.describe('toolbar', () => {
     test('appears and closes according to editor and math editor focus', async ({ page }) => {
       await test.step('appears when editor is focused', async () => {
