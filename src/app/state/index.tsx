@@ -64,7 +64,7 @@ export type EditorState = {
    * do not trigger the main text area's `onInput` event so we need a mechanism to
    * trigger this from multiple places
    */
-  onAnswerChange: (shouldUpdateHistory?: boolean) => void
+  onAnswerChange: (caretPosition?: CaretPosition, shouldUpdateHistory?: boolean) => void
   initialValue?: string
   baseUrl: string
 
@@ -175,7 +175,7 @@ export function EditorStateProvider({
       setIsMathToolbarOpen(false)
       setIsToolbarOpen(false)
 
-      onAnswerChange(true, true)
+      onAnswerChange(0, true, true)
 
       if (forceCursorPosition) {
         setCursorAroundElement(image, forceCursorPosition)
@@ -189,7 +189,7 @@ export function EditorStateProvider({
 
     function onChange(latex: string) {
       equationEditorHistory.write(latex)
-      onAnswerChange(false, false)
+      onAnswerChange(0, false, false)
     }
 
     function onEnter(latex: string) {
@@ -323,7 +323,7 @@ export function EditorStateProvider({
   }
 
   const updateAnswerHistoryDebounced = debounceAnswerSave(
-    (content: string, caretPosition: CaretPosition) => updateAnswerHistory(content, caretPosition),
+    (content: string, caretPositionAfter: CaretPosition) => updateAnswerHistory(content, caretPositionAfter),
     500,
   )
 
@@ -331,7 +331,11 @@ export function EditorStateProvider({
    * @param shouldUpdateHistory - Whether to update the answer history (defaults to true)
    * @param shouldUpdateHistoryImmediately - Whether to update the answer history immediately, without debouncing (defaults to false)
    */
-  function onAnswerChange(shouldUpdateHistory: boolean = true, shouldUpdateHistoryImmediately: boolean = false) {
+  function onAnswerChange(
+    caretPosition: CaretPosition = 0,
+    shouldUpdateHistory: boolean = true,
+    shouldUpdateHistoryImmediately: boolean = false,
+  ) {
     const fn = () => {
       const content = mainTextAreaRef.current?.innerHTML
       if (content !== undefined) {
@@ -339,9 +343,6 @@ export function EditorStateProvider({
         onValueChange(answer)
 
         if (shouldUpdateHistory) {
-          // The magic '-1' is needed because the position will already be after
-          // the first inserted character at this point
-          const caretPosition = getCaretPosition(mainTextAreaRef.current!) - 1
           if (shouldUpdateHistoryImmediately) {
             updateAnswerHistory(answer.answerHtml, caretPosition)
           } else {
@@ -350,6 +351,7 @@ export function EditorStateProvider({
         }
       }
     }
+
     /** This 0ms timeout is crucial - it essentially moves the callback into the next event loop,
      * after pending DOM changes have been made in the current loop (in practice,
      * this is needed because closing a math editor changes the HTML of the answer,

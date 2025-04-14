@@ -1,4 +1,4 @@
-import { ClipboardEvent, FocusEvent, FormEvent, forwardRef, Fragment, useImperativeHandle } from 'react'
+import { ClipboardEvent, FocusEvent, forwardRef, Fragment, useImperativeHandle, useState } from 'react'
 import { createPortal } from 'react-dom'
 import styled from 'styled-components'
 import classNames from 'classnames/dedupe' // Removes duplicates in class list
@@ -7,7 +7,7 @@ import useEditorState from '../../state'
 import Toolbar from '../toolbar'
 import { HelpDialog } from '../help-dialog'
 import { sanitize } from '../../utils/sanitization'
-import { setCaretPosition } from '../../utility'
+import { CaretPosition, getCaretPosition, setCaretPosition } from '../../utility'
 import { RichTextEditorHandle } from '../..'
 import { useKeyboardEventListener } from '../../hooks/use-keyboard-events'
 
@@ -25,6 +25,7 @@ export type TextAreaProps = {
 const MainTextArea = forwardRef<RichTextEditorHandle, TextAreaProps>((props, ref) => {
   const { toolbarRoot, ariaInvalid, ariaLabelledBy, questionId, editorStyle, className, id, lang } = props
   const editor = useEditorState()
+  const [storedCaretPosition, setStoredCaretPosition] = useState<CaretPosition>(0)
 
   useImperativeHandle(ref, () => ({
     setValue: (value: string) => {
@@ -35,7 +36,7 @@ const MainTextArea = forwardRef<RichTextEditorHandle, TextAreaProps>((props, ref
       setTimeout(() => {
         editor.initMathImages()
         setTimeout(() => {
-          editor.onAnswerChange()
+          editor.onAnswerChange(storedCaretPosition)
         }, 0)
       }, 0)
     },
@@ -66,7 +67,7 @@ const MainTextArea = forwardRef<RichTextEditorHandle, TextAreaProps>((props, ref
             setCaretPosition(editor.ref.current, newCaretPosition)
           }
 
-          editor.onAnswerChange(false)
+          editor.onAnswerChange(newCaretPosition, false)
         }, 0)
       }, 0)
     }
@@ -135,7 +136,7 @@ const MainTextArea = forwardRef<RichTextEditorHandle, TextAreaProps>((props, ref
       }
 
       setTimeout(() => {
-        editor.onAnswerChange()
+        editor.onAnswerChange(storedCaretPosition)
       }, 0)
     }, 0)
   }
@@ -177,14 +178,19 @@ const MainTextArea = forwardRef<RichTextEditorHandle, TextAreaProps>((props, ref
             e.stopPropagation()
           }
 
-          editor.onAnswerChange()
+          editor.onAnswerChange(storedCaretPosition)
         }}
         onKeyDown={(e) => {
+          setStoredCaretPosition(getCaretPosition(editor.ref.current!))
+
           if (e.key.toLowerCase() === 'e' && e.ctrlKey) {
             e.preventDefault()
             e.stopPropagation()
             editor.spawnMathEditorAtCursor()
           }
+        }}
+        onMouseDown={(_e) => {
+          setStoredCaretPosition(getCaretPosition(editor.ref.current!))
         }}
         onPaste={onPaste}
         onDragOver={(e) => {
