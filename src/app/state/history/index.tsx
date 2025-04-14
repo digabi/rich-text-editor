@@ -36,7 +36,6 @@ export default function useHistory() {
   const setStack = (newStack: HistoryEntry[]) => {
     stackRef.current = newStack
     _setStack(newStack)
-    console.debug({ newStack })
   }
 
   const setPointer = (newPointer: number) => {
@@ -80,7 +79,7 @@ export default function useHistory() {
     const newValue = stackRef.current.at(newPointer)
 
     setPointer(newPointer)
-    return { content: newValue?.content ?? '', newCaretPosition: caretPosition } //: newValue?.caretPositionBeforeChange }
+    return { content: newValue?.content ?? '', newCaretPosition: caretPosition }
   }
 
   const redo = (): HistoryActionResult | undefined => {
