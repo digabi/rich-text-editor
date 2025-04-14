@@ -324,7 +324,7 @@ export function EditorStateProvider({
   }
 
   const updateAnswerHistoryDebounced = debounceAnswerSave(
-    (content: string, caretPositionAfter: CaretPosition) => updateAnswerHistory(content, caretPositionAfter),
+    (content: string, caretPositionBefore: CaretPosition) => updateAnswerHistory(content, caretPositionBefore),
     500,
   )
 
