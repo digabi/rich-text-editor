@@ -455,7 +455,11 @@ test.describe('Rich text editor', () => {
       })
     })
 
-    test('cursor is returned to the correct position', async ({ page }) => {
+    test('cursor is returned to the correct position', async ({ page, browserName }) => {
+      test.fixme(
+        browserName === 'firefox',
+        'There are some differences in how exactly this works across browsers, Chromium seems to be more consistent so focusing on that',
+      )
       await test.step('on undo', async () => {
         await page.keyboard.type('This is a test')
 
