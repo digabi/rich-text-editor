@@ -1,4 +1,4 @@
-import { ClipboardEvent, FocusEvent, forwardRef, Fragment, useImperativeHandle, useRef } from 'react'
+import { ClipboardEvent, FocusEvent, forwardRef, Fragment, useEffect, useImperativeHandle, useRef } from 'react'
 import { createPortal } from 'react-dom'
 import styled from 'styled-components'
 import classNames from 'classnames/dedupe' // Removes duplicates in class list
@@ -148,6 +148,31 @@ const MainTextArea = forwardRef<RichTextEditorHandle, TextAreaProps>((props, ref
       editor.hideToolbar()
     }
   }
+
+  /*
+    Prevent dragging content into and out of the editor.
+    As content dragged into the editor would need its own sanitization logic etc.,
+    we just block drag and drop. The text field itself has the proper `onDragOver` & `onDrop`
+    handlers, but for some reason it is still possible to drag content into the surrounding element
+    and bypass those handlers entirely.
+  */
+  useEffect(() => {
+    const el = editor.ref.current
+    if (!el) return
+
+    const handleDrop = (e: InputEvent) => {
+      if (e.inputType === 'insertFromDrop' || e.inputType === 'deleteByDrag') {
+        e.preventDefault()
+        e.stopPropagation()
+      }
+    }
+
+    el.addEventListener('beforeinput', handleDrop)
+
+    return () => {
+      el.removeEventListener('beforeinput', handleDrop)
+    }
+  }, [])
 
   return (
     <>
