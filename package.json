@@ -29,7 +29,7 @@
   },
   "devDependencies": {
     "@digabi/eslint-config": "^3.3.0",
-    "@playwright/experimental-ct-react": "^1.51.1",
+    "@playwright/experimental-ct-react": "^1.52.0",
     "@types/node": "^22.14.1",
     "@types/react": "^19.1.2",
     "@types/react-dom": "^19.1.2",
@@ -37,7 +37,7 @@
     "@typescript-eslint/parser": "^7.18.0",
     "buffer": "^6.0.3",
     "concurrently": "^9.1.2",
-    "esbuild": "^0.25.2",
+    "esbuild": "^0.25.3",
     "eslint": "^8.57.1",
     "eslint-config-prettier": "^10.1.2",
     "eslint-plugin-import": "^2.31.0",
@@ -54,7 +54,7 @@
   },
   "dependencies": {
     "@digabi/mathquill": "^0.10.12",
-    "@playwright/test": "^1.51.1",
+    "@playwright/test": "^1.52.0",
     "@types/express": "^4.17.21",
     "@types/jquery": "^3.5.32",
     "@types/sanitize-html": "^2.15.0",
