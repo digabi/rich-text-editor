@@ -4,7 +4,7 @@ import * as mathSvg from './server/mathSvg'
 import * as http from 'node:http'
 
 const app = express()
-app.get('/', (_, res) => res.send())
+app.get('/', (_, res) => void res.send())
 app.get('/math.svg', mathSvg.mathSvgResponse)
 
 const port = process.env.PORT || 5111
