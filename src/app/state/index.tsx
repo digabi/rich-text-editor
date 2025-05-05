@@ -132,7 +132,7 @@ export function EditorStateProvider({
   onValueChange = () => {},
   initialValue = '',
   baseUrl = '',
-  onLatexUpdate = defaultOnLatexUpdate(baseUrl),
+  onLatexUpdate: _onLatexUpdate = defaultOnLatexUpdate(baseUrl),
 }: EditorStateProps) {
   const [isToolbarOpen, setIsToolbarOpen] = useState(false)
   const [isMathToolbarOpen, setIsMathToolbarOpen] = useState(false)
@@ -220,6 +220,11 @@ export function EditorStateProvider({
     setMathEditorPortal([stub, portal])
   }
 
+  function onLatexUpdate(img: HTMLImageElement, latex: string) {
+    img.setAttribute('data-latex', latex)
+    _onLatexUpdate(img, latex)
+  }
+
   function onMathImageClick(img: HTMLImageElement, e: Event) {
     const parent = img.parentElement
     e.stopPropagation()
@@ -233,7 +238,7 @@ export function EditorStateProvider({
     }
 
     spawnMathEditor(stub, img, {
-      initialLatex: img.getAttribute('alt'),
+      initialLatex: img.getAttribute('data-latex') || img.getAttribute('alt'),
       onLatexUpdate: (latex) => onLatexUpdate(img, latex),
     })
   }
@@ -292,6 +297,7 @@ export function EditorStateProvider({
           }
         }
         mathImage.setAttribute('alt', oldImage.getAttribute('alt') ?? '')
+        mathImage.setAttribute('data-latex', oldImage.getAttribute('data-latex') ?? '')
         oldImage.replaceWith(mathImage)
       })
     }
