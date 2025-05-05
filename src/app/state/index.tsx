@@ -241,6 +241,7 @@ export function EditorStateProvider({
   function createMathImage() {
     const mathImage = document.createElement('img')
     mathImage.addEventListener('click', (e) => onMathImageClick(mathImage, e))
+    mathImage.setAttribute('data-math-image', '')
     mathImage.setAttribute('initialized', '')
     mathImage.setAttribute('src', '') // Browsers add a border to images without a source attribute
     mathImage.classList.add('equation')
@@ -276,7 +277,7 @@ export function EditorStateProvider({
 
   function initMathImages() {
     if (mainTextAreaRef.current) {
-      const selector = ['src*="/math.svg?"', 'src^="data:image/svg+xml"']
+      const selector = ['src*="/math.svg?"', 'src^="data:image/svg+xml"', 'data-math-image']
         .map((attr) => `img[${attr}][alt]:not([initialized])`)
         .join(', ')
       Array.from(mainTextAreaRef.current.querySelectorAll(selector)).forEach((oldImage) => {
