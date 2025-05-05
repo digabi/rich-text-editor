@@ -276,22 +276,23 @@ export function EditorStateProvider({
 
   function initMathImages() {
     if (mainTextAreaRef.current) {
-      Array.from(mainTextAreaRef.current.querySelectorAll('img[src*="/math.svg?"][alt]:not([initialized])')).forEach(
-        (oldImage) => {
-          const mathImage = createMathImage()
-          const src = oldImage.getAttribute('src')
-          if (src) {
-            const { origin, pathname, search } = new URL(src, baseUrl || document.location.toString())
-            if (origin !== baseUrl) {
-              mathImage.setAttribute('src', `${baseUrl}${pathname}${search}`)
-            } else {
-              mathImage.setAttribute('src', src)
-            }
+      const selector = ['src*="/math.svg?"', 'src^="data:image/svg+xml"']
+        .map((attr) => `img[${attr}][alt]:not([initialized])`)
+        .join(', ')
+      Array.from(mainTextAreaRef.current.querySelectorAll(selector)).forEach((oldImage) => {
+        const mathImage = createMathImage()
+        const src = oldImage.getAttribute('src')
+        if (src) {
+          const { origin, pathname, search, protocol } = new URL(src, baseUrl || document.location.toString())
+          if (protocol !== 'data:' && origin !== baseUrl) {
+            mathImage.setAttribute('src', `${baseUrl}${pathname}${search}`)
+          } else {
+            mathImage.setAttribute('src', src)
           }
-          mathImage.setAttribute('alt', oldImage.getAttribute('alt') ?? '')
-          oldImage.replaceWith(mathImage)
-        },
-      )
+        }
+        mathImage.setAttribute('alt', oldImage.getAttribute('alt') ?? '')
+        oldImage.replaceWith(mathImage)
+      })
     }
   }
 
