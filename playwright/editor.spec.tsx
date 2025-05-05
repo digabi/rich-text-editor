@@ -896,11 +896,22 @@ test.describe('Rich text editor', () => {
       const initialContent = `
 testi.
 kuva: <img src="data:image/png;base64,${samplePNG}" alt="Hello World!">
-kaava:\
-  <img
-    src="http://localhost:5111/math.svg?latex=%5Csqrt%7B123%7D"
-    alt="\\sqrt{123}"
-  />`
+kaava 1: <img
+  src="http://localhost:5111/math.svg?latex=%5Csqrt%7B123%7D"
+  alt="\\sqrt{123}"
+/>
+kaava 2: <img
+  src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIzLjA2MWV4IiBoZWlnaHQ9IjIuMzk4ZXgiIHJvbGU9ImltZyIgZm9jdXNhYmxlPSJmYWxzZSIgdmlld0JveD0iMCAtMTAwOC4zIDEzNTMgMTA2MCIgeG1sbnM6eGxpbms9Imh0dHA6Ly93d3cudzMub3JnLzE5OTkveGxpbmsiIGFyaWEtaGlkZGVuPSJ0cnVlIiBzdHlsZT0idmVydGljYWwtYWxpZ246IC0wLjExN2V4OyI+PGRlZnM+PHBhdGggaWQ9Ik1KWC0yLVRFWC1OLTIyMUEiIGQ9Ik05NSAxNzhRODkgMTc4IDgxIDE4NlQ3MiAyMDBUMTAzIDIzMFQxNjkgMjgwVDIwNyAzMDlRMjA5IDMxMSAyMTIgMzExSDIxM1EyMTkgMzExIDIyNyAyOTRUMjgxIDE3N1EzMDAgMTM0IDMxMiAxMDhMMzk3IC03N1EzOTggLTc3IDUwMSAxMzZUNzA3IDU2NVQ4MTQgNzg2UTgyMCA4MDAgODM0IDgwMFE4NDEgODAwIDg0NiA3OTRUODUzIDc4MlY3NzZMNjIwIDI5M0wzODUgLTE5M1EzODEgLTIwMCAzNjYgLTIwMFEzNTcgLTIwMCAzNTQgLTE5N1EzNTIgLTE5NSAyNTYgMTVMMTYwIDIyNUwxNDQgMjE0UTEyOSAyMDIgMTEzIDE5MFQ5NSAxNzhaIj48L3BhdGg+PHBhdGggaWQ9Ik1KWC0yLVRFWC1OLTMxIiBkPSJNMjEzIDU3OEwyMDAgNTczUTE4NiA1NjggMTYwIDU2M1QxMDIgNTU2SDgzVjYwMkgxMDJRMTQ5IDYwNCAxODkgNjE3VDI0NSA2NDFUMjczIDY2M1EyNzUgNjY2IDI4NSA2NjZRMjk0IDY2NiAzMDIgNjYwVjM2MUwzMDMgNjFRMzEwIDU0IDMxNSA1MlQzMzkgNDhUNDAxIDQ2SDQyN1YwSDQxNlEzOTUgMyAyNTcgM1ExMjEgMyAxMDAgMEg4OFY0NkgxMTRRMTM2IDQ2IDE1MiA0NlQxNzcgNDdUMTkzIDUwVDIwMSA1MlQyMDcgNTdUMjEzIDYxVjU3OFoiPjwvcGF0aD48L2RlZnM+PGcgc3Ryb2tlPSJjdXJyZW50Q29sb3IiIGZpbGw9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIwIiB0cmFuc2Zvcm09InNjYWxlKDEsLTEpIj48ZyBkYXRhLW1tbC1ub2RlPSJtYXRoIj48ZyBkYXRhLW1tbC1ub2RlPSJtc3FydCI+PGcgdHJhbnNmb3JtPSJ0cmFuc2xhdGUoODUzLDApIj48ZyBkYXRhLW1tbC1ub2RlPSJtbiI+PHVzZSBkYXRhLWM9IjMxIiB4bGluazpocmVmPSIjTUpYLTItVEVYLU4tMzEiPjwvdXNlPjwvZz48L2c+PGcgZGF0YS1tbWwtbm9kZT0ibW8iIHRyYW5zZm9ybT0idHJhbnNsYXRlKDAsMTQ4LjMpIj48dXNlIGRhdGEtYz0iMjIxQSIgeGxpbms6aHJlZj0iI01KWC0yLVRFWC1OLTIyMUEiPjwvdXNlPjwvZz48cmVjdCB3aWR0aD0iNTAwIiBoZWlnaHQ9IjYwIiB4PSI4NTMiIHk9Ijg4OC4zIj48L3JlY3Q+PC9nPjwvZz48L2c+PC9zdmc+"
+  alt="\\sqrt{1}"
+/>
+kaava 3: <img
+  src="/custom?l=\\sqrt{2}"
+  alt="square root of 2"
+  data-math-image=""
+  data-latex="\\sqrt{2}"
+/>
+`
+
       await unmountComponent()
       await mount(
         <RichTextEditor
@@ -914,13 +925,34 @@ kaava:\
       )
     })
 
-    test('is editable', async ({ page }) => {
+    test('is editable when img src is math.svg path', async ({ page }) => {
       const equationEditor = getEditorLocator(page)
-      await expect(page.getByRole('img').last()).toBeVisible()
-      await page.getByRole('img').last().click()
+      const image = page.getByRole('img').nth(1)
+      await expect(image).toBeVisible()
+      await image.click()
       await assertEquationEditorLatexContent(equationEditor, '\\sqrt{123}')
       await clickOutsideEditor(page)
-      assertAnswerContent(answer, { imageCount: 1 })
+      assertAnswerContent(answer, { imageCount: 3 })
+    })
+
+    test('is editable when img src is a data url', async ({ page }) => {
+      const equationEditor = getEditorLocator(page)
+      const image = page.getByRole('img').nth(2)
+      await expect(image).toBeVisible()
+      await image.click()
+      await assertEquationEditorLatexContent(equationEditor, '\\sqrt{1}')
+      await clickOutsideEditor(page)
+      assertAnswerContent(answer, { imageCount: 3 })
+    })
+
+    test('is editable when img src and alt are custom values', async ({ page }) => {
+      const equationEditor = getEditorLocator(page)
+      const image = page.getByRole('img').nth(3)
+      await expect(image).toBeVisible()
+      await image.click()
+      await assertEquationEditorLatexContent(equationEditor, '\\sqrt{2}')
+      await clickOutsideEditor(page)
+      assertAnswerContent(answer, { imageCount: 3 })
     })
   })
 })
