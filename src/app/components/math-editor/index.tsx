@@ -80,9 +80,10 @@ export default function MathEditor(props: Props) {
 
   const onChange = (oldValue: string | undefined, newValue: string) => {
     if (oldValue === newValue) return
-    setLatex(newValue)
-    props.onChange?.(newValue)
-    props.onLatexUpdate?.(newValue)
+    const normalizedValue = newValue.replaceAll('\u00A0', '\\ ')
+    setLatex(normalizedValue)
+    props.onChange?.(normalizedValue)
+    props.onLatexUpdate?.(normalizedValue)
   }
 
   const { ref: latexRef, isError, mq } = useMathQuill({ latex, onChange, onEnter: props.onEnter })

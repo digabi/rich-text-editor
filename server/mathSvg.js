@@ -42,7 +42,9 @@ function mathSvgResponse(req, res) {
     res.sendStatus(400)
     return
   }
-  latexToSvg(latex, (svg) => res.send(svg))
+  // non-breaking spaces are replaced server side as well to render existing formulas correctly
+  const normalizedLatex = latex.replaceAll('\u00A0', '\\ ')
+  latexToSvg(normalizedLatex, (svg) => res.send(svg))
 }
 
 function latexIsTooLong(latex) {
