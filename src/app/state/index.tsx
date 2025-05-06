@@ -132,7 +132,7 @@ export function EditorStateProvider({
   onValueChange = () => {},
   initialValue = '',
   baseUrl = '',
-  onLatexUpdate = defaultOnLatexUpdate(baseUrl),
+  onLatexUpdate: _onLatexUpdate = defaultOnLatexUpdate(baseUrl),
 }: EditorStateProps) {
   const [isToolbarOpen, setIsToolbarOpen] = useState(false)
   const [isMathToolbarOpen, setIsMathToolbarOpen] = useState(false)
@@ -220,6 +220,11 @@ export function EditorStateProvider({
     setMathEditorPortal([stub, portal])
   }
 
+  function onLatexUpdate(img: HTMLImageElement, latex: string) {
+    img.setAttribute('data-latex', latex)
+    _onLatexUpdate(img, latex)
+  }
+
   function onMathImageClick(img: HTMLImageElement, e: Event) {
     const parent = img.parentElement
     e.stopPropagation()
@@ -233,7 +238,7 @@ export function EditorStateProvider({
     }
 
     spawnMathEditor(stub, img, {
-      initialLatex: img.getAttribute('alt'),
+      initialLatex: img.getAttribute('data-latex') || img.getAttribute('alt'),
       onLatexUpdate: (latex) => onLatexUpdate(img, latex),
     })
   }
@@ -241,6 +246,7 @@ export function EditorStateProvider({
   function createMathImage() {
     const mathImage = document.createElement('img')
     mathImage.addEventListener('click', (e) => onMathImageClick(mathImage, e))
+    mathImage.setAttribute('data-math-image', '')
     mathImage.setAttribute('initialized', '')
     mathImage.setAttribute('src', '') // Browsers add a border to images without a source attribute
     mathImage.classList.add('equation')
@@ -276,22 +282,24 @@ export function EditorStateProvider({
 
   function initMathImages() {
     if (mainTextAreaRef.current) {
-      Array.from(mainTextAreaRef.current.querySelectorAll('img[src*="/math.svg?"][alt]:not([initialized])')).forEach(
-        (oldImage) => {
-          const mathImage = createMathImage()
-          const src = oldImage.getAttribute('src')
-          if (src) {
-            const { origin, pathname, search } = new URL(src, baseUrl || document.location.toString())
-            if (origin !== baseUrl) {
-              mathImage.setAttribute('src', `${baseUrl}${pathname}${search}`)
-            } else {
-              mathImage.setAttribute('src', src)
-            }
+      const selector = ['src*="/math.svg?"', 'src^="data:image/svg+xml"', 'data-math-image']
+        .map((attr) => `img[${attr}][alt]:not([initialized])`)
+        .join(', ')
+      Array.from(mainTextAreaRef.current.querySelectorAll(selector)).forEach((oldImage) => {
+        const mathImage = createMathImage()
+        const src = oldImage.getAttribute('src')
+        if (src) {
+          const { origin, pathname, search, protocol } = new URL(src, baseUrl || document.location.toString())
+          if (protocol !== 'data:' && origin !== baseUrl) {
+            mathImage.setAttribute('src', `${baseUrl}${pathname}${search}`)
+          } else {
+            mathImage.setAttribute('src', src)
           }
-          mathImage.setAttribute('alt', oldImage.getAttribute('alt') ?? '')
-          oldImage.replaceWith(mathImage)
-        },
-      )
+        }
+        mathImage.setAttribute('alt', oldImage.getAttribute('alt') ?? '')
+        mathImage.setAttribute('data-latex', oldImage.getAttribute('data-latex') ?? '')
+        oldImage.replaceWith(mathImage)
+      })
     }
   }
 
