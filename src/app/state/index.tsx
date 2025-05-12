@@ -332,7 +332,9 @@ export function EditorStateProvider({
   }
 
   const updateAnswerHistory = (content: string, caretPositionBefore: CaretPosition) => {
-    mainTextAreaHistory.write(content, caretPositionBefore, getCaretPosition(mainTextAreaRef.current!))
+    if (mainTextAreaRef.current) {
+      mainTextAreaHistory.write(content, caretPositionBefore, getCaretPosition(mainTextAreaRef.current))
+    }
   }
 
   const updateAnswerHistoryDebounced = debounceAnswerSave(
