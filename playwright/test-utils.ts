@@ -20,7 +20,7 @@ export const assertEquationEditorLatexContent = async (equationEditor: Locator, 
 export const getEditorLocator = (page: Page) => page.getByTestId('rich-text-editor')
 
 export const repeat = async (times: number, action: (i: number) => Promise<void>) => {
-  for await (const i of Array.from({ length: times }, (_, i) => i)) {
+  for (const i of Array.from({ length: times }, (_, i) => i)) {
     await action(i)
   }
   return Promise.resolve()
