@@ -49,7 +49,13 @@ function stripBlockElements(html: string) {
         if (node.lastChild && node.lastChild.nodeName !== 'BR') node.insertBefore(document.createElement('br'), null)
         while (node.childNodes.length && node.firstChild !== null) parent.insertBefore(node.firstChild, node)
         parent.removeChild(node)
+      } else if (node.textContent) {
+        const lineStartsWithAnyNumberOfSpaces = !!node.textContent?.match(/^(\s+)/)
+        if (lineStartsWithAnyNumberOfSpaces) {
+          node.textContent = node.textContent?.replaceAll('  ', '\u00A0 ') // nbsp + space
+        }
       }
+
       lastNode = node
     }
   } while (Array.prototype.some.call(parent.childNodes, (node: Node) => isBlockElement(node)))

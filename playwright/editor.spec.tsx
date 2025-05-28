@@ -122,6 +122,21 @@ test.describe('Rich text editor', () => {
     })
   })
 
+  test('can paste Python code from clipboard and retain line indentation', async ({ page }) => {
+    await setClipboardHTML(
+      page,
+      '<div><div><span>for</span><span> x </span><span>in</span><span> [</span><span>1</span><span>,</span><span>2</span><span>,</span><span>3</span><span>]:</span></div><div><span>    </span><span>print</span><span>(x)</span></div></div>',
+    )
+
+    const nbsp = '\u00A0'
+
+    await paste(page)
+    assertAnswerContent(answer, {
+      answerText: `for x in [1,2,3]:\n${nbsp} ${nbsp} print(x)`,
+      answerHtml: `for x in [1,2,3]:<br>&nbsp; &nbsp; print(x)`,
+    })
+  })
+
   test('images with sources pointing outside are removed from pasted HTML', async ({ page }) => {
     await setClipboardHTML(page, `Hello <img src="www.test.com/test/pic.png" alt="test">World`)
 
