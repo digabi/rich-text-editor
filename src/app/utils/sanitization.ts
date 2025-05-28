@@ -49,7 +49,17 @@ function stripBlockElements(html: string) {
         if (node.lastChild && node.lastChild.nodeName !== 'BR') node.insertBefore(document.createElement('br'), null)
         while (node.childNodes.length && node.firstChild !== null) parent.insertBefore(node.firstChild, node)
         parent.removeChild(node)
+      } else if (node.textContent) {
+        // To keep possible Python code block indentation, we replace each space in the beginning of a line with a non-breaking space
+        const nodeIsPrecededByBR = node.previousSibling?.nodeName === 'BR'
+        if (nodeIsPrecededByBR) {
+          const spaces = node.textContent?.match(/^(\s+)/)?.[0]
+          if (spaces) {
+            node.textContent = node.textContent?.replace(spaces, spaces.replaceAll(' ', '\u00A0'))
+          }
+        }
       }
+
       lastNode = node
     }
   } while (Array.prototype.some.call(parent.childNodes, (node: Node) => isBlockElement(node)))
