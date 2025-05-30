@@ -125,15 +125,15 @@ test.describe('Rich text editor', () => {
   test('can paste Python code from clipboard and retain line indentation', async ({ page }) => {
     await setClipboardHTML(
       page,
-      '<div><div><span>for</span><span> x </span><span>in</span><span> [</span><span>1</span><span>,</span><span>2</span><span>,</span><span>3</span><span>]:</span></div><div><span>    </span><span>print</span><span>(x)</span></div></div>',
+      `<div><div><span>for</span><span> x </span><span>in</span><span> [</span><span>1</span><span>,</span><span>2</span><span>]:</span></div><div><span>    </span><span>print</span><span>(x)</span></div><div><span>    </span><span>for</span><span> x </span><span>in</span><span> [</span><span>'a'</span><span>,</span><span>'b'</span><span>]:</span></div><div><span>        </span><span>print</span><span>(x)</span></div></div>`,
     )
 
     const nbsp = '\u00A0'
 
     await paste(page)
     assertAnswerContent(answer, {
-      answerText: `for x in [1,2,3]:\n${nbsp} ${nbsp} print(x)`,
-      answerHtml: `for x in [1,2,3]:<br>&nbsp; &nbsp; print(x)`,
+      answerText: `for x in [1,2]:\n${nbsp} ${nbsp} print(x)\n${nbsp} ${nbsp} for x in ['a','b']:\n${nbsp} ${nbsp} ${nbsp} ${nbsp} print(x)`,
+      answerHtml: `for x in [1,2]:<br>&nbsp; &nbsp; print(x)<br>&nbsp; &nbsp; for x in ['a','b']:<br>&nbsp; &nbsp; &nbsp; &nbsp; print(x)`,
     })
   })
 
