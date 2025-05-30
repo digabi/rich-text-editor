@@ -133,7 +133,7 @@ test.describe('Rich text editor', () => {
     await paste(page)
     assertAnswerContent(answer, {
       // we only assert the text here because the html sanitization is not working the same way in Firefox
-      answerText: `for x in [1,2]:\n${nbsp} ${nbsp} for y in [3,4]:\n${nbsp} ${nbsp} ${nbsp} ${nbsp} print(x,y)`,
+      answerText: `for x in [1,2]:\n${nbsp}${nbsp}${nbsp}${nbsp}for y in [3,4]:\n${nbsp}${nbsp}${nbsp}${nbsp}${nbsp}${nbsp}${nbsp}${nbsp}print(x,y)`,
     })
   })
 
