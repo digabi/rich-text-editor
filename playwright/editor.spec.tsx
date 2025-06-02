@@ -31,6 +31,8 @@ import { Answer } from '../src/app/utility'
 import fi from '../src/FI'
 import { BASIC, ALGEBRA, GEOMETRY, SET_THEORY } from '../src/app/components/toolbar/math-char-data'
 
+const nbsp = '\u00A0'
+
 test.describe('Rich text editor', () => {
   let answer: Answer = { answerHtml: '', answerText: '', imageCount: 0 }
   let unmountComponent: () => Promise<void>
@@ -122,18 +124,40 @@ test.describe('Rich text editor', () => {
     })
   })
 
-  test('can paste Python code from clipboard and retain line indentation', async ({ page }) => {
+  test('can paste Python code from clipboard as HTML and retain line indentation', async ({ page, browserName }) => {
+    // this is what copy pasting some code in Abicode produces:
     await setClipboardHTML(
       page,
       '<div><div><span>for</span><span> x </span><span>in</span><span> [</span><span>1</span><span>,</span><span>2</span><span>]:</span></div><div><span>    </span><span>for</span><span> y </span><span>in</span><span> [</span><span>3</span><span>,</span><span>4</span><span>]:</span></div><div><span>        </span><span>print</span><span>(x,y)</span></div></div>',
     )
 
-    const nbsp = '\u00A0'
+    await paste(page)
+
+    assertAnswerContent(answer, {
+      answerText: `for x in [1,2]:\n${nbsp}${nbsp}${nbsp}${nbsp}for y in [3,4]:\n${nbsp}${nbsp}${nbsp}${nbsp}${nbsp}${nbsp}${nbsp}${nbsp}print(x,y)`,
+    })
+
+    if (browserName === 'firefox') {
+      assertAnswerContent(answer, {
+        answerHtml: `<span>for</span><span> x </span><span>in</span><span> [</span><span>1</span><span>,</span><span>2</span><span>]:</span><br><span>&nbsp;&nbsp;&nbsp;&nbsp;</span><span>for</span><span> y </span><span>in</span><span> [</span><span>3</span><span>,</span><span>4</span><span>]:</span><br><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span>print</span><span>(x,y)</span>`,
+      })
+    }
+
+    if (browserName === 'chromium') {
+      assertAnswerContent(answer, {
+        answerHtml: `for x in [1,2]:<br>&nbsp;&nbsp;&nbsp;&nbsp;for y in [3,4]:<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;print(x,y)`,
+      })
+    }
+  })
+
+  test('can paste Python code from clipboard as text and retain line indentation', async ({ page }) => {
+    // this is what clicking "copy code" in Abicode produces:
+    await setClipboardText(page, 'for x in [1,2]:\n    print(x)')
 
     await paste(page)
     assertAnswerContent(answer, {
-      // we only assert the text here because the html sanitization is not working the same way in Firefox
-      answerText: `for x in [1,2]:\n${nbsp}${nbsp}${nbsp}${nbsp}for y in [3,4]:\n${nbsp}${nbsp}${nbsp}${nbsp}${nbsp}${nbsp}${nbsp}${nbsp}print(x,y)`,
+      answerText: `for x in [1,2]:\n${nbsp}${nbsp}${nbsp}${nbsp}print(x)`,
+      answerHtml: `for x in [1,2]:<br>&nbsp;&nbsp;&nbsp;&nbsp;print(x)`,
     })
   })
 
