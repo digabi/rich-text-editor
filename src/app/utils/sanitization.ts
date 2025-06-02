@@ -20,6 +20,7 @@ export function sanitize(html: string, opts?: sanitizeHtml.IOptions) {
         }),
       (v) => convertLinksToRelative(v),
       (v) => stripBlockElements(v),
+      (v) => preserveIndentation(v),
     ] as Array<(html: string) => string>
   ).reduce((value, fn) => fn(value), html)
 }
@@ -44,25 +45,44 @@ function stripBlockElements(html: string) {
     for (let i = 0; i < parent.childNodes.length; i++) {
       const node = parent.childNodes[i]
       if (isBlockElement(node)) {
-        if (lastNode !== undefined && lastNode.nodeType === Node.TEXT_NODE && /\S/.test(lastNode.textContent ?? ''))
+        if (lastNode !== undefined && lastNode.nodeType === Node.TEXT_NODE && /\S/.test(lastNode.textContent ?? '')) {
           parent.insertBefore(document.createElement('br'), node)
-        if (node.lastChild && node.lastChild.nodeName !== 'BR') node.insertBefore(document.createElement('br'), null)
-        while (node.childNodes.length && node.firstChild !== null) parent.insertBefore(node.firstChild, node)
-        parent.removeChild(node)
-      } else if (node.textContent) {
-        // To keep possible Python code block indentation, we replace each space in the beginning of a line with a non-breaking space
-        const nodeIsPrecededByBR = node.previousSibling?.nodeName === 'BR'
-        if (nodeIsPrecededByBR) {
-          const spaces = node.textContent?.match(/^(\s+)/)?.[0]
-          if (spaces) {
-            node.textContent = node.textContent?.replace(spaces, spaces.replaceAll(' ', '\u00A0'))
-          }
         }
+        if (node.lastChild && node.lastChild.nodeName !== 'BR') {
+          node.insertBefore(document.createElement('br'), null)
+        }
+        while (node.childNodes.length && node.firstChild !== null) {
+          parent.insertBefore(node.firstChild, node)
+        }
+        parent.removeChild(node)
       }
-
       lastNode = node
     }
   } while (Array.prototype.some.call(parent.childNodes, (node: Node) => isBlockElement(node)))
 
   return parent.innerHTML
+}
+
+function preserveIndentation(html: string) {
+  const parent = document.createElement('div')
+  parent.innerHTML = html
+
+  Array.from(parent.childNodes).forEach((node) => {
+    if (node.textContent) {
+      const nodeIsPrecededByBR = node.previousSibling?.nodeName === 'BR'
+      if (nodeIsPrecededByBR) {
+        const spaces = node.textContent?.match(/^(\s+)/)?.[0]
+        if (spaces) {
+          node.textContent = node.textContent?.replace(spaces, spaces.replaceAll(' ', '\u00A0'))
+        }
+      }
+    }
+  })
+
+  return parent.innerHTML
+}
+
+export function preserveLineBreaksAndIndentation(text: string) {
+  const textWithBrs = text.replace(/\n/g, '<br>')
+  return preserveIndentation(textWithBrs)
 }
