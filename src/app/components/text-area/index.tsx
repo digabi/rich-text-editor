@@ -6,7 +6,7 @@ import useEditorState from '../../state'
 
 import Toolbar from '../toolbar'
 import { HelpDialog } from '../help-dialog'
-import { sanitize } from '../../utils/sanitization'
+import { preserveLineBreaksAndIndentation, sanitize } from '../../utils/sanitization'
 import { CaretPosition, getCaretPosition, setCaretPosition } from '../../utility'
 import { RichTextEditorHandle } from '../..'
 import { useKeyboardEventListener } from '../../hooks/use-keyboard-events'
@@ -121,7 +121,7 @@ const MainTextArea = forwardRef<RichTextEditorHandle, TextAreaProps>((props, ref
     } else if (html) {
       document.execCommand('insertHTML', false, sanitize(html))
     } else if (text) {
-      document.execCommand('insertHTML', false, text)
+      document.execCommand('insertHTML', false, preserveLineBreaksAndIndentation(text))
     }
 
     /** setTimeout makes the callback run in the next (or later) loop of
