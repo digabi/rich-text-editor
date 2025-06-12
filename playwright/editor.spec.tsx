@@ -124,6 +124,15 @@ test.describe('Rich text editor', () => {
     })
   })
 
+  test('can paste text with line breaks, and preserve line breaks', async ({ page }) => {
+    await setClipboardText(page, 'Hello\nWorld!\n\nAll\ngood?')
+    await paste(page)
+    assertAnswerContent(answer, {
+      answerText: 'Hello\nWorld!\n\nAll\ngood?',
+      answerHtml: 'Hello<br>World!<br><br>All<br>good?',
+    })
+  })
+
   test('can paste Python code from clipboard as HTML and retain line indentation', async ({ page, browserName }) => {
     // this is what copy pasting some code in Abicode produces:
     await setClipboardHTML(
