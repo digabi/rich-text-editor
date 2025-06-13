@@ -133,6 +133,39 @@ test.describe('Rich text editor', () => {
     })
   })
 
+  // first line is often not inside a tag
+  test('preserves line break after first line', async ({ page }) => {
+    await setClipboardHTML(page, 'line1<div>line2</div><div>line3</div>')
+    await paste(page)
+    assertAnswerContent(answer, {
+      answerText: 'line1\nline2\nline3',
+      answerHtml: 'line1<br>line2<br>line3',
+    })
+  })
+
+  test('preserves tabs in pasted text', async ({ page }) => {
+    const TAB = `${nbsp}${nbsp}${nbsp}${nbsp}`
+    const htmlTab = '&nbsp;&nbsp;&nbsp;&nbsp;'
+    await setClipboardHTML(page, 'Hello<br>\tWorld!<br><br>\t\tAll \tgood?')
+    await paste(page)
+    assertAnswerContent(answer, {
+      answerText: `Hello\n${TAB}World!\n\n${TAB}${TAB}All ${TAB}good?`,
+      answerHtml: `Hello<br>${htmlTab}World!<br><br>${htmlTab}${htmlTab}All ${htmlTab}good?`,
+    })
+  })
+
+  test('does not print double line breaks', async ({ page }) => {
+    await setClipboardHTML(
+      page,
+      `<body><div><p>line 1</p><p>line 2</p><p><br/></p><p>line 3 after empty row</p></div></body>`,
+    )
+    await paste(page)
+    assertAnswerContent(answer, {
+      answerText: 'line 1\nline 2\n\nline 3 after empty row',
+      answerHtml: 'line 1<br>line 2<br><br>line 3 after empty row',
+    })
+  })
+
   test('can paste Python code from clipboard as HTML and retain line indentation', async ({ page, browserName }) => {
     // this is what copy pasting some code in Abicode produces:
     await setClipboardHTML(
