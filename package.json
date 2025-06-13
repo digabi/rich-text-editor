@@ -29,8 +29,8 @@
   },
   "devDependencies": {
     "@digabi/eslint-config": "^3.3.0",
-    "@playwright/experimental-ct-react": "^1.53.0",
-    "@playwright/test": "^1.53.0",
+    "@playwright/experimental-ct-react": "1.52.0",
+    "@playwright/test": "1.52.0",
     "@types/express": "^5.0.3",
     "@types/node": "^22.15.31",
     "@types/react": "^19.1.8",
