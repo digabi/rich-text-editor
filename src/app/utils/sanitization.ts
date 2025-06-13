@@ -21,6 +21,7 @@ export function sanitize(html: string, opts?: sanitizeHtml.IOptions) {
       (v) => convertLinksToRelative(v),
       (v) => stripBlockElements(v),
       (v) => preserveIndentation(v),
+      (v) => trimAndPreserveTabs(v),
     ] as Array<(html: string) => string>
   ).reduce((value, fn) => fn(value), html)
 }
@@ -45,9 +46,15 @@ function stripBlockElements(html: string) {
     for (let i = 0; i < parent.childNodes.length; i++) {
       const node = parent.childNodes[i]
       if (isBlockElement(node)) {
-        if (lastNode !== undefined && lastNode.nodeType === Node.TEXT_NODE && /\S/.test(lastNode.textContent ?? '')) {
+        // if the last node is a text node or a span, which is not empty, add a br before this node
+        if (
+          lastNode !== undefined &&
+          (lastNode.nodeType === Node.TEXT_NODE || lastNode.nodeName === 'SPAN') &&
+          /\S/.test(lastNode.textContent ?? '')
+        ) {
           parent.insertBefore(document.createElement('br'), node)
         }
+        // if this node has a last child that is not a br, add a br
         if (node.lastChild && node.lastChild.nodeName !== 'BR') {
           node.insertBefore(document.createElement('br'), null)
         }
@@ -61,6 +68,10 @@ function stripBlockElements(html: string) {
   } while (Array.prototype.some.call(parent.childNodes, (node: Node) => isBlockElement(node)))
 
   return parent.innerHTML
+}
+
+function trimAndPreserveTabs(html: string) {
+  return html.trim().replace(/\t/g, '&nbsp;&nbsp;&nbsp;&nbsp;')
 }
 
 function preserveIndentation(html: string) {
