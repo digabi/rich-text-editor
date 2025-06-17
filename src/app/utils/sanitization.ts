@@ -20,7 +20,7 @@ export function sanitize(html: string, opts?: sanitizeHtml.IOptions) {
         }),
       (v) => convertLinksToRelative(v),
       (v) => stripBlockElements(v),
-      (v) => preserveIndentation(v),
+      (v) => preserveLineBreaksAndIndentation(v),
       (v) => trimAndPreserveTabs(v),
     ] as Array<(html: string) => string>
   ).reduce((value, fn) => fn(value), html)

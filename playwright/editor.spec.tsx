@@ -124,6 +124,15 @@ test.describe('Rich text editor', () => {
     })
   })
 
+  test('can paste html with line breaks, and preserve line breaks', async ({ page }) => {
+    await setClipboardHTML(page, 'Hello\nWorld!\n\nAll\ngood?')
+    await paste(page)
+    assertAnswerContent(answer, {
+      answerText: 'Hello\nWorld!\n\nAll\ngood?',
+      answerHtml: 'Hello<br>World!<br><br>All<br>good?',
+    })
+  })
+
   test('can paste text with line breaks, and preserve line breaks', async ({ page }) => {
     await setClipboardText(page, 'Hello\nWorld!\n\nAll\ngood?')
     await paste(page)
