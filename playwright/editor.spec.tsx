@@ -210,6 +210,15 @@ test.describe('Rich text editor', () => {
     })
   })
 
+  test('escapes HTML content pasted as text', async ({ page }) => {
+    await setClipboardText(page, `<script>This should be 'escaped' "properly"</script>`)
+    await paste(page)
+    assertAnswerContent(answer, {
+      answerText: `<script>This should be 'escaped' "properly"</script>`,
+      answerHtml: `&lt;script&gt;This should be 'escaped' "properly"&lt;/script&gt;`,
+    })
+  })
+
   test('images with sources pointing outside are removed from pasted HTML', async ({ page }) => {
     await setClipboardHTML(page, `Hello <img src="www.test.com/test/pic.png" alt="test">World`)
 
