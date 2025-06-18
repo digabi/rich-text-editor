@@ -152,7 +152,7 @@ test.describe('Rich text editor', () => {
     })
   })
 
-  test('preserves tabs in pasted text', async ({ page }) => {
+  test('preserves tabs in pasted html', async ({ page }) => {
     const TAB = `${nbsp}${nbsp}${nbsp}${nbsp}`
     const htmlTab = '&nbsp;&nbsp;&nbsp;&nbsp;'
     await setClipboardHTML(page, 'Hello<br>\tWorld!<br><br>\t\tAll \tgood?')
@@ -164,10 +164,8 @@ test.describe('Rich text editor', () => {
   })
 
   test('does not print double line breaks', async ({ page }) => {
-    await setClipboardHTML(
-      page,
-      `<body><div><p>line 1</p><p>line 2</p><p><br/></p><p>line 3 after empty row</p></div></body>`,
-    )
+    const textFromCollaboraWriter = `<body>\n<div>\n<p>line 1</p>\n<p>line 2</p>\n<p><br/></p>\n<p>line 3 after empty row</p>\n</div>\n</body>`
+    await setClipboardHTML(page, textFromCollaboraWriter)
     await paste(page)
     assertAnswerContent(answer, {
       answerText: 'line 1\nline 2\n\nline 3 after empty row',
