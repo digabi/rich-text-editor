@@ -9,6 +9,7 @@ const sanitizeOpts = {
 }
 
 export function sanitize(html: string, opts?: sanitizeHtml.IOptions) {
+  let isInsideHeadTag = false
   return (
     [
       (v) =>
@@ -17,16 +18,29 @@ export function sanitize(html: string, opts?: sanitizeHtml.IOptions) {
           allowedTags: [...sanitizeOpts.allowedTags, 'div', 'p'],
           allowedSchemes: ['data', 'http', 'https'],
           ...opts,
+          // We need to track if we are inside a head tag, because we don't want to add <br>s inside head tags
+          onOpenTag: (tag) => (tag === 'head' ? (isInsideHeadTag = true) : undefined),
+          onCloseTag: (tag) => (tag === 'head' ? (isInsideHeadTag = false) : undefined),
+          textFilter: (text) => {
+            if (isInsideHeadTag) {
+              return text
+            }
+            if (text === '\n') {
+              return ''
+            }
+            return text.replaceAll(/\n/g, '<br>')
+          },
+          ...opts,
         }),
       (v) => convertLinksToRelative(v),
       (v) => stripBlockElements(v),
       (v) => preserveIndentation(v),
-      (v) => trimAndPreserveTabs(v),
+      (v) => preserveTabs(v),
     ] as Array<(html: string) => string>
   ).reduce((value, fn) => fn(value), html)
 }
 
-export function convertLinksToRelative(html: string) {
+function convertLinksToRelative(html: string) {
   return html.replace(new RegExp(document.location.origin, 'g'), '')
 }
 
@@ -39,7 +53,7 @@ function isBlockElement(node: Node) {
 // change block-elements (namely `div` and `p`) into `br`s.
 function stripBlockElements(html: string) {
   const parent = document.createElement('div')
-  parent.innerHTML = html
+  parent.innerHTML = html.trim()
 
   do {
     let lastNode: Node | undefined = undefined
@@ -70,8 +84,15 @@ function stripBlockElements(html: string) {
   return parent.innerHTML
 }
 
-function trimAndPreserveTabs(html: string) {
-  return html.trim().replace(/\t/g, '&nbsp;&nbsp;&nbsp;&nbsp;')
+function preserveTabs(html: string) {
+  return html.replace(/\t/g, '&nbsp;&nbsp;&nbsp;&nbsp;')
+}
+
+export function sanitizeText(text: string) {
+  return ([escapeHtml, preserveLineBreaks, preserveIndentation] as Array<(text: string) => string>).reduce(
+    (value, fn) => fn(value),
+    text,
+  )
 }
 
 function preserveIndentation(html: string) {
@@ -93,7 +114,15 @@ function preserveIndentation(html: string) {
   return parent.innerHTML
 }
 
-export function preserveLineBreaksAndIndentation(text: string) {
-  const textWithBrs = text.replace(/\n/g, '<br>')
-  return preserveIndentation(textWithBrs)
+function preserveLineBreaks(text: string) {
+  return text.replaceAll(/\n/g, '<br>')
+}
+
+function escapeHtml(text: string) {
+  return String(text)
+    .replaceAll('&', '&amp;')
+    .replaceAll('<', '&lt;')
+    .replaceAll('>', '&gt;')
+    .replaceAll('"', '&quot;')
+    .replaceAll("'", '&#39;')
 }

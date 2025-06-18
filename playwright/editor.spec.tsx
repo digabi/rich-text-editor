@@ -124,6 +124,15 @@ test.describe('Rich text editor', () => {
     })
   })
 
+  test('can paste html with line breaks, and preserve line breaks', async ({ page }) => {
+    await setClipboardHTML(page, 'Hello\nWorld!\n\nAll\ngood?')
+    await paste(page)
+    assertAnswerContent(answer, {
+      answerText: 'Hello\nWorld!\n\nAll\ngood?',
+      answerHtml: 'Hello<br>World!<br><br>All<br>good?',
+    })
+  })
+
   test('can paste text with line breaks, and preserve line breaks', async ({ page }) => {
     await setClipboardText(page, 'Hello\nWorld!\n\nAll\ngood?')
     await paste(page)
@@ -143,7 +152,7 @@ test.describe('Rich text editor', () => {
     })
   })
 
-  test('preserves tabs in pasted text', async ({ page }) => {
+  test('preserves tabs in pasted html', async ({ page }) => {
     const TAB = `${nbsp}${nbsp}${nbsp}${nbsp}`
     const htmlTab = '&nbsp;&nbsp;&nbsp;&nbsp;'
     await setClipboardHTML(page, 'Hello<br>\tWorld!<br><br>\t\tAll \tgood?')
@@ -155,10 +164,8 @@ test.describe('Rich text editor', () => {
   })
 
   test('does not print double line breaks', async ({ page }) => {
-    await setClipboardHTML(
-      page,
-      `<body><div><p>line 1</p><p>line 2</p><p><br/></p><p>line 3 after empty row</p></div></body>`,
-    )
+    const textFromCollaboraWriter = `<body>\n<div>\n<p>line 1</p>\n<p>line 2</p>\n<p><br/></p>\n<p>line 3 after empty row</p>\n</div>\n</body>`
+    await setClipboardHTML(page, textFromCollaboraWriter)
     await paste(page)
     assertAnswerContent(answer, {
       answerText: 'line 1\nline 2\n\nline 3 after empty row',
@@ -200,6 +207,15 @@ test.describe('Rich text editor', () => {
     assertAnswerContent(answer, {
       answerText: `for x in [1,2]:\n${nbsp}${nbsp}${nbsp}${nbsp}print(x)`,
       answerHtml: `for x in [1,2]:<br>&nbsp;&nbsp;&nbsp;&nbsp;print(x)`,
+    })
+  })
+
+  test('escapes HTML content pasted as text', async ({ page }) => {
+    await setClipboardText(page, `<script>This should be 'escaped' "properly"</script>`)
+    await paste(page)
+    assertAnswerContent(answer, {
+      answerText: `<script>This should be 'escaped' "properly"</script>`,
+      answerHtml: `&lt;script&gt;This should be 'escaped' "properly"&lt;/script&gt;`,
     })
   })
 
