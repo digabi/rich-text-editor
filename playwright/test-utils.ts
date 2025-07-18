@@ -168,4 +168,4 @@ export const specialCharacters = {
 }
 
 export const getLatexImgTag = (latex: string) =>
-  `<img src="http://localhost:5111/math.svg?latex=${encodeURIComponent(latex)}" alt="${latex}">`
+  `<img src="http://localhost:5111/math.svg?latex=${encodeURIComponent(latex)}" alt="${latex.replace(/</g, '&lt;').replace(/>/g, '&gt;')}">`
