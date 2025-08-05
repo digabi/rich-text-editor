@@ -41,6 +41,10 @@ test.describe('Rich text editor', () => {
     answer = newAnswer
   }
 
+  const assertAnswer = async (expected: Partial<Answer>) => {
+    await expect(() => assertAnswerContent(answer, expected)).toPass({ intervals: [500], timeout: 5000 })
+  }
+
   test.beforeEach(async ({ page, mount }) => {
     const { unmount } = await mount(
       <RichTextEditor
@@ -61,32 +65,31 @@ test.describe('Rich text editor', () => {
   })
 
   test('can type in the editor', async ({ page }) => {
-    const editor = getEditorLocator(page)
     await page.keyboard.type('Hello World!')
 
-    assertAnswerContent(answer, { answerHtml: 'Hello World!', answerText: 'Hello World!' })
+    await assertAnswer({ answerHtml: 'Hello World!', answerText: 'Hello World!' })
   })
 
   test('can erase', async ({ page }) => {
     await test.step('text', async () => {
       await page.keyboard.type('Hello World!')
-      assertAnswerContent(answer, { answerHtml: 'Hello World!', answerText: 'Hello World!' })
+      await assertAnswer({ answerHtml: 'Hello World!', answerText: 'Hello World!' })
       await repeat(7, async () => {
         await page.keyboard.press('Backspace')
       })
-      assertAnswerContent(answer, { answerHtml: 'Hello', answerText: 'Hello' })
+      await assertAnswer({ answerHtml: 'Hello', answerText: 'Hello' })
     })
 
     await test.step('equations', async () => {
       await page.keyboard.press('Control+E')
       await page.keyboard.type('x^2')
       await page.keyboard.press('Escape')
-      assertAnswerContent(answer, {
+      await assertAnswer({
         answerHtml: `Hello${getLatexImgTag('x^2')}`,
         answerText: 'Hello',
       })
       await page.keyboard.press('Backspace')
-      assertAnswerContent(answer, {
+      await assertAnswer({
         answerHtml: 'Hello',
         answerText: 'Hello',
       })
@@ -95,14 +98,14 @@ test.describe('Rich text editor', () => {
 
   test('can input special characters from toolbar', async ({ page }) => {
     await inputSpecialCharacterFromToolbar(page, specialCharacters.alpha[1])
-    assertAnswerContent(answer, {
+    await assertAnswer({
       answerText: specialCharacters.alpha[1],
     })
 
     await page.getByTestId('toggle-all-special-characters').click()
 
     await inputSpecialCharacterFromToolbar(page, specialCharacters.delta[1])
-    assertAnswerContent(answer, {
+    await assertAnswer({
       answerText: specialCharacters.alpha[1] + specialCharacters.delta[1],
     })
   })
@@ -110,7 +113,7 @@ test.describe('Rich text editor', () => {
   test('can paste text from clipboard', async ({ page }) => {
     await setClipboardText(page, 'Hello World!')
     await paste(page)
-    assertAnswerContent(answer, {
+    await assertAnswer({
       answerText: 'Hello World!',
     })
   })
@@ -118,7 +121,7 @@ test.describe('Rich text editor', () => {
   test('can paste HTML from clipboard', async ({ page }) => {
     await setClipboardHTML(page, '<p>Hello World!</p>')
     await paste(page)
-    assertAnswerContent(answer, {
+    await assertAnswer({
       answerText: 'Hello World!',
       answerHtml: 'Hello World!',
     })
@@ -127,7 +130,7 @@ test.describe('Rich text editor', () => {
   test('can paste html with line breaks, and preserve line breaks', async ({ page }) => {
     await setClipboardHTML(page, 'Hello\nWorld!\n\nAll\ngood?')
     await paste(page)
-    assertAnswerContent(answer, {
+    await assertAnswer({
       answerText: 'Hello\nWorld!\n\nAll\ngood?',
       answerHtml: 'Hello<br>World!<br><br>All<br>good?',
     })
@@ -136,7 +139,7 @@ test.describe('Rich text editor', () => {
   test('can paste text with line breaks, and preserve line breaks', async ({ page }) => {
     await setClipboardText(page, 'Hello\nWorld!\n\nAll\ngood?')
     await paste(page)
-    assertAnswerContent(answer, {
+    await assertAnswer({
       answerText: 'Hello\nWorld!\n\nAll\ngood?',
       answerHtml: 'Hello<br>World!<br><br>All<br>good?',
     })
@@ -146,7 +149,7 @@ test.describe('Rich text editor', () => {
   test('preserves line break after first line', async ({ page }) => {
     await setClipboardHTML(page, 'line1<div>line2</div><div>line3</div>')
     await paste(page)
-    assertAnswerContent(answer, {
+    await assertAnswer({
       answerText: 'line1\nline2\nline3',
       answerHtml: 'line1<br>line2<br>line3',
     })
@@ -157,7 +160,7 @@ test.describe('Rich text editor', () => {
     const htmlTab = '&nbsp;&nbsp;&nbsp;&nbsp;'
     await setClipboardHTML(page, 'Hello<br>\tWorld!<br><br>\t\tAll \tgood?')
     await paste(page)
-    assertAnswerContent(answer, {
+    await assertAnswer({
       answerText: `Hello\n${TAB}World!\n\n${TAB}${TAB}All ${TAB}good?`,
       answerHtml: `Hello<br>${htmlTab}World!<br><br>${htmlTab}${htmlTab}All ${htmlTab}good?`,
     })
@@ -167,7 +170,7 @@ test.describe('Rich text editor', () => {
     const textFromCollaboraWriter = `<body>\n<div>\n<p>line 1</p>\n<p>line 2</p>\n<p><br/></p>\n<p>line 3 after empty row</p>\n</div>\n</body>`
     await setClipboardHTML(page, textFromCollaboraWriter)
     await paste(page)
-    assertAnswerContent(answer, {
+    await assertAnswer({
       answerText: 'line 1\nline 2\n\nline 3 after empty row',
       answerHtml: 'line 1<br>line 2<br><br>line 3 after empty row',
     })
@@ -182,18 +185,18 @@ test.describe('Rich text editor', () => {
 
     await paste(page)
 
-    assertAnswerContent(answer, {
+    await assertAnswer({
       answerText: `for x in [1,2]:\n${nbsp}${nbsp}${nbsp}${nbsp}for y in [3,4]:\n${nbsp}${nbsp}${nbsp}${nbsp}${nbsp}${nbsp}${nbsp}${nbsp}print(x,y)`,
     })
 
     if (browserName === 'firefox') {
-      assertAnswerContent(answer, {
+      await assertAnswer({
         answerHtml: `<span>for</span><span> x </span><span>in</span><span> [</span><span>1</span><span>,</span><span>2</span><span>]:</span><br><span>&nbsp;&nbsp;&nbsp;&nbsp;</span><span>for</span><span> y </span><span>in</span><span> [</span><span>3</span><span>,</span><span>4</span><span>]:</span><br><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span>print</span><span>(x,y)</span>`,
       })
     }
 
     if (browserName === 'chromium') {
-      assertAnswerContent(answer, {
+      await assertAnswer({
         answerHtml: `for x in [1,2]:<br>&nbsp;&nbsp;&nbsp;&nbsp;for y in [3,4]:<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;print(x,y)`,
       })
     }
@@ -204,7 +207,7 @@ test.describe('Rich text editor', () => {
     await setClipboardText(page, 'for x in [1,2]:\n    print(x)')
 
     await paste(page)
-    assertAnswerContent(answer, {
+    await assertAnswer({
       answerText: `for x in [1,2]:\n${nbsp}${nbsp}${nbsp}${nbsp}print(x)`,
       answerHtml: `for x in [1,2]:<br>&nbsp;&nbsp;&nbsp;&nbsp;print(x)`,
     })
@@ -213,7 +216,7 @@ test.describe('Rich text editor', () => {
   test('escapes HTML content pasted as text', async ({ page }) => {
     await setClipboardText(page, `<script>This should be 'escaped' "properly"</script>`)
     await paste(page)
-    assertAnswerContent(answer, {
+    await assertAnswer({
       answerText: `<script>This should be 'escaped' "properly"</script>`,
       answerHtml: `&lt;script&gt;This should be 'escaped' "properly"&lt;/script&gt;`,
     })
@@ -224,7 +227,7 @@ test.describe('Rich text editor', () => {
 
     await paste(page)
 
-    assertAnswerContent(answer, {
+    await assertAnswer({
       answerText: 'Hello World',
       answerHtml: 'Hello World',
     })
@@ -279,7 +282,7 @@ test.describe('Rich text editor', () => {
     await assertEquationEditorLatexContent(equationEditor, latex)
     await clickOutsideEditor(page)
 
-    assertAnswerContent(answer, {
+    await assertAnswer({
       answerText: '',
       imageCount: 0,
     })
@@ -299,7 +302,7 @@ test.describe('Rich text editor', () => {
     await setClipboardHTML(page, badHtml)
     await paste(page)
 
-    assertAnswerContent(answer, { answerHtml: goodHtml, answerText: 'drop\nbar\nlink text', imageCount: 0 })
+    await assertAnswer({ answerHtml: goodHtml, answerText: 'drop\nbar\nlink text', imageCount: 0 })
   })
 
   test('deletes line breaks correctly', async ({ page }) => {
@@ -315,7 +318,7 @@ test.describe('Rich text editor', () => {
     await page.keyboard.press('ArrowLeft')
     await page.keyboard.press('ArrowUp')
     await page.keyboard.press('Backspace')
-    assertAnswerContent(answer, {
+    await assertAnswer({
       answerHtml: `${getLatexImgTag('0')}${getLatexImgTag('1')}<br>${getLatexImgTag('2')}`,
     })
   })
@@ -335,7 +338,7 @@ test.describe('Rich text editor', () => {
     await page.keyboard.type('Hello!')
     await page.keyboard.press('Escape')
 
-    assertAnswerContent(answer, {
+    await assertAnswer({
       answerHtml: `${getLatexImgTag('Hello!')}`,
     })
   })
@@ -359,7 +362,7 @@ test.describe('Rich text editor', () => {
     await page.keyboard.type('Hello!')
     await page.keyboard.press('Escape')
 
-    assertAnswerContent(answer, {
+    await assertAnswer({
       answerHtml: `${getLatexImgTag('Hello!')}`,
     })
   })
@@ -434,7 +437,9 @@ test.describe('Rich text editor', () => {
         await char.click()
       }
 
-      assertAnswerContent(answer, {
+      await page.waitForTimeout(1000)
+
+      await assertAnswer({
         answerText: [BASIC, ALGEBRA, GEOMETRY, SET_THEORY]
           .flat()
           .map((char) => char.label)
@@ -454,7 +459,7 @@ test.describe('Rich text editor', () => {
 
       await page.keyboard.press('Escape')
 
-      assertAnswerContent(answer, {
+      await assertAnswer({
         answerHtml: `${getLatexImgTag('°\\cdot\\times\\pm\\infty^{23}\\frac{1}{2}\\frac{1}{3}\\pi‰\\alpha\\beta\\Gamma\\gamma\\Delta\\delta\\varepsilon\\zeta\\eta\\theta\\vartheta\\iota\\kappa\\Lambda\\lambda\\mu\\nu\\Xi\\xi\\Pi\\rho\\Sigma\\sigma\\tau\\Upsilon\\upsilon\\Phi\\phi\\chi\\Psi\\psi\\Omega\\omega\\partial\\varphi\\ne\\approx\\le\\ge<>\\sim\\equiv\\not\\equiv\\circ\\ldots\\propto\\sphericalangle\\mid\\parallel\\xrightleftharpoons[⇅\\angle\\uparrow\\nearrow\\searrow\\downarrow\\leftrightarrow\\perp\\rightarrow\\Rightarrow\\Leftrightarrow\\in\\mathbb{Z}\\mathbb{R}\\exists\\forall\\mathbb{N}\\mathbb{Q}\\cap\\cup\\setminus\\subset\\not\\subset\\notin\\varnothing\\wedge\\vee\\neg\\nabla]{}')}`,
       })
     })
@@ -475,59 +480,59 @@ test.describe('Rich text editor', () => {
     test('can undo and redo changes', async ({ page, browserName }) => {
       await test.step('Ctrl+Z undoes changes', async () => {
         await writeAndWaitForTimeout(page, 'aa')
-        assertAnswerContent(answer, { answerText: 'aa' })
+        await assertAnswer({ answerText: 'aa' })
         await writeAndWaitForTimeout(page, 'bb')
-        assertAnswerContent(answer, { answerText: 'aabb' })
+        await assertAnswer({ answerText: 'aabb' })
         await page.keyboard.press('Control+z')
-        assertAnswerContent(answer, { answerText: 'aa' })
+        await assertAnswer({ answerText: 'aa' })
       })
 
       await test.step('undo at earlies change does nothing', async () => {
         await page.keyboard.press('Control+z')
-        assertAnswerContent(answer, { answerText: '' })
+        await assertAnswer({ answerText: '' })
         await page.keyboard.press('Control+z')
-        assertAnswerContent(answer, { answerText: '' })
+        await assertAnswer({ answerText: '' })
       })
 
       await test.step('Ctrl+Y redoes changes', async () => {
         await page.keyboard.press('Control+y')
-        assertAnswerContent(answer, { answerText: 'aa' })
+        await assertAnswer({ answerText: 'aa' })
         await page.keyboard.press('Control+y')
-        assertAnswerContent(answer, { answerText: 'aabb' })
+        await assertAnswer({ answerText: 'aabb' })
       })
 
       await test.step('typing clears changes', async () => {
         await page.keyboard.press('Control+z')
-        assertAnswerContent(answer, { answerText: 'aa' })
+        await assertAnswer({ answerText: 'aa' })
         await page.keyboard.press('Control+z')
-        assertAnswerContent(answer, { answerText: '' })
+        await assertAnswer({ answerText: '' })
         await writeAndWaitForTimeout(page, 'cc')
-        assertAnswerContent(answer, { answerText: 'cc' })
+        await assertAnswer({ answerText: 'cc' })
       })
 
       await test.step('redo at latest change does nothing', async () => {
         await page.keyboard.press('Control+y')
-        assertAnswerContent(answer, { answerText: 'cc' })
+        await assertAnswer({ answerText: 'cc' })
       })
 
       await test.step('equations can be undone', async () => {
         await page.keyboard.press('Control+e')
         await page.keyboard.type('xxx')
         await getEditorLocator(page).click()
-        assertAnswerContent(answer, { answerHtml: `cc${getLatexImgTag('xxx')}` })
+        await assertAnswer({ answerHtml: `cc${getLatexImgTag('xxx')}` })
         await page.waitForTimeout(historyTimeout)
         await page.keyboard.press('Control+z')
-        assertAnswerContent(answer, { answerHtml: 'cc' })
+        await assertAnswer({ answerHtml: 'cc' })
       })
 
       await test.step('equations can be redone', async () => {
         await page.keyboard.press('Control+y')
-        assertAnswerContent(answer, { answerHtml: `cc${getLatexImgTag('xxx')}` })
+        await assertAnswer({ answerHtml: `cc${getLatexImgTag('xxx')}` })
         await getEditorLocator(page).getByRole('img').click()
         await page.waitForTimeout(historyTimeout)
         await page.keyboard.type('yyy')
         await page.keyboard.press('Escape')
-        assertAnswerContent(answer, { answerHtml: `cc${getLatexImgTag('xxxyyy')}` })
+        await assertAnswer({ answerHtml: `cc${getLatexImgTag('xxxyyy')}` })
       })
 
       await test.step('pasting images can be undone', async () => {
@@ -536,7 +541,7 @@ test.describe('Rich text editor', () => {
         await page.waitForTimeout(historyTimeout)
         await page.keyboard.press('Control+z')
         await page.keyboard.press('Control+z')
-        assertAnswerContent(answer, { answerHtml: 'cc' })
+        await assertAnswer({ answerHtml: 'cc' })
         await setClipboardImage(page, 'image/png', samplePNG)
         await paste(page)
         await expect(getEditorLocator(page).getByRole('img')).toBeVisible()
@@ -566,7 +571,7 @@ test.describe('Rich text editor', () => {
         })
 
         await page.keyboard.type('component ')
-        assertAnswerContent(answer, { answerHtml: 'This is a component test' })
+        await assertAnswer({ answerHtml: 'This is a component test' })
 
         await repeat(4, async () => {
           await page.keyboard.press('ArrowRight')
@@ -575,7 +580,7 @@ test.describe('Rich text editor', () => {
         await page.waitForTimeout(historyTimeout)
         await page.keyboard.press('Control+z')
         await page.keyboard.type('(1) ')
-        assertAnswerContent(answer, { answerHtml: 'This is a (1) test' })
+        await assertAnswer({ answerHtml: 'This is a (1) test' })
       })
 
       await test.step('on redo', async () => {
@@ -587,7 +592,7 @@ test.describe('Rich text editor', () => {
 
         await page.keyboard.press('Control+y')
         await page.keyboard.type('(2) ')
-        assertAnswerContent(answer, { answerHtml: 'This is a (1) (2) test' })
+        await assertAnswer({ answerHtml: 'This is a (1) (2) test' })
       })
 
       await test.step('on undo across different lines', async () => {
@@ -611,17 +616,17 @@ test.describe('Rich text editor', () => {
 
         await page.keyboard.type(' (3)')
         await page.waitForTimeout(historyTimeout)
-        assertAnswerContent(answer, { answerText: 'This (3) is a (1) (2) test\nThis is a second line' })
+        await assertAnswer({ answerText: 'This (3) is a (1) (2) test\nThis is a second line' })
 
         await page.keyboard.press('ArrowDown')
         await page.keyboard.press('ArrowDown')
         await page.keyboard.type(' (4)')
-        assertAnswerContent(answer, { answerText: 'This (3) is a (1) (2) test\nThis is a second line (4)' })
+        await assertAnswer({ answerText: 'This (3) is a (1) (2) test\nThis is a second line (4)' })
         await page.waitForTimeout(historyTimeout)
         await page.keyboard.press('Control+z')
         await page.keyboard.press('Control+z')
         await page.keyboard.type(' (5)')
-        assertAnswerContent(answer, { answerText: 'This (5) is a (1) (2) test\nThis is a second line' })
+        await assertAnswer({ answerText: 'This (5) is a (1) (2) test\nThis is a second line' })
       })
     })
   })
@@ -638,7 +643,7 @@ test.describe('Rich text editor', () => {
       await page.keyboard.press('Backspace')
 
       await assertEditorTextContent(getEditorLocator(page), 'Held!')
-      assertAnswerContent(answer, { answerHtml: 'Held!', answerText: 'Held!', imageCount: 0 })
+      await assertAnswer({ answerHtml: 'Held!', answerText: 'Held!', imageCount: 0 })
     })
 
     test('can remove selected text and image', async ({ page }) => {
@@ -649,7 +654,7 @@ test.describe('Rich text editor', () => {
       await selectEditorContent(getEditorLocator(page), 2, 9)
       await page.keyboard.press('Backspace')
 
-      assertAnswerContent(answer, { answerHtml: 'Hed!', answerText: 'Hed!', imageCount: 0 })
+      await assertAnswer({ answerHtml: 'Hed!', answerText: 'Hed!', imageCount: 0 })
     })
 
     test.describe('can replace selected text with ', () => {
@@ -662,14 +667,14 @@ test.describe('Rich text editor', () => {
         await page.keyboard.press('o')
 
         await assertEditorTextContent(getEditorLocator(page), 'Hold!')
-        assertAnswerContent(answer, { answerHtml: 'Hold!', answerText: 'Hold!', imageCount: 0 })
+        await assertAnswer({ answerHtml: 'Hold!', answerText: 'Hold!', imageCount: 0 })
       })
 
       test('with a special character', async ({ page }) => {
         await inputSpecialCharacterFromToolbar(page, specialCharacters.alpha[1])
         await clickOutsideEditor(page)
 
-        assertAnswerContent(answer, { answerText: `H${specialCharacters.alpha[1]}ld!` })
+        await assertAnswer({ answerText: `H${specialCharacters.alpha[1]}ld!` })
       })
 
       test('with an equation', async ({ page }) => {
@@ -677,7 +682,7 @@ test.describe('Rich text editor', () => {
         await inputLatexCommandFromToolbar(page, specialCharacters.cos[0])
         await clickOutsideEditor(page)
 
-        assertAnswerContent(answer, { answerText: 'Hld!' })
+        await assertAnswer({ answerText: 'Hld!' })
       })
 
       test('with a pasted image', async ({ page }) => {
@@ -686,7 +691,7 @@ test.describe('Rich text editor', () => {
         await pasteHtmlImage(page, img)
 
         expect(await editor.innerHTML()).toContain(`H${img}ld!`)
-        assertAnswerContent(answer, {
+        await assertAnswer({
           answerText: 'Hld!',
           imageCount: 1,
         })
@@ -794,7 +799,7 @@ test.describe('Rich text editor', () => {
       await test.step(' and places cursor after equation image', async () => {
         await page.keyboard.press('B')
 
-        assertAnswerContent(answer, { answerText: 'B' })
+        await assertAnswer({ answerText: 'B' })
       })
     })
 
@@ -861,40 +866,40 @@ test.describe('Rich text editor', () => {
 
     test('updates the answer when equation is changed', async ({ page }) => {
       await page.keyboard.press('1')
-      assertAnswerContent(answer, { answerHtml: getLatexImgTag('1') })
+      await assertAnswer({ answerHtml: getLatexImgTag('1') })
       await page.keyboard.press('2')
-      assertAnswerContent(answer, { answerHtml: getLatexImgTag('12') })
+      await assertAnswer({ answerHtml: getLatexImgTag('12') })
 
       await test.step('updates on undo', async () => {
         await page.keyboard.press('Control+z')
-        assertAnswerContent(answer, { answerHtml: getLatexImgTag('1') })
+        await assertAnswer({ answerHtml: getLatexImgTag('1') })
       })
 
       await test.step('updates with long text', async () => {
         await page.keyboard.type('testing that this works when there is a lot of text as well')
-        assertAnswerContent(answer, {
+        await assertAnswer({
           answerHtml: getLatexImgTag(
             '1testing\\ that\\ this\\ works\\ when\\ there\\ is\\ a\\ lot\\ of\\ text\\ as\\ well',
           ),
         })
         await selectAll(page)
         await page.keyboard.press('Backspace')
-        assertAnswerContent(answer, { answerHtml: getLatexImgTag('') })
+        await assertAnswer({ answerHtml: getLatexImgTag('') })
       })
 
       await test.step('updates when latex command is inserted', async () => {
         await inputLatexCommandFromToolbar(page, specialCharacters.sqrt[0])
-        assertAnswerContent(answer, { answerHtml: getLatexImgTag('\\sqrt{ }') })
+        await assertAnswer({ answerHtml: getLatexImgTag('\\sqrt{ }') })
         await page.keyboard.type('123')
-        assertAnswerContent(answer, { answerHtml: getLatexImgTag('\\sqrt{123}') })
+        await assertAnswer({ answerHtml: getLatexImgTag('\\sqrt{123}') })
       })
 
       await test.step('updates when re-opnening an equation', async () => {
         await page.keyboard.press('Escape')
-        assertAnswerContent(answer, { answerHtml: getLatexImgTag('\\sqrt{123}') })
+        await assertAnswer({ answerHtml: getLatexImgTag('\\sqrt{123}') })
         await getEditorLocator(page).getByRole('img').first().click()
         await page.keyboard.type('abc')
-        assertAnswerContent(answer, { answerHtml: getLatexImgTag('\\sqrt{123}abc') })
+        await assertAnswer({ answerHtml: getLatexImgTag('\\sqrt{123}abc') })
       })
     })
 
@@ -907,7 +912,7 @@ test.describe('Rich text editor', () => {
         await page.keyboard.press('B')
         await clickOutsideEditor(page)
         await expect(page.locator('.answer > img')).toHaveCount(2)
-        assertAnswerContent(answer, {
+        await assertAnswer({
           answerHtml: `${getLatexImgTag('A')}${getLatexImgTag('B')}`,
         })
       })
@@ -921,7 +926,7 @@ test.describe('Rich text editor', () => {
         await editor.getByRole('img').last().click()
         await page.keyboard.press('2')
         await page.keyboard.press('Escape')
-        assertAnswerContent(answer, {
+        await assertAnswer({
           answerHtml: `${getLatexImgTag('A2')}${getLatexImgTag('B2')}`,
         })
       })
@@ -946,7 +951,7 @@ test.describe('Rich text editor', () => {
         await page.keyboard.press('Escape')
         await page.keyboard.type('XX')
 
-        assertAnswerContent(answer, {
+        await assertAnswer({
           answerHtml: 'kaava: <img alt="\\sqrt{123}">XX ja tekstiä',
         })
       })
@@ -957,7 +962,7 @@ test.describe('Rich text editor', () => {
         await page.keyboard.press('Shift+Tab')
         await page.keyboard.type('XX')
 
-        assertAnswerContent(answer, {
+        await assertAnswer({
           answerHtml: 'kaava: XX<img alt="\\sqrt{123}"> ja tekstiä',
         })
       })
@@ -970,7 +975,7 @@ test.describe('Rich text editor', () => {
         await page.keyboard.press('Tab')
         await page.keyboard.type('XX')
 
-        assertAnswerContent(answer, {
+        await assertAnswer({
           answerHtml: 'kaava: <img alt="\\sqrt{123}">XX ja tekstiä',
         })
       })
@@ -981,7 +986,7 @@ test.describe('Rich text editor', () => {
         await page.mouse.click(33, 320)
         await page.keyboard.type('XX')
 
-        assertAnswerContent(answer, {
+        await assertAnswer({
           answerText: 'kaXXava:  ja tekstiä',
         })
       })
@@ -1029,7 +1034,7 @@ kaava 3: <img
       await image.click()
       await assertEquationEditorLatexContent(equationEditor, '\\sqrt{123}')
       await clickOutsideEditor(page)
-      assertAnswerContent(answer, { imageCount: 3 })
+      await assertAnswer({ imageCount: 3 })
     })
 
     test('is editable when img src is a data url', async ({ page }) => {
@@ -1039,7 +1044,7 @@ kaava 3: <img
       await image.click()
       await assertEquationEditorLatexContent(equationEditor, '\\sqrt{1}')
       await clickOutsideEditor(page)
-      assertAnswerContent(answer, { imageCount: 3 })
+      await assertAnswer({ imageCount: 3 })
     })
 
     test('is editable when img src and alt are custom values', async ({ page }) => {
@@ -1049,7 +1054,7 @@ kaava 3: <img
       await image.click()
       await assertEquationEditorLatexContent(equationEditor, '\\sqrt{2}')
       await clickOutsideEditor(page)
-      assertAnswerContent(answer, { imageCount: 3 })
+      await assertAnswer({ imageCount: 3 })
     })
   })
 })
