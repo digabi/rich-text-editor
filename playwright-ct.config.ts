@@ -39,10 +39,10 @@ export default defineConfig({
   },
 
   projects: [
-    /*{
+    {
       name: 'chromium',
       use: { ...devices['Desktop Chrome'], contextOptions: { permissions: ['clipboard-read', 'clipboard-write'] } },
-    },*/
+    },
     {
       name: 'firefox',
       use: { ...devices['Desktop Firefox'] },
