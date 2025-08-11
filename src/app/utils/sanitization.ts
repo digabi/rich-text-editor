@@ -25,10 +25,11 @@ export function sanitize(html: string, opts?: sanitizeHtml.IOptions) {
             if (isInsideHeadTag) {
               return text
             }
-            if (text === '\n') {
+            const cleanedText = preserveLineBreaks(text)
+            if (cleanedText === '<br>') {
               return ''
             }
-            return text.replaceAll(/\n/g, '<br>')
+            return cleanedText
           },
           ...opts,
         }),
@@ -115,7 +116,7 @@ function preserveIndentation(html: string) {
 }
 
 function preserveLineBreaks(text: string) {
-  return text.replaceAll(/\n/g, '<br>')
+  return text.replaceAll(/\r/g, '').replaceAll(/\n/g, '<br>')
 }
 
 function escapeHtml(text: string) {

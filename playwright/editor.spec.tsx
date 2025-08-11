@@ -176,6 +176,15 @@ test.describe('Rich text editor', () => {
     })
   })
 
+  test('ignores carriage returns', async ({ page }) => {
+    await setClipboardHTML(page, 'Hello\r\nWorld!')
+    await paste(page)
+    await assertAnswer({
+      answerText: 'Hello\nWorld!',
+      answerHtml: 'Hello<br>World!',
+    })
+  })
+
   test('can paste Python code from clipboard as HTML and retain line indentation', async ({ page, browserName }) => {
     // this is what copy pasting some code in Abicode produces:
     await setClipboardHTML(
