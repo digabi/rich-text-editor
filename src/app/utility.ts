@@ -130,10 +130,10 @@ export const getAnswer = (html: string) => {
 }
 
 const stripBrsAndTrimFromEnd = (answerHtml: string) =>
-  answerHtml.replace(/^(\n|<br ?\/?>)*/g, '').replace(/(\s|<br ?\/?>)*$/g, '')
+  answerHtml.replace(/^(\r|\n|<br ?\/?>)*/g, '').replace(/(\s|<br ?\/?>)*$/g, '')
 
 const stripNewLinesFromStartAndWhiteSpacesFromEnd = (answerHtml: string) =>
-  answerHtml.replace(/^(\n)*/g, '').replace(/(\s)*$/g, '')
+  answerHtml.replace(/^(\r|\n)*/g, '').replace(/(\s)*$/g, '')
 
 export function decodeBase64Image(dataString: string) {
   const matches = dataString.match(/^data:([A-Za-z-+/]+);base64,(.+)$/)
