@@ -8,10 +8,6 @@ on:
     branches: [master]
   pull_request:
     branches: [master]
-  workflow_run:
-    workflows: ['Run npm update']
-    types:
-      - completed
 
 jobs:
   build:

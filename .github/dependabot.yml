@@ -10,10 +10,11 @@ updates:
     schedule:
       interval: 'daily'
       time: '01:00'
+    cooldown:
+      default-days: 7
+      exclude:
+        - "@digabi/*"
     open-pull-requests-limit: 99
-    ignore:
-      - dependency-name: "*"
-        update-types: [ "version-update:semver-patch", "version-update:semver-minor" ]
   - package-ecosystem: 'github-actions'
     directory: '/'
     schedule:
