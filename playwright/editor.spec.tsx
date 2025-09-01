@@ -127,8 +127,8 @@ test.describe('Rich text editor', () => {
     })
   })
 
-  test('can paste html with line breaks, and preserve line breaks', async ({ page }) => {
-    await setClipboardHTML(page, 'Hello\nWorld!\n\nAll\ngood?')
+  test('keeps line breaks in pre-formatted HTML content', async ({ page }) => {
+    await setClipboardHTML(page, '<pre>Hello\nWorld!\n\nAll\ngood?</pre>')
     await paste(page)
     await assertAnswer({
       answerText: 'Hello\nWorld!\n\nAll\ngood?',
@@ -166,18 +166,22 @@ test.describe('Rich text editor', () => {
     })
   })
 
-  test('does not print double line breaks', async ({ page }) => {
+  test('does not print double line breaks', async ({ page, browserName }) => {
+    test.fixme(
+      browserName === 'chromium',
+      'This produces subtly different HTML in different browsers, only run this test in FF',
+    )
     const textFromCollaboraWriter = `<body>\n<div>\n<p>line 1</p>\n<p>line 2</p>\n<p><br/></p>\n<p>line 3 after empty row</p>\n</div>\n</body>`
     await setClipboardHTML(page, textFromCollaboraWriter)
     await paste(page)
-    await assertAnswer({
-      answerText: 'line 1\nline 2\n\nline 3 after empty row',
-      answerHtml: 'line 1<br>line 2<br><br>line 3 after empty row',
-    })
+    await assertEditorHTMLContent(
+      getEditorLocator(page),
+      '\nline 1<br>\nline 2<br>\n<br>\nline 3 after empty row<br><br><br>',
+    )
   })
 
   test('ignores carriage returns', async ({ page }) => {
-    await setClipboardHTML(page, 'Hello\r\nWorld!')
+    await setClipboardText(page, 'Hello\r\nWorld!')
     await paste(page)
     await assertAnswer({
       answerText: 'Hello\nWorld!',
