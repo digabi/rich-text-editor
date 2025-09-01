@@ -42,7 +42,7 @@ test.describe('Rich text editor', () => {
   }
 
   const assertAnswer = async (expected: Partial<Answer>) => {
-    await expect(() => assertAnswerContent(answer, expected)).toPass({ intervals: [500], timeout: 5000 })
+    await expect(() => assertAnswerContent(answer, expected)).toPass({ intervals: [500], timeout: 2000 })
   }
 
   test.beforeEach(async ({ page, mount }) => {
