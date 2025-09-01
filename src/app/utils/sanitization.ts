@@ -21,11 +21,12 @@ export function sanitize(html: string, opts?: sanitizeHtml.IOptions) {
           // We need to track if we are inside a head tag, because we don't want to add <br>s inside head tags
           onOpenTag: (tag) => (tag === 'head' ? (isInsideHeadTag = true) : undefined),
           onCloseTag: (tag) => (tag === 'head' ? (isInsideHeadTag = false) : undefined),
-          textFilter: (text) => {
+          textFilter: (text, tagName) => {
             if (isInsideHeadTag) {
               return text
             }
-            const cleanedText = preserveLineBreaks(text)
+            // If the text is preformatted, make sure the line breaks in it are kept
+            const cleanedText = tagName === 'pre' ? preserveLineBreaks(text) : text
             if (cleanedText === '<br>') {
               return ''
             }
