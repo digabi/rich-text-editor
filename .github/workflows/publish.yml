@@ -1,0 +1,72 @@
+name: 'Publish rich-text-editor'
+
+on:
+
+  workflow_dispatch:
+    inputs:
+      bump:
+        type: choice
+        description: Version bump
+        options:
+          - major
+          - minor
+          - patch
+          - premajor
+          - preminor
+          - prepatch
+          - prerelease
+
+concurrency:
+  group: publish-queue # Publish jobs fail if ran simultaneously
+
+permissions:
+  id-token: write # Required for NPM Trusted publishing
+  contents: write
+
+jobs:
+  publish:
+    name: Publish new version
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: '.nvmrc'
+          cache: 'npm'
+      # Ensure npm 11.5.1 or later is installed
+      - name: Update npm
+        run: npm install -g npm@latest
+      - run: npm ci
+      - run: npm run build
+      - run: npm run test
+
+      - name: Setup git config
+        run: |
+          git config --global user.email "ci@ylioppilastutkinto.fi"
+          git config --global user.name "Github CI"
+
+      - name: Get NPM tag name
+        id: npm-tag
+        run: |
+          TAG=latest
+
+          if [[ "${{ inputs.bump }}" == *pre* ]]; then
+            branchName="${{ github.ref_name }}"
+            TAG=${branchName//\//-}
+          fi
+
+          echo "value=$TAG" >> $GITHUB_OUTPUT
+
+      - name: Bump package version
+        run: |
+          TAG=${{ steps.npm-tag.outputs.value }}
+          npm version ${{ inputs.bump }} --preid="$TAG"
+
+      - name: Publish to npm and push to git
+        run: |
+          TAG=${{ steps.npm-tag.outputs.value }}
+
+          npm publish --tag=$TAG
+          git push && git push --tags
