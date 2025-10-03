@@ -40,6 +40,7 @@ jobs:
         run: npm install -g npm@latest
       - run: npm ci
       - run: npm run build
+      - run: npx playwright install
       - run: npm run test
 
       - name: Setup git config
