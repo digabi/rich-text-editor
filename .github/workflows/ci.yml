@@ -20,6 +20,9 @@ jobs:
         with:
           node-version-file: '.nvmrc'
           cache: 'npm'
+      - name: Install deps
+        # Don't run prepare step, since it runs tests also.
+        run: npm ci --ignore-scripts
       - name: Cache Playwright Browsers
         id: cache-playwright-browsers
         uses: actions/cache@v4
@@ -27,9 +30,6 @@ jobs:
           path: ~/.cache/ms-playwright
           key: ${{ runner.os }}-${{ hashFiles('./package-lock.json') }}
       - run: npx playwright install --with-deps chromium firefox
-      - name: Install deps
-        # Don't run prepare step, since it runs tests also.
-        run: npm ci --ignore-scripts
       - name: Run tests
         env:
           CI: true

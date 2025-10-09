@@ -38,10 +38,9 @@ jobs:
       # Ensure npm 11.5.1 or later is installed
       - name: Update npm
         run: npm install -g npm@latest
-      - run: npx playwright install
-      - run: npm ci
+      - run: npm ci --ignore-scripts
       - run: npm run build
-      - run: npm run test
+      - run: npx playwright install
 
       - name: Setup git config
         run: |
