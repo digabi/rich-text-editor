@@ -1,4 +1,42 @@
-const mjAPI = require('mathjax-node')
+import type { Request, Response } from 'express'
+import mjAPI from 'mathjax-node'
+
+mjAPI.config({
+  //@ts-expect-error wrong types
+  extensions: 'Safe,TeX/mhchem.js',
+  MathJax: {
+    SVG: {
+      font: 'Latin-Modern',
+    },
+  },
+})
+mjAPI.start()
+
+export function latexToSvg(latex: string, cb: (res: string | undefined) => void) {
+  if (latexIsTooLong(latex) || nestingIsTooDeep(latex)) {
+    cb(errorResponse)
+    return
+  }
+
+  mjAPI.typeset(
+    {
+      math: latex,
+      format: 'TeX', // "inline-TeX", "MathML"
+      mml: false,
+      svg: true,
+      linebreaks: true,
+      width: 100,
+    },
+    (data) => {
+      if (data.errors) {
+        cb(errorResponse)
+      } else {
+        cb(data.svg)
+      }
+    },
+  )
+}
+
 const MAX_NESTING_LEVEL = 20
 const MAX_LENGTH = 5000
 const nestedContextStartedRegexes = ['\\left', '{', '\\begin']
@@ -23,21 +61,9 @@ const errorResponse = `<?xml version="1.0" encoding="UTF-8" standalone="no"?>
     <text x="25" y="16" fill="red">Virhe LaTeX-koodissa / Fel i LaTeX-koden</text>
 </svg>`
 
-module.exports = { mathSvgResponse, latexToSvg }
-
-mjAPI.config({
-  extensions: 'Safe,TeX/mhchem.js',
-  MathJax: {
-    SVG: {
-      font: 'Latin-Modern',
-    },
-  },
-})
-mjAPI.start()
-
-function mathSvgResponse(req, res) {
+export function mathSvgResponse(req: Request, res: Response) {
   res.type('svg')
-  const latex = req.query.latex
+  const latex = req.query.latex as string
   if (latex === undefined) {
     res.sendStatus(400)
     return
@@ -47,11 +73,11 @@ function mathSvgResponse(req, res) {
   latexToSvg(normalizedLatex, (svg) => res.send(svg))
 }
 
-function latexIsTooLong(latex) {
+function latexIsTooLong(latex: string) {
   return latex && latex.length > MAX_LENGTH
 }
 
-function nestingIsTooDeep(latex) {
+function nestingIsTooDeep(latex: string) {
   let nestingLevel = 0
   const matches = latex.match(/\\right|\\left|\\begin|\\end|\{|\}/g)
   if (!matches) {
@@ -63,29 +89,4 @@ function nestingIsTooDeep(latex) {
     if (nestingLevel > MAX_NESTING_LEVEL) return true
   }
   return false
-}
-
-function latexToSvg(latex, cb) {
-  if (latexIsTooLong(latex) || nestingIsTooDeep(latex)) {
-    cb(errorResponse)
-    return
-  }
-
-  mjAPI.typeset(
-    {
-      math: latex,
-      format: 'TeX', // "inline-TeX", "MathML"
-      mml: false,
-      svg: true,
-      linebreaks: true,
-      width: 100,
-    },
-    (data) => {
-      if (data.errors) {
-        cb(errorResponse)
-      } else {
-        cb(data.svg)
-      }
-    },
-  )
 }
