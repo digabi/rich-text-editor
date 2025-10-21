@@ -14,7 +14,7 @@ updates:
       default-days: 7
       exclude:
         - "@digabi/*"
-    open-pull-requests-limit: 0
+    open-pull-requests-limit: 99
   - package-ecosystem: 'github-actions'
     directory: '/'
     schedule:
