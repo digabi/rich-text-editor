@@ -37,6 +37,10 @@ updates:
       - dependency-name: '@types/node'
         update-types:
           - version-update:semver-major
+    groups:
+      playwright-packages:
+        patterns:
+          - "@playwright/*"
   - package-ecosystem: 'github-actions'
     directory: '/'
     schedule:
