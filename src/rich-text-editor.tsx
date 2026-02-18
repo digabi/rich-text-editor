@@ -22,6 +22,7 @@ export const makeRichText = (props: MakeRichTextProps) => {
     onValueChange,
     invalidImageSelector,
     onLatexUpdate,
+    getPasteSource,
   } = {
     ...defaultProps,
     ...props,
@@ -38,6 +39,7 @@ export const makeRichText = (props: MakeRichTextProps) => {
       textAreaProps={textAreaProps}
       invalidImageSelector={invalidImageSelector}
       onLatexUpdate={onLatexUpdate}
+      getPasteSource={getPasteSource}
     />,
   )
 
