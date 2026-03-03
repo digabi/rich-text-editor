@@ -56,7 +56,7 @@
   },
   "dependencies": {
     "@digabi/mathquill": "^0.10.12",
-    "@types/jquery": "^3.5.32",
+    "@types/jquery": "^4.0.0",
     "@types/sanitize-html": "^2.16.0",
     "classnames": "^2.5.1",
     "jquery": "^4.0.0",
