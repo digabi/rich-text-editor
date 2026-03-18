@@ -103,7 +103,10 @@ const MainTextArea = forwardRef<RichTextEditorHandle, TextAreaProps>((props, ref
     if (!content) return
 
     // We only allow pasting one image at a time, so we pick the last one
-    const file = Array.from(content.items).at(-1)?.getAsFile()
+    const file = Array.from(content.items)
+      .map((item) => item.getAsFile())
+      .filter((file) => file !== null)
+      .at(-1)
     const html = content.getData('text/html')
     const text = content.getData('text/plain')
     const pasteType = file ? 'file' : html ? 'html' : 'text'
@@ -128,11 +131,11 @@ const MainTextArea = forwardRef<RichTextEditorHandle, TextAreaProps>((props, ref
      * the event loop. We use this to make sure that the we run these operations after
      * the innerHtml of the text field has already been updated
      */
-    setTimeout(() => {
+    setTimeout(async () => {
       editor.initMathImages()
 
       if (pasteType === 'html') {
-        editor.persistValidImages()
+        await editor.persistValidImages()
       }
 
       setTimeout(() => {

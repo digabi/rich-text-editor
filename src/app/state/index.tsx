@@ -24,7 +24,7 @@ import MainTextArea from '../components/text-area'
 
 export type EditorState = {
   /** Ref to the main text-area (which is a `contenteditable` `<div />`) */
-  ref: React.RefObject<HTMLDivElement | null>
+  ref: React.RefObject<HTMLDivElement>
 
   mathEditorPortal: [portalRoot: Node, portal: ReactPortal] | null
 
@@ -40,7 +40,7 @@ export type EditorState = {
   expandToolbar: () => void
   collapseToolbar: () => void
 
-  persistValidImages: () => void
+  persistValidImages: () => Promise<void>
   handlePastedImage: NonNullable<RichTextEditorProps['getPasteSource']>
   allowedFileTypes: NonNullable<RichTextEditorProps['allowedFileTypes']>
   invalidImageSelector: NonNullable<RichTextEditorProps['invalidImageSelector']>
@@ -303,7 +303,7 @@ export function EditorStateProvider({
     }
   }
 
-  function persistValidImages() {
+  async function persistValidImages() {
     mainTextAreaRef.current?.querySelectorAll(invalidImageSelector).forEach((e) => e.remove())
     const images = Array.from(mainTextAreaRef.current?.querySelectorAll('img[src^="data:image/') ?? [])
     const imagesWithFile = images.flatMap((e) => {
@@ -317,18 +317,20 @@ export function EditorStateProvider({
       return []
     })
 
-    imagesWithFile.forEach(async (img) => {
-      if (
-        img.element instanceof HTMLImageElement &&
-        isForbiddenInlineImage(img.file.type, img.element, allowedFileTypes)
-      ) {
-        img.element.remove()
-      }
+    await Promise.all(
+      imagesWithFile.map(async (img) => {
+        if (
+          img.element instanceof HTMLImageElement &&
+          isForbiddenInlineImage(img.file.type, img.element, allowedFileTypes)
+        ) {
+          img.element.remove()
+        }
 
-      img.element.setAttribute('src', loadingImage)
-      const url = await getPasteSource(new File([img.file.data], 'image', { type: img.file.type }))
-      img.element.setAttribute('src', url)
-    })
+        img.element.setAttribute('src', loadingImage)
+        const url = await getPasteSource(new File([img.file.data], 'image', { type: img.file.type }))
+        img.element.setAttribute('src', url)
+      }),
+    )
   }
 
   const updateAnswerHistory = (content: string, caretPositionBefore: CaretPosition) => {
