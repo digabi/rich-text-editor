@@ -24,7 +24,7 @@ import MainTextArea from '../components/text-area'
 
 export type EditorState = {
   /** Ref to the main text-area (which is a `contenteditable` `<div />`) */
-  ref: React.RefObject<HTMLDivElement | null>
+  ref: React.RefObject<HTMLDivElement>
 
   mathEditorPortal: [portalRoot: Node, portal: ReactPortal] | null
 
