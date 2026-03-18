@@ -128,11 +128,11 @@ const MainTextArea = forwardRef<RichTextEditorHandle, TextAreaProps>((props, ref
      * the event loop. We use this to make sure that the we run these operations after
      * the innerHtml of the text field has already been updated
      */
-    setTimeout(() => {
+    setTimeout(async () => {
       editor.initMathImages()
 
       if (pasteType === 'html') {
-        editor.persistValidImages()
+        await editor.persistValidImages()
       }
 
       setTimeout(() => {
