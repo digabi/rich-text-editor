@@ -28,7 +28,7 @@
     "url": "https://github.com/digabi/rich-text-editor.git"
   },
   "devDependencies": {
-    "@digabi/eslint-config": "^3.4.0",
+    "@digabi/eslint-config": "^4.0.1",
     "@playwright/experimental-ct-react": "^1.55.0",
     "@playwright/test": "^1.55.0",
     "@types/express": "^5.0.3",
