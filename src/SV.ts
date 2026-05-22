@@ -11,7 +11,7 @@ const SV: typeof FI = {
 <li>Det går förutom att skriva text och formler, att också att lägga till bilder i svarsfältet.</li></ul>`,
     shortcutTitle: 'Tips på tangentkombinationer',
     shortcuts: `<table><tbody>
-<tr><th>Lägg till en bild från urklippet</th><td>Ctrl-V</td></tr>
+<tr><th>Lägg till en bild från urklippet</th><td>Windows/Linux: Ctrl-V<br>Mac: Cmd-V</td></tr>
 <tr><th>Skriv en formel</th><td>Ctrl-E</td></tr>
 <tr><th colspan="2">I formeln </th></tr>
 <tr><th>Bråkstreck</th><td>/</td></tr>
@@ -39,28 +39,19 @@ const SV: typeof FI = {
           'text',
           'Skapa bilden med valbart program. Klicka på skärmdumpsikonen i övre balken och avgränsa den delen av skärmen du vill använda.',
         ],
-        ['key', 'CTRL'],
-        ['text', '-'],
-        ['key', 'V'],
-        [
-          'text',
-          ' bifogar bilden i svarsfältet där kursorn ligger. Du kan ändra på bildens position genom att släpa bilden eller genom att klippa den med kommandot',
-        ],
-        ['key', 'CTRL'],
-        ['text', '-'],
-        ['key', 'X'],
-        ['text', ' och klistra in den med kommandot'],
-        ['key', 'CTRL'],
-        ['text', '-'],
-        ['key', 'V'],
+        ['text', ' Bifoga bilden i svarsfältet där kursorn ligger med kommandot '],
+        ['shortcut', 'paste'],
+        ['text', '.'],
+        ['text', ' Du kan ändra på bildens position genom att släpa bilden eller genom att klippa den med kommandot '],
+        ['shortcut', 'cut'],
+        ['text', ' och klistra in den med kommandot '],
+        ['shortcut', 'paste'],
         ['text', ' på valbart ställe.'],
       ],
       equationTitle: 'Formler',
       equationInstruction: [
         ['text', 'Formeln läggs till med kommandot '],
-        ['key', 'CTRL'],
-        ['text', '-'],
-        ['key', 'E'],
+        ['key', 'Ctrl-E'],
       ],
       equationHotkeys: 'Snabbkommandon med formler:',
       equationTable: [

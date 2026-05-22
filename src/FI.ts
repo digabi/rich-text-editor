@@ -1,4 +1,4 @@
-type NodeList = ['key' | 'text', string][]
+type NodeList = ['key' | 'shortcut' | 'text', string][]
 type Table = [string, string][]
 
 export default {
@@ -15,7 +15,7 @@ napsauttamalla valikon merkintöjä ja/tai kirjoittamalla LaTeXia.</li>
 lisätä kuvia.</li></ul>`,
     shortcutTitle: 'Pikanäppäinvinkkejä',
     shortcuts: `<table><tbody>
-<tr><th>Liitä kuva leikepöydältä</th><td>Ctrl-V</td></tr>
+<tr><th>Liitä kuva leikepöydältä</th><td>Windows/Linux: Ctrl-V<br>Mac: Cmd-V</td></tr>
 <tr><th>Kirjoita kaava</th><td>Ctrl-E</td></tr>
 <tr><th colspan="2">Kaavassa</th></tr>
 <tr><th>Jakoviiva</th><td>/</td></tr>
@@ -43,28 +43,19 @@ lisätä kuvia.</li></ul>`,
           'text',
           'Tee kuva haluamallasi ohjelmalla. Napsauta yläpalkista kuvakaappauskuvaketta ja rajaa haluamasi kuva-alue näytöltä.',
         ],
-        ['key', 'CTRL'],
-        ['text', '-'],
-        ['key', 'V'],
-        [
-          'text',
-          ' liittää kuvan vastauskenttään kursorin kohdalle. Voit vaihtaa kuvan paikkaa raahaamalla tai leikkaamalla kuvan komennolla ',
-        ],
-        ['key', 'CTRL'],
-        ['text', '-'],
-        ['key', 'X'],
+        ['text', ' Liitä kuva vastauskenttään kursorin kohdalle komennolla '],
+        ['shortcut', 'paste'],
+        ['text', '.'],
+        ['text', ' Voit vaihtaa kuvan paikkaa raahaamalla tai leikkaamalla kuvan komennolla '],
+        ['shortcut', 'cut'],
         ['text', ' ja liittämällä sen komennolla '],
-        ['key', 'CTRL'],
-        ['text', '-'],
-        ['key', 'V'],
+        ['shortcut', 'paste'],
         ['text', ' haluamaasi paikkaan.'],
       ] as NodeList,
       equationTitle: 'Kaavat',
       equationInstruction: [
         ['text', 'Kaava lisätään komennolla '],
-        ['key', 'CTRL'],
-        ['text', '-'],
-        ['key', 'E'],
+        ['key', 'Ctrl-E'],
       ] as NodeList,
       equationHotkeys: 'Pikakomennot kaavassa:',
       equationTable: [

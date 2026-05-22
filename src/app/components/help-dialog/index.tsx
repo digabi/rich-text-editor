@@ -3,8 +3,20 @@ import useEditorState from '../../state'
 import { eventHandlerWithoutFocusLoss } from '../../utility'
 import CloseIcon from '../icons/close'
 
-const mapLocalizationNodeToElement = ([type, content]: ['key' | 'text', string]) =>
-  type === 'key' ? <Key>{content}</Key> : content
+const mapLocalizationNodeToElement = ([type, content]: ['key' | 'shortcut' | 'text', string]) => {
+  if (type === 'text') {
+    return content
+  }
+
+  if (type === 'shortcut') {
+    const modifier = navigator.platform.startsWith('Mac') ? 'Cmd' : 'Ctrl' // Note that Ctrl+E is an exception and is used on Mac as well
+    const key = content === 'cut' ? 'X' : 'V'
+
+    return <Key>{`${modifier}-${key}`}</Key>
+  }
+
+  return <Key>{content}</Key>
+}
 
 export const HelpDialog = () => {
   const { t } = useEditorState()
