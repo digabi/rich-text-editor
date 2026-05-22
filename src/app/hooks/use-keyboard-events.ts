@@ -1,20 +1,12 @@
 import { useEffect } from 'react'
 
-export const useKeyboardEventListener = (
-  key: string,
-  ctrl: boolean,
-  fn: (e?: KeyboardEvent) => void,
-  preventDefault: boolean = true,
-) => {
+export const useKeyboardEventListener = (keyMatch: (e: KeyboardEvent) => boolean, fn: (e?: KeyboardEvent) => void) => {
   useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
-      if (!ctrl || (ctrl && event.ctrlKey)) {
-        if (event.key.toLowerCase() === key.toLowerCase()) {
-          if (preventDefault) {
-            event.preventDefault()
-          }
-          fn(event)
-        }
+      if (keyMatch(event)) {
+        event.preventDefault()
+        // todo: do we need e.stopPropagation() here?
+        fn(event)
       }
     }
 
@@ -23,5 +15,5 @@ export const useKeyboardEventListener = (
     return () => {
       window.removeEventListener('keydown', handleKeyDown)
     }
-  }, [key, fn])
+  }, [keyMatch, fn])
 }

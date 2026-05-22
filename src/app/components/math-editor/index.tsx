@@ -5,6 +5,7 @@ import useMathQuill from '../../hooks/use-mathquill'
 import useEditorState from '../../state'
 import { useKeyboardEventListener } from '../../hooks/use-keyboard-events'
 import styled from 'styled-components'
+import { isMatch, redoShortcut, undoShortcut } from '../../utils/shortcuts'
 
 export type MathEditorHandle = {
   mq: MathQuill.MathField
@@ -75,8 +76,8 @@ export default function MathEditor(props: Props) {
     }
   }
 
-  useKeyboardEventListener('z', true, historyHandler(undoEquation))
-  useKeyboardEventListener('y', true, historyHandler(redoEquation))
+  useKeyboardEventListener((event) => isMatch(event, undoShortcut), historyHandler(undoEquation))
+  useKeyboardEventListener((event) => isMatch(event, redoShortcut), historyHandler(redoEquation))
 
   const onChange = (oldValue: string | undefined, newValue: string) => {
     if (oldValue === newValue) return
