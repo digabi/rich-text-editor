@@ -1,6 +1,8 @@
 type NodeList = ['key' | 'shortcut' | 'text', string][]
 type Table = [string, string][]
 
+const pasteShortcut = typeof navigator !== 'undefined' && navigator.platform.startsWith('Mac') ? 'Cmd-V' : 'Ctrl-V'
+
 export default {
   editor: {
     mathEditor: 'Matikkaeditori',
@@ -15,7 +17,7 @@ napsauttamalla valikon merkintöjä ja/tai kirjoittamalla LaTeXia.</li>
 lisätä kuvia.</li></ul>`,
     shortcutTitle: 'Pikanäppäinvinkkejä',
     shortcuts: `<table><tbody>
-<tr><th>Liitä kuva leikepöydältä</th><td>Windows/Linux: Ctrl-V<br>Mac: Cmd-V</td></tr>
+<tr><th>Liitä kuva leikepöydältä</th><td>${pasteShortcut}</td></tr>
 <tr><th>Kirjoita kaava</th><td>Ctrl-E</td></tr>
 <tr><th colspan="2">Kaavassa</th></tr>
 <tr><th>Jakoviiva</th><td>/</td></tr>

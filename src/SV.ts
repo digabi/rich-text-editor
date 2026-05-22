@@ -1,5 +1,7 @@
 import FI from './FI'
 
+const pasteShortcut = typeof navigator !== 'undefined' && navigator.platform.startsWith('Mac') ? 'Cmd-V' : 'Ctrl-V'
+
 const SV: typeof FI = {
   editor: {
     mathEditor: 'Matematikeditor',
@@ -11,7 +13,7 @@ const SV: typeof FI = {
 <li>Det går förutom att skriva text och formler, att också att lägga till bilder i svarsfältet.</li></ul>`,
     shortcutTitle: 'Tips på tangentkombinationer',
     shortcuts: `<table><tbody>
-<tr><th>Lägg till en bild från urklippet</th><td>Windows/Linux: Ctrl-V<br>Mac: Cmd-V</td></tr>
+<tr><th>Lägg till en bild från urklippet</th><td>${pasteShortcut}</td></tr>
 <tr><th>Skriv en formel</th><td>Ctrl-E</td></tr>
 <tr><th colspan="2">I formeln </th></tr>
 <tr><th>Bråkstreck</th><td>/</td></tr>
