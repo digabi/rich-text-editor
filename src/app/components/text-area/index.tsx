@@ -74,6 +74,15 @@ const MainTextArea = forwardRef<RichTextEditorHandle, TextAreaProps>((props, ref
     }
   }
 
+  // Prevent browser's native undo/redo history use on MacOS,
+  // as it would cause strange behaviour especially when mixed with our own implementation
+  useKeyboardEventListener(
+    (event) => event.key.toLowerCase() === 'z' && event.metaKey,
+    (e) => {
+      e?.stopPropagation()
+    },
+  )
+
   useKeyboardEventListener((event) => isMatch(event, undoShortcut), historyHandler(editor.undoEditor))
   useKeyboardEventListener((event) => isMatch(event, redoShortcut), historyHandler(editor.redoEditor))
 
