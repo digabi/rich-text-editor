@@ -5,7 +5,6 @@ export const useKeyboardEventListener = (keyMatch: (e: KeyboardEvent) => boolean
     const handleKeyDown = (event: KeyboardEvent) => {
       if (keyMatch(event)) {
         event.preventDefault()
-        // todo: do we need e.stopPropagation() here?
         fn(event)
       }
     }
