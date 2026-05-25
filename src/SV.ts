@@ -1,8 +1,7 @@
 import FI from './FI'
-import { getCutShortcutLabel, getPasteShortcutLabel } from './app/utils/shortcuts'
+import { getCmdOrCtrlLabel } from './app/utils/shortcuts'
 
-const pasteShortcut = getPasteShortcutLabel()
-const cutShortcut = getCutShortcutLabel()
+const modifierKey = getCmdOrCtrlLabel()
 
 const SV: typeof FI = {
   editor: {
@@ -15,7 +14,7 @@ const SV: typeof FI = {
 <li>Det går förutom att skriva text och formler, att också att lägga till bilder i svarsfältet.</li></ul>`,
     shortcutTitle: 'Tips på tangentkombinationer',
     shortcuts: `<table><tbody>
-<tr><th>Lägg till en bild från urklippet</th><td>${pasteShortcut}</td></tr>
+<tr><th>Lägg till en bild från urklippet</th><td>${modifierKey}-V</td></tr>
 <tr><th>Skriv en formel</th><td>Ctrl-E</td></tr>
 <tr><th colspan="2">I formeln </th></tr>
 <tr><th>Bråkstreck</th><td>/</td></tr>
@@ -44,12 +43,18 @@ const SV: typeof FI = {
           'Skapa bilden med valbart program. Klicka på skärmdumpsikonen i övre balken och avgränsa den delen av skärmen du vill använda.',
         ],
         ['text', ' Bifoga bilden i svarsfältet där kursorn ligger med kommandot '],
-        ['key', pasteShortcut],
+        ['key', modifierKey],
+        ['text', '-'],
+        ['key', 'V'],
         ['text', '.'],
         ['text', ' Du kan ändra på bildens position genom att släpa bilden eller genom att klippa den med kommandot '],
-        ['key', cutShortcut],
+        ['key', modifierKey],
+        ['text', '-'],
+        ['key', 'X'],
         ['text', ' och klistra in den med kommandot '],
-        ['key', pasteShortcut],
+        ['key', modifierKey],
+        ['text', '-'],
+        ['key', 'V'],
         ['text', ' på valbart ställe.'],
       ],
       equationTitle: 'Formler',
