@@ -76,8 +76,10 @@ export default function MathEditor(props: Props) {
     }
   }
 
-  useKeyboardEventListener((event) => isMatch(event, undoShortcut), historyHandler(undoEquation))
-  useKeyboardEventListener((event) => isMatch(event, redoShortcut), historyHandler(redoEquation))
+  useKeyboardEventListener([
+    { keyMatch: (event) => isMatch(event, undoShortcut), fn: historyHandler(undoEquation) },
+    { keyMatch: (event) => isMatch(event, redoShortcut), fn: historyHandler(redoEquation) },
+  ])
 
   const onChange = (oldValue: string | undefined, newValue: string) => {
     if (oldValue === newValue) return

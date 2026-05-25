@@ -74,8 +74,10 @@ const MainTextArea = forwardRef<RichTextEditorHandle, TextAreaProps>((props, ref
     }
   }
 
-  useKeyboardEventListener((event) => isMatch(event, undoShortcut), historyHandler(editor.undoEditor))
-  useKeyboardEventListener((event) => isMatch(event, redoShortcut), historyHandler(editor.redoEditor))
+  useKeyboardEventListener([
+    { keyMatch: (event) => isMatch(event, undoShortcut), fn: historyHandler(editor.undoEditor) },
+    { keyMatch: (event) => isMatch(event, redoShortcut), fn: historyHandler(editor.redoEditor) },
+  ])
 
   async function onPaste(e: ClipboardEvent) {
     e.preventDefault()

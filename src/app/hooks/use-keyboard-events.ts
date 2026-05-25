@@ -1,11 +1,18 @@
 import { useEffect } from 'react'
 
-export const useKeyboardEventListener = (keyMatch: (e: KeyboardEvent) => boolean, fn: (e?: KeyboardEvent) => void) => {
+type KeyboardEventShortcut = {
+  keyMatch: (e: KeyboardEvent) => boolean
+  fn: (e?: KeyboardEvent) => void
+}
+
+export const useKeyboardEventListener = (shortcuts: KeyboardEventShortcut[]) => {
   useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
-      if (keyMatch(event)) {
+      const shortcut = shortcuts.find(({ keyMatch }) => keyMatch(event))
+
+      if (shortcut) {
         event.preventDefault()
-        fn(event)
+        shortcut.fn(event)
       }
     }
 
@@ -14,5 +21,5 @@ export const useKeyboardEventListener = (keyMatch: (e: KeyboardEvent) => boolean
     return () => {
       window.removeEventListener('keydown', handleKeyDown)
     }
-  }, [keyMatch, fn])
+  }, [shortcuts])
 }
