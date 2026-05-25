@@ -12,6 +12,7 @@ export const useKeyboardEventListener = (shortcuts: KeyboardEventShortcut[]) => 
 
       if (shortcut) {
         event.preventDefault()
+        event.stopPropagation() // Prevent browser's native handling of the shortcut, as it would cause strange behaviour especially when mixed with our own implementation
         shortcut.fn(event)
       }
     }
