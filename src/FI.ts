@@ -1,7 +1,10 @@
-type NodeList = ['key' | 'shortcut' | 'text', string][]
+import { getCutShortcutLabel, getPasteShortcutLabel } from './app/utils/shortcuts'
+
+type NodeList = ['key' | 'text', string][]
 type Table = [string, string][]
 
-const pasteShortcut = typeof navigator !== 'undefined' && navigator.platform.startsWith('Mac') ? 'Cmd-V' : 'Ctrl-V'
+const pasteShortcut = getPasteShortcutLabel()
+const cutShortcut = getCutShortcutLabel()
 
 export default {
   editor: {
@@ -46,12 +49,12 @@ lisätä kuvia.</li></ul>`,
           'Tee kuva haluamallasi ohjelmalla. Napsauta yläpalkista kuvakaappauskuvaketta ja rajaa haluamasi kuva-alue näytöltä.',
         ],
         ['text', ' Liitä kuva vastauskenttään kursorin kohdalle komennolla '],
-        ['shortcut', 'paste'],
+        ['key', pasteShortcut],
         ['text', '.'],
         ['text', ' Voit vaihtaa kuvan paikkaa raahaamalla tai leikkaamalla kuvan komennolla '],
-        ['shortcut', 'cut'],
+        ['key', cutShortcut],
         ['text', ' ja liittämällä sen komennolla '],
-        ['shortcut', 'paste'],
+        ['key', pasteShortcut],
         ['text', ' haluamaasi paikkaan.'],
       ] as NodeList,
       equationTitle: 'Kaavat',

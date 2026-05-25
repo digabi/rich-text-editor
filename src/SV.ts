@@ -1,6 +1,8 @@
 import FI from './FI'
+import { getCutShortcutLabel, getPasteShortcutLabel } from './app/utils/shortcuts'
 
-const pasteShortcut = typeof navigator !== 'undefined' && navigator.platform.startsWith('Mac') ? 'Cmd-V' : 'Ctrl-V'
+const pasteShortcut = getPasteShortcutLabel()
+const cutShortcut = getCutShortcutLabel()
 
 const SV: typeof FI = {
   editor: {
@@ -42,12 +44,12 @@ const SV: typeof FI = {
           'Skapa bilden med valbart program. Klicka på skärmdumpsikonen i övre balken och avgränsa den delen av skärmen du vill använda.',
         ],
         ['text', ' Bifoga bilden i svarsfältet där kursorn ligger med kommandot '],
-        ['shortcut', 'paste'],
+        ['key', pasteShortcut],
         ['text', '.'],
         ['text', ' Du kan ändra på bildens position genom att släpa bilden eller genom att klippa den med kommandot '],
-        ['shortcut', 'cut'],
+        ['key', cutShortcut],
         ['text', ' och klistra in den med kommandot '],
-        ['shortcut', 'paste'],
+        ['key', pasteShortcut],
         ['text', ' på valbart ställe.'],
       ],
       equationTitle: 'Formler',

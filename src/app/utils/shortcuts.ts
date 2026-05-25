@@ -14,7 +14,10 @@ export function isMatch(event: KeyboardEvent, shortcut: Shortcut): boolean {
   )
 }
 
-const isMac = () => navigator?.platform.startsWith('Mac') ?? false
+export const isMac = (): boolean => navigator?.platform.startsWith('Mac') ?? false
+
+export const getPasteShortcutLabel = (): string => (isMac() ? 'Cmd-V' : 'Ctrl-V')
+export const getCutShortcutLabel = (): string => (isMac() ? 'Cmd-X' : 'Ctrl-X')
 
 const ctrl = (key: string): Shortcut => ({ key, ctrl: true })
 const cmd = (key: string): Shortcut => ({ key, meta: true })
