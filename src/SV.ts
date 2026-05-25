@@ -60,7 +60,9 @@ const SV: typeof FI = {
       equationTitle: 'Formler',
       equationInstruction: [
         ['text', 'Formeln läggs till med kommandot '],
-        ['key', 'Ctrl-E'],
+        ['key', 'Ctrl'],
+        ['text', '-'],
+        ['key', 'E'],
       ],
       equationHotkeys: 'Snabbkommandon med formler:',
       equationTable: [

@@ -65,7 +65,9 @@ lisätä kuvia.</li></ul>`,
       equationTitle: 'Kaavat',
       equationInstruction: [
         ['text', 'Kaava lisätään komennolla '],
-        ['key', 'Ctrl-E'],
+        ['key', 'Ctrl'],
+        ['text', '-'],
+        ['key', 'E'],
       ] as NodeList,
       equationHotkeys: 'Pikakomennot kaavassa:',
       equationTable: [
