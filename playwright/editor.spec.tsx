@@ -228,7 +228,7 @@ test.describe('Rich text editor', () => {
   }
 
   test.beforeEach(async ({ page, mount }, testInfo) => {
-    await mockPlatform(page, testInfo.titlePath.includes('Mac shortcuts') ? 'MacIntel' : 'Linux x86_64')
+    await mockPlatform(page, testInfo.tags.includes('@mac') ? 'MacIntel' : 'Linux x86_64')
 
     await mountEditor(page, mount)
   })
@@ -664,6 +664,17 @@ test.describe('Rich text editor', () => {
       })
     })
 
+    test('can undo and redo editor changes with Mac hotkeys @mac', async ({ page, browserName }) => {
+      await runEditorHistoryHotkeyTest({
+        page,
+        browserName,
+        assertAnswer,
+        writeAndWaitForTimeout,
+        historyTimeout,
+        shortcuts: macHistoryShortcuts,
+      })
+    })
+
     test('cursor is returned to the correct position', async ({ page, browserName }) => {
       test.fixme(
         browserName === 'firefox',
@@ -829,6 +840,10 @@ test.describe('Rich text editor', () => {
 
       test('hotkeys', async ({ page }) => {
         await runEquationEditorHistoryHotkeyTest(page, ctrlHistoryShortcuts)
+      })
+
+      test('hotkeys @mac', async ({ page }) => {
+        await runEquationEditorHistoryHotkeyTest(page, macHistoryShortcuts)
       })
     })
 
@@ -1146,23 +1161,6 @@ kaava 3: <img
       await assertEquationEditorLatexContent(equationEditor, '\\sqrt{2}')
       await clickOutsideEditor(page)
       await assertAnswer({ imageCount: 3 })
-    })
-  })
-
-  test.describe('Mac shortcuts', () => {
-    test('can undo and redo editor changes with Mac hotkeys', async ({ page, browserName }) => {
-      await runEditorHistoryHotkeyTest({
-        page,
-        browserName,
-        assertAnswer,
-        writeAndWaitForTimeout,
-        historyTimeout,
-        shortcuts: macHistoryShortcuts,
-      })
-    })
-
-    test('can undo and redo equation changes with Mac hotkeys', async ({ page }) => {
-      await runEquationEditorHistoryHotkeyTest(page, macHistoryShortcuts)
     })
   })
 })
