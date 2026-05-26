@@ -653,7 +653,7 @@ test.describe('Rich text editor', () => {
       await editor.click()
     })
 
-    test('can undo and redo changes with Ctrl hotkeys', async ({ page, browserName }) => {
+    test('can undo and redo changes with Windows/Linux hotkeys', async ({ page, browserName }) => {
       await runEditorHistoryHotkeyTest({
         page,
         browserName,
@@ -838,11 +838,11 @@ test.describe('Rich text editor', () => {
         await assertEquationEditorLatexContent(page.getByTestId('equation-editor'), '\\sqrt{2}')
       })
 
-      test('hotkeys', async ({ page }) => {
+      test('hotkeys Windows/Linux', async ({ page }) => {
         await runEquationEditorHistoryHotkeyTest(page, ctrlHistoryShortcuts)
       })
 
-      test('hotkeys @mac', async ({ page }) => {
+      test('hotkeys Mac @mac', async ({ page }) => {
         await runEquationEditorHistoryHotkeyTest(page, macHistoryShortcuts)
       })
     })
