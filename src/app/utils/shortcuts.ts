@@ -18,9 +18,5 @@ export const isMac = (): boolean => navigator?.platform.startsWith('Mac') ?? fal
 
 export const getCmdOrCtrlLabel = (): 'Cmd' | 'Ctrl' => (isMac() ? 'Cmd' : 'Ctrl')
 
-const ctrl = (key: string): Shortcut => ({ key, ctrl: true })
-const cmd = (key: string): Shortcut => ({ key, meta: true })
-const cmdShift = (key: string): Shortcut => ({ key, meta: true, shift: true })
-
-export const undoShortcut = isMac() ? cmd('z') : ctrl('z')
-export const redoShortcut = isMac() ? cmdShift('z') : ctrl('y')
+export const undoShortcut = isMac() ? { meta: true, key: 'z' } : { ctrl: true, key: 'z' }
+export const redoShortcut: Shortcut = isMac() ? { meta: true, shift: true, key: 'z' } : { ctrl: true, key: 'y' }
