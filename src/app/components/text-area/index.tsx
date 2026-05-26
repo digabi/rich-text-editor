@@ -10,6 +10,7 @@ import { sanitize, sanitizeText } from '../../utils/sanitization'
 import { CaretPosition, getCaretPosition, setCaretPosition } from '../../utility'
 import { RichTextEditorHandle } from '../..'
 import { useKeyboardEventListener } from '../../hooks/use-keyboard-events'
+import { isMatch, redoShortcut, undoShortcut } from '../../utils/shortcuts'
 
 export type TextAreaProps = {
   ariaInvalid?: boolean
@@ -73,27 +74,10 @@ const MainTextArea = forwardRef<RichTextEditorHandle, TextAreaProps>((props, ref
     }
   }
 
-  // Prevent browser's native undo/redo history use on MacOS,
-  // as it would cause strange behaviour especially when mixed with our own implementation
-  useKeyboardEventListener(
-    'z',
-    false,
-    (e) => {
-      if (e?.metaKey) {
-        e.preventDefault()
-        e.stopPropagation()
-      }
-    },
-    false,
-  )
-  useKeyboardEventListener('z', true, historyHandler(editor.undoEditor))
-  useKeyboardEventListener('y', true, historyHandler(editor.redoEditor))
-  useKeyboardEventListener('e', true, (e) => {
-    if (editor.ref.current === document.activeElement) {
-      e?.preventDefault()
-      editor.spawnMathEditorAtCursor()
-    }
-  })
+  useKeyboardEventListener([
+    { keyMatch: (event) => isMatch(event, undoShortcut), fn: historyHandler(editor.undoEditor) },
+    { keyMatch: (event) => isMatch(event, redoShortcut), fn: historyHandler(editor.redoEditor) },
+  ])
 
   async function onPaste(e: ClipboardEvent) {
     e.preventDefault()

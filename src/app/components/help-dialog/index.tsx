@@ -3,8 +3,17 @@ import useEditorState from '../../state'
 import { eventHandlerWithoutFocusLoss } from '../../utility'
 import CloseIcon from '../icons/close'
 
-const mapLocalizationNodeToElement = ([type, content]: ['key' | 'text', string]) =>
-  type === 'key' ? <Key>{content}</Key> : content
+type LocalizationNodeType = 'key' | 'text'
+
+const mapLocalizationNodeToElement = ([type, content]: [LocalizationNodeType, string]) => {
+  switch (type) {
+    case 'text':
+      return content
+
+    case 'key':
+      return <Key>{content}</Key>
+  }
+}
 
 export const HelpDialog = () => {
   const { t } = useEditorState()

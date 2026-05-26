@@ -1,20 +1,19 @@
 import { useEffect } from 'react'
 
-export const useKeyboardEventListener = (
-  key: string,
-  ctrl: boolean,
-  fn: (e?: KeyboardEvent) => void,
-  preventDefault: boolean = true,
-) => {
+type KeyboardEventShortcut = {
+  keyMatch: (e: KeyboardEvent) => boolean
+  fn: (e?: KeyboardEvent) => void
+}
+
+export const useKeyboardEventListener = (shortcuts: KeyboardEventShortcut[]) => {
   useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
-      if (!ctrl || (ctrl && event.ctrlKey)) {
-        if (event.key.toLowerCase() === key.toLowerCase()) {
-          if (preventDefault) {
-            event.preventDefault()
-          }
-          fn(event)
-        }
+      const shortcut = shortcuts.find(({ keyMatch }) => keyMatch(event))
+
+      if (shortcut) {
+        event.preventDefault()
+        event.stopPropagation() // Prevent browser's native handling of the shortcut, as it would cause strange behaviour especially when mixed with our own implementation
+        shortcut.fn(event)
       }
     }
 
@@ -23,5 +22,5 @@ export const useKeyboardEventListener = (
     return () => {
       window.removeEventListener('keydown', handleKeyDown)
     }
-  }, [key, fn])
+  }, [shortcuts])
 }

@@ -1,5 +1,9 @@
+import { getCmdOrCtrlLabel } from './app/utils/shortcuts'
+
 type NodeList = ['key' | 'text', string][]
 type Table = [string, string][]
+
+const modifierKey = getCmdOrCtrlLabel()
 
 export default {
   editor: {
@@ -15,7 +19,7 @@ napsauttamalla valikon merkintöjä ja/tai kirjoittamalla LaTeXia.</li>
 lisätä kuvia.</li></ul>`,
     shortcutTitle: 'Pikanäppäinvinkkejä',
     shortcuts: `<table><tbody>
-<tr><th>Liitä kuva leikepöydältä</th><td>Ctrl-V</td></tr>
+<tr><th>Liitä kuva leikepöydältä</th><td>${modifierKey}-V</td></tr>
 <tr><th>Kirjoita kaava</th><td>Ctrl-E</td></tr>
 <tr><th colspan="2">Kaavassa</th></tr>
 <tr><th>Jakoviiva</th><td>/</td></tr>
@@ -43,18 +47,18 @@ lisätä kuvia.</li></ul>`,
           'text',
           'Tee kuva haluamallasi ohjelmalla. Napsauta yläpalkista kuvakaappauskuvaketta ja rajaa haluamasi kuva-alue näytöltä.',
         ],
-        ['key', 'CTRL'],
+        ['key', modifierKey],
         ['text', '-'],
         ['key', 'V'],
         [
           'text',
           ' liittää kuvan vastauskenttään kursorin kohdalle. Voit vaihtaa kuvan paikkaa raahaamalla tai leikkaamalla kuvan komennolla ',
         ],
-        ['key', 'CTRL'],
+        ['key', modifierKey],
         ['text', '-'],
         ['key', 'X'],
         ['text', ' ja liittämällä sen komennolla '],
-        ['key', 'CTRL'],
+        ['key', modifierKey],
         ['text', '-'],
         ['key', 'V'],
         ['text', ' haluamaasi paikkaan.'],
@@ -62,7 +66,7 @@ lisätä kuvia.</li></ul>`,
       equationTitle: 'Kaavat',
       equationInstruction: [
         ['text', 'Kaava lisätään komennolla '],
-        ['key', 'CTRL'],
+        ['key', 'Ctrl'],
         ['text', '-'],
         ['key', 'E'],
       ] as NodeList,

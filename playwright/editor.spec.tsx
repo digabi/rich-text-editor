@@ -1,5 +1,5 @@
 import React from 'react'
-import { test, expect } from '@playwright/experimental-ct-react'
+import { test, expect, type ComponentFixtures } from '@playwright/experimental-ct-react'
 import { Page } from '@playwright/test'
 import {
   getEditorLocator,
@@ -33,9 +33,167 @@ import { BASIC, ALGEBRA, GEOMETRY, SET_THEORY } from '../src/app/components/tool
 
 const nbsp = '\u00A0'
 
+type HistoryShortcutKeys = {
+  undo: string
+  redo: string
+  undoLabel: string
+  redoLabel: string
+}
+
+const ctrlHistoryShortcuts: HistoryShortcutKeys = {
+  undo: 'Control+z',
+  redo: 'Control+y',
+  undoLabel: 'Ctrl+Z',
+  redoLabel: 'Ctrl+Y',
+}
+
+const macHistoryShortcuts: HistoryShortcutKeys = {
+  undo: 'Meta+z',
+  redo: 'Meta+Shift+z',
+  undoLabel: 'Cmd+Z',
+  redoLabel: 'Cmd+Shift+Z',
+}
+
+const mockPlatform = async (page: Page, platform: string) => {
+  const setPlatform = (platform: string) => {
+    Object.defineProperty(Navigator.prototype, 'platform', {
+      configurable: true,
+      get: () => platform,
+    })
+  }
+
+  await page.addInitScript(setPlatform, platform)
+  await page.evaluate(setPlatform, platform)
+}
+
+async function runEditorHistoryHotkeyTest({
+  page,
+  browserName,
+  assertAnswer,
+  writeAndWaitForTimeout,
+  historyTimeout,
+  shortcuts,
+}: {
+  page: Page
+  browserName: string
+  assertAnswer: (expected: Partial<Answer>) => Promise<void>
+  writeAndWaitForTimeout: (page: Page, text: string) => Promise<void>
+  historyTimeout: number
+  shortcuts: HistoryShortcutKeys
+}) {
+  await test.step(`${shortcuts.undoLabel} undoes changes`, async () => {
+    await writeAndWaitForTimeout(page, 'aa')
+    await assertAnswer({ answerText: 'aa' })
+    await writeAndWaitForTimeout(page, 'bb')
+    await assertAnswer({ answerText: 'aabb' })
+    await page.keyboard.press(shortcuts.undo)
+    await assertAnswer({ answerText: 'aa' })
+  })
+
+  await test.step('undo at earliest change does nothing', async () => {
+    await page.keyboard.press(shortcuts.undo)
+    await assertAnswer({ answerText: '' })
+    await page.keyboard.press(shortcuts.undo)
+    await assertAnswer({ answerText: '' })
+  })
+
+  await test.step(`${shortcuts.redoLabel} redoes changes`, async () => {
+    await page.keyboard.press(shortcuts.redo)
+    await assertAnswer({ answerText: 'aa' })
+    await page.keyboard.press(shortcuts.redo)
+    await assertAnswer({ answerText: 'aabb' })
+  })
+
+  await test.step('typing clears changes', async () => {
+    await page.keyboard.press(shortcuts.undo)
+    await assertAnswer({ answerText: 'aa' })
+    await page.keyboard.press(shortcuts.undo)
+    await assertAnswer({ answerText: '' })
+    await writeAndWaitForTimeout(page, 'cc')
+    await assertAnswer({ answerText: 'cc' })
+  })
+
+  await test.step('redo at latest change does nothing', async () => {
+    await page.keyboard.press(shortcuts.redo)
+    await assertAnswer({ answerText: 'cc' })
+  })
+
+  await test.step('equations can be undone', async () => {
+    await page.keyboard.press('Control+e')
+    await page.keyboard.type('xxx')
+    await getEditorLocator(page).click()
+    await assertAnswer({ answerHtml: `cc${getLatexImgTag('xxx')}` })
+    await page.waitForTimeout(historyTimeout)
+    await page.keyboard.press(shortcuts.undo)
+    await assertAnswer({ answerHtml: 'cc' })
+  })
+
+  await test.step('equations can be redone', async () => {
+    await page.keyboard.press(shortcuts.redo)
+    await assertAnswer({ answerHtml: `cc${getLatexImgTag('xxx')}` })
+    await getEditorLocator(page).getByRole('img').click()
+    await page.waitForTimeout(historyTimeout)
+    await page.keyboard.type('yyy')
+    await page.keyboard.press('Escape')
+    await assertAnswer({ answerHtml: `cc${getLatexImgTag('xxxyyy')}` })
+  })
+
+  await test.step('pasting images can be undone', async () => {
+    test.fixme(browserName === 'firefox', 'image paste not working on firefox')
+    await getEditorLocator(page).click()
+    await page.waitForTimeout(historyTimeout)
+    await page.keyboard.press(shortcuts.undo)
+    await page.keyboard.press(shortcuts.undo)
+    await assertAnswer({ answerHtml: 'cc' })
+    await setClipboardImage(page, 'image/png', samplePNG)
+    await paste(page)
+    await expect(getEditorLocator(page).getByRole('img')).toBeVisible()
+    await page.waitForTimeout(historyTimeout)
+    await page.keyboard.press(shortcuts.undo)
+    await expect(getEditorLocator(page).getByRole('img')).not.toBeVisible()
+  })
+
+  await test.step('pasting images can be redone', async () => {
+    test.fixme(browserName === 'firefox', 'image paste not working on firefox')
+    await page.keyboard.press(shortcuts.redo)
+    await expect(getEditorLocator(page).getByRole('img')).toBeVisible()
+  })
+}
+
+async function runEquationEditorHistoryHotkeyTest(page: Page, shortcuts: HistoryShortcutKeys) {
+  await initEquationHistory(page)
+  await page.keyboard.press(shortcuts.undo)
+  await expect(getRedoButton(page)).toBeEnabled()
+  await page.keyboard.press('ArrowLeft')
+  await page.keyboard.press('2')
+  await expect(getRedoButton(page)).toBeDisabled()
+  await page.keyboard.press(shortcuts.undo)
+  await expect(getRedoButton(page)).toBeEnabled()
+  await assertEquationEditorLatexContent(page.getByTestId('equation-editor'), '\\sqrt{ }')
+  await page.keyboard.press(shortcuts.redo)
+  await assertEquationEditorLatexContent(page.getByTestId('equation-editor'), '\\sqrt{2}')
+}
+
+async function initEquationHistory(page: Page) {
+  await openEquationEditor(page)
+  await inputLatexCommandFromToolbar(page, specialCharacters.sqrt[0])
+  await page.keyboard.press('1')
+  await expect(getUndoButton(page)).toBeEnabled()
+  await expect(getRedoButton(page)).toBeDisabled()
+}
+
+async function openEquationEditor(page: Page) {
+  if ((await page.getByTestId('equation-editor').count()) === 0) {
+    await page.getByRole('button', { name: 'Lisää kaava' }).click()
+  }
+
+  await expect(page.getByTestId('equation-editor')).toHaveCount(1)
+}
+
 test.describe('Rich text editor', () => {
   let answer: Answer = { answerHtml: '', answerText: '', imageCount: 0 }
   let unmountComponent: () => Promise<void>
+  const historyTimeout = 550 // History updates have a 500ms debounce
 
   const onAnswerChange = (newAnswer: Answer) => {
     answer = newAnswer
@@ -45,7 +203,12 @@ test.describe('Rich text editor', () => {
     await expect(() => assertAnswerContent(answer, expected)).toPass({ intervals: [500], timeout: 2000 })
   }
 
-  test.beforeEach(async ({ page, mount }) => {
+  const writeAndWaitForTimeout = async (page: Page, text: string) => {
+    await page.keyboard.type(text)
+    await page.waitForTimeout(historyTimeout)
+  }
+
+  const mountEditor = async (page: Page, mount: ComponentFixtures['mount']) => {
     const { unmount } = await mount(
       <RichTextEditor
         language="FI"
@@ -62,6 +225,12 @@ test.describe('Rich text editor', () => {
     })
     const editor = getEditorLocator(page)
     await editor.click()
+  }
+
+  test.beforeEach(async ({ page, mount }, testInfo) => {
+    await mockPlatform(page, testInfo.tags.includes('@mac') ? 'MacIntel' : 'Linux x86_64')
+
+    await mountEditor(page, mount)
   })
 
   test('can type in the editor', async ({ page }) => {
@@ -479,94 +648,30 @@ test.describe('Rich text editor', () => {
   })
 
   test.describe('Editor history', () => {
-    const historyTimeout = 550 // History updates have a 500ms debounce
-    const writeAndWaitForTimeout = async (page: Page, text: string) => {
-      await page.keyboard.type(text)
-      await page.waitForTimeout(historyTimeout)
-    }
-
     test.beforeEach(async ({ page }) => {
       const editor = getEditorLocator(page)
       await editor.click()
     })
 
-    test('can undo and redo changes', async ({ page, browserName }) => {
-      await test.step('Ctrl+Z undoes changes', async () => {
-        await writeAndWaitForTimeout(page, 'aa')
-        await assertAnswer({ answerText: 'aa' })
-        await writeAndWaitForTimeout(page, 'bb')
-        await assertAnswer({ answerText: 'aabb' })
-        await page.keyboard.press('Control+z')
-        await assertAnswer({ answerText: 'aa' })
+    test('can undo and redo changes with Windows/Linux hotkeys', async ({ page, browserName }) => {
+      await runEditorHistoryHotkeyTest({
+        page,
+        browserName,
+        assertAnswer,
+        writeAndWaitForTimeout,
+        historyTimeout,
+        shortcuts: ctrlHistoryShortcuts,
       })
+    })
 
-      await test.step('undo at earlies change does nothing', async () => {
-        await page.keyboard.press('Control+z')
-        await assertAnswer({ answerText: '' })
-        await page.keyboard.press('Control+z')
-        await assertAnswer({ answerText: '' })
-      })
-
-      await test.step('Ctrl+Y redoes changes', async () => {
-        await page.keyboard.press('Control+y')
-        await assertAnswer({ answerText: 'aa' })
-        await page.keyboard.press('Control+y')
-        await assertAnswer({ answerText: 'aabb' })
-      })
-
-      await test.step('typing clears changes', async () => {
-        await page.keyboard.press('Control+z')
-        await assertAnswer({ answerText: 'aa' })
-        await page.keyboard.press('Control+z')
-        await assertAnswer({ answerText: '' })
-        await writeAndWaitForTimeout(page, 'cc')
-        await assertAnswer({ answerText: 'cc' })
-      })
-
-      await test.step('redo at latest change does nothing', async () => {
-        await page.keyboard.press('Control+y')
-        await assertAnswer({ answerText: 'cc' })
-      })
-
-      await test.step('equations can be undone', async () => {
-        await page.keyboard.press('Control+e')
-        await page.keyboard.type('xxx')
-        await getEditorLocator(page).click()
-        await assertAnswer({ answerHtml: `cc${getLatexImgTag('xxx')}` })
-        await page.waitForTimeout(historyTimeout)
-        await page.keyboard.press('Control+z')
-        await assertAnswer({ answerHtml: 'cc' })
-      })
-
-      await test.step('equations can be redone', async () => {
-        await page.keyboard.press('Control+y')
-        await assertAnswer({ answerHtml: `cc${getLatexImgTag('xxx')}` })
-        await getEditorLocator(page).getByRole('img').click()
-        await page.waitForTimeout(historyTimeout)
-        await page.keyboard.type('yyy')
-        await page.keyboard.press('Escape')
-        await assertAnswer({ answerHtml: `cc${getLatexImgTag('xxxyyy')}` })
-      })
-
-      await test.step('pasting images can be undone', async () => {
-        test.fixme(browserName === 'firefox', 'image paste not working on firefox')
-        await getEditorLocator(page).click()
-        await page.waitForTimeout(historyTimeout)
-        await page.keyboard.press('Control+z')
-        await page.keyboard.press('Control+z')
-        await assertAnswer({ answerHtml: 'cc' })
-        await setClipboardImage(page, 'image/png', samplePNG)
-        await paste(page)
-        await expect(getEditorLocator(page).getByRole('img')).toBeVisible()
-        await page.waitForTimeout(historyTimeout)
-        await page.keyboard.press('Control+z')
-        await expect(getEditorLocator(page).getByRole('img')).not.toBeVisible()
-      })
-
-      await test.step('pasting images can be redone', async () => {
-        test.fixme(browserName === 'firefox', 'image paste not working on firefox')
-        await page.keyboard.press('Control+y')
-        await expect(getEditorLocator(page).getByRole('img')).toBeVisible()
+    test('can undo and redo editor changes with Mac hotkeys @mac', async ({ page, browserName }) => {
+      await runEditorHistoryHotkeyTest({
+        page,
+        browserName,
+        assertAnswer,
+        writeAndWaitForTimeout,
+        historyTimeout,
+        shortcuts: macHistoryShortcuts,
       })
     })
 
@@ -716,19 +821,12 @@ test.describe('Rich text editor', () => {
     test.beforeEach(async ({ page }) => {
       const editor = getEditorLocator(page)
       await editor.click()
-      await page.getByRole('button', { name: 'Lisää kaava' }).click()
-      await expect(page.getByTestId('equation-editor')).toHaveCount(1)
+      await openEquationEditor(page)
     })
 
     test.describe('can undo and redo changes with ', () => {
-      test.beforeEach(async ({ page }) => {
-        await inputLatexCommandFromToolbar(page, specialCharacters.sqrt[0])
-        await page.keyboard.press('1')
-        await expect(getUndoButton(page)).toBeEnabled()
-        await expect(getRedoButton(page)).toBeDisabled()
-      })
-
       test('toolbar buttons', async ({ page }) => {
+        await initEquationHistory(page)
         await getUndoButton(page).click()
         await expect(getRedoButton(page)).toBeEnabled()
         await page.keyboard.press('ArrowLeft')
@@ -740,17 +838,12 @@ test.describe('Rich text editor', () => {
         await assertEquationEditorLatexContent(page.getByTestId('equation-editor'), '\\sqrt{2}')
       })
 
-      test('hotkeys', async ({ page }) => {
-        await page.keyboard.press('Control+z')
-        await expect(getRedoButton(page)).toBeEnabled()
-        await page.keyboard.press('ArrowLeft')
-        await page.keyboard.press('2')
-        await expect(getRedoButton(page)).toBeDisabled()
-        await page.keyboard.press('Control+z')
-        await expect(getRedoButton(page)).toBeEnabled()
-        await assertEquationEditorLatexContent(page.getByTestId('equation-editor'), '\\sqrt{ }')
-        await page.keyboard.press('Control+y')
-        await assertEquationEditorLatexContent(page.getByTestId('equation-editor'), '\\sqrt{2}')
+      test('hotkeys Windows/Linux', async ({ page }) => {
+        await runEquationEditorHistoryHotkeyTest(page, ctrlHistoryShortcuts)
+      })
+
+      test('hotkeys Mac @mac', async ({ page }) => {
+        await runEquationEditorHistoryHotkeyTest(page, macHistoryShortcuts)
       })
     })
 
