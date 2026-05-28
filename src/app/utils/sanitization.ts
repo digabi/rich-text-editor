@@ -58,16 +58,13 @@ function stripBlockElements(html: string) {
   parent.innerHTML = html.trim()
 
   do {
-    let lastNode: Node | undefined = undefined
     for (let i = 0; i < parent.childNodes.length; i++) {
       const node = parent.childNodes[i]
       if (isBlockElement(node)) {
-        // if the last node is a text node or a span, which is not empty, add a br before this node
-        if (
-          lastNode !== undefined &&
-          (lastNode.nodeType === Node.TEXT_NODE || lastNode.nodeName === 'SPAN') &&
-          /\S/.test(lastNode.textContent ?? '')
-        ) {
+        // Preserve the line break that the block element represents by inserting a <br>
+        // before it, unless the previous sibling already provides one (or there is no
+        // content before it that needs separating).
+        if (needsBrBeforeBlock(node.previousSibling)) {
           parent.insertBefore(document.createElement('br'), node)
         }
         // if this node has a last child that is not a br, add a br
@@ -79,11 +76,25 @@ function stripBlockElements(html: string) {
         }
         parent.removeChild(node)
       }
-      lastNode = node
     }
   } while (Array.prototype.some.call(parent.childNodes, (node: Node) => isBlockElement(node)))
 
   return parent.innerHTML
+}
+
+function needsBrBeforeBlock(prevSibling: Node | null) {
+  if (prevSibling === null) return false
+  if (prevSibling.nodeName === 'BR') return false
+  // A preceding block will be unwrapped and contribute its own trailing <br>
+  if (isBlockElement(prevSibling)) return false
+  // Whitespace-only text nodes and spans don't represent content that needs a line break
+  if (
+    (prevSibling.nodeType === Node.TEXT_NODE || prevSibling.nodeName === 'SPAN') &&
+    !/\S/.test(prevSibling.textContent ?? '')
+  ) {
+    return false
+  }
+  return true
 }
 
 function preserveTabs(html: string) {
