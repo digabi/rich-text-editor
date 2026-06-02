@@ -127,6 +127,59 @@ function preserveIndentation(html: string) {
   return parent.innerHTML
 }
 
+// A tab is rendered as four non-breaking spaces, matching `preserveTabs`.
+const NBSP = '\u00A0'
+const tabWidth = 4
+
+function leadingWhitespaceToNbsp(whitespace: string) {
+  return whitespace.replaceAll('\t', NBSP.repeat(tabWidth)).replaceAll(' ', NBSP)
+}
+
+/**
+ * WebKit strips the leading whitespace from each line when it serializes the clipboard HTML
+ * during a copy. So indentation pasted from e.g. Collabora Writer is missing from the
+ * `text/html` flavor on Safari/WebKit — even though Chrome and Firefox keep it right there in
+ * the markup (`<p>    text</p>`), where the existing sanitization already picks it up. The
+ * indentation still survives in the `text/plain` flavor on every browser, so we use it to
+ * restore the leading indentation of each line that lost it.
+ *
+ * Only leading whitespace is restored, and only when the HTML has less than the plain text —
+ * so this is a no-op when the HTML already kept the indentation (Chrome/Firefox), and it
+ * never removes content. Pastes containing images are skipped, because inline images can
+ * shift the line alignment between the HTML and the plain text.
+ */
+export function restoreLeadingIndentation(html: string, plainText: string) {
+  if (/<img/i.test(html)) return html
+
+  const textLines = plainText.replaceAll('\r', '').split('\n')
+  const parent = document.createElement('div')
+  parent.innerHTML = html
+
+  let lineIndex = 0
+  let atLineStart = true
+  Array.from(parent.childNodes).forEach((node) => {
+    if (node.nodeName === 'BR') {
+      lineIndex++
+      atLineStart = true
+      return
+    }
+    if (!atLineStart) return
+    atLineStart = false
+
+    const targetWhitespace = textLines[lineIndex]?.match(/^[ \t]+/)?.[0]
+    if (!targetWhitespace) return
+    const targetNbsp = leadingWhitespaceToNbsp(targetWhitespace)
+
+    const current = node.textContent ?? ''
+    const currentLeadingLength = current.match(/^\s*/)?.[0].length ?? 0
+    if (targetNbsp.length > currentLeadingLength) {
+      node.textContent = targetNbsp.slice(0, targetNbsp.length - currentLeadingLength) + current
+    }
+  })
+
+  return parent.innerHTML
+}
+
 function preserveLineBreaks(text: string) {
   return text.replaceAll(/\r/g, '').replaceAll(/\n/g, '<br>')
 }

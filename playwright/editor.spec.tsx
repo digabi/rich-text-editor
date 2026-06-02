@@ -15,6 +15,7 @@ import {
   setClipboardText,
   paste,
   setClipboardHTML,
+  setClipboardHTMLAndText,
   samplePNG,
   sampleGIF,
   assertAnswerContent,
@@ -344,6 +345,20 @@ test.describe('Rich text editor', () => {
     await assertAnswer({
       answerText: `Hello\n${TAB}World!\n\n${TAB}${TAB}All ${TAB}good?`,
       answerHtml: `Hello<br>${htmlTab}World!<br><br>${htmlTab}${htmlTab}All ${htmlTab}good?`,
+    })
+  })
+
+  test('restores indentation from the clipboard text when the HTML lacks it', async ({ page }) => {
+    // Simulates the Safari/WebKit clipboard from Collabora Writer: the HTML has lost the leading
+    // whitespace, but the indentation still survives in the plain-text flavor (here a tab). We
+    // restore it from the plain text.
+    const collaboraHtml =
+      '<div id="meta-origin" data-coolorigin="https%3A%2F%2Fexample.net%2Fcool%2Fclipboard" style="white-space: normal;"><p>Ei sisennetty</p><p>Sisennetty</p></div>'
+    await setClipboardHTMLAndText(page, collaboraHtml, 'Ei sisennetty\n\tSisennetty')
+    await paste(page)
+    const TAB = `${nbsp}${nbsp}${nbsp}${nbsp}`
+    await assertAnswer({
+      answerText: `Ei sisennetty\n${TAB}Sisennetty`,
     })
   })
 

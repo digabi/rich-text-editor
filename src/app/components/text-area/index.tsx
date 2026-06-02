@@ -6,7 +6,7 @@ import useEditorState from '../../state'
 
 import Toolbar from '../toolbar'
 import { HelpDialog } from '../help-dialog'
-import { sanitize, sanitizeText } from '../../utils/sanitization'
+import { restoreLeadingIndentation, sanitize, sanitizeText } from '../../utils/sanitization'
 import { CaretPosition, getCaretPosition, setCaretPosition } from '../../utility'
 import { RichTextEditorHandle } from '../..'
 import { useKeyboardEventListener } from '../../hooks/use-keyboard-events'
@@ -106,7 +106,8 @@ const MainTextArea = forwardRef<RichTextEditorHandle, TextAreaProps>((props, ref
         return
       }
     } else if (html) {
-      document.execCommand('insertHTML', false, sanitize(html))
+      const sanitized = sanitize(html)
+      document.execCommand('insertHTML', false, text ? restoreLeadingIndentation(sanitized, text) : sanitized)
     } else if (text) {
       document.execCommand('insertHTML', false, sanitizeText(text))
     }

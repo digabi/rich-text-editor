@@ -65,6 +65,20 @@ export const setClipboardHTML = async (page: Page, text: string) => {
   }, text)
 }
 
+export const setClipboardHTMLAndText = async (page: Page, html: string, text: string) => {
+  await page.evaluate(
+    async ([html, text]) => {
+      await navigator.clipboard.write([
+        new ClipboardItem({
+          'text/html': new Blob([html], { type: 'text/html' }),
+          'text/plain': new Blob([text], { type: 'text/plain' }),
+        }),
+      ])
+    },
+    [html, text],
+  )
+}
+
 export const setClipboardImage = async (page: Page, filetype: string, base64: string) => {
   await page.evaluate(
     async ([filetype, base64]) => {
