@@ -4,9 +4,7 @@ On 18.10.2024 we released a new major version (v8) of the rich text editor, whic
 
 [![Node.js CI](https://github.com/digabi/rich-text-editor/actions/workflows/ci.yml/badge.svg)](https://github.com/digabi/rich-text-editor/actions/workflows/ci.yml)
 
-[![Abitti.net](https://abitti.net/images/abittidev_logo.svg)](https://abitti.net/)
-
-[Abitti.net](https://abitti.net)
+[Abitti.fi](https://abitti.fi)
 
 [Use of Abitti Trademark policy](https://abitti.net/abitti-trademark.html)
 
