@@ -324,6 +324,18 @@ test.describe('Rich text editor', () => {
     })
   })
 
+  // The browser sometimes wraps a new line in a <div> in contenteditable
+  // (e.g. when pressing Enter between images). The line break must survive
+  // sanitization even when the previous sibling is an image.
+  test('preserves line break when a div follows an image', async ({ page }) => {
+    const img = `<img src="data:image/png;base64,${samplePNG}" alt="">`
+    await setClipboardHTML(page, `${img}<div>${img}</div>`)
+    await paste(page)
+    await assertAnswer({
+      answerHtml: `${img}<br>${img}`,
+    })
+  })
+
   test('preserves tabs in pasted html', async ({ page }) => {
     const TAB = `${nbsp}${nbsp}${nbsp}${nbsp}`
     const htmlTab = '&nbsp;&nbsp;&nbsp;&nbsp;'
