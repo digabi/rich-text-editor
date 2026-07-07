@@ -1,6 +1,6 @@
 /* eslint-disable no-console */
 import express from 'express'
-import * as mathSvg from './server/mathSvg'
+import * as mathSvg from './server/mathSvg.js'
 import * as http from 'node:http'
 
 const app = express()

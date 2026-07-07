@@ -1,8 +1,7 @@
 #!/usr/bin/env node
-require('ts-node').register()
 
-const latexCommands = require('../src/latexCommands').default
-const mathSvg = require('../server/mathSvg')
+const latexCommands = require('../src/latexCommands.ts').default
+const mathSvg = require('../server/mathSvg.js')
 const fs = require('fs')
 const util = require('util')
 

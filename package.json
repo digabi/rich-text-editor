@@ -19,7 +19,7 @@
     "build:npm": "npx tsc -p ./tsconfig.build.json",
     "build": "rm -rf dist && npm run build:bundle && npm run build:npm",
     "dev": "esbuild --serve=localhost:1234 src/rich-text-editor-bundle.ts --outfile=dev/js/index.js --bundle --servedir=dev --watch",
-    "dev-server": "ts-node dev-server.ts",
+    "dev-server": "node dev-server.mts",
     "watch": "concurrently -n='ESBUILD,DEVSERVER' -c=auto 'npm run dev' 'npm run dev-server'",
     "prepare": "PREPARE=true npm run test && npm run build"
   },
@@ -37,7 +37,6 @@
     "@types/react-dom": "^18.3.7",
     "@typescript-eslint/eslint-plugin": "^8.40.0",
     "@typescript-eslint/parser": "^8.40.0",
-    "buffer": "^6.0.3",
     "concurrently": "^10.0.0",
     "esbuild": "^0.28.0",
     "eslint": "^8.57.1",
@@ -47,11 +46,7 @@
     "eslint-plugin-promise": "^7.2.1",
     "express": "^5.1.0",
     "prettier": "^3.6.2",
-    "process": "^0.11.10",
     "sanitize-html": "^2.17.0",
-    "ts-loader": "^9.5.2",
-    "ts-node": "^10.9.2",
-    "tslib": "^2.8.1",
     "typescript": "^5.9.2"
   },
   "dependencies": {
