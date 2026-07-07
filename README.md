@@ -88,7 +88,7 @@ We hope you understand our desire to focus on our goal specified by law.
 ## Dependencies
 
 - MathQuill (https://github.com/digabi/mathquill)
-- MathJax-Node
+- MathJax
 - Jquery
 - sanitize-html
 

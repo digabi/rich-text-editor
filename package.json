@@ -56,11 +56,13 @@
   },
   "dependencies": {
     "@digabi/mathquill": "^0.10.12",
+    "@mathjax/mathjax-mhchem-font-extension": "^4.1.2",
+    "@mathjax/mathjax-modern-font": "^4.1.2",
     "@types/jquery": "^4.0.0",
     "@types/sanitize-html": "^2.16.0",
     "classnames": "^2.5.1",
     "jquery": "^4.0.0",
-    "mathjax-node": "^2.1.1",
+    "mathjax": "^4.1.2",
     "styled-components": "^6.1.19"
   },
   "peerDependencies": {
