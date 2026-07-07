@@ -21,7 +21,7 @@ Promise.all(
 )
   .then((data) => {
     fs.writeFileSync(
-      `${__dirname}/../src/latexCommandsWithSvg.js`,
+      `${__dirname}/../src/latexCommandsWithSvg.ts`,
       `export default ${util.inspect(data, { depth: null })}`,
       'utf8',
     )

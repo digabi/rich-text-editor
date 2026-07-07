@@ -10,7 +10,7 @@
     "server/*"
   ],
   "scripts": {
-    "generateMathButtons": "scripts/createMathSvg.js && prettier --write src/latexCommandsWithSvg.js",
+    "generateMathButtons": "scripts/createMathSvg.js && prettier --write src/latexCommandsWithSvg.ts",
     "typecheck": "tsc --noEmit",
     "lint": "eslint .",
     "test:ct": "playwright test -c playwright-ct.config.ts",
