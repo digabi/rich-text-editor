@@ -34,7 +34,7 @@ const mathJaxInit = MathJax.init({
     typeset: false,
   },
   output: {
-    font: 'mathjax-modern'
+    font: 'mathjax-modern',
   },
   tex: {
     packages: ['base', 'ams', 'mhchem'],
