@@ -5,5 +5,14 @@
   "rules": {
     "prefer-arrow-callback": ["error", { "allowNamedFunctions": true }],
     "@typescript-eslint/no-misused-promises": ["error", { "checksVoidReturn": false }]
-  }
+  },
+  "overrides": [
+    {
+      "files": ["**/*.js"],
+      "rules": {
+        "import/no-commonjs": "off",
+        "promise/prefer-await-to-then": "off"
+      }
+    }
+  ]
 }

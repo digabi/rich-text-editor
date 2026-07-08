@@ -9,4 +9,5 @@ export const mathSvgResponse: (
   },
 ) => void
 
+export function latexToSvg(latex: string): Promise<string>
 export function latexToSvg(latex: string, cb: (svg: string) => void): void
