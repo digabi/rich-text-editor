@@ -27,6 +27,7 @@ import {
   getLatexImgTag,
 } from './test-utils'
 import RichTextEditor from '../src/app'
+import EditorInRerenderingParent from './EditorInRerenderingParent'
 import { Answer } from '../src/app/utility'
 import fi from '../src/FI'
 import { BASIC, ALGEBRA, GEOMETRY, SET_THEORY } from '../src/app/components/toolbar/math-char-data'
@@ -758,6 +759,29 @@ test.describe('Rich text editor', () => {
         await page.keyboard.type(' (5)')
         await assertAnswer({ answerText: 'This (5) is a (1) (2) test\nThis is a second line' })
       })
+    })
+
+    test('moves one edit at a time even when the parent re-renders on every change', async ({ page, mount }) => {
+      await unmountComponent()
+      await mount(<EditorInRerenderingParent />)
+      const editor = getEditorLocator(page)
+      await editor.click()
+
+      await writeAndWaitForTimeout(page, 'aa')
+      await writeAndWaitForTimeout(page, 'bb')
+      await expect(editor).toHaveText('aabb')
+
+      await page.keyboard.press('Control+z')
+      await expect(editor).toHaveText('aa')
+
+      await page.keyboard.press('Control+z')
+      await expect(editor).toHaveText('')
+
+      await page.keyboard.press('Control+y')
+      await expect(editor).toHaveText('aa')
+
+      await page.keyboard.press('Control+y')
+      await expect(editor).toHaveText('aabb')
     })
   })
 

@@ -339,10 +339,27 @@ export function EditorStateProvider({
     }
   }
 
-  const updateAnswerHistoryDebounced = debounceAnswerSave(
-    (content: string, caretPositionBefore: CaretPosition) => updateAnswerHistory(content, caretPositionBefore),
-    500,
-  )
+  /** `debounceAnswerSave` keeps its pending timer in a closure, so the debounced function has to
+   * survive re-renders. If it were recreated on every render, each call would get a timer of its own
+   * and none of them would ever be cancelled, making every single keystroke its own history entry.
+   * Library users who re-render the editor on `onValueChange` (e.g. by storing the answer in a
+   * store) would then undo and redo one character at a time instead of one edit at a time.
+   *
+   * The debounced callback reads `updateAnswerHistory` from a ref so that it always runs the
+   * current render's version instead of the one captured when the debounce was created.
+   * */
+  const updateAnswerHistoryRef = useRef(updateAnswerHistory)
+  updateAnswerHistoryRef.current = updateAnswerHistory
+
+  const updateAnswerHistoryDebouncedRef = useRef<ReturnType<typeof debounceAnswerSave>>()
+  if (!updateAnswerHistoryDebouncedRef.current) {
+    updateAnswerHistoryDebouncedRef.current = debounceAnswerSave(
+      (content: string, caretPositionBefore: CaretPosition) =>
+        updateAnswerHistoryRef.current(content, caretPositionBefore),
+      500,
+    )
+  }
+  const updateAnswerHistoryDebounced = updateAnswerHistoryDebouncedRef.current
 
   /**
    * @param shouldUpdateHistory - Whether to update the answer history (defaults to true)
