@@ -1,7 +1,3 @@
-# 🚨🚨 18.10.2024 Breaking change warning 🚨🚨
-
-On 18.10.2024 we released a new major version (v8) of the rich text editor, which was a re-write of the old codebase. This warning is not critical to users of NPM packages using versioning, but users of the unpkg bundle (http://unpkg.com/rich-text-editor/dist/rich-text-editor-bundle.js) will notice that the latest bundle of the code will not work as expected anymore. To avoid a breaking change in your system, you can set the version of the unpkg package explicitly to the last stable version of v7 as follows: http://unpkg.com/rich-text-editor@7.3.0/dist/rich-text-editor-bundle.js
-
 [![Node.js CI](https://github.com/digabi/rich-text-editor/actions/workflows/ci.yml/badge.svg)](https://github.com/digabi/rich-text-editor/actions/workflows/ci.yml)
 
 [Abitti.fi](https://abitti.fi)
@@ -11,11 +7,13 @@ On 18.10.2024 we released a new major version (v8) of the rich text editor, whic
 Rich text editor with math support for Finnish Matriculation Examination Board.
 Live demo can be found at [https://math-demo.abitti.fi/](https://math-demo.abitti.fi/)
 
-Since v4.0.0, only ES2017 code with ES modules is provided (in the `dist`
-directory). If you want to use this library, a bundler such as Webpack or
-Rollup is probably needed.
-
 ## Usage
+
+### Notes
+
+Since v4.0.0, only ES2017 code with ES modules is provided (in the dist directory). If you want to use this library, a bundler such as Webpack or Rollup is probably needed.
+
+Since the release of v8.0.0 in 2024, this has been a React component. If you still need the old legacy version, you need to explicitly use the last stable v7 release (like this: http://unpkg.com/rich-text-editor@7.3.0/dist/rich-text-editor-bundle.js)
 
 ### Usage with NPM
 
@@ -92,21 +90,31 @@ We hope you understand our desire to focus on our goal specified by law.
 - Jquery
 - sanitize-html
 
-## Getting started
+## Development
+
+### Getting started
 
 1. Install [Node.js](https://nodejs.org/en/)
-3. Run `npm install`.
-4. Run `npm run dev`.
-5. Browser tests: [http://localhost:5111/test/tests.html](http://localhost:5111/test/tests.html)
-6. Manual testing: [http://localhost:5111/test/tests.html?grep=manual](http://localhost:5111/test/tests.html?grep=manual)
+1. Run `npm install`.
+1. Run `npm run watch` to run locally. This starts a simple frontend at http://127.0.0.1:1234/ and a backend for rendering equations at http://127.0.0.1:5111.
 
-### Testing the bundle locally
+### Testing
 
-1. Run `npm run build`
-2. Run `npm run dev-server`
-3. Run a simple http server in the project root, for example `python3 -m http.server 8080`
-4. Edit `dev/index.html` script tag to point to the bundle: `<script type="module" src="/dist/rich-text-editor-bundle.js"></script>` (don't commit this).
-5. Go to http://localhost:8080/dev/index.html
+There is an extensive component test collection via Playwright. Most of the tests are run with both Chromium and Firefox, some are run with only one of them because of limitations with performing some actions via JS.
+
+```sh
+# Runs type checks and the test suite
+npm run test
+ 
+# Runs just the test suite
+npm run test:ct
+
+# Use --ui to run and inspect the tests in Playwright's GUI
+npm run test:ct -- --ui
+
+# Run just a specific test with -g
+npm run test:ct -- -g "can paste text from clipboard"
+```
 
 ## Example of direct usage
 
