@@ -35,6 +35,7 @@
     "@types/node": "^24.10.9",
     "@types/react": "^18.3.28",
     "@types/react-dom": "^18.3.7",
+    "@types/sanitize-html": "^2.16.0",
     "@typescript-eslint/eslint-plugin": "^8.40.0",
     "@typescript-eslint/parser": "^8.40.0",
     "concurrently": "^10.0.0",
@@ -46,7 +47,6 @@
     "eslint-plugin-promise": "^7.2.1",
     "express": "^5.1.0",
     "prettier": "^3.6.2",
-    "sanitize-html": "^2.17.0",
     "typescript": "^5.9.2"
   },
   "dependencies": {
@@ -54,10 +54,10 @@
     "@mathjax/mathjax-mhchem-font-extension": "^4.1.2",
     "@mathjax/mathjax-modern-font": "^4.1.2",
     "@types/jquery": "^4.0.0",
-    "@types/sanitize-html": "^2.16.0",
     "classnames": "^2.5.1",
     "jquery": "^4.0.0",
     "mathjax": "^4.1.2",
+    "sanitize-html": "^2.17.0",
     "styled-components": "^6.1.19"
   },
   "peerDependencies": {
