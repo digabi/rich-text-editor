@@ -4,6 +4,7 @@ import * as mathSvg from './server/mathSvg'
 import * as http from 'node:http'
 
 const app = express()
+app.use((_, res, next) => (res.header('access-control-allow-origin', '*'), next()))
 app.get('/', (_, res) => void res.send())
 app.get('/math.svg', mathSvg.mathSvgResponse)
 

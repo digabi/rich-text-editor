@@ -104,6 +104,13 @@ const defaultPasteSource = (file: File): Promise<string> =>
   })
 
 const defaultOnLatexUpdate = (baseUrl: string) => (img: HTMLImageElement, latex: string) => {
+  img.addEventListener('load', function bakeSVG() {
+    if (!img.currentSrc.startsWith('data:'))
+      void fetch(img.currentSrc)
+        .then((resp) => resp.bytes())
+        .then((bytes) => img.setAttribute('src', `data:image/svg+xml;base64,${bytes.toBase64()}`))
+    img.removeEventListener('load', bakeSVG)
+  })
   img.setAttribute('src', `${baseUrl}/math.svg?latex=${encodeURIComponent(latex)}`)
   img.setAttribute('alt', latex)
 }
